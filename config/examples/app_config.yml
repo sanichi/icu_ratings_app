@@ -7,4 +7,4 @@ icu_db:
 
 secret_token: 5fbd352d214c2118a7fc152173de8dd358dcd07289a8eb76fe332e279848a905fd1228b6e51e4ec60c14b41d69f93eecea7a35bb8854d993a6a0f13091bd08a7
 
-session_key: my_session
+session_key: _ratings_session

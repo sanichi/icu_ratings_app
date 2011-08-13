@@ -25,8 +25,4 @@ group :test, :development do
   gem "factory_girl_rails"
   gem "faker"
   gem "guard-rspec"
-  if RUBY_PLATFORM =~ /darwin/i
-    gem "rb-fsevent", :require => false
-    gem "growl", :require => false
-  end
 end

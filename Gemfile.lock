@@ -63,7 +63,6 @@ GEM
       i18n (~> 0.4)
     fastercsv (1.5.4)
     ffi (1.0.9)
-    growl (1.0.3)
     guard (0.4.2)
       thor (~> 0.14.6)
     guard-rspec (0.4.0)
@@ -119,7 +118,6 @@ GEM
       rdoc (~> 3.4)
       thor (~> 0.14.4)
     rake (0.9.2)
-    rb-fsevent (0.4.0)
     rdoc (3.8)
     redcarpet (1.17.2)
     rspec (2.6.0)
@@ -165,7 +163,6 @@ DEPENDENCIES
   escape_utils
   factory_girl_rails
   faker
-  growl
   guard-rspec
   haml
   hirb
@@ -174,7 +171,6 @@ DEPENDENCIES
   launchy
   mysql2 (= 0.2.6)
   rails (= 3.0.9)
-  rb-fsevent
   redcarpet
   rspec-rails
   sass
