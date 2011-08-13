@@ -1,0 +1,24 @@
+%table
+  %tr
+    %th Email
+    %th Player
+    %th ICU ID
+    %th Role
+    %th Expiry Date
+  - if @users.count == 0
+    %tr
+      %td{:colspan => 5, :class => "centered"} No matches
+  - else
+    - @users.matches.each do |u|
+      %tr
+        %td= link_to u.email, [:admin, u]
+        - if u.icu_player
+          %td= link_to u.icu_player.name, u.icu_player, :remote => true
+        - else
+          %td{:class => :error} None
+        %td{:class => "centered"}= u.icu_id
+        %td{:class => "centered"}= u.role
+        %td{:class => "centered"}= u.expiry
+  - if @users.multi_page
+    %tr
+      %td{:colspan => 5, :class => "centered"}= pagination_links(@users)

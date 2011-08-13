@@ -1,0 +1,39 @@
+%table{:class => "sections"}
+  %tr
+    %td{:class => "section"}
+      %h2 Latest Tournaments
+      %ul{:class => "home"}
+        - @tournaments.each do |t|
+          %li
+            = link_to t.name, t
+        %li= link_to "More...", tournaments_path
+    %td{:class => "section"}
+      %h2 Latest News
+      %ul{:class => "home"}
+        - @news_items.each do |n|
+          %li
+            = link_to n.headline, n
+        %li= link_to "More...", news_items_path
+
+#help
+  %dl
+    %dt How can I see my rating?
+    %dd
+      This functionality is still in development and should be ready early in 2012.
+      Meanwhile, please continue to use the
+      =link_to_icu "rating list", "ratings/list.php"
+      on the main site.
+    %dt How can I submit a tournament for rating?
+    %dd
+      First, ask the
+      = mail_to_icu
+      to authorize your account for submissions. Then
+      - unless current_user
+        log in and
+      click Tournament &rarr; New.
+    - unless current_user
+      %dt How can I log in?
+      %dd
+        Go to the
+        = link_to "Log in", log_in_path
+        page where there is further help if you need it.

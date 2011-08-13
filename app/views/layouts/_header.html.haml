@@ -1,0 +1,56 @@
+= image_tag "misc/logo.png", :alt => 'ICU Logo'
+%h1 ICU Ratings
+
+%ul.sf-menu
+  %li
+    %a{:href => home_path} Home
+    %ul
+      %li
+        %a{:href => news_items_path} News
+        - if can? :create, NewsItem
+          %ul
+            %li
+              %a{:href => new_news_item_path} New
+      %li
+        %a{:href => contacts_path} Contacts
+  %li
+    %a{:href => tournaments_path} Tournaments
+    - if can?(:manage, Upload) || can?(:read, OldTournament)
+      %ul
+        - if can? :manage, Upload
+          %li
+            %a{:href => new_admin_upload_path} New
+        - if can? :manage, Tournament
+          %li
+            %a{:href => admin_tournaments_path} Search
+        - if can? :read, OldTournament
+          %li
+            %a{:href => admin_old_tournaments_path} Old
+        - if can? :read, Upload
+          %li
+            %a{:href => admin_uploads_path} Uploads
+  - if can? :read, IcuPlayer
+    %li
+      %a{:href => icu_players_path} Players
+      %ul
+        %li
+          %a{:href => icu_players_path} ICU Players
+        %li
+          %a{:href => fide_players_path} FIDE Players
+  - if can? :read, Event
+    %li
+      %a{:href => admin_events_path} Admin
+      %ul
+        - if can? :read, User
+          %li
+            %a{:href => admin_users_path} Users
+          %li
+            %a{:href => admin_logins_path} Logins
+        %li
+          %a{:href => admin_events_path} Events
+  %li= link_to "Help", "#", :id => "help-link"
+  %li
+    - if current_user
+      %a{:href => log_out_path}= "Log out"
+    - else
+      %a{:href => log_in_path} Log in

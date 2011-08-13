@@ -1,0 +1,18 @@
+%table
+  %tr
+    %th Name
+    %th Start
+    %th Upload
+    %th Reporter
+  - if @tournaments.count == 0
+    %tr
+      %td{:colspan => 4, :class => "centered"} No matches
+  - @tournaments.matches.each do |t|
+    %tr
+      %td= link_to t.long_name, [:admin, t]
+      %td= t.start
+      %td= t.upload ? link_to(t.upload.created_at.strftime("%Y-%m-%d"), [:admin, t.upload]) : ""
+      %td= t.user.name
+  - if @tournaments.multi_page
+    %tr
+      %td{:colspan => 4, :class => "centered"}= pagination_links(@tournaments)

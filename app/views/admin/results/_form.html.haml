@@ -1,0 +1,25 @@
+= form_for [:admin, @result], :remote => true do |f|
+  = f.hidden_field :round, :value => @result.round
+  = f.hidden_field :player_id, :value => @player.id
+  %table{:class => "right-headers noborder"}
+    %tr
+      %th Player
+      %td= @player.name
+    %tr
+      %th Round
+      %td= @result.round
+    %tr
+      %th= f.label :opponent_id
+      %td= f.select :opponent_id, @opponents, :selected => @result.opponent ? @result.opponent.id.to_s : ""
+    %tr
+      %th= f.label :result
+      %td= f.select :result, result_menu, :selected => @result.result
+    %tr
+      %th= f.label :rateable
+      %td= f.check_box :rateable, { :disabled => !@result.opponent }, "true", "false"
+    %tr
+      %th= f.label :colour
+      %td= f.select :colour, colour_menu("Unknown"), :selected => @result.colour
+    %tr
+      %th= label_tag :opp_result, "Opponent's Result"
+      %td= select_tag :opp_result, options_for_select(result_menu, @result.opponents_result), :disabled => @result.rateable || !@result.opponent

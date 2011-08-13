@@ -1,0 +1,21 @@
+$(function() {
+  $("#<%= @id %>").dialog({
+    autoOpen: false,
+    modal: true,
+    title: "<%= @title %>",
+    width: <%= @width %>,
+    buttons: {
+      <% if @button %>
+        <%= @button %>: function() {
+          $("form", this).submit();
+          <% if @autoclose %>
+            $(this).dialog("close");
+          <% end %>
+        },
+      <% end %>
+      <%= @cancel %>: function() {
+        $(this).dialog("close");
+      }
+    }
+  });
+});

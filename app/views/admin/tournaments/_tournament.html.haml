@@ -1,0 +1,59 @@
+%table{:class => "right-headers cushioned"}
+  %tr
+    %th Name
+    %td= @tournament.name
+    %td{:class => "floater top", :rowspan => 10}
+      = link_to edit_admin_tournament_path(@tournament), :remote => true do
+        = image_tag "icons/edit.png", :alt => "Edit Tournament"
+  %tr
+    %th Start Date
+    %td= @tournament.start
+  %tr
+    %th End Date
+    %td= @tournament.finish
+  %tr
+    %th Rounds
+    %td= @tournament.rounds
+  %tr
+    %th Federation
+    %td= @tournament.fed
+  %tr
+    %th City
+    %td= @tournament.city
+  %tr
+    %th Site
+    %td= @tournament.site
+  %tr
+    %th Arbiter
+    %td= @tournament.arbiter
+  %tr
+    %th Deputy
+    %td= @tournament.deputy
+  %tr
+    %th Time Control
+    %td= @tournament.time_control
+  %tr
+    %th Tie Break Rules
+    %td{:id => "show_tie_breaks"}= @tournament.tie_breaks
+    %td{:class => "floater"}
+      = link_to edit_admin_tournament_path(@tournament, :tie_breaks => ""), :remote => true do
+        = image_tag "icons/edit.png", :alt => "Edit Tie Breaks"
+  %tr
+    %th Ranking
+    %td{:id => "show_ranking"}= @tournament.ranking_summary.fetch(:description)
+    %td{:class => "floater top", :rowspan => 2}
+      = link_to edit_admin_tournament_path(@tournament, :ranks => ""), :remote => true do
+        = image_tag "icons/rank.png", :alt => "Rank Tournament"
+  %tr
+    %th Upload
+    %td= @tournament.upload ? link_to(@tournament.upload.created_at.strftime('%Y-%m-%d'), [:admin, @tournament.upload]) : ''
+  %tr
+    %th Reporter
+    %td= @tournament.user.name
+
+%table{:class => "left"}
+  %tr
+    %td
+      = link_to admin_tournament_path(@tournament, :format => "js"), :remote => true do
+        = image_tag "icons/export.png", :alt => "Export Tournament"
+      = link_to "Export", admin_tournament_path(@tournament, :format => "js"), :remote => true

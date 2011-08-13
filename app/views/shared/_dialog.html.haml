@@ -1,0 +1,16 @@
+-# The local variable 'id' must be defined.
+- @id = "dialog_#{id}"
+
+-# Everything else is configurable with defaults.
+- @title     = defined?(title)     ? title  : id.titleize
+- @width     = defined?(width)     ? width  : 500
+- @button    = defined?(button)    ? button : "Update"
+- @cancel    = defined?(cancel)    ? cancel : "Cancel"
+- @autoclose = defined?(autoclose) ? true   : false
+
+-# Arrange for jQuery to build the dialog when the page loads.
+- content_for :javascript do
+  = render "shared/dialog.js"
+
+-# And provide the div into which jQuery will insert the dialog.
+%div{:id => @id}= defined?(html) ? raw(html) : ""

@@ -1,0 +1,8 @@
+= title
+- base = object.errors.delete(:base)
+- if base
+  - base.each do |err|
+    * #{err}
+- object.errors.each_pair do |key, errs|
+  - errs.each do |err|
+    * #{key.to_s.humanize}: #{err}

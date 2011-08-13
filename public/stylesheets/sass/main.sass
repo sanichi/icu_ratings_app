@@ -1,0 +1,481 @@
+//
+// Constants.
+//
+
+// Fonts.
+$sans: verdana, arial, helvetica, sans-serif
+
+// Font sizes.
+$font-size: 15px
+$small-font: 12px
+
+// Normal colours.
+$col: #384A5B
+$bg-col: #063263
+$lnk-col: #178059
+$hd-col: #4B70B3
+$bd-col: #178AFF
+$bdr: 1px solid $bd-col
+
+// Colours in the top header.
+$hd-lnk-col: #B0B5C4
+
+// Colours in the content area.
+$cn-bg-col: #558AC7
+
+// Colours in the bottom footer.
+$ft-col: #B0B5C4
+
+// Highlight colours.
+$hl-col: white
+$hl-bg-col: #73AF02
+
+// Colours for prominent headers and buttons.
+$sp-col: white
+$sp-bg-col: #73AF02
+$sp-bdr: 1px solid #90EE90
+
+// Table colours.
+$tab-bg-col: white
+$tab-hd-col: #004080
+$tab-bdr: 1px solid #506C90
+
+// Notice and alert.
+$alert-bdr: 1px solid white
+$alert-col: white
+$alert-bg: red
+$notice-bdr: 1px solid white
+$notice-col: white
+$notice-bg: green
+
+// Micellaneous colours.
+$dsbl-col: #999
+$form-col: #EBEBFB
+$inpt-bdr: 1px solid #BBBBCB
+$btn-col: $sp-col
+$btn-bg-col: $sp-bg-col
+$btn-bdr: 1px solid white
+
+// Spacing.
+$hpad: 20px
+$vpad: 20px
+$tpad: 2px
+
+// Corner sizes.
+$crnr-lrg: 10px
+$crnr-med: 5px
+
+//
+// Mixins.
+//
+
+=rounded-corners($radius: $crnr-med)
+  :border-radius $radius
+  :-moz-border-radius $radius
+  :-webkit-border-radius $radius
+
+=header($size, $pad, $radius, $weight: bold)
+  :text-align center
+  :font
+    :size $size
+    :weight $weight
+  :padding $pad
+  :margin-bottom $vpad
+  span
+    :color $sp-col
+    :background-color $sp-bg-col
+    :border $sp-bdr
+    :padding $radius
+    +rounded-corners($radius)
+    a
+      :color $sp-col !important
+
+=label()
+  :color $tab-hd-col !important
+  :font-style italic
+  :font-weight normal
+  :font-size 0.85em
+  :white-space nowrap
+
+//
+// Default styles.
+//
+
+body
+  :background-color $bg-col
+  :color $col
+  :font
+    :family $sans
+    :size $font-size
+  :line-height 18px
+  :margin 0
+  :padding 0
+
+h1, h2, h3, h4
+  :text-align center
+  :color $hd-col
+  &.left
+    :text-align left
+
+a
+  :color $lnk-col !important
+  :text-decoration none
+  &:visited
+    :color $lnk-col
+  &:hover
+    :text-decoration underline
+  &.external
+    :background url(/images/misc/external.png) no-repeat scroll right center transparent
+    :padding-right 13px
+  img
+    :border 0
+    :margin-bottom -0.15em
+.error a
+  :color $alert-col !important
+  :text-decoration underline
+
+hr
+  :border none
+  :border-top $bdr
+  :height 1px
+  :margin $vpad 0
+
+table
+  :margin
+    :left auto
+    :right auto
+  :border-collapse collapse
+  td, th
+    :border $tab-bdr
+    :background-color $tab-bg-col
+    :padding 4px 6px
+    pre
+      :margin 0
+  th
+    +label()
+  td.centered
+    :text-align center
+  td.on-right
+    :text-align right
+  td.hilite
+    :background-color $hl-bg-col
+    :color $hl-col
+  td, th
+    &.floater
+      :background-color transparent
+      :border 0
+    &.top
+      :vertical-align top
+    &.disabled
+      :color $dsbl-col
+    &.section
+      :vertical-align top
+      :padding 2em 3em
+      h2
+        :margin-top 0
+  &.invisible
+    td, th
+      :border 0
+      :background-color transparent
+  &.normal
+    td, th
+      :border $bdr
+      :background-color $tab-bg-col
+  &.noborder
+    td, th
+      :border 0
+  &.right-headers th
+    :text-align right
+  &.left
+    :margin-left 0
+  &.sections
+    :border-collapse separate
+    :border-spacing $vpad 0
+  tr
+    &.left-headers th
+      :text-align left
+    &.disabled td, th
+      :color $dsbl-col
+  tr.splitter > td
+    :border 0
+    :background-color transparent
+    :vertical-align top
+    :padding 0 10px
+
+ul
+  &.home
+    :padding-left 0
+    :line-height 1.4
+
+form
+  input, select, textarea
+    :border $inpt-bdr
+    :padding 0.2em
+    :font-size $font-size
+  input[type='submit']
+    :color $btn-col
+    :background-color $btn-bg-col
+    :border $btn-bdr
+    +rounded-corners()
+  td
+    label
+      :margin-left 2em
+      &:first-child
+        :margin-left 0
+
+img.left-padded
+  :padding-left 10px
+
+//
+// Headers and footers.
+//
+
+#header
+  :height 100px
+  :border-bottom $bdr
+  :background
+    :image url(/images/misc/header_background.png)
+    :repeat no-repeat
+    :position right
+  img
+    :float left
+    :padding 0px 10px
+  h1
+    :margin-top 0px
+    :margin-bottom 0px
+    :padding-top 20px
+    :line-height 1.5
+    :text-align left
+    :color white
+    :font
+      :variant small-caps
+      :size 30px
+
+#content
+  :background-color $cn-bg-col
+  :padding $vpad 0
+
+#footer
+  :border-top $bdr
+  :color $ft-col
+  :text-align center
+  :font-size $small-font
+
+//
+// Superfish custom styling (see superfish.css).
+//
+
+.sf-menu
+  :float left
+  :margin-bottom 1em
+  a
+    :padding .5em .5em
+    :color $hd-lnk-col !important
+  li
+    :background $bg-col
+  li li
+    :background darken($bg-col, 5%)
+    :border $bdr
+    :border-bottom 0
+  li li li
+    :background darken($bg-col, 5%)
+    :border $bdr
+    :border-bottom 0
+  ul
+    :border-bottom $bdr
+
+//
+// Prominent, centered, rounded headers.
+//
+
+div.header
+  +header(24px, 17px, $crnr-lrg)
+
+div.small-header
+  +header($font-size, 6px, $crnr-med)
+
+div.flash
+  +header($font-size, 6px, $crnr-med, normal)
+
+div
+  span.notice
+    :color $notice-col
+    :background-color $notice-bg
+    :border $notice-bdr
+
+div
+  span.alert
+    :color $alert-col
+    :background-color $alert-bg
+    :border $alert-bdr
+
+//
+// Miscellaneous general classes.
+//
+
+.note
+  :font-size $small-font
+
+.centered
+  :text-align center
+
+.cushioned
+  :margin-bottom $vpad
+
+.turbaned
+  :margin-top $vpad
+
+.error
+  :color $alert-col
+  :background-color $alert-bg
+
+//
+// News.
+//
+
+.news
+  :width 80%
+  :margin 0 auto
+  :border $bdr
+  +rounded-corners($crnr-lrg)
+  :padding 1em
+  :background-color $tab-bg-col
+  .details
+    :text-align center
+    span
+      :font-weight bold
+  .story
+    h1, h2, h3, h4
+      :text-align left !important
+  hr
+    :margin $vpad/2.0 auto
+    :border-color $col
+
+//
+// Help
+//
+
+#help
+  :font-size 0.8em
+  dt
+    :color $tab-hd-col
+  dd
+    :margin-top 1em
+    :margin-bottom 1em
+    p
+      :margin 1em 0
+    p:first-child
+      :margin-top 0
+    p:last-child
+      :margin-bottom 0
+
+//
+// Contacts.
+//
+
+#contacts
+  :width 30%
+  :margin $vpad auto 0 auto
+  :border $bdr
+  :padding 1em
+  :background-color $tab-bg-col
+
+//
+// Rails flash messages and errors.
+//
+
+.field_with_errors
+  :color red
+
+#error_explanation
+  :width 450px
+  :border $alert-bdr
+  :padding 7px
+  :margin 0 auto $vpad auto
+  :background-color #f0f0f0
+  h2
+    :text-align left
+    :padding 5px 5px 5px 15px
+    :font-size $font-size
+    :margin -7px
+    :margin-bottom 0px
+    :background-color $alert-bg
+    :color $alert-col
+  ul li
+    :font-size $font-size
+    :list-style square
+
+//
+// Simple-form (adapted from Railscasts 234).
+//
+
+$form-width: 600px
+$form-label-width: 200px
+$form-input-margin: $form-label-width + 2 * $hpad
+
+form.simple-form
+  :background-color $form-col
+  :border $bdr
+  :width $form-width
+  :margin 0 auto 0 auto
+  :padding-top $vpad
+  +rounded-corners($crnr-lrg)
+  label
+    :float left
+    :width $form-label-width
+    :text-align right
+    :margin $tpad $hpad
+    :clear left
+    +label()
+  div
+    &.input
+      :margin-bottom 10px
+    &.boolean
+      :margin-left $form-label-width
+  input[type='text'], select, textarea
+    :background-color $tab-bg-col
+  input[type='submit']
+    :margin-left $form-input-margin
+    &.extra
+      :margin-left 1em !important
+  div.boolean label
+    :float none
+    :margin 0
+  label.collection_radio
+    :float none
+    :margin 0
+    :margin-right 10px
+    :margin-left 2px
+  .error
+    :clear left
+    :margin-left $form-label-width
+    :font-size 12px
+    :color #D00
+    :display block
+  .hint
+    :clear left
+    :margin-left $form-label-width
+    :font-size 12px
+    :color #555
+    :display block
+    :font-style italic
+form.wide
+  :width $form-width * 1.75
+form.short-labels
+  label
+    :width $form-label-width * 0.5
+  input[type='submit']
+    :margin-left $form-input-margin - $form-label-width * 0.5
+    &.extra
+      :margin-left 1em
+
+//
+// Temporary beta-badge.
+//
+
+#beta-badge
+  :border none
+  :position fixed
+  :right 0
+  :top 0
+  :z-index 100

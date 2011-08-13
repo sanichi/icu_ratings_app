@@ -1,0 +1,6 @@
+No	Name                	Loc Id	Total	 1  	 2  	 3  
+
+1 	Griffiths, Ryan-Rhys	6897  	3    	 4:W	 2:W	 3:W
+2 	flynn, jamie        	5226  	2    	 3:W	 1:L	 4:W
+3 	Hulleman, Leon      	6409  	1    	 2:L	 4:W	 1:L
+4 	Dunne, Thomas       	10914 	0    	 1:L	 3:L	 2:L

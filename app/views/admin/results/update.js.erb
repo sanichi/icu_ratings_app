@@ -1,0 +1,7 @@
+<% if @player && @tournament %>
+  $("#results").html("<%= escape_javascript(render('admin/players/results')) %>");
+  $("#score").html("<%= score_html(@player.score, :rounds => @player.results.size) %>");
+  $("#dialog_update_player").dialog("close");
+<% else %>
+  alert("<%= escape_javascript(render('shared/error', :object => @result, :title => 'Error updating result:')) %>")
+<% end %>

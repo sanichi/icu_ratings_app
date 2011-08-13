@@ -1,0 +1,11 @@
+en:
+  admin:
+    one: "Website Administrator"
+    other: "Website Administrators"
+  officer:
+    one: "Rating Officer"
+    other: "Rating Officers"
+  reporter:
+    one: "Tournament Reporter"
+    other: "Tournament Reporters"
+  

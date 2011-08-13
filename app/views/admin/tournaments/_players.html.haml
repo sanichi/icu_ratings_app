@@ -1,0 +1,20 @@
+%table
+  %tr
+    %th
+    %th Name
+    - 1.upto(@tournament.rounds) do |r|
+      %th= r
+    %th Pts
+    %th Rnk
+  - @players.each do |player|
+    %tr
+      %td{:class => "centered"}= category_icon(player)
+      %td= link_to player.name, [:admin, player]
+      - 1.upto(@tournament.rounds) do |r|
+        - result = player.result_in_round(r)
+        - if result
+          %td{:class => "centered"}= score_html(result.score, :rateable => result.rateable)
+        - else
+          %td
+      %td{:class => "centered"}= score_html(player.score)
+      %td{:class => "centered"}= player.rank

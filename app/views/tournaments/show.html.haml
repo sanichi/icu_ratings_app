@@ -1,0 +1,12 @@
+- content_for :head do
+  = javascript_include_tag "tournament"
+
+.header
+  %span= @tournament.name
+
+%table
+  %tr.splitter
+    %td
+      = render "players"
+    %td
+      = render "tournament"

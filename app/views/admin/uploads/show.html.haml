@@ -1,0 +1,38 @@
+.header
+  %span Upload
+
+%table{:class => "right-headers"}
+  - if @upload.tournament
+    %tr
+      %th Tournament
+      %td= link_to @upload.tournament.name, [:admin, @upload.tournament]
+  %tr
+    %th Reporter
+    %td= @upload.user.name
+  %tr
+    %th File Name
+    %td= @upload.name
+  %tr
+    %th Format
+    %td= @upload.format
+  %tr
+    %th Content Type
+    %td= @upload.content_type
+  %tr
+    %th File Type
+    %td= @upload.file_type
+  %tr
+    %th Size
+    %td= @upload.size
+  %tr
+    %th Created
+    %td= @upload.created_at
+  - unless @upload.error.blank?
+    %tr
+      %th Errors
+      %td= @upload.error
+
+%table{:class => "turbaned"}
+  %tr
+    %td
+      = link_to "Delete", [:admin, @upload], :confirm => 'Are you sure?', :method => :delete

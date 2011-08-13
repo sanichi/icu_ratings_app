@@ -1,0 +1,14 @@
+.header
+  %span Players
+
+%div{:class => "centered cushioned"}
+  = link_to @tournament.long_name, tournament_path(@tournament)
+
+%table
+  %tr
+    %th Name
+    %th ICU ID
+  - @players.each do |player|
+    %tr
+      %td= link_to player.name, [@tournament, player]
+      %td= player.icu_id

@@ -1,0 +1,4 @@
+- [:notice, :alert].each do |key|
+  - unless flash[key].blank?
+    .flash
+      %span{:class => key}= flash[key]

@@ -1,0 +1,22 @@
+= form_tag admin_tournament_path(@tournament, :format => "text"), :method => "get", :target => "_export" do |f|
+  %table{:class => "right-headers noborder"}
+    %tr
+      %th= label_tag :type
+      %td= select_tag :type, options_for_select(@tournament.export_formats, 'SPExport')
+    - ICU::Tournament::SPExport::COLUMNS.each do |c|
+      - key, text = c
+      - next if key == :num || key == :name
+      %tr{"data-format" => "spexport"}
+        %th= label_tag "spexport[#{key}]", text
+        %td= check_box_tag "spexport[#{key}]", 1, key == :id || key == :points
+    - ICU::Tournament::Krause::OPTIONS.each do |c|
+      - key, text = c
+      %tr{"data-format" => "krause"}
+        %th= label_tag "krause[#{key}]", text
+        %td= check_box_tag "krause[#{key}]", 1, true
+    %tr{"data-format" => "krause"}
+      %th= label_tag "krause[fide]", "Ratings and IDs"
+      %td= select_tag "krause[fide]", options_for_select([["FIDE", 1], ["ICU", 0]], 1)
+    %tr{"data-format" => "krause spexport"}
+      %th= label_tag :order
+      %td= select_tag :order, options_for_select([["by rank", :rank], ["by name", :name]], :rank)

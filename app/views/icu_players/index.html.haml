@@ -1,0 +1,11 @@
+.header
+  %span ICU Players
+
+#search_form{:class => "cushioned"}
+  = render "search_form"
+
+#icu_player_results
+  = render "search_results"
+
+= icu_player_details_dialog
+= fide_player_details_dialog

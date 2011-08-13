@@ -1,0 +1,43 @@
+.header
+  %span
+    - if @icu_player
+      = @icu_player.name
+    - elsif @old_tournament
+      = @old_tournament.name
+    - else
+      "Old Tournaments"
+
+%table
+  %tr
+    %th{:rowspan => 2} Name
+    %th{:rowspan => 2} G
+    %th{:rowspan => 2} K
+    %th{:colspan => 2} Scores
+    %th{:rowspan => 2} B
+    %th{:colspan => 5} Ratings
+  %tr
+    %th Exp
+    %th Act
+    %th Perf
+    %th Trn
+    %th Old
+    %th New
+    %th Diff
+  - @old_rating_histories.each do |rh|
+    %tr
+      - if @icu_player
+        %td= link_to rh.old_tournament.name, admin_old_rating_histories_path(:old_tournament_id => rh.old_tournament.id)
+      - elsif @old_tournament
+        %td= link_to rh.icu_player.name, admin_old_rating_histories_path(:icu_player_id => rh.icu_player.id)
+      - else
+        %td= rh.id
+      %td{:class => "centered"}= rh.games
+      %td{:class => "centered"}= rh.kfactor
+      %td{:class => "centered"}= number_with_precision(rh.expected_score, :precision => 2)
+      %td{:class => "centered"}= number_with_precision(rh.actual_score, :precision => 1)
+      %td{:class => "centered"}= rh.bonus
+      %td{:class => "centered"}= rh.performance_rating
+      %td{:class => "centered"}= rh.tournament_rating
+      %td{:class => "centered"}= rh.old_rating
+      %td{:class => "centered"}= rh.new_rating
+      %td{:class => "on-right"}= rh.rating_change

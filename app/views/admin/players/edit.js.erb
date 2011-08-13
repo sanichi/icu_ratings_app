@@ -1,0 +1,14 @@
+$("#dialog_update_player")
+  .html("<%= escape_javascript(render('form')) %>")
+  .dialog("option", "title", "Update Player")
+  .dialog("open");
+$("#player_dob").datepicker({
+    dateFormat: 'yy-mm-dd',
+    defaultDate: '-25y',
+    maxDate: '-5y',
+    minDate: '-100y',
+    yearRange: '-100:-5',
+    autoSize: true,
+    changeYear: true
+});
+$("#player_last_name").focus();

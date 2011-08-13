@@ -1,0 +1,40 @@
+%table{:class => "right-headers"}
+  %tr
+    %th Name
+    %td= @tournament.name
+  %tr
+    %th Start Date
+    %td= @tournament.start
+  %tr
+    %th End Date
+    %td= @tournament.finish
+  %tr
+    %th Rounds
+    %td= @tournament.rounds
+  %tr
+    %th Federation
+    %td= @tournament.fed
+  %tr
+    %th City
+    %td= @tournament.city
+  %tr
+    %th Site
+    %td= @tournament.site
+  %tr
+    %th Arbiter
+    %td= @tournament.arbiter
+  %tr
+    %th Deputy
+    %td= @tournament.deputy
+  %tr
+    %th Time Control
+    %td= @tournament.time_control
+  %tr
+    %th Tie Break Rules
+    %td{:id => "show_tie_breaks"}= @tournament.tie_breaks
+  %tr
+    %th Upload
+    %td= @tournament.upload ? link_to(@tournament.upload.created_at.strftime('%Y-%m-%d'), [:admin, @tournament.upload]) : ''
+  %tr
+    %th Reporter
+    %td= @tournament.user.name

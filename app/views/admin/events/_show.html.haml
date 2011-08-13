@@ -1,0 +1,15 @@
+%table{:class => "turbaned"}
+  %tr
+    %th Event
+    %th Time
+    %th Secs
+    %th OK
+  %tr
+    %td= @event.name
+    %td{:class => "centered"}= @event.created_at
+    %td{:class => "centered"}= @event.time
+    %td{:class => "centered"}
+      = image_tag "icons/#{@event.success ? 'tick' : 'exclamation'}.png", :alt => @event.success ? "OK" : "problem"
+  %tr
+    %td{:colspan => 4}
+      %pre= @event.report

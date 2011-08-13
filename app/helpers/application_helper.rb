@@ -1,0 +1,146 @@
+module ApplicationHelper
+  def flash_messages
+    render "shared/flash", :flash => flash
+  end
+
+  def score_html(score, args={})
+    str = case score
+    when 0.0, 0 then '0'
+    when 0.5    then '&frac12;'
+    when 1.0, 1 then '1'
+    else score.floor.to_s + (score.*(2).to_i.odd? ? '&frac12;' : '')
+    end
+    if !args[:rateable].nil? && !args[:rateable] && score <= 1.0
+      str = case str
+          when '0' then '-'
+          when '1' then '+'
+          else '='
+      end
+    end
+    if args[:rounds]
+      str+= '/'
+      str+= args[:rounds].to_s
+    end
+    str.html_safe
+  end
+
+  def federation_menu(opt={:top => 'IRL', :none => 'None'})
+    ICU::Federation.menu(opt)
+  end
+
+  def colour_menu(none=nil)
+    menu = [["White", "W"], ["Black", "B"]]
+    menu.unshift([none, ""]) if none
+    menu
+  end
+
+  def gender_menu(none=nil)
+    menu = [["Male", "M"], ["Female", "F"]]
+    menu.unshift([none, ""]) if none
+    menu
+  end
+
+  def problem_menu(any=nil)
+    menu = Login::PROBLEMS.map { |r| [r.capitalize, r] }
+    menu.unshift([any, ""]) if any
+    menu
+  end
+
+  def result_menu
+    %w{Draw Win Loss}.map{ |r| [r, r[0]] }
+  end
+
+  def role_menu(none=nil)
+    menu = User::ROLES.map { |r| [r.capitalize, r] }
+    menu.unshift([none, ""]) if none
+    menu
+  end
+
+  def title_menu(none=nil)
+    menu = %w{GM IM FM CM NM WGM WIM WFM WCM WNM}.map{ |t| Array.new(2, t) }
+    menu.unshift([none, ""]) if none
+    menu
+  end
+
+  def upload_format_menu(none=nil)
+    menu = Upload::FORMATS
+    menu.unshift([none, ""]) if none
+    menu
+  end
+
+  def user_menu(table, any=nil)
+    menu = User.joins(table).group(:user_id).map{ |u| [u.name, u.id] }.sort{ |a,b| a[0] <=> b[0] }
+    menu.unshift([any, ""]) if any
+    menu
+  end
+
+  # Returns links to objects on various external sites.
+  def foreign_url_for(obj, opt={})
+    host, path = nil, nil
+    text, target = opt.values_at(:text, :target)
+    case obj
+    when IcuPlayer
+      host = "www.icu.ie"
+      path = "players/display.php?id=#{obj.id}"
+      text ||= obj.id
+      target ||= "_icu_ie"
+    when FidePlayer
+      host = "ratings.fide.com"
+      path = "card.phtml?event=#{obj.id}"
+      text ||= obj.id
+      target ||= "_fide_com"
+    end
+    return nil unless host && path
+    link_to text, "http://#{host}/#{path}", :target => target, :class => "external"
+  end
+  
+  # Returns a plain link to the main ICU site.
+  def link_to_icu(label, path="")
+    link_to label, "http://www.icu.ie/#{path}", :target => "_icu_ie"
+  end
+
+  # Returns an ICU email link.
+  def mail_to_icu(officer=:ratings)
+    name = case officer.to_sym
+      when :chairperson then "Chairperson"
+      when :treasurer   then "Treasurer"
+      when :ratings     then "Rating Officer"
+      else "ICU"
+    end
+    mail_to "#{officer}@icu.ie", name, :encode => "hex"
+  end
+
+  # Returns a string showing results displayed plus next and previous links.
+  def pagination_links(pager)
+    links = Array.new
+    links.push(link_to "next", pager.next_page, :remote => true) if pager.before_end
+    links.push(link_to "prev", pager.prev_page, :remote => true) if pager.after_start
+    raw "#{pager.sequence} of #{pluralize(pager.count, "match")}#{links.size > 0 ? ": " : ""}#{links.join(", ")}"
+  end
+
+  # These dialogs are used in more than one place so are defined here.
+  def icu_player_details_dialog
+    render "shared/dialog.html", :id => "icu_player_details", :width => 800, :button => false, :cancel => "Dismiss", :title => "ICU Player"
+  end
+  def fide_player_details_dialog
+    render "shared/dialog.html", :id => "fide_player_details", :width => 800, :button => false, :cancel => "Dismiss", :title => "FIDE Player"
+  end
+
+  # Returns a summary of created and updated datetimes.
+  def timestamps_summary(object)
+    summary = I18n.l(object.created_at, :format => :long)
+    unless object.created_at.to_date == object.updated_at.to_date
+      summary << " (updated "
+      summary << I18n.l(object.updated_at, :format => :short)
+      summary << ")"
+    end
+    summary
+  end
+
+  # Returns copyright text (e.g. "&copy; ICU 2011-2013").
+  def copyright
+    start = 2011
+    finish = Date.today.year
+    raw "&copy; ICU %s" % (finish > start ? "#{start}-#{finish}" : start.to_s)
+  end
+end

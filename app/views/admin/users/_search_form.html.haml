@@ -1,0 +1,13 @@
+= form_tag admin_users_path, :method => "get", :remote => true do
+  = hidden_field_tag :per_page, params[:per_page]
+  %table{:class => "invisible"}
+    %tr
+      %th= label_tag :email
+      %th= label_tag :role
+      %th= label_tag :icu_id, "ICU ID"
+      %th
+    %tr
+      %td= text_field_tag :email, params[:email], :class => "centered", :size => 15
+      %td= select_tag :role, options_for_select(role_menu("Any"), params[:role])
+      %td= text_field_tag :icu_id, params[:icu_id], :class => "centered", :size => 10
+      %td= submit_tag "Search"

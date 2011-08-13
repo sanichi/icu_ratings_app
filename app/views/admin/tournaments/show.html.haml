@@ -1,0 +1,13 @@
+.header
+  %span= @tournament.name
+
+%table
+  %tr.splitter
+    %td#players
+      = render "players"
+    %td#tournament
+      = render "tournament"
+
+= render "shared/dialog.html", :id => "update_tournament"
+= render "shared/dialog.html", :id => "export_tournament", :width => 400, :button => "Export", :autoclose => true
+= render "shared/dialog.html", :id => "rank_tournament", :width => 300, :button => "OK"

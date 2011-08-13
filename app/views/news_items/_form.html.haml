@@ -1,0 +1,18 @@
+= form_for @news_item, :html => { :class => "simple-form wide short-labels" } do |f|
+  - if @news_item.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@news_item.errors.count, 'error')} prohibited this news from being saved:"
+      %ul
+        - @news_item.errors.full_messages.each do |msg|
+          %li= msg
+  - if @news_item.user_id || current_user
+    = f.hidden_field :user_id, :value => @news_item.user_id || current_user.id
+  .input
+    = f.label :headline
+    = f.text_field :headline, :size => 80, :maxlength => 256
+  .input
+    = f.label :story
+    = f.text_area :story, :size => "80x20"
+  .input
+    = f.submit @news_item.new_record? ? "Create" : "Update"
+    = f.submit "Cancel", :class => "extra"

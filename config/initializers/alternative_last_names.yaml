@@ -1,0 +1,5 @@
+---
+  - [Ffrench, French]
+  - [Murchadha, Murphy]
+  - [Quinn, Benjamin, !ruby/regexp /^(Debbie|Deborah)$/]
+  - ["O'Siochru", King, !ruby/regexp /^Mairead$/]

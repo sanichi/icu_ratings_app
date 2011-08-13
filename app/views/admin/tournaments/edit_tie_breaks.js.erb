@@ -1,0 +1,15 @@
+var sortable_tie_breaks = function() {
+  // Join up the names of the selected sortable table columns.
+  var tie_breaks = $('#sortable_tie_breaks tr td input:checked').map(function() { return this.name }).get().join(',');
+  // Insert the result into the hidden tie_breaks input parameter.
+  $('#tournament_tie_breaks').val(tie_breaks);
+}
+$("#dialog_update_tournament")
+  .html("<%= escape_javascript(render('form_tie_breaks')) %>")
+  .dialog("option", "title", "Update Tie Breaks")
+  .dialog("open");
+$('#sortable_tie_breaks')
+  .sortable({ axis: 'y', delay: 100, distance: 5, opacity: 0.6, revert: true, tolerance: 'pointer', update: sortable_tie_breaks })
+  .disableSelection()
+  .find('input')
+  .bind('change', sortable_tie_breaks);

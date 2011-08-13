@@ -1,0 +1,21 @@
+function toggle_rateable(bool) { bool ? $("#result_rateable").attr("checked", "checked") : $("#result_rateable").removeAttr("checked") }
+function enable_rateable(bool) { bool ? $("#result_rateable").removeAttr("disabled") : $("#result_rateable").attr("disabled", true) }
+function enable_opp_result(bool) { bool ? $("#opp_result").removeAttr("disabled") : $("#opp_result").attr("disabled", true) }
+function mirror_opp_result() { var res = $("#result_result").val(); $("#opp_result").val(res == "D" ? "D" : (res == "W" ? "L" : "W")) }
+
+$(function() {
+  $("#result_opponent_id").live("change", function() {
+    var rateable = this.value.length > 0;
+    toggle_rateable(rateable);
+    enable_rateable(rateable);
+    enable_opp_result(false);
+  });
+  $("#result_rateable").live("change", function() {
+    var rateable = this.checked
+    enable_opp_result(!rateable);
+    if (rateable) mirror_opp_result();
+  });
+  $("#result_result").live("change", function() {
+    mirror_opp_result();
+  });
+});

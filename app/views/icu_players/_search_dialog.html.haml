@@ -1,0 +1,10 @@
+- if @player
+  = render "search_player"
+  %hr
+
+%h3{:class => "centered"} Matching ICU Players
+#icu_player_results
+  = render "search_results"
+%hr
+
+= render "search_form"

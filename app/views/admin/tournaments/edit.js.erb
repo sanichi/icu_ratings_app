@@ -1,0 +1,12 @@
+$("#dialog_update_tournament")
+  .html("<%= escape_javascript(render('form')) %>")
+  .dialog("option", "title", "Update Tournament")
+  .dialog("open");
+$("#tournament_start").datepicker({
+    dateFormat: 'yy-mm-dd',
+    autoSize: true
+});
+$("#tournament_finish").datepicker({
+    dateFormat: 'yy-mm-dd',
+    autoSize: true
+});

@@ -1,0 +1,7 @@
+<% if @problem %>
+  alert("Tournament ranking is: <%= @ranking[:description] %>")
+<% else %>
+  $("#players").html("<%= escape_javascript(render('players')) %>");
+  $("#show_ranking").html("<%= @ranking[:description] %>")
+  $("#dialog_rank_tournament").dialog("close");
+<% end %>

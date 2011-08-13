@@ -1,0 +1,9 @@
+= form_for [:admin, @tournament], :remote => true do |f|
+  = f.hidden_field :tie_breaks
+
+%table{:class => "right-headers noborder"}
+  %tbody{:id => "sortable_tie_breaks"}
+    - @tournament.tie_break_selections.each do |pair|
+      %tr
+        %th= label_tag pair.first.id, pair.first.name
+        %td= check_box_tag pair.first.id, 1, pair.last

@@ -1,0 +1,27 @@
+function toggle_file_format() {
+  var selected = this.value;
+  toggle_upload_options(selected);
+  toggle_help_sections(selected);
+}
+function toggle_upload_options(selected) {
+  $.each(["name", "start", "feds", "ratings"], function(i, key) { toggle_upload_option(key, "off") });
+  var on = [];
+  switch(selected) {
+    case "Krause":       on.push("feds", "ratings"); break;
+    case "SwissPerfect": on.push("feds", "start"); break;
+    case "SPExport":     on.push("feds", "start", "name"); break;
+  }
+  $.each(on, function(i, key) { toggle_upload_option(key, "on") })
+}
+function toggle_upload_option(key, status) {
+  var div = $("#" + key).parent();
+  status == "on" ? div.fadeIn(DEFAULT_FADEIN_TIME) : div.hide();
+}
+function toggle_help_sections(selected) {
+  $("#upload_format option").each(function() { $("#help ." + this.value).hide() });
+  $("#help ." + selected).show();
+}
+$(function() {
+  $("#start").datepicker({ dateFormat: 'yy-mm-dd' });
+  $("#upload_format").bind("change", toggle_file_format).trigger("change")
+});

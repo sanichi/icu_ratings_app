@@ -1,0 +1,37 @@
+- content_for :title, "Log in"
+
+= form_tag sessions_path, :class => "simple-form" do
+  .input
+    = label_tag :email
+    = text_field_tag :email, params[:email]
+  .input
+    = label_tag :password
+    = password_field_tag :password
+  .input
+    = submit_tag "Log in"
+
+#help
+  %dl
+    %dt What email and password should I use to log in?
+    %dd
+      = succeed "." do
+        The same ones you use to log into the main
+        = link_to_icu "ICU site"
+    %dt If I don't yet have an account, how can I get one?
+    %dd
+      %p
+        First,
+        = link_to_icu "subscribe", "shop/subscribe.php"
+        as a member of the ICU for the current season, if you haven't already done so.
+        Then
+        = link_to_icu "register an account", "members/newbies.php"
+        and wait for it to sync with this site (it can take up to 24 hours).
+      %p
+        On the main site, there are
+        = link_to_icu "detailed instructions", "articles/display.php?id=283"
+        for becoming a member and setting up an account, if you need further help.
+    %dt Do I need anything special to submit tournament reports?
+    %dd
+      Yes. Please request the
+      = mail_to_icu
+      to authorize your account.

@@ -1,0 +1,10 @@
+- content_for :title, "Search Uploads"
+
+.header
+  %span Uploads
+
+#search_form{:class => "cushioned"}
+  = render "search_form"
+
+#upload_results
+  = render "search_results"

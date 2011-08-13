@@ -1,0 +1,32 @@
+= form_for [:admin, @tournament], :remote => true do |f|
+  %table{:class => "right-headers noborder"}
+    %tr
+      %th Original data
+      %td{:class => "disabled"}= @tournament.original_data
+    %tr
+      %th= f.label :name
+      %td= f.text_field :name
+    %tr
+      %th= f.label :start
+      %td= f.text_field :start, { :value => @tournament.start }  # rails bug?
+    %tr
+      %th= f.label :finish
+      %td= f.text_field :finish, { :value => @tournament.finish }  # rails bug?
+    %tr
+      %th= f.label :fed, "Federation"
+      %td= f.select :fed, federation_menu
+    %tr
+      %th= f.label :city
+      %td= f.text_field :city
+    %tr
+      %th= f.label :site
+      %td= f.text_field :site
+    %tr
+      %th= f.label :arbiter
+      %td= f.text_field :arbiter
+    %tr
+      %th= f.label :deputy
+      %td= f.text_field :deputy
+    %tr
+      %th= f.label :time_control
+      %td= f.text_field :time_control
