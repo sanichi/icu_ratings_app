@@ -1,0 +1,29 @@
+development:
+  adapter: mysql2
+  encoding: utf8
+  reconnect: false
+  database: ratings_development
+  pool: 5
+  username: ratings
+  password: 
+  socket: /opt/local/var/run/mysql5/mysqld.sock
+
+test:
+  adapter: mysql2
+  encoding: utf8
+  reconnect: false
+  database: ratings_test
+  pool: 5
+  username: ratings
+  password: 
+  socket: /opt/local/var/run/mysql5/mysqld.sock
+
+production:
+  adapter: mysql2
+  encoding: utf8
+  reconnect: false
+  database: ratings_production
+  pool: 5
+  username: ratings
+  password: 
+  socket: /opt/local/var/run/mysql5/mysqld.sock

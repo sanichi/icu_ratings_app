@@ -15,6 +15,7 @@ gem "cancan", "~> 1.6"
 
 group :development do
   gem "hirb"
+  gem "capistrano"
 end
 
 group :test, :development do
@@ -29,6 +30,3 @@ group :test, :development do
     gem "growl", :require => false
   end
 end
-
-# Deploy with Capistrano.
-# gem 'capistrano'
