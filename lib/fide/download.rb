@@ -12,8 +12,9 @@ module FIDE
 
       # Run periodically (roughly every week) to sync Irish FIDE players and ratings.
       # Since the number of Irish players is relatively small, we can afford to download
-      # the full FIDE list, not ignore inactive players, track historical ratings and
-      # perform creates and updates through ActiveRecord.
+      # the full FIDE list, not ignore inactive players, track historical ratings and perfom
+      # creates and updates through ActiveRecord. Use bin/rake sync:irish_fide_players[F]
+      # to force a reread of a file already processed.
       def sync_fide_players(force=false)
         @start = Time.now
         @time = Hash.new
@@ -67,7 +68,7 @@ module FIDE
         lines = data.split(/\n\r?/)
         @nlines = lines.size
         raise SyncError.new("unexpected number of lines (#{lines.size})") unless @nlines > 250000
-        if lines.first.match(/^ID\s*number\s*Name\s*Title?\s*Fed\s*((Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Nov|Dec)[12]\d)/i)
+        if lines.first.match(/^ID\s*number\s*Name\s*Title?\s*Fed\s*((Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Nov|Dec)[a-z]*[12]\d)/i)
           lines.shift
           @period = check_period("1st #{$1}")
         else
@@ -207,6 +208,7 @@ module FIDE
       # Since the number of such players is large, we download the latest list (smaller
       # than the full list), ignore inactive players, only track the latest rating, avoid
       # ActiveRecord and instead perform updates by creating a file and loading it into MySQL.
+      # Use bin/rake sync:other_fide_players[F] to force a reread of a file already processed.
       def sync_fide_players(force=false)
         @start = Time.now
         @time = Hash.new
@@ -284,7 +286,7 @@ module FIDE
 
           # Check the header line.
           if (@count == 1)
-            unless line.match(/^ID\s*number\s*Name\s*Title?\s*Fed\s*((Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Nov|Dec)[12]\d)/i)
+            unless line.match(/^ID\s*number\s*Name\s*Title?\s*Fed\s*(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Nov|Dec)[a-z]*[12]\d/i)
               raise SyncError.new("unexpected first line of file: #{line}")
             end
             next
