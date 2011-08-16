@@ -12,6 +12,7 @@ gem "whenever", :require => false
 gem "escape_utils"
 gem "redcarpet"
 gem "cancan", "~> 1.6"
+gem "newrelic_rpm"
 
 group :development do
   gem "hirb"
