@@ -1,4 +1,4 @@
-set :whenever_command, "bundle exec whenever"
+set :whenever_command, "bin/whenever"
 require "bundler/capistrano"
 require "whenever/capistrano"
 
