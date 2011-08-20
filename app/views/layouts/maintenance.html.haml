@@ -1,0 +1,24 @@
+!!!
+%html
+  %head
+    %style{:type => "text/css"}
+      body { text-align: center; font-family: verdana,arial,helvetica,sans-serif; background-color: #063263; color: white; margin: 0; padding: 0; }
+      h1 { padding: 1em 0; font-size: 32px; }
+      div { background-color: #558AC7; padding: 2em 0; }
+      p { font-size: 16px; }
+      a { font-size: 8pt; color: #B0B0B3; text-decoration: none; }
+      a:hover { text-decoration: underline }
+  %body
+    %h1 ICU Ratings is Unavailable
+    %div
+      %p
+        = succeed "." do
+          We're currently offline for
+          = reason
+          as of
+          = Time.now.utc.strftime('%a %e %b %H:%M %Z')
+      %p
+        = succeed "." do
+          Sorry for the inconvenience. We'll be back
+          = back
+    %a{:href => "mailto:admin@icu.ie"} Contact Us
