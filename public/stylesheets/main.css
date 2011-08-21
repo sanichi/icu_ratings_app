@@ -254,12 +254,16 @@ div span.alert {
   -webkit-border-radius: 10px;
   padding: 1em;
   background-color: white; }
-  .news .details {
-    text-align: center; }
-    .news .details span {
+  .news .headline {
+    text-align: right; }
+    .news .headline span {
       font-weight: bold; }
+    .news .headline .times {
+      float: left;
+      font-size: 12px; }
   .news .story h1, .news .story h2, .news .story h3, .news .story h4 {
-    text-align: left !important; }
+    text-align: left !important;
+    color: #384a5b; }
   .news hr {
     margin: 10px auto;
     border-color: #384a5b; }

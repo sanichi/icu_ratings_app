@@ -340,13 +340,17 @@ div
   +rounded-corners($crnr-lrg)
   :padding 1em
   :background-color $tab-bg-col
-  .details
-    :text-align center
+  .headline
+    :text-align right
     span
       :font-weight bold
+    .times
+      :float left
+      :font-size $small-font
   .story
     h1, h2, h3, h4
       :text-align left !important
+      :color $col
   hr
     :margin $vpad/2.0 auto
     :border-color $col

@@ -4,10 +4,9 @@
   %span= @news_item.headline
 
 .news
-  .details
-    = "by"
+  .headline
     %span= @news_item.user.name(false)
-  .details.note= timestamps_summary(@news_item)
+    .times= timestamps_summary(@news_item)
   %hr
   .story= @news_item.html_story
 

@@ -127,14 +127,19 @@ module ApplicationHelper
   end
 
   # Returns a summary of created and updated datetimes.
-  def timestamps_summary(object)
-    summary = I18n.l(object.created_at, :format => :long)
-    unless object.created_at.to_date == object.updated_at.to_date
-      summary << " (updated "
-      summary << I18n.l(object.updated_at, :format => :short)
-      summary << ")"
+  def timestamps_summary(object, opts={})
+    created = object.created_at
+    updated = object.updated_at
+    unless opts[:time]
+      created = created.to_date
+      updated = updated.to_date
     end
-    summary
+    summary = "created <span>#{I18n.l(created, :format => :long)}</span>"
+    unless updated == created
+      format = created.year == updated.year ? :short : :long
+      summary << "; updated <span>#{I18n.l(updated, :format => format)}<span>"
+    end
+    raw summary
   end
 
   # Returns copyright text (e.g. "&copy; ICU 2011-2013").
