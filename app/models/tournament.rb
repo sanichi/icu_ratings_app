@@ -8,7 +8,7 @@ class Tournament < ActiveRecord::Base
   has_many   :players, :include => :results
   belongs_to :user
 
-  default_scope order("start DESC, finish DESC, created_at DESC")
+  default_scope order("start DESC, finish DESC, name")
 
   attr_accessible :name, :start, :finish, :fed, :city, :site, :arbiter, :deputy, :time_control, :tie_breaks
 
