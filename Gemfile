@@ -17,6 +17,7 @@ gem "newrelic_rpm"
 group :development do
   gem "hirb"
   gem "capistrano"
+  gem "pry"
 end
 
 group :test, :development do
