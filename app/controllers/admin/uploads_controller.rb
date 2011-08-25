@@ -24,16 +24,27 @@ module Admin
         if @tournament
           if @tournament.save
             @tournament.renumber_opponents
-            redirect_to [:admin, @tournament], :notice => 'New tournament created'
+            redirect_to [:admin, @tournament], :notice => "New tournament created"
           else
             @upload.update_attribute :error, @tournament.error_summary
-            redirect_to @upload, :alert => 'Invalid tournament'
+            redirect_to @upload, :alert => "Invalid tournament"
           end
         else
-          redirect_to [:admin, @upload], :alert => 'Cannot extract tournament from file'
+          redirect_to [:admin, @upload], :alert => "Cannot extract tournament from file"
         end
       else
         render :action => 'new'
+      end
+    end
+    
+    def destroy
+      @upload = Upload.find(params[:id])
+      authorize!(:destroy, @upload)
+      if @upload.tournament.present?
+        redirect_to [:admin, @upload], :alert => "You can't delete an upload which is associated with tournament"
+      else
+        @upload.destroy
+        redirect_to admin_uploads_url
       end
     end
   end

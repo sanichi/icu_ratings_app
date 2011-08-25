@@ -4,33 +4,33 @@ class Ability
   def initialize(user)
     alias_action :update, :destroy, :to => :modify
     user ||= User.new
-    
-    # What anyone can do.
+
     can :read, NewsItem
-    
-    # What members can do.
+
     return unless user.role? :member
 
-    # What tournament reporters can do.
     return unless user.role? :reporter
-    can :manage, Upload
-    can :manage, Tournament
-    can :manage, Player
-    can :manage, Result
+
+    can [:read, :create], Upload
+    can :modify, Upload, :user_id => user.id
+
+    can :read, [Tournament, Player, Result]
+    can :modify, Tournament, :user_id => user.id
+    can :modify, Player, :tournament => { :user_id => user.id }
+    can :modify, Result, :player => { :tournament => { :user_id => user.id } }
+
     can :create, NewsItem
     can :modify, NewsItem, :user_id => user.id
-    can :read, IcuPlayer
-    can :read, FidePlayer
-    can :read, OldTournament
-    can :read, OldRatingHistory
-    
-    # What rating officers can do.
+
+    can :read, [IcuPlayer, FidePlayer, OldTournament, OldRatingHistory]
+
     return unless user.role? :officer
+
     can :read, Event
-    can :manage, NewsItem
-    
-    # What administrators can do.
+    can :manage, [Upload, Tournament, NewsItem]
+
     return unless user.role? :admin
+
     can :manage, :all
   end
 end

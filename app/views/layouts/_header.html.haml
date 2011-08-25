@@ -3,54 +3,43 @@
 
 %ul.sf-menu
   %li
-    %a{:href => home_path} Home
+    = link_to "Home", home_path
     %ul
       %li
-        %a{:href => news_items_path} News
+        = link_to "News", news_items_path
         - if can? :create, NewsItem
           %ul
-            %li
-              %a{:href => new_news_item_path} New
-      %li
-        %a{:href => contacts_path} Contacts
+            %li= link_to "New", new_news_item_path
+      %li= link_to "Contacts", contacts_path
   %li
-    %a{:href => tournaments_path} Tournaments
+    = link_to "Tournaments", tournaments_path
     - if can?(:manage, Upload) || can?(:read, OldTournament)
       %ul
-        - if can? :manage, Upload
-          %li
-            %a{:href => new_admin_upload_path} New
-        - if can? :manage, Tournament
-          %li
-            %a{:href => admin_tournaments_path} Search
+        - if can? :create, Upload
+          %li= link_to "New", new_admin_upload_path
+        - if can? :read, Tournament
+          %li= link_to "Search", admin_tournaments_path
         - if can? :read, OldTournament
-          %li
-            %a{:href => admin_old_tournaments_path} Old
+          %li= link_to "Old", admin_old_tournaments_path
         - if can? :read, Upload
-          %li
-            %a{:href => admin_uploads_path} Uploads
+          %li= link_to "Uploads", admin_uploads_path
   - if can? :read, IcuPlayer
     %li
-      %a{:href => icu_players_path} Players
+      = link_to "Players", icu_players_path
       %ul
-        %li
-          %a{:href => icu_players_path} ICU Players
-        %li
-          %a{:href => fide_players_path} FIDE Players
+        %li= link_to "ICU Players", icu_players_path
+        %li= link_to "FIDE Players", fide_players_path
   - if can? :read, Event
     %li
-      %a{:href => admin_events_path} Admin
+      = link_to "Admin", admin_events_path
       %ul
         - if can? :read, User
-          %li
-            %a{:href => admin_users_path} Users
-          %li
-            %a{:href => admin_logins_path} Logins
-        %li
-          %a{:href => admin_events_path} Events
+          %li= link_to "Users", admin_users_path
+          %li= link_to "Logins", admin_logins_path
+        %li= link_to "Events", admin_events_path
   %li= link_to "Help", "#", :id => "help-link"
   %li
     - if current_user
-      %a{:href => log_out_path}= "Log out"
+      = link_to "Log out", log_out_path
     - else
-      %a{:href => log_in_path} Log in
+      = link_to "Log in", log_in_path

@@ -10,10 +10,6 @@
     %td{:class => "floater"}
   - if can? :manage, User
     %tr
-      %th Password
-      %td= @user.password
-      %td{:class => "floater"}
-    %tr
       %th Preferred Email
       %td{:id => "user_preferred_email"}= @user.preferred_email
       %td{:class => "floater"}
@@ -56,4 +52,4 @@
       %td{:class => "floater"}
 
 = icu_player_details_dialog
-= render "shared/dialog", :id => "update_user", :width => 500
+= render "shared/dialog", :id => "update_user", :width => 600

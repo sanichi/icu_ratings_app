@@ -32,7 +32,8 @@
       %th Errors
       %td= @upload.error
 
-%table{:class => "turbaned"}
-  %tr
-    %td
-      = link_to "Delete", [:admin, @upload], :confirm => 'Are you sure?', :method => :delete
+- if can?(:destroy, @upload) && @upload.tournament.blank?
+  %table{:class => "turbaned"}
+    %tr
+      %td
+        = link_to "Delete", [:admin, @upload], :confirm => 'Are you sure?', :method => :delete
