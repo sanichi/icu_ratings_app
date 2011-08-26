@@ -18,10 +18,11 @@ group :development do
   gem "hirb"
   gem "capistrano"
   gem "pry"
-  if RUBY_PLATFORM =~ /darwin/i
-    gem "rb-fsevent", :require => false
-    gem "growl", :require => false
-  end
+end
+
+group :test, :development, :darwin do
+  gem "rb-fsevent", :require => false
+  gem "growl", :require => false
 end
 
 group :test, :development do

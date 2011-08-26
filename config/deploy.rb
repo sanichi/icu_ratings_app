@@ -2,6 +2,8 @@ set :whenever_command, "bin/whenever"
 require "bundler/capistrano"
 require "whenever/capistrano"
 
+set :bundle_without, [:darwin, :development, :test]
+
 set :application, "ratings.icu.ie"
 role :app, application
 role :web, application
