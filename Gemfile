@@ -20,7 +20,7 @@ group :development do
   gem "pry"
 end
 
-group :test, :development, :darwin do
+group :test, :darwin do
   gem "rb-fsevent", :require => false
   gem "growl", :require => false
 end
