@@ -20,9 +20,40 @@ module Admin
     end
 
     def update
+      update_from_id(params) unless params[:player]
       if @player.update_attributes(params[:player])
         @tournament = @player.tournament
       end
+    end
+    
+    private
+    
+    def update_from_id(params)
+      player = ActiveSupport::HashWithIndifferentAccess.new
+      if params[:icu_id]
+        ip = IcuPlayer.find_by_id(params[:icu_id])
+        if ip
+          player[:icu_id]     = params[:icu_id]
+          player[:first_name] = ip.first_name
+          player[:last_name]  = ip.last_name
+          player[:fed]        = ip.fed
+          player[:title]      = ip.title
+          player[:gender]     = ip.gender
+          player[:dob]        = ip.dob
+        end
+      elsif params[:fide_id]
+        fp = FidePlayer.find_by_id(params[:fide_id])
+        if fp
+          player[:fide_id]     = params[:fide_id]
+          player[:first_name]  = fp.first_name
+          player[:last_name]   = fp.last_name
+          player[:fed]         = fp.fed
+          player[:title]       = fp.title
+          player[:gender]      = fp.gender
+          player[:fide_rating] = fp.rating unless @player.fide_rating
+        end
+      end
+      params[:player] = player
     end
   end
 end
