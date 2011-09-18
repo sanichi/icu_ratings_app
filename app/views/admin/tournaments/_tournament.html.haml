@@ -2,9 +2,10 @@
   %tr
     %th Name
     %td= @tournament.name
-    %td{:class => "floater top", :rowspan => 10}
-      = link_to edit_admin_tournament_path(@tournament), :remote => true do
-        = image_tag "icons/edit.png", :alt => "Edit Tournament"
+    - if can? :edit, @tournament
+      %td{:class => "floater top", :rowspan => 10}
+        = link_to edit_admin_tournament_path(@tournament), :remote => true do
+          = image_tag "icons/edit.png", :alt => "Edit Tournament"
   %tr
     %th Start Date
     %td= @tournament.start
@@ -35,15 +36,17 @@
   %tr
     %th Tie Break Rules
     %td{:id => "show_tie_breaks"}= @tournament.tie_breaks
-    %td{:class => "floater"}
-      = link_to edit_admin_tournament_path(@tournament, :tie_breaks => ""), :remote => true do
-        = image_tag "icons/edit.png", :alt => "Edit Tie Breaks"
+    - if can? :edit, @tournament
+      %td{:class => "floater"}
+        = link_to edit_admin_tournament_path(@tournament, :tie_breaks => ""), :remote => true do
+          = image_tag "icons/edit.png", :alt => "Edit Tie Breaks"
   %tr
     %th Ranking
     %td{:id => "show_ranking"}= @tournament.ranking_summary.fetch(:description)
-    %td{:class => "floater top", :rowspan => 2}
-      = link_to edit_admin_tournament_path(@tournament, :ranks => ""), :remote => true do
-        = image_tag "icons/rank.png", :alt => "Rank Tournament"
+    - if can? :edit, @tournament
+      %td{:class => "floater top", :rowspan => 2}
+        = link_to edit_admin_tournament_path(@tournament, :ranks => ""), :remote => true do
+          = image_tag "icons/rank.png", :alt => "Rank Tournament"
   %tr
     %th Upload
     %td= @tournament.upload ? link_to(@tournament.upload.created_at.strftime('%Y-%m-%d'), [:admin, @tournament.upload]) : ''

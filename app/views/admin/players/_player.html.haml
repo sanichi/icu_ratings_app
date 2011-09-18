@@ -1,20 +1,23 @@
 %table{:class => "right-headers"}
   %tr
-    %td{:class => "floater top"}
-      = link_to edit_admin_player_path(@player), :remote => true do
-        = image_tag "icons/edit.png", :alt => "Edit"
+    - if can? :edit, @tournament
+      %td{:class => "floater top"}
+        = link_to edit_admin_player_path(@player), :remote => true do
+          = image_tag "icons/edit.png", :alt => "Edit"
     %th Name
     %td= @player.name
   %tr
-    %td{:class => "floater top"}
-      = link_to icu_players_path(:player_id => @player.id, :per_page => 10), :remote => true do
-        = image_tag "icons/search.png", :alt => "Match ICU Player"
+    - if can? :edit, @tournament
+      %td{:class => "floater top"}
+        = link_to icu_players_path(:player_id => @player.id, :per_page => 10), :remote => true do
+          = image_tag "icons/search.png", :alt => "Match ICU Player"
     %th ICU ID
     %td= @player.icu_id
   %tr
-    %td{:class => "floater top", :rowspan => 12}
-      = link_to fide_players_path(:player_id => @player.id, :per_page => 10), :remote => true do
-        = image_tag "icons/search.png", :alt => "Match FIDE Player"
+    - if can? :edit, @tournament
+      %td{:class => "floater top", :rowspan => 12}
+        = link_to fide_players_path(:player_id => @player.id, :per_page => 10), :remote => true do
+          = image_tag "icons/search.png", :alt => "Match FIDE Player"
     %th FIDE ID
     %td= @player.fide_id
   %tr
