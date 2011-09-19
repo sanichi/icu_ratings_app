@@ -50,6 +50,10 @@ module ApplicationHelper
     %w{Draw Win Loss}.map{ |r| [r, r[0]] }
   end
 
+  def reporter_menu
+    User.where("role != 'member'").order("icu_players.last_name, icu_players.first_name").map{ |u| [u.icu_player.name, u.id] }
+  end
+
   def role_menu(none=nil)
     menu = User::ROLES.map { |r| [r.capitalize, r] }
     menu.unshift([none, ""]) if none

@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 describe "Tournament" do
-  describe "reporters" do
+  describe "editing" do
     before(:each) do
       @user = login_user("reporter")
       @file = "#{Rails.root}/spec/files/bunratty_masters_2011.txt"
     end
 
-    it "can only edit their own tournaments and players" do
+    it "reporters can edit their own tournaments and players, officers can change reporter" do
       Tournament.count.should == 0
       Player.count.should == 0
       visit "/admin/uploads/new"
@@ -22,6 +22,7 @@ describe "Tournament" do
       page.should have_selector(:xpath, "//a[@href='#{tpath}/edit' and @data-remote='true']")
       page.should have_selector(:xpath, "//a[@href='#{tpath}/edit?tie_breaks=' and @data-remote='true']")
       page.should have_selector(:xpath, "//a[@href='#{tpath}/edit?ranks=' and @data-remote='true']")
+      page.should have_no_selector(:xpath, "//a[@href='#{tpath}/edit?reporter=']")
       Player.count.should == 34
       p = Player.find_by_last_name_and_first_name("Baburin", "Alexander")
       ppath = "/admin/players/#{p.id}"
@@ -41,6 +42,9 @@ describe "Tournament" do
       page.should have_no_selector(:xpath, "//a[starts-with(@href,'/icu_players') and @data-remote='true']")
       page.should have_no_selector(:xpath, "//a[starts-with(@href,'/fide_players') and @data-remote='true']")
       page.should have_no_selector(:xpath, "//a[starts-with(@href,'/admin/results')]")
+      login_user("officer")
+      visit tpath
+      page.should have_selector(:xpath, "//a[@href='#{tpath}/edit?reporter=' and @data-remote='true']")
     end
   end
 end

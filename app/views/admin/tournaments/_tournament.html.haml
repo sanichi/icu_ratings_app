@@ -53,6 +53,10 @@
   %tr
     %th Reporter
     %td= @tournament.user.name
+    - if can? :manage, @tournament
+      %td{:class => "floater top"}
+        = link_to edit_admin_tournament_path(@tournament, :reporter => ""), :remote => true do
+          = image_tag "icons/edit.png", :alt => "Change Reporter"
 
 %table{:class => "left"}
   %tr

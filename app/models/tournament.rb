@@ -10,7 +10,7 @@ class Tournament < ActiveRecord::Base
 
   default_scope order("start DESC, finish DESC, name")
 
-  attr_accessible :name, :start, :finish, :fed, :city, :site, :arbiter, :deputy, :time_control, :tie_breaks
+  attr_accessible :name, :start, :finish, :fed, :city, :site, :arbiter, :deputy, :time_control, :tie_breaks, :user_id
 
   before_validation :normalise_attributes
 

@@ -1,0 +1,4 @@
+$("#dialog_update_tournament")
+  .html("<%= escape_javascript(render('form_reporter')) %>")
+  .dialog("option", "title", "Update Reporter")
+  .dialog("open");

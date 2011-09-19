@@ -22,6 +22,8 @@ module Admin
         :edit_tie_breaks
       when params[:ranks]
         :edit_ranks
+      when params[:reporter]
+        :edit_reporter
       else
         :edit
       end
@@ -40,7 +42,7 @@ module Admin
         @players = @tournament.players.order(order).includes(:results)
         render :update_ranks
       else
-        # Updating (a) general tournament attributes or (b) tie break rules.
+        # Updating (a) general tournament attributes, (b) tie break rules or (c) tournament reporter.
         @tournament.update_attributes(params[:tournament])
         render params[:tournament][:tie_breaks] ? :update_tie_breaks : :update
       end
