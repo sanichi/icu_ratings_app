@@ -4,7 +4,7 @@ describe "Tournament" do
   describe "editing" do
     before(:each) do
       @user = login_user("reporter")
-      @file = "#{Rails.root}/spec/files/bunratty_masters_2011.txt"
+      @file = "#{Rails.root}/spec/files/bunratty_masters_2011.tab"
     end
 
     it "reporters can edit their own tournaments and players, officers can change reporter" do

@@ -2,10 +2,14 @@
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
+require 'util/hacks'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
+
+# Permit Capybara to recognize ".tab" as a text/plain when file is uploaded.
+Util::Hacks.fix_mime_types
 
 RSpec.configure do |config|
   # == Mock Framework
