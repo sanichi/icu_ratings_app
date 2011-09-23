@@ -122,7 +122,7 @@
 128,2000 Kilkenny - Masters,2000-11-26,34
 129,2000 York Viking Festival - (JR),2000-12-22,10
 130,2000 Ulster Championships - Senior,2000-12-30,16
-131,2001 Birmingham Winter Congress - (SS + GW),2001-01-07,12
+131,2001 Birmingham Winter Congress,2001-01-07,12
 132,2001 L.S.C.A. Championships - Under 12s,2001-01-14,23
 133,2001 L.S.C.A. Championships - Under 16s,2001-01-14,24
 134,2001 L.S.C.A. Championships - Under 14s,2001-01-21,44
@@ -188,27 +188,27 @@
 192,2001 Elm Mount Club Championships - Div.2 Team,2001-07-23,8
 193,2001 Branagan Cup,2001-07-26,79
 194,2001 Dublin Club Championships,2001-08-09,18
-195,2001 British Championships - (SC\, BK\, JK + JMcD),2001-08-10,33
+195,2001 British Championships,2001-08-10,33
 196,2001 Dublin Open Classic,2001-08-26,64
 197,2001 John Alfred v Pat Reynolds,2001-08-26,2
 198,2001 Mind Sports Olympiad - (AF),2001-08-27,11
 199,2001 World Junior Championships - (SC),2001-08-29,14
-202,2001 European Youth Championships - Under 12s - Boys (KSM),2001-09-09,9
-203,2001 European Youth Championships - Under 14s - Boys (KMcP),2001-09-09,10
-204,2001 European Youth Championships - Under 16s - Boys (GW),2001-09-09,10
-205,2001 European Youth Championships - Under 18s - Boys (SS),2001-09-09,10
-206,2001 National Club Championships (Bray/Greystones\, Crumlin\, Cork City + Limerick),2001-09-09,26
+202,2001 European Youth Championships - Under 12s - Boys,2001-09-09,9
+203,2001 European Youth Championships - Under 14s - Boys,2001-09-09,10
+204,2001 European Youth Championships - Under 16s - Boys,2001-09-09,10
+205,2001 European Youth Championships - Under 18s - Boys,2001-09-09,10
+206,2001 National Club Championships,2001-09-09,26
 207,2001 Munster Championships,2001-09-09,25
 208,2001 Elm Mount Club Championships - Section A,2001-09-17,7
 209,2001 Civil Service Challenge,2001-09-19,42
-210,2001 European Club Cup (Bray/Greystones + Dublin),2001-09-29,73
+210,2001 European Club Cup,2001-09-29,73
 211,2001 Henderson Cup,2001-09-30,17
 212,2001 Williamson Shield,2001-09-30,18
 213,2001 Elm Mount Club Championships - Section D,2001-10-01,7
 214,2001 Elm Mount Club Championships - Section C,2001-10-01,6
 215,2001 Elm Mount Club Championships - Section B,2001-10-01,6
 216,2001 Isle of Man - Minor (JH),2001-10-07,6
-217,2001 Isle of Man - Major (GC\, JC\, PC + GW),2001-10-07,17
+217,2001 Isle of Man - Major,2001-10-07,17
 218,2001 Isle of Man - Open (JR),2001-10-07,10
 219,2001 City of Dublin - Junior,2001-10-14,52
 220,2001 City of Dublin - Intermediate,2001-10-14,34
@@ -216,13 +216,13 @@
 222,2001 Limerick Open - Stars Barred,2001-10-29,22
 223,2001 Limerick Open - Open,2001-10-29,46
 224,2001 Braille Championships,2001-10-29,10
-225,2001 World Youth Championships - Under 10s - Boys (JF),2001-11-02,12
-226,2001 World Youth Championships - Under 14s - Girls (SH),2001-11-02,12
-227,2001 World Youth Championships - Under 14s - Boys (AL),2001-11-02,12
-228,2001 World Youth Championships - Under 16s - Girls (HLOR),2001-11-02,12
-229,2001 World Youth Championships - Under 16s - Boys (SJ),2001-11-02,12
-230,2001 European Team Championships - Women (DQ\, ES + GUL),2001-11-15,21
-231,2001 European Team Championships - Men (MQ\, MH\, SB + MOC),2001-11-15,36
+225,2001 World Youth Championships - Under 10s - Boys,2001-11-02,12
+226,2001 World Youth Championships - Under 14s - Girls,2001-11-02,12
+227,2001 World Youth Championships - Under 14s - Boys,2001-11-02,12
+228,2001 World Youth Championships - Under 16s - Girls,2001-11-02,12
+229,2001 World Youth Championships - Under 16s - Boys,2001-11-02,12
+230,2001 European Team Championships - Women,2001-11-15,21
+231,2001 European Team Championships - Men,2001-11-15,36
 232,2001 Ulster Championships - Junior,2001-11-25,11
 233,2001 Ulster Championships - Intermediate,2001-11-25,12
 234,2001 Kilkenny Congress - Challengers,2001-12-02,77
@@ -238,13 +238,13 @@
 244,2002 Gonzaga Classic - Major,2002-02-03,17
 245,2002 Gonzaga Classic - Masters,2002-02-03,9
 246,2002 Charleville Club Championships,2002-02-07,10
-247,2002 Cappelle La Grande Tournament (CD + JR),2002-02-16,20
+247,2002 Cappelle La Grande Tournament,2002-02-16,20
 248,2002 Bunratty Festival - Minor,2002-02-17,113
 249,2002 Bunratty Festival - Major,2002-02-17,87
 250,2002 Bunratty Festival - Challengers,2002-02-17,66
 251,2002 Bunratty Festival - Masters,2002-02-17,43
 252,2002 Dublin v St. Albans,2002-02-23,21
-253,2002 British Braille Championships - Minor (SH),2002-03-03,6
+253,2002 British Braille Championships - Minor,2002-03-03,6
 254,2001-2002 U.C.U. Leagues - Div.2,2002-03-21,90
 255,2001-2002 U.C.U. Leagues - Div.1,2002-03-21,58
 256,2002 Cork City Congress - Minor,2002-03-24,62
@@ -256,7 +256,7 @@
 262,2002 Irish Junior Championships - Under 14s,2002-04-07,51
 263,2002 Irish Junior Championships - Under 19s,2002-04-07,14
 264,2001-2002 M.C.U. Leagues - Div.1,2002-04-10,50
-265,2002 Aventinius Tournament (LH\, KOD\, DP +DS),2002-04-14,4
+265,2002 Aventinius Tournament,2002-04-14,4
 266,2002 North Munster Championships,2002-04-21,21
 267,2001-2002 L.C.U. Leagues - Div.5 [B.A. Cup],2002-04-28,90
 268,2001-2002 L.C.U. Leagues - Div.4 [O'Hanlon Cup],2002-04-28,104
@@ -289,66 +289,66 @@
 295,2002 Belfast Summerfest - Novices,2002-06-09,19
 296,2002 Belfast Summerfest - Challengers,2002-06-09,19
 297,2002 Belfast Summerfest - Open,2002-06-09,10
-298,2002 Dublin Masters (CB\, SB\, JJ\, MOC +JR),2002-06-18,6
+298,2002 Dublin Masters,2002-06-18,6
 299,2002 Irish Championships - Weekender,2002-07-07,34
 300,2002 Irish Championships - Junior,2002-07-12,25
 301,2002 Irish Championships - Intermediate,2002-07-12,22
 302,2002 Irish Championships - Senior,2002-07-14,19
 303,2002 Faber Cup,2002-07-26,18
 304,2002 Glorney Cup,2002-07-26,30
-305,2002 British Championships - Under 16s (MD),2002-08-02,8
+305,2002 British Championships - Under 16s,2002-08-02,8
 306,2002 Lost Boys Tournament (CD\, MOC + JR),2002-08-04,27
-307,2002 British Championships - Under 125 "BCF" (GW),2002-08-09,6
-308,2002 British Championships - Under 175 "BCF" (MD),2002-08-09,6
+307,2002 British Championships - Under 125 "BCF",2002-08-09,6
+308,2002 British Championships - Under 175 "BCF",2002-08-09,6
 309,2002 British Championships - Open (SC),2002-08-09,11
 310,2002 Dublin Classic,2002-08-25,63
 311,2002 Chanac Open (JL),2002-08-31,10
-312,2002 National Club Championships (Bray/Greystones\, Phibsboro\, Fisherwick + R.V.H.),2002-09-15,29
-313,2002 Junior International Triangular Match - Under 12s (SOC\, DM\, SS\, JS\, NK\, SMcC\, MSH + CD),2002-09-15,24
-314,2002 Junior International Triangular Match - Under 14s (JMcM\, RD\, RL\, JV\, EK\, CL\, EA + HLOR),2002-09-15,24
+312,2002 National Club Championships,2002-09-15,29
+313,2002 Junior International Triangular Match - Under 12s,2002-09-15,24
+314,2002 Junior International Triangular Match - Under 14s,2002-09-15,24
 315,2002 C.I.Y.M.S. Challenge,2002-09-18,43
 316,2002 European Club Cup (Crumlin),2002-09-28,42
 317,2002 Munster Championships - Junior,2002-09-29,15
 318,2002 Munster Championships - Senior,2002-09-29,18
 319,2002 Bray/Greystones Club Championships - Minor,2002-10-02,15
-320,2002 Isle of Man - Major (GC\, JC\, PC + NL),2002-10-06,22
-321,2002 Isle of Man - Open (SB\, PC\, CD + AF),2002-10-06,33
+320,2002 Isle of Man - Major,2002-10-06,22
+321,2002 Isle of Man - Open,2002-10-06,33
 322,2002 City of Dublin - Junior,2002-10-06,46
 323,2002 City of Dublin - Intermediate,2002-10-06,37
 324,2002 City of Dublin - Senior,2002-10-06,14
-325,2002 European Youth Championships - Under 10s - Boys (JF),2002-10-08,10
-326,2002 European Youth Championships - Under 14s - Girls (SH),2002-10-08,10
-327,2002 European Youth Championships - Under 14s - Boys (KMcP),2002-10-08,10
-328,2002 European Youth Championships - Under 16s - Girls (HLOR),2002-10-08,9
-329,2002 European Youth Championships - Under 16s - Boys (GW),2002-10-08,9
-330,2002 European Youth Championships - Under 18s - Boys (DM),2002-10-08,9
+325,2002 European Youth Championships - Under 10s - Boys,2002-10-08,10
+326,2002 European Youth Championships - Under 14s - Girls,2002-10-08,10
+327,2002 European Youth Championships - Under 14s - Boys,2002-10-08,10
+328,2002 European Youth Championships - Under 16s - Girls,2002-10-08,9
+329,2002 European Youth Championships - Under 16s - Boys,2002-10-08,9
+330,2002 European Youth Championships - Under 18s - Boys,2002-10-08,9
 331,2002 Limerick Open,2002-10-28,69
 332,2002 Braille Championships,2002-10-28,24
 333,2002 City of Derry Club Championships,2002-10-29,9
-334,2002 Le Touquet Tournament - Open (PC + AF),2002-11-02,18
+334,2002 Le Touquet Tournament - Open,2002-11-02,18
 335,2002 Olympiad - Women (SC\, DQ\, GUL + ES),2002-11-10,46
-336,2002 Olympiad - Men (AB\, BK\, MQ\, MH\, MO + SC),2002-11-10,62
+336,2002 Olympiad - Men,2002-11-10,62
 337,2002 Ulster Championships - Junior,2002-11-24,21
 338,2002 Ulster Championships - Intermediate,2002-11-24,19
 339,2002 Alex Beckett Trophy,2002-11-24,2
-340,2002 World Youth Championships - Under 10s - Girls (CD),2002-11-28,12
-341,2002 World Youth Championships - Under 10s - Boys (OB\, MD\, JF + SMcC),2002-11-28,41
-342,2002 World Youth Championships - Under 12s - Boys (SOC),2002-11-28,11
-343,2002 World Youth Championships - Under 14s - Girls (SH),2002-11-28,12
-344,2002 World Youth Championships - Under 14s - Boys (MD),2002-11-28,12
-345,2002 World Youth Championships - Under 16s - Boys (SB),2002-11-28,12
-346,2002 World Youth Championships - Under 18s - Boys (SJ),2002-11-28,12
+340,2002 World Youth Championships - Under 10s - Girls,2002-11-28,12
+341,2002 World Youth Championships - Under 10s - Boys,2002-11-28,41
+342,2002 World Youth Championships - Under 12s - Boys,2002-11-28,11
+343,2002 World Youth Championships - Under 14s - Girls,2002-11-28,12
+344,2002 World Youth Championships - Under 14s - Boys,2002-11-28,12
+345,2002 World Youth Championships - Under 16s - Boys,2002-11-28,12
+346,2002 World Youth Championships - Under 18s - Boys,2002-11-28,12
 347,2002 Kilkenny Congress - Challengers,2002-12-01,81
 348,2002 Kilkenny Congress - James Mason,2002-12-01,80
 349,2002 Kilkenny Congress - Major,2002-12-01,54
 350,2002 Kilkenny Congress - Masters,2002-12-01,36
 351,2002 Castle Cup,2002-12-03,23
-352,2002 London Junior Championships - Under 14s - Minor (HLOR),2002-12-15,7
-353,2002 World Junior Championships - Boys (SC),2002-12-19,14
-354,2002 North American Open - Under 2200 "USCF" (GUL),2002-12-29,7
+352,2002 London Junior Championships - Under 14s - Minor,2002-12-15,7
+353,2002 World Junior Championships - Boys,2002-12-19,14
+354,2002 North American Open - Under 2200 "USCF",2002-12-29,7
 355,2002 Hastings Jubilee - Minor (NL),2002-12-29,6
-356,2002 London Junior Championships - Under 16s (HLOR),2002-12-30,7
-357,2002 London Junior Championships - Under 18/21s (RLOR),2002-12-30,7
+356,2002 London Junior Championships - Under 16s,2002-12-30,7
+357,2002 London Junior Championships - Under 18/21s,2002-12-30,7
 358,2002 Ulster Championships - Senior,2002-12-30,22
 359,2003 Tucson Open - Reserve (CL),2003-01-12,5
 360,2003 Tucson Open - Open (GUL),2003-01-12,3
@@ -371,8 +371,8 @@
 375,2003 Bunratty Festival - Major,2003-02-23,92
 376,2003 Bunratty Festival - Challengers,2003-02-23,73
 377,2003 Bunratty Festival - Masters,2003-02-23,38
-378,2003 Junior International Challenge Match - Under 12s (OB\, PC\, DM + BQ),2003-03-02,10
-379,2003 Junior International Challenge Match - Under 16s (CF\, EK\, HLOR\, DMcM\, JMcM + JW),2003-03-02,14
+378,2003 Junior International Challenge Match - Under 12s,2003-03-02,10
+379,2003 Junior International Challenge Match - Under 16s,2003-03-02,14
 380,2003 North Ulster Championships,2003-03-04,8
 381,2003 Glenrothes Congress - Minor (SD),2003-03-09,6
 382,2002 Elm Mount Club Championships - E,2003-03-10,8
@@ -413,7 +413,7 @@
 417,2003 Galway Open,2003-05-18,51
 418,2003 Ulster Team Championships,2003-05-18,10
 419,2003 Waterford Open,2003-05-25,38
-420,2003 South West Arizona Championships - Open (GUL),2003-05-25,6
+420,2003 South West Arizona Championships - Open,2003-05-25,6
 421,2003 Drogheda Congress - Veterens,2003-06-02,4
 422,2003 Drogheda Congress - D,2003-06-02,8
 423,2003 Drogheda Congress - C,2003-06-02,6
@@ -423,14 +423,14 @@
 427,2003 Belfast Summerfest - Novices,2003-06-08,11
 428,2003 Belfast Summerfest - Challengers,2003-06-08,14
 429,2003 Belfast Summerfest - Open,2003-06-08,14
-430,2003 U.S. National Open - Under 1800 "USCF" (DQ + GUL),2003-06-15,13
+430,2003 U.S. National Open - Under 1800 "USCF",2003-06-15,13
 431,2003 U.S. National Open - Open (SC),2003-06-15,7
-432,2003 Junior International Triangular Match - Under 12s (JF\, DM\, SOC\, CD\, SMcC\, BQ\, DF + SO),2003-06-22,24
-433,2003 Junior International Triangular Match - Under 14s (CL\, EW\, IL\, DG\, JOD\, JV\, TL + SM),2003-06-22,24
+432,2003 Junior International Triangular Match - Under 12s,2003-06-22,24
+433,2003 Junior International Triangular Match - Under 14s,2003-06-22,24
 434,2003 Rathmines Club Championships - Junior,2003-06-24,8
 435,2003 Rathmines Club Championships - Intermediate,2003-06-24,6
 436,2003 Rathmines Club Championships - Senior,2003-06-24,12
-437,2003 World Junior Championships - Boys (DM),2003-07-03,13
+437,2003 World Junior Championships - Boys,2003-07-03,13
 438,2003 Tom White Cup,2003-07-09,35
 439,2003 Irish Championships - Junior,2003-07-13,31
 440,2003 Irish Championships - Intermediate,2003-07-13,25
@@ -440,17 +440,17 @@
 466,2003 Branagan Cup,2003-07-17,84
 444,2003 Ye Olde Pueblo Open (CL + GUL),2003-07-20,11
 445,2003 Drogheda Club Championships,2003-07-20,14
-446,2003 European Youth Team Championships - Under 18s - Boys (SJ\, KMcP\, KD + SB),2003-07-27,32
-447,2003 British Championships - Under 9s (MD),2003-07-27,8
+446,2003 European Youth Team Championships - Under 18s - Boys,2003-07-27,32
+447,2003 British Championships - Under 9s,2003-07-27,8
 448,2003 Bray/Greystones Club Championships - Minor,2003-07-30,20
 449,2003 Bray/Greystones Club Championships - Senior,2003-07-30,8
-450,2003 Biel International Festival - Master Tournament (MOC),2003-08-01,12
-451,2003 British Championships - Under 10s (OB + SH),2003-08-01,14
-452,2003 British Championships - Under 125 "BCF" (HLOR),2003-08-01,6
+450,2003 Biel International Festival - Master Tournament,2003-08-01,12
+451,2003 British Championships - Under 10s,2003-08-01,14
+452,2003 British Championships - Under 125 "BCF",2003-08-01,6
 453,2003 British Championships - Open (SC),2003-08-01,22
-454,2003 Lancashire Festival - International Tournament (SC),2003-08-09,10
+454,2003 Lancashire Festival - International Tournament,2003-08-09,10
 455,2003 New Pueblo Open (GUL),2003-08-17,5
-456,2003 Berks & Bucks Congress - Reserves "C" (OB),2003-08-25,7
+456,2003 Berks & Bucks Congress - Reserves "C",2003-08-25,7
 457,2003 Elm Mount Club Championships - F,2003-08-31,6
 458,2003 Elm Mount Club Championships - E,2003-08-31,6
 459,2003 Elm Mount Club Championships - D,2003-08-31,6
@@ -467,32 +467,32 @@
 473,2003 Malahide Club Championships,2003-09-30,16
 474,2003 Dublin Club Championships,2003-10-01,14
 475,2003 Isle of Man - Open (JL + KMcP),2003-10-05,19
-476,2003 European Club Cup [Phibsboro (SB\, ROD\, DS)],2003-10-05,17
-477,2003 European Team Championships - Men (BK\, SC\, DMcM + AF),2003-10-20,36
+476,2003 European Club Cup [Phibsboro],2003-10-05,17
+477,2003 European Team Championships - Men,2003-10-20,36
 478,2003 Braille Championships - Junior,2003-10-27,3
 479,2003 Braille Championships - Senior,2003-10-27,6
 480,2003 Limerick Open,2003-10-27,68
-481,2003 World Youth Championships - Under 10s - Boys (MD + SH),2003-11-03,22
-482,2003 World Youth Championships - Under 12s - Boys (OB\, JF + DM),2003-11-03,30
-483,2003 World Youth Championships - Under 14s - Boys (CL + EW),2003-11-03,22
-484,2003 World Youth Championships - Under 16s - Girls (HLOR),2003-11-03,12
-485,2003 World Youth Championships - Under 16s - Boys (MD + KMcP),2003-11-03,22
-486,2003 World Youth Championships - Under 18s - Girls (EA),2003-11-03,11
-487,2003 World Youth Championships - Under 18s - Boys (SJ),2003-11-03,11
+481,2003 World Youth Championships - Under 10s - Boys,2003-11-03,22
+482,2003 World Youth Championships - Under 12s - Boys,2003-11-03,30
+483,2003 World Youth Championships - Under 14s - Boys,2003-11-03,22
+484,2003 World Youth Championships - Under 16s - Girls,2003-11-03,12
+485,2003 World Youth Championships - Under 16s - Boys,2003-11-03,22
+486,2003 World Youth Championships - Under 18s - Girls,2003-11-03,11
+487,2003 World Youth Championships - Under 18s - Boys,2003-11-03,11
 488,2003 Ulster Championships - Junior,2003-11-23,14
 489,2003 Ulster Championships - Intermediate,2003-11-23,16
-490,2003 European Community Youth Championships - Under 12s - Girls (SC),2003-11-29,7
-491,2003 European Community Youth Championships - Under 12s - Boys (SOC),2003-11-29,7
-492,2003 European Community Youth Championships - Under 14s - Girls (EF),2003-11-29,7
-493,2003 European Community Youth Championships - Under 14s - Boys (JOD),2003-11-29,8
+490,2003 European Community Youth Championships - Under 12s - Girls,2003-11-29,7
+491,2003 European Community Youth Championships - Under 12s - Boys,2003-11-29,7
+492,2003 European Community Youth Championships - Under 14s - Girls,2003-11-29,7
+493,2003 European Community Youth Championships - Under 14s - Boys,2003-11-29,8
 494,2003 Kilkenny Congress - Challengers,2003-11-30,97
 495,2003 Kilkenny Congress - James Mason,2003-11-30,70
 496,2003 Kilkenny Congress - Major,2003-11-30,43
 497,2003 Kilkenny Congress - Masters,2003-11-30,28
 498,2003 U.C.C. Challengers Trophy,2003-12-14,17
 499,2003 U.C.C. Perpetual Cup,2003-12-14,32
-500,2003 London Junior Championships - Under 14s - Minor (OB),2003-12-14,6
-501,2003 London Junior Championships - Under 12s - Major (OB),2003-12-30,10
+500,2003 London Junior Championships - Under 14s - Minor,2003-12-14,6
+501,2003 London Junior Championships - Under 12s - Major,2003-12-30,10
 502,2003 Ulster Championships - Senior,2003-12-30,14
 503,2004 Munster Junior Championships - Under 10s,2004-01-18,30
 504,2004 Munster Junior Championships - Under 12s,2004-01-18,58
@@ -512,8 +512,8 @@
 518,2004 Gonzaga Classic - Masters,2004-02-08,8
 519,2004 Youth Interprovincials - Under 16s,2004-02-15,25
 520,2004 Youth Interprovincials - Under 19s,2004-02-15,18
-521,2004 Aosta Tournament - Open (SB\, TB + MOC),2004-02-15,29
-522,2004 U.S. Ameteur Team Championships - East (DQ),2004-02-16,7
+521,2004 Aosta Tournament - Open,2004-02-15,29
+522,2004 U.S. Ameteur Team Championships - East,2004-02-16,7
 523,2004 Bunratty Festival - Minor,2004-02-22,116
 524,2004 Bunratty Festival - Major,2004-02-22,86
 525,2004 Bunratty Festival - Challengers,2004-02-22,59
@@ -539,16 +539,16 @@
 545,2004 Limerick Club Championships - Junior,2004-04-20,20
 546,2004 Limerick Club Championships - Round Robin,2004-04-20,9
 547,2003-2004 Galway Winter League,2004-04-22,20
-548,2004 All-Ireland Colleges Championships - Final - Under 14s (Gonzaga\, Methodist College\, St. Joseph's + Straffan),2004-04-24,20
-549,2004 All-Ireland Colleges Championships - Final - Under 16s (Gonzaga\, St. Benildus\, Sullivan Upper + Templeogue),2004-04-24,25
-550,2004 All-Ireland Colleges Championships - Final - Under 19s (Gonzaga\, Methodist College + St. Benildus),2004-04-24,23
+548,2004 All-Ireland Colleges Championships - Final - Under 14s,2004-04-24,20
+549,2004 All-Ireland Colleges Championships - Final - Under 16s,2004-04-24,25
+550,2004 All-Ireland Colleges Championships - Final - Under 19s,2004-04-24,23
 551,2003-2004 M.C.U. Leagues - Div.3,2004-04-25,51
 552,2003-2004 M.C.U. Leagues - Div.2,2004-04-25,43
 553,2003-2004 M.C.U. Leagues - Div.1,2004-04-25,58
-554,2004 Junior International Challenge Match - Under 12s (SO\, OB\, DM\, ER\, AK + SOC),2004-04-25,17
-555,2004 Junior International Challenge Match - Under 14s (RR\, SM\, KSM\, DG\, JD + LN),2004-04-25,19
-556,2004 Junior International Challenge Match - Under 16s (KMcP\, EW\, RD\, HLOR\, EA\, KOF + POF),2004-04-25,17
-557,2004 National Club Championships (Dublin\, Fisherwick\, Phibsboro\, Rathmines/Crumlin),2004-04-25,31
+554,2004 Junior International Challenge Match - Under 12s,2004-04-25,17
+555,2004 Junior International Challenge Match - Under 14s,2004-04-25,19
+556,2004 Junior International Challenge Match - Under 16s,2004-04-25,17
+557,2004 National Club Championships,2004-04-25,31
 558,2004 Malahide Millennium Tournament - Challengers,2004-05-03,38
 559,2004 Malahide Millennium Tournament - Major,2004-05-03,29
 560,2004 Limerick Club Championships - Senior,2004-05-12,33
@@ -559,7 +559,7 @@
 565,2003-2004 L.C.U. Leagues - Div.1 [Armstrong Cup],2004-05-15,162
 606,2003-2004 L.C.U. Leagues - Div.6 [Bodley Cup],2004-05-15,22
 607,2003-2004 L.C.U. Leagues - Div.5 [B.E.A. Cup],2004-05-15,82
-566,2004 Ulster Team Championships - Final (Clifton House v Fisherwick),2004-05-16,10
+566,2004 Ulster Team Championships - Final,2004-05-16,10
 567,2004 Drogheda Club Championships,2004-05-20,14
 568,2004 4NCL (SC),2004-05-23,3
 569,2004 East Coast Championships,2004-05-27,30
@@ -584,21 +584,21 @@
 588,2004 Faber Cup (CD\, EA + DG),2004-07-30,18
 589,2004 Glorney Cup (JMcM\, DF\, EW\, GN + DG),2004-07-30,30
 590,2004 Politiken Cup (MD),2004-07-31,11
-591,2004 European Youth Championships - Under 10s - Boys (AM),2004-08-07,10
-592,2004 European Youth Championships - Under 12s - Girls (PM),2004-08-07,10
-593,2004 European Youth Championships - Under 12s - Boys (ER),2004-08-07,10
-594,2004 European Youth Championships - Under 16s - Boys (KMcP),2004-08-07,10
-595,2004 European Youth Championships - Under 18s - Boys (SJ),2004-08-07,10
-596,2004 British Championships - Under 10s (MD),2004-08-13,8
+591,2004 European Youth Championships - Under 10s - Boys,2004-08-07,10
+592,2004 European Youth Championships - Under 12s - Girls,2004-08-07,10
+593,2004 European Youth Championships - Under 12s - Boys,2004-08-07,10
+594,2004 European Youth Championships - Under 16s - Boys,2004-08-07,10
+595,2004 European Youth Championships - Under 18s - Boys,2004-08-07,10
+596,2004 British Championships - Under 10s,2004-08-13,8
 597,2004 Lucan Club Championships,2004-08-24,13
-598,2004 Sacramento Congress - Under 1800 (JL),2004-08-29,5
+598,2004 Sacramento Congress - Under 1800,2004-08-29,5
 599,2004 Elm Mount Club Championships - Section D,2004-08-30,8
 600,2004 Elm Mount Club Championships - Section C,2004-08-30,8
 601,2004 Elm Mount Club Championships - Section B,2004-08-30,7
 602,2004 Elm Mount Club Championships - Section A,2004-08-30,9
-603,2004 European Union Youth Championships - Under 10s (AOD),2004-08-31,10
-604,2004 European Union Youth Championships - Under 14s (SOC),2004-08-31,9
-605,2004 European Union Youth Championships - Under 16s (KMcP),2004-08-31,10
+603,2004 European Union Youth Championships - Under 10s,2004-08-31,10
+604,2004 European Union Youth Championships - Under 14s,2004-08-31,9
+605,2004 European Union Youth Championships - Under 16s,2004-08-31,10
 608,2004 Sants Tournament - Group B (NW),2004-09-05,11
 609,2004 Sants Tournament - Group A (DS),2004-09-05,10
 610,2004 Junior International Match [v Scotland + Wales] - Under 12s,2004-09-05,30
@@ -618,15 +618,15 @@
 624,2004 Isle of Man Tournament - Open (AF),2004-10-03,10
 625,2004 Essent Tournament - Open (SB + MOC),2004-10-23,18
 626,2004 Limerick Open,2004-10-25,46
-627,2004 Olympiad - Women (SC\, GUL\, DQ + HLOR),2004-10-29,46
-628,2004 Olympiad - Men (AB\, BK\, MQ\, SC\, GW + JR),2004-10-29,62
-629,2004 Calvia Amateur Tournament - Group C (EP),2004-10-29,5
-630,2004 Calvia Amateur Tournament - Group B (PW),2004-10-29,10
-631,2004 World Youth Championships - Under 10s - Boys (AM),2004-11-13,12
-632,2004 World Youth Championships - Under 12s - Girls (PM),2004-11-13,11
-633,2004 World Youth Championships - Under 12s - Boys (OB\, JF\, SH +SO),2004-11-13,34
-634,2004 World Youth Championships - Under 14s - Boys (DG\, SM +DM),2004-11-13,29
-635,2004 World Youth Championships - Under 16s - Boys (MD + EW),2004-11-13,24
+627,2004 Olympiad - Women,2004-10-29,46
+628,2004 Olympiad - Men,2004-10-29,62
+629,2004 Calvia Amateur Tournament - Group C,2004-10-29,5
+630,2004 Calvia Amateur Tournament - Group B,2004-10-29,10
+631,2004 World Youth Championships - Under 10s - Boys,2004-11-13,12
+632,2004 World Youth Championships - Under 12s - Girls,2004-11-13,11
+633,2004 World Youth Championships - Under 12s - Boys,2004-11-13,34
+634,2004 World Youth Championships - Under 14s - Boys,2004-11-13,29
+635,2004 World Youth Championships - Under 16s - Boys,2004-11-13,24
 636,2004 Kilkenny Congress - Challengers,2004-11-28,77
 637,2004 Kilkenny Congress - James Mason,2004-11-28,72
 638,2004 Kilkenny Congress - Major,2004-11-28,52
@@ -659,9 +659,9 @@
 665,2005 Bunratty Festival - Major,2005-02-20,85
 666,2005 Bunratty Festival - Challengers,2005-02-20,73
 667,2005 Bunratty Festival - Masters,2005-02-20,34
-668,2005 Junior International Match [v Wales] - Under 12s (AM\, MD\, AW +RW),2005-02-20,8
-669,2005 Junior International Match [v Wales] - Under 14s (SO\, OB\, RS + PM),2005-02-20,8
-670,2005 Junior International Match [v Wales] - Under 16s (HLOR\, DF\, GR + TL),2005-02-20,8
+668,2005 Junior International Match [v Wales] - Under 12s,2005-02-20,8
+669,2005 Junior International Match [v Wales] - Under 14s,2005-02-20,8
+670,2005 Junior International Match [v Wales] - Under 16s,2005-02-20,8
 671,2005 Youth Interprovincials - Under 16s,2005-03-05,13
 672,2005 Youth Interprovincials - Under 19s,2005-03-05,20
 673,2005 City of Belfast Championships - Henderson Cup,2005-03-13,17
@@ -681,7 +681,7 @@
 687,2005 Cork Congress - Masters,2005-04-03,91
 688,2005 North Munster Championships - Under 1200,2005-04-17,19
 689,2005 North Munster Championships - Open,2005-04-17,25
-690,2005 Coventry International Tournament (PW),2005-04-17,10
+690,2005 Coventry International Tournament,2005-04-17,10
 691,2005 Limerick Club Championships - Junior,2005-04-20,23
 692,2005 Limerick Club Championships - Senior,2005-04-20,15
 693,2004-2005 L.C.U. Leagues - Div.6 [Bodley Cup],2005-04-24,65
@@ -696,7 +696,7 @@
 702,2004-2005 M.C.U. Leagues - Div.3,2005-05-15,40
 703,2004-2005 M.C.U. Leagues - Div.2,2005-05-15,46
 704,2004-2005 M.C.U. Leagues - Div.1,2005-05-15,53
-705,2005 HB Global Challenge - Under 1800 (DQ),2005-05-22,10
+705,2005 HB Global Challenge - Under 1800,2005-05-22,10
 706,2004-2005 4 NCL - Div.3 (HLOR + PW),2005-05-30,19
 707,2005 Cork Club Championships - Junior,2005-05-31,12
 708,2005 Cork Club Championships - Senior,2005-05-31,38
@@ -712,41 +712,41 @@
 718,2005 Drogheda Club Championships - Div.2,2005-06-07,8
 719,2005 Belfast Summerfest - Challengers,2005-06-12,20
 720,2005 Belfast Summerfest - Open,2005-06-12,10
-721,2005 National Club Championships (Ennis\, Galway\, Phibsboro + Rathmines),2005-06-12,27
+721,2005 National Club Championships,2005-06-12,27
 722,2005 New South Wales Open (PC),2005-06-13,7
 723,2005 Gold Coast Open (PC),2005-06-19,8
 724,2005 World Open - Under 1800 (DQ),2005-07-04,8
-725,2005 South Wales International Tournament (PW),2005-07-14,10
+725,2005 South Wales International Tournament,2005-07-14,10
 726,2005 Irish Championships - Junior,2005-07-15,34
 727,2005 Irish Championships - Intermediate,2005-07-15,20
 728,2005 Irish Championships - Senior,2005-07-17,20
 729,2005 Irish Championships - Open,2005-07-17,41
 730,2005 Queensland Championships (PC),2005-07-24,8
 731,2005 Branagan Cup,2005-07-26,40
-732,2005 World Youth Championships - Under 10s - Boys (RW),2005-07-28,12
-733,2005 World Youth Championships - Under 12s - Boys (SH),2005-07-28,12
-734,2005 World Youth Championships - Under 14s - Girls (CD),2005-07-28,12
-735,2005 World Youth Championships - Under 14s - Boys (LN),2005-07-28,12
-736,2005 World Youth Championships - Under 16s - Boys (DG + SM),2005-07-28,23
-737,2005 World Youth Championships - Under 18s - Girls (EA),2005-07-28,12
-738,2005 World Youth Championships - Under 18s - Boys (AL),2005-07-28,12
+732,2005 World Youth Championships - Under 10s - Boys,2005-07-28,12
+733,2005 World Youth Championships - Under 12s - Boys,2005-07-28,12
+734,2005 World Youth Championships - Under 14s - Girls,2005-07-28,12
+735,2005 World Youth Championships - Under 14s - Boys,2005-07-28,12
+736,2005 World Youth Championships - Under 16s - Boys,2005-07-28,23
+737,2005 World Youth Championships - Under 18s - Girls,2005-07-28,12
+738,2005 World Youth Championships - Under 18s - Boys,2005-07-28,12
 739,2005 Match (DP v SS),2005-07-29,2
 740,2005 Faber Cup (SC\, AW + SC),2005-07-29,17
 741,2005 Glorney Cup (DF\, DM\, CL\, RD + SO),2005-07-29,30
 742,2005 Killane Shield,2005-07-30,53
 743,2005 Sitges Open (JR),2005-07-30,10
-744,2005 European Team Championships (AB\, BK\, SC + MO),2005-08-08,40
+744,2005 European Team Championships,2005-08-08,40
 745,2005 Badalona Open (GMacE + JR),2005-08-09,20
 746,2005 US Open (DQ),2005-08-14,10
 747,2005 Irish Championships - Veterens,2005-08-21,3
-748,2005 Queensland Adults Only Tournament (PC),2005-08-21,6
+748,2005 Queensland Adults Only Tournament,2005-08-21,6
 749,2005 Phibsboro Club Championships - Div.5,2005-08-25,6
 750,2005 Phibsboro Club Championships - Div.4,2005-08-25,8
 751,2005 Phibsboro Club Championships - Junior,2005-08-25,8
 752,2005 Phibsboro Club Championships - Intermediate,2005-08-25,8
-753,2005 EU Youth Championships - Under 10s (RW),2005-08-26,9
-754,2005 EU Youth Championships - Under 12s (SM),2005-08-26,9
-755,2005 EU Youth Championships - Under 14s (OB + JF),2005-08-26,16
+753,2005 EU Youth Championships - Under 10s,2005-08-26,9
+754,2005 EU Youth Championships - Under 12s,2005-08-26,9
+755,2005 EU Youth Championships - Under 14s,2005-08-26,16
 756,2005 City of Dublin Championships - Junior,2005-08-28,18
 757,2005 City of Dublin Championships - Challengers,2005-08-28,35
 758,2005 City of Dublin Championships - Major,2005-08-28,35
@@ -1137,8 +1137,8 @@
 1146,John Robinson U12 Cup 2008,2008-07-23,36
 1147,Bernadette Stokes U14 Cup 2008,2008-07-23,36
 1129,British Championships\, 2008,2008-07-28,14
-1126,First Saturday Tournament\, Budapest\, August 2008 (part 1),2008-08-02,6
-1127,First Saturday Tournament\, Budapest\, August 2008 (part 2),2008-08-02,6
+1126,First Saturday Tournament\, Budapest\, August 2008,2008-08-02,6
+1127,First Saturday Tournament\, Budapest\, August 2008,2008-08-02,6
 1155,103rd Grand Tournoi International\, Paris 2008,2008-08-04,10
 1132,European Youth Championships\, U10\, 2008,2008-08-05,10
 1141,Jessie Gilbert International\, Coulsdon 2008,2008-08-16,10
