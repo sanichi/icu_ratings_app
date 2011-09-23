@@ -4,7 +4,7 @@
     %th Player
     %th Problem
     %th IP Address
-    %th Time
+    %th Time Ago
   - if @logins.count == 0
     %tr
       %td{:colspan => 5, :class => "centered"} No matches
@@ -19,7 +19,7 @@
           %td{:class => :error} None
         %td= login.problem
         %td= login.ip
-        %td= login.created_at
+        %td= time_ago_in_words login.created_at, true
   - if @logins.multi_page
     %tr
       %th{:colspan => 5, :class => "centered"}= pagination_links(@logins)

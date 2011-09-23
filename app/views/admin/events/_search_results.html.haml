@@ -1,7 +1,7 @@
 %table
   %tr
     %th Event
-    %th Time
+    %th Time Ago
     %th Secs
     %th OK
     %th{:class => "floater"}
@@ -12,7 +12,7 @@
     - @events.matches.each do |event|
       %tr
         %td= event.name
-        %td{:class => "centered"}= event.created_at
+        %td= time_ago_in_words event.created_at, true        
         %td{:class => "centered"}= event.time
         %td{:class => "centered"}
           = image_tag "icons/#{event.success ? 'tick' : 'exclamation'}.png", :alt => event.success ? "OK" : "problem"
