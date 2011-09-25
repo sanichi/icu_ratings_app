@@ -25,7 +25,9 @@ class NewsItemsController < ApplicationController
   end
 
   def update
-    if @news_item.update_attributes(params[:news_item])
+    if params[:commit] == "Cancel"
+      redirect_to @news_item
+    elsif @news_item.update_attributes(params[:news_item])
       redirect_to @news_item, :notice => "News was successfully updated."
     else
       render :action => "edit"

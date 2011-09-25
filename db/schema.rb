@@ -11,7 +11,16 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110702132055) do
+ActiveRecord::Schema.define(:version => 20110925144030) do
+
+  create_table "downloads", :force => true do |t|
+    t.string   "comment"
+    t.string   "file_name"
+    t.string   "content_type"
+    t.binary   "data",         :limit => 16777215
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "events", :force => true do |t|
     t.string   "name"

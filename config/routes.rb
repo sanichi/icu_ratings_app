@@ -12,6 +12,7 @@ Ratings::Application.routes.draw do
   resources :icu_players,  :only => [:index, :show]
   resources :fide_players, :only => [:index, :show]
   resources :news_items
+  resources :downloads
 
   namespace "admin" do
     resources :events,               :only => [:index, :show, :destroy]

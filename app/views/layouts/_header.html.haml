@@ -29,14 +29,16 @@
       %ul
         %li= link_to "ICU Players", icu_players_path
         %li= link_to "FIDE Players", fide_players_path
-  - if can? :read, Event
+  - if can? :read, Download
     %li
-      = link_to "Admin", admin_events_path
+      = link_to "Admin", downloads_path
       %ul
+        %li= link_to "Downloads", downloads_path
         - if can? :read, User
           %li= link_to "Users", admin_users_path
           %li= link_to "Logins", admin_logins_path
-        %li= link_to "Events", admin_events_path
+        - if can? :read, Event
+          %li= link_to "Events", admin_events_path
   %li= link_to "Help", "#", :id => "help-link"
   %li
     - if current_user

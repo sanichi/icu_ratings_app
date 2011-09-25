@@ -22,6 +22,7 @@ describe "authorized links after logging in" do
         "/fide_players"               => %w{admin officer reporter},
         "/icu_players"                => %w{admin officer reporter},
         "/news_items"                 => %w{admin officer reporter member},
+        "/downloads"                  => %w{admin officer reporter},
         "/tournaments"                => %w{admin officer reporter member},
       }.each do |target, authorized|
         if authorized.include?(role)

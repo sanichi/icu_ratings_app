@@ -14,7 +14,7 @@ class Ability
     can [:read, :create], Upload
     can :modify, Upload, :user_id => user.id
 
-    can :read, [Tournament, Player, Result]
+    can :read, [Download, Player, Result, Tournament]
     can :modify, Tournament, :user_id => user.id
     can :modify, Player, :tournament => { :user_id => user.id }
     can :modify, Result, :player => { :tournament => { :user_id => user.id } }
@@ -22,12 +22,12 @@ class Ability
     can :create, NewsItem
     can :modify, NewsItem, :user_id => user.id
 
-    can :read, [IcuPlayer, FidePlayer, OldTournament, OldRatingHistory]
+    can :read, [FidePlayer, IcuPlayer, OldRatingHistory, OldTournament]
 
     return unless user.role? :officer
 
     can :read, Event
-    can :manage, [Upload, Tournament, NewsItem]
+    can :manage, [Download, NewsItem, Tournament, Upload]
 
     return unless user.role? :admin
 

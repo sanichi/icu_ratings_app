@@ -1,5 +1,6 @@
 class Upload < ActiveRecord::Base
   extend Util::Pagination
+  include Util::Model
 
   FORMATS = [['Swiss Perfect', 'SwissPerfect'], ['Swiss Perfect Export', 'SPExport'], ['FIDE-Krause', 'Krause'], ['ICU-CSV', 'ForeignCSV']]
   DEFAULT_FORMAT = 'SwissPerfect'
@@ -18,7 +19,7 @@ class Upload < ActiveRecord::Base
     return if file.blank?
     self.size = file.size
     return if size == 0
-    self.name = file.original_filename
+    self.name = base_part_of(file.original_filename)
     self.content_type = file.content_type
     self.file_type = %x{file -b #{file.tempfile.path}}.chomp
 

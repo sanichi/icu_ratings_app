@@ -66,7 +66,14 @@ describe "NewsItem" do
       page.click_button "Create"
       NewsItem.where(:headline => headline, :story => story).should have(1).item
       page.click_link "Edit"
+      headline = "Changed Headline"
+      page.fill_in "Headline", :with => headline
+      page.click_button "Update"
+      NewsItem.where(:headline => headline, :story => story).should have(1).item
+      page.click_link "Edit"      
+      page.fill_in "Headline", :with => "Rubbish"
       page.click_button "Cancel"
+      NewsItem.where(:headline => headline, :story => story).should have(1).item
       page.click_link "Delete"
       NewsItem.where(:headline => headline, :story => story).should have(0).items
     end
