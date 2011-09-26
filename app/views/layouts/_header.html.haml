@@ -33,7 +33,11 @@
     %li
       = link_to "Admin", downloads_path
       %ul
-        %li= link_to "Downloads", downloads_path
+        %li
+          = link_to "Downloads", downloads_path
+          - if can? :create, Download
+            %ul
+              %li= link_to "New", new_download_path
         - if can? :read, User
           %li= link_to "Users", admin_users_path
           %li= link_to "Logins", admin_logins_path
