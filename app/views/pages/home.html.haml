@@ -25,12 +25,14 @@
       on the main site.
     %dt How can I submit a tournament for rating?
     %dd
-      First, ask the
-      = mail_to_icu
-      to authorize your account for submissions. Then
-      - unless current_user
-        log in and
-      click Tournament &rarr; New.
+      - if !current_user
+        First log in, then click Help again.
+      - elsif can? :create, Upload
+        Click Tournament &rarr; New.
+      - else
+        Please ask the
+        = mail_to_icu
+        to authorize your account for submissions.
     - unless current_user
       %dt How can I log in?
       %dd
