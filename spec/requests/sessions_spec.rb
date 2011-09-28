@@ -66,4 +66,32 @@ describe "Sessions" do
       @user.logins.where(:problem => "none", :role => "reporter").count.should == 1
     end
   end
+
+  describe "switching user" do
+    it "from a member, reporter or officer it logs an event" do
+      login_user("member")
+      Login.count.should == 1
+      login_user("reporter")
+      Login.count.should == 2
+      login_user("officer")
+      Login.count.should == 3
+      login_user("admin")
+      Login.count.should == 4
+    end
+
+    it "from an admin, it does not log an event" do
+      login_user("admin")
+      Login.count.should == 1
+      login_user("member")
+      Login.count.should == 1
+      login_user("admin")
+      Login.count.should == 2
+      login_user("reporter")
+      Login.count.should == 2
+      login_user("admin")
+      Login.count.should == 3
+      login_user("reporter")
+      Login.count.should == 3
+    end
+  end
 end

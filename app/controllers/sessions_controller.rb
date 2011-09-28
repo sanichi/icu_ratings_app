@@ -4,7 +4,7 @@ class SessionsController < ApplicationController
 
   def create
     begin
-      user = User.authenticate!(params[:email], params[:password], request.ip)
+      user = User.authenticate!(params, request.ip, can?(:manage, User))
       session[:user_id] = user.id
       redirect_to root_url, :notice => "Logged in as #{user.name(false)}"
     rescue => e

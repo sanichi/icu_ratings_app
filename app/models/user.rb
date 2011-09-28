@@ -39,12 +39,12 @@ class User < ActiveRecord::Base
     users
   end
 
-  def self.authenticate!(email, password, ip)
-    user = find_by_email(email)
+  def self.authenticate!(params, ip, switch)
+    user = find_by_email(params[:email])
     raise "Invalid email or password" unless user
-    user.login_event(ip, "password") unless user.password == password
-    user.login_event(ip, "expiry") if user.expiry.past?
-    user.login_event(ip, "none")
+    user.login_event(ip, switch, "password") unless user.password == params[:password]
+    user.login_event(ip, switch, "expiry") if user.expiry.past?
+    user.login_event(ip, switch, "none")
     user
   end
 
@@ -53,8 +53,8 @@ class User < ActiveRecord::Base
     ROLES.index(base_role.to_s) <= ROLES.index(role)  # Needs ROLES in order lowest to highest!
   end
 
-  def login_event(ip, problem)
-    logins.create(:ip => ip, :problem => problem, :role => role)
+  def login_event(ip, switch, problem)
+    logins.create(:ip => ip, :problem => problem, :role => role) unless switch
     raise "Sorry, your ICU membership expired on #{expiry}" if problem == "expiry"
     raise "Invalid email or password" if problem == "password"
   end
