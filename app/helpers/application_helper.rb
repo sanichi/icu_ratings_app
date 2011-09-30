@@ -100,7 +100,7 @@ module ApplicationHelper
   
   # Returns a plain link to the main ICU site.
   def link_to_icu(label, path="")
-    link_to label, "http://www.icu.ie/#{path}", :target => "_icu_ie"
+    link_to label, "http://www.icu.ie/#{path}", :target => "_icu_ie", :class => "external"
   end
 
   # Returns an ICU email link.
