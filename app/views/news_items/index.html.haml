@@ -7,3 +7,21 @@
 
 #news_results.turbaned
   = render "search_results"
+
+- if can? :create, NewsItem
+  #help
+    %dl
+      %dt Can I create news items?
+      %dd
+        Yes. Hover your mouse over the
+        %em News
+        menu item under
+        %em Home
+        and then click the
+        = link_to "New", new_news_item_path
+        button that appears.
+      %dt Can I edit or delete a news item?
+      %dd
+        Yes, but only if you own it (normally this means if you created it).
+        Just click the news item to view it and if you are able to edit or
+        delete it there will be appropriate buttons just below the article.

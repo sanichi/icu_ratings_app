@@ -18,7 +18,9 @@ class DownloadsController < ApplicationController
   end
 
   def create
-    if @download.save
+    if params[:commit] == "Cancel"
+      redirect_to downloads_path
+    elsif @download.save
       redirect_to downloads_path, :notice => "Download was successfully created."
     else
       render :action => "new"

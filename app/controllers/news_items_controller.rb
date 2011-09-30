@@ -8,6 +8,10 @@ class NewsItemsController < ApplicationController
   end
 
   def show
+    respond_to do |format|
+      format.html
+      format.text { render :text => @news_item.story }
+    end
   end
 
   def new
@@ -17,7 +21,9 @@ class NewsItemsController < ApplicationController
   end
 
   def create
-    if @news_item.save
+    if params[:commit] == "Cancel"
+      redirect_to news_items_path
+    elsif @news_item.save
       redirect_to @news_item, :notice => "News was successfully created."
     else
       render :action => "new"

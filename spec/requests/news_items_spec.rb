@@ -19,6 +19,7 @@ describe "NewsItem" do
       page.should have_selector("span.notice", :text => /created/i)
       page.should have_selector("span", :text => headline)
       page.should have_selector("p", :text => story)
+      page.should have_link("Markdown")
       NewsItem.where(:headline => headline, :story => story).should have(1).item
       page.click_link "Edit"
       page.should have_selector("head title", :text => "Update News Item")
@@ -35,6 +36,7 @@ describe "NewsItem" do
 
     it "can edit and delete other's news items" do
       visit "/news_items/#{@news.id}/edit"
+      page.should have_link("Markdown")
       headline, story = "Latest News", "Latest Story"
       page.fill_in "Headline", :with => headline
       page.fill_in "Story", :with => story
@@ -54,6 +56,7 @@ describe "NewsItem" do
     it "cannot edit other's news items" do
       visit "/news_items/#{@news.id}"
       page.should have_no_link "Edit"
+      page.should have_link("Markdown")
       visit "/news_items/#{@news.id}/edit"
       page.should have_selector("span.alert", :text => /authoriz/i)
     end
@@ -64,6 +67,7 @@ describe "NewsItem" do
       page.fill_in "Headline", :with => headline
       page.fill_in "Story", :with => story
       page.click_button "Create"
+      page.should have_link("Markdown")
       NewsItem.where(:headline => headline, :story => story).should have(1).item
       page.click_link "Edit"
       headline = "Changed Headline"
@@ -93,6 +97,13 @@ describe "NewsItem" do
       visit "/news_items/#{@news.last.id}/edit"
       page.should have_selector("span.alert", :text => /authoriz/i)
     end
+
+    it "do not have a link to see Markdown" do
+      visit "/news_items/#{@news.first.id}"
+      page.should have_no_link("Markdown")
+      visit "/news_items/#{@news.last.id}"
+      page.should have_no_link("Markdown")
+    end
   end
 
   describe "anyone" do
@@ -109,6 +120,7 @@ describe "NewsItem" do
       page.should have_selector("span", :text => @news.first.headline)
       page.should have_no_link "Edit"
       page.should have_no_link "Delete"
+      page.should have_no_link "Markdown"
     end
 
     it "cannot manage news" do
