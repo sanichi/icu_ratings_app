@@ -131,12 +131,17 @@ class Player < ActiveRecord::Base
         match = false
         errors.push "ICU name mismatch: #{icu_player.name}"
       end
-      %w(dob fed gender title).each do |attr|
-        a = icu_player.send(attr).presence || next
-        b = self.send(attr).presence || next
-        unless a == b
-          match = false unless attr == "title"  # title may change over time, so we just warn about it
-          errors.push("ICU #{attr} mismatch: #{a}")
+      if icu_player.master_id
+        match = false
+        errors.push("Match with duplicate ICU player")
+      else
+        %w(dob fed gender title).each do |attr|
+          a = icu_player.send(attr).presence || next
+          b = self.send(attr).presence || next
+          unless a == b
+            match = false unless attr == "title"  # title may change over time, so we just warn about it
+            errors.push("ICU #{attr} mismatch: #{a}")
+          end
         end
       end
     else

@@ -3,9 +3,9 @@ class IcuPlayersController < ApplicationController
   authorize_resource
 
   def index
-    if params[:player_id].to_i > 0
-      @player = Player.find(params[:player_id])
-      [:last_name, :first_name].each { |name| params[name] ||= @player.send(name) } if @player
+    if params[:player_id].to_i > 0 && @player = Player.find(params[:player_id])
+      [:last_name, :first_name].each { |name| params[name] ||= @player.send(name) }
+      params[:include_duplicates] = true if @player.icu_player && @player.icu_player.master_id
     end
     @icu_players = IcuPlayer.search(params, icu_players_path)
     render params[:results] ? :results : :search if request.xhr?

@@ -35,7 +35,7 @@
     %tr
       %th
         = label_tag :include_deceased, "include deceased"
-        = check_box_tag :include_deceased
+        = check_box_tag :include_deceased, "1", params[:include_desceased]
       %th
         = label_tag :include_duplicates, "include duplicates"
-        = check_box_tag :include_duplicates
+        = check_box_tag :include_duplicates, "1", params[:include_duplicates]
