@@ -59,7 +59,6 @@ describe "Upload" do
 
     describe "officers" do
       before(:each) do
-        IcuPlayer.all.each { |p| p.delete } # work around to clear players and avoid strange duplicate ID problem at 2nd login_user below
         @user = login_user("officer")
         @file = "#{Rails.root}/spec/files/invalid.txt"
       end

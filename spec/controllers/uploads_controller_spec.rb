@@ -2,6 +2,15 @@
 require 'spec_helper'
 
 describe Admin::UploadsController do
+  def sample_players
+    IcuPlayer.all.each { |p| p.delete }
+    @ryan   = Factory(:icu_player, :id => 6897,  :last_name => "Griffiths", :first_name => "Ryan-Rhys")
+    @jamie  = Factory(:icu_player, :id => 5226,  :last_name => "Flynn",     :first_name => "Jamie")
+    @leon   = Factory(:icu_player, :id => 6409,  :last_name => "Hulleman",  :first_name => "Leon")
+    @thomas = Factory(:icu_player, :id => 10914, :last_name => "Dunne",     :first_name => "Thomas")
+    @peter  = Factory(:icu_player, :id => 159,   :last_name => "Cafolla",   :first_name => "Peter")
+    @tony   = Factory(:icu_player, :id => 456,   :last_name => "Fox",       :first_name => "Tony")
+  end
 
   describe "test_upload utility" do
     it "should create uploaded files for testing" do
@@ -17,8 +26,6 @@ describe Admin::UploadsController do
     end
 
     describe "valid SwissPerfect file" do
-      fixtures :icu_players
-
       before(:each) do
         @params =
         {
@@ -27,6 +34,7 @@ describe Admin::UploadsController do
           :start  => "2010-04-11",
           :feds   => "",
         }
+        sample_players
       end
 
       it "should be processed correctly" do
@@ -36,8 +44,10 @@ describe Admin::UploadsController do
         Upload.count.should == 1
         Tournament.count.should == 1
         Player.where(:status => "ok").count.should == 4
-        %w{thomas jamie ryan leon}.each { |n| icu_players(n).players.size.should == 1 }
-
+        @thomas.players.size.should == 1
+        @ryan.players.size.should == 1
+        @jamie.players.size.should == 1
+        @leon.players.size.should == 1
         tournament = Tournament.last
         tournament.name.should == "U - 19 All Ireland"
         tournament.start.to_s.should == "2010-04-11"
@@ -58,8 +68,6 @@ describe Admin::UploadsController do
     end
 
     describe "valid Krause file" do
-      fixtures :icu_players
-
       before(:each) do
         @params =
         {
@@ -67,6 +75,7 @@ describe Admin::UploadsController do
           :upload => { :format => "Krause" },
           :feds   => "",
         }
+        sample_players
       end
 
       it "should be processed correctly" do
@@ -76,7 +85,10 @@ describe Admin::UploadsController do
         Upload.count.should == 1
         Tournament.count.should == 1
         Player.where(:status => "ok").count.should == 4
-        %w{thomas jamie ryan leon}.each { |n| icu_players(n).players.size.should == 1 }
+        @thomas.players.size.should == 1
+        @ryan.players.size.should == 1
+        @jamie.players.size.should == 1
+        @leon.players.size.should == 1
 
         tournament = Tournament.last
         tournament.name.should == "U-19 All Ireland"
@@ -101,8 +113,6 @@ describe Admin::UploadsController do
     end
 
     describe "valid SwissPerfect export file" do
-      fixtures :icu_players
-
       before(:each) do
         @params =
         {
@@ -111,6 +121,7 @@ describe Admin::UploadsController do
           :name   => "U19 All Ireland",
           :start  => "2010-04-11",
         }
+        sample_players
       end
 
       it "should be processed correctly" do
@@ -120,7 +131,10 @@ describe Admin::UploadsController do
         Upload.count.should == 1
         Tournament.count.should == 1
         Player.where(:status => "ok").count.should == 4
-        %w{thomas jamie ryan leon}.each { |n| icu_players(n).players.size.should == 1 }
+        @thomas.players.size.should == 1
+        @ryan.players.size.should == 1
+        @jamie.players.size.should == 1
+        @leon.players.size.should == 1
 
         tournament = Tournament.last
         tournament.name.should == "U19 All Ireland"
@@ -145,14 +159,13 @@ describe Admin::UploadsController do
     end
 
     describe "valid ForeignCSV file" do
-      fixtures :icu_players
-
       before(:each) do
         @params =
         {
           :file       => test_upload("isle_of_man_2007.csv"),
           :upload     => { :format => "ForeignCSV" },
         }
+        sample_players
       end
 
       it "should be processed correctly" do
@@ -164,7 +177,8 @@ describe Admin::UploadsController do
         Player.where(:status => "ok").count.should == 15
         Player.where(:category => "icu_player").count.should == 2
         Player.where(:category => "foreign_player").count.should == 12
-        %w{peter tony}.each { |n| icu_players(n).players.size.should == 1 }
+        @peter.players.size.should == 1
+        @tony.players.size.should == 1
 
         tournament = Tournament.last
         tournament.name.should == "Isle of Man Masters, 2007"
