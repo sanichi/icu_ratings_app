@@ -1,5 +1,5 @@
-= form_for [:admin, @tournament], :remote => true do |f|
-  %table{:class => "right-headers noborder"}
+= form_for [:admin, @tournament], remote: true do |f|
+  %table{class: "right-headers noborder"}
     %tr
       %th= f.label :user_id, "Reporter"
       %td= f.select :user_id, reporter_menu

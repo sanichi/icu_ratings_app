@@ -11,12 +11,12 @@
   .story= @news_item.html_story
 
 - if can? :create, NewsItem
-  %table{:class => "turbaned"}
+  %table{class: "turbaned"}
     %tr
       - if can? :modify, @news_item
         %td
           = link_to "Edit", edit_news_item_path(@news_item)
         %td
-          = link_to "Delete", @news_item, :confirm => 'Are you sure you want to delete this news item?', :method => :delete
+          = link_to "Delete", @news_item, confirm: 'Are you sure you want to delete this news item?', method: :delete
       %td
-        = link_to "Markdown", news_item_path(@news_item, :format => "txt")
+        = link_to "Markdown", news_item_path(@news_item, format: "txt")

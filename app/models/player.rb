@@ -3,26 +3,26 @@ class Player < ActiveRecord::Base
   TITLES = %w{GM IM FM CM NM WGM WIM WFM WCM WNM}
   GENDERS = %W{M F}
 
-  belongs_to :tournament, :include => :players
-  belongs_to :icu_player, :foreign_key => "icu_id"
-  belongs_to :fide_player, :foreign_key => "fide_id"
-  has_many :results, :include => :opponent
+  belongs_to :tournament, include: :players
+  belongs_to :icu_player, foreign_key: "icu_id"
+  belongs_to :fide_player, foreign_key: "fide_id"
+  has_many :results, include: :opponent
 
   attr_accessible :first_name, :last_name, :icu_id, :fide_id, :fed, :title, :gender, :dob, :icu_rating, :fide_rating
 
   before_validation :normalise_attributes, :canonicalize_names, :deduce_category_and_status
 
   validates_presence_of     :first_name, :last_name, :original_name
-  validates_numericality_of :icu_id, :original_icu_id, :only_integer => true, :greater_than => 0, :allow_nil => true
-  validates_numericality_of :fide_id, :original_fide_id, :only_integer => true, :greater_than => 0, :allow_nil => true
-  validates_inclusion_of    :fed, :original_fed, :in => FEDS, :allow_nil => true, :message => '(%{value}) is invalid'
-  validates_inclusion_of    :title, :original_title, :in => TITLES, :allow_nil => true, :message => '(%{value}) is invalid'
-  validates_inclusion_of    :gender, :original_gender, :in => GENDERS, :allow_nil => true, :message => "(%{value}) should be #{GENDERS.join(' or ')}"
-  validates_date            :dob, :original_dob, :after => '1910-01-01', :allow_nil => true
-  validates_numericality_of :icu_rating, :original_icu_rating, :fide_rating, :original_fide_rating, :only_integer => true, :greater_than => 0, :allow_nil => true
-  validates_numericality_of :rank, :only_integer => true, :greater_than => 0, :allow_nil => true
-  validates_numericality_of :num, :only_integer => true, :greater_than => 0
-  validates_inclusion_of    :category, :in => %w(icu_player fide_player foreign_player new_player), :allow_nil => true, :message => '(%{value}) is invalid'
+  validates_numericality_of :icu_id, :original_icu_id, only_integer: true, greater_than: 0, allow_nil: true
+  validates_numericality_of :fide_id, :original_fide_id, only_integer: true, greater_than: 0, allow_nil: true
+  validates_inclusion_of    :fed, :original_fed, in: FEDS, allow_nil: true, message: '(%{value}) is invalid'
+  validates_inclusion_of    :title, :original_title, in: TITLES, allow_nil: true, message: '(%{value}) is invalid'
+  validates_inclusion_of    :gender, :original_gender, in: GENDERS, allow_nil: true, message: "(%{value}) should be #{GENDERS.join(' or ')}"
+  validates_date            :dob, :original_dob, after: '1910-01-01', allow_nil: true
+  validates_numericality_of :icu_rating, :original_icu_rating, :fide_rating, :original_fide_rating, only_integer: true, greater_than: 0, allow_nil: true
+  validates_numericality_of :rank, only_integer: true, greater_than: 0, allow_nil: true
+  validates_numericality_of :num, only_integer: true, greater_than: 0
+  validates_inclusion_of    :category, in: %w(icu_player fide_player foreign_player new_player), allow_nil: true, message: '(%{value}) is invalid'
   validates_presence_of     :status
 
   def self.build_from_icut(icup, tournament)
@@ -189,7 +189,7 @@ class Player < ActiveRecord::Base
 
   def canonicalize_names
     name = ICU::Name.new(first_name, last_name)
-    self.first_name = name.first(:chars => "US-ASCII")
-    self.last_name = name.last(:chars => "US-ASCII")
+    self.first_name = name.first(chars: "US-ASCII")
+    self.last_name = name.last(chars: "US-ASCII")
   end
 end

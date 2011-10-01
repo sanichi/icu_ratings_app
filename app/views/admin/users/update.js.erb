@@ -3,5 +3,5 @@
   $("#user_role").text("<%= @user.role %>");
   $("#user_preferred_email").text("<%= @user.preferred_email %>");
 <% else %>
-  alert("<%= escape_javascript(render('shared/error', :object => @user, :title => 'Error updating user:')) %>")
+  alert("<%= escape_javascript(render('shared/error', object: @user, title: 'Error updating user:')) %>")
 <% end %>

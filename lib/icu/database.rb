@@ -8,7 +8,7 @@ module ICU
     class Player < Database
       def sync
         success = sync_players_steps
-        Event.create(:name => 'ICU Player Synchronisation', :report => report, :time => Time.now - @start, :success => success)
+        Event.create(name: 'ICU Player Synchronisation', report: report, time: Time.now - @start, success: success)
       end
 
       private
@@ -32,26 +32,26 @@ module ICU
 
       MAP =
       {
-        :plr_id           => :id,
-        :plr_first_name   => :first_name,
-        :plr_last_name    => :last_name,
-        :plr_date_born    => :dob,
-        :plr_date_joined  => :joined,
-        :plr_fed          => :fed,
-        :plr_sex          => :gender,
-        :plr_title        => :title,
-        :plr_email        => :email,
-        :plr_deceased     => :deceased,
-        :plr_id_dup       => :master_id,
-        :plr_address1     => :address,
-        :plr_address2     => :address,
-        :plr_address3     => :address,
-        :plr_address4     => :address,
-        :plr_phone_home   => :phone_numbers,
-        :plr_phone_work   => :phone_numbers,
-        :plr_phone_mobile => :phone_numbers,
-        :plr_note         => :note,
-        :club_name        => :club,
+        plr_id:           :id,
+        plr_first_name:   :first_name,
+        plr_last_name:    :last_name,
+        plr_date_born:    :dob,
+        plr_date_joined:  :joined,
+        plr_fed:          :fed,
+        plr_sex:          :gender,
+        plr_title:        :title,
+        plr_email:        :email,
+        plr_deceased:     :deceased,
+        plr_id_dup:       :master_id,
+        plr_address1:     :address,
+        plr_address2:     :address,
+        plr_address3:     :address,
+        plr_address4:     :address,
+        plr_phone_home:   :phone_numbers,
+        plr_phone_work:   :phone_numbers,
+        plr_phone_mobile: :phone_numbers,
+        plr_note:         :note,
+        club_name:        :club,
       }
 
       def update_ours_from_theirs
@@ -119,7 +119,7 @@ module ICU
     class Member < Database
       def sync
         success = sync_user_steps
-        Event.create(:name => 'ICU User Synchronisation', :report => report, :time => Time.now - @start, :success => success)
+        Event.create(name: 'ICU User Synchronisation', report: report, time: Time.now - @start, success: success)
       end
 
       private
@@ -145,11 +145,11 @@ module ICU
 
       MAP =
       {
-        :mem_id       => :id,
-        :mem_email    => :email,
-        :mem_password => :password,
-        :mem_icu_id   => :icu_id,
-        :mem_expiry   => :expiry,
+        mem_id:       :id,
+        mem_email:    :email,
+        mem_password: :password,
+        mem_icu_id:   :icu_id,
+        mem_expiry:   :expiry,
       }
 
       def get_our_users
@@ -218,7 +218,7 @@ module ICU
     class FIDE < Database
       def sync
         success = sync_fide_steps
-        Event.create(:name => 'ICU-FIDE Synchronisation', :report => report, :time => Time.now - @start, :success => success)
+        Event.create(name: 'ICU-FIDE Synchronisation', report: report, time: Time.now - @start, success: success)
       end
 
       private
@@ -279,7 +279,7 @@ module ICU
                 fide_rating.rating = rating
                 fide_rating.games = games
               else
-                fide_rating = fide_player.fide_ratings.build(:period => period, :rating => rating, :games => games)
+                fide_rating = fide_player.fide_ratings.build(period: period, rating: rating, games: games)
               end
               if fide_rating.changed?
                 fide_rating.save!
@@ -312,7 +312,7 @@ module ICU
       end
 
       def get_our_fide_players
-        @fide_players = FidePlayer.all(:include => :fide_ratings).inject({}) { |h,p| h[p.id] = p; h }
+        @fide_players = FidePlayer.all(include: :fide_ratings).inject({}) { |h,p| h[p.id] = p; h }
       end
 
       def report
@@ -333,7 +333,7 @@ module ICU
 
     def initialize
       @client = Mysql2::Client.new(APP_CONFIG["icu_db"].symbolize_keys)
-      @client.query_options.merge!(:symbolize_keys => true)
+      @client.query_options.merge!(symbolize_keys: true)
       @start = Time.now
     end
 

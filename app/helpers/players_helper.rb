@@ -13,6 +13,6 @@ module PlayersHelper
       image = "flag_red"
       alt = "Problem"
     end
-    image_tag "icons/#{image}.png", :alt => alt
+    image_tag "icons/#{image}.png", alt: alt
   end
 end

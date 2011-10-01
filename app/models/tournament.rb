@@ -5,7 +5,7 @@ class Tournament < ActiveRecord::Base
   TIEBREAK = "(?:#{ICU::TieBreak.rules.map(&:id).join('|')})"
 
   has_one    :upload
-  has_many   :players, :include => :results
+  has_many   :players, include: :results
   belongs_to :user
 
   default_scope order("start DESC, finish DESC, name")
@@ -15,12 +15,12 @@ class Tournament < ActiveRecord::Base
   before_validation :normalise_attributes
 
   validates_presence_of     :name, :start
-  validates_date            :start, :after => '1900-01-01'
-  validates_date            :finish, :after => '1900-01-01', :allow_nil => true
+  validates_date            :start, after: '1900-01-01'
+  validates_date            :finish, after: '1900-01-01', allow_nil: true
   validate                  :finish_on_or_after_start
-  validates_inclusion_of    :fed, :in => FEDS, :allow_nil => true, :message => '(%{value}) is invalid'
-  validates_format_of       :tie_breaks, :with => /^#{TIEBREAK}(?:,#{TIEBREAK})*$/, :allow_nil => true
-  validates_numericality_of :user_id, :only_integer => true, :greater_than => 0, :message => "(%{value}) is invalid"
+  validates_inclusion_of    :fed, in: FEDS, allow_nil: true, message: '(%{value}) is invalid'
+  validates_format_of       :tie_breaks, with: /^#{TIEBREAK}(?:,#{TIEBREAK})*$/, allow_nil: true
+  validates_numericality_of :user_id, only_integer: true, greater_than: 0, message: "(%{value}) is invalid"
 
   # Build a Tournament from an icu_tournament object parsed from an uploaded file.
   def self.build_from_icut(icut, upload=nil)
@@ -49,8 +49,8 @@ class Tournament < ActiveRecord::Base
         matches = matches.where("tournaments.name LIKE ?", "%#{term}%")
       end
     end
-    matches = matches.joins(:players).where(:players => { :icu_id => params[:icu_id].to_i }) if params[:icu_id].to_i > 0
-    matches = matches.where(:user_id => params[:user_id].to_i) if params[:user_id].to_i > 0
+    matches = matches.joins(:players).where(players: { icu_id: params[:icu_id].to_i }) if params[:icu_id].to_i > 0
+    matches = matches.where(user_id: params[:user_id].to_i) if params[:user_id].to_i > 0
     paginate(matches, path, params)
   end
 
@@ -67,13 +67,13 @@ class Tournament < ActiveRecord::Base
     end
     icut.tie_breaks = tie_breaks.split(',') unless tie_breaks.blank?
     players.each do |p|
-      opt = { :id => p.icu_id, :rating => p.icu_rating }
+      opt = { id: p.icu_id, rating: p.icu_rating }
       [:fed, :fide_id, :fide_rating, :gender, :rank, :title, :dob].each { |attr| opt[attr] = p.send(attr) }
       icut.add_player(ICU::Player.new(p.first_name, p.last_name, p.id, opt))
     end
     players.each do |p|
       p.results.each do |r|
-        opt = { :opponent => r.opponent_id }
+        opt = { opponent: r.opponent_id }
         [:colour, :rateable].each { |attr| opt[attr] = r.send(attr) }
         icut.add_result(ICU::Result.new(r.round, p.id, r.score, opt))
       end
@@ -91,7 +91,7 @@ class Tournament < ActiveRecord::Base
   def export(params)
     format, order, opts = export_params(params)
     begin
-      icut = icu_tournament(:renumber => order)
+      icut = icu_tournament(renumber: order)
       icut.serialize(format, opts)
     rescue => e
       e.message
@@ -177,10 +177,10 @@ class Tournament < ActiveRecord::Base
       string = "Invalid (#{invalid})"
     end
     {
-      :valid       => symbol == :valid,
-      :rankable    => symbol == :valid || symbol == :inconsistent,
-      :type        => symbol,
-      :description => string,
+      valid:       symbol == :valid,
+      rankable:    symbol == :valid || symbol == :inconsistent,
+      type:        symbol,
+      description: string,
     }
   end
 

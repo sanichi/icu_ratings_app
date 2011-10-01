@@ -1,5 +1,5 @@
-= form_tag admin_tournament_path(@tournament, :format => "text"), :method => "get", :target => "_export" do |f|
-  %table{:class => "right-headers noborder"}
+= form_tag admin_tournament_path(@tournament, format: "text"), method: "get", target: "_export" do |f|
+  %table{class: "right-headers noborder"}
     %tr
       %th= label_tag :type
       %td= select_tag :type, options_for_select(@tournament.export_formats, 'SPExport')

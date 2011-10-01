@@ -13,4 +13,4 @@
   = render "shared/dialog.js"
 
 -# And provide the div into which jQuery will insert the dialog.
-%div{:id => @id}= defined?(html) ? raw(html) : ""
+%div{id: @id}= defined?(html) ? raw(html) : ""

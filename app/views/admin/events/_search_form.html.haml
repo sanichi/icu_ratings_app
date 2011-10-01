@@ -1,6 +1,6 @@
-= form_tag admin_events_path, :method => "get", :remote => true do
+= form_tag admin_events_path, method: "get", remote: true do
   = hidden_field_tag :per_page, params[:per_page]
-  %table{:class => "invisible"}
+  %table{class: "invisible"}
     %tr
       %th= label_tag :name
       %th= label_tag :report
@@ -9,9 +9,9 @@
       %th= label_tag :max_time, "Max Time"
       %th
     %tr
-      %td= text_field_tag :name, params[:name], :class => "centered", :size => 15
-      %td= text_field_tag :report, params[:report], :class => "centered", :size => 15
+      %td= text_field_tag :name, params[:name], class: "centered", size: 15
+      %td= text_field_tag :report, params[:report], class: "centered", size: 15
       %td= select_tag :success, options_for_select([["Any", ""], ["Yes", 1], ["No", 0]], params[:success])
-      %td{:class => "centered"}= text_field_tag :min_time, params[:min_time], :class => "centered", :size => 3, :maxlength => 6
-      %td{:class => "centered"}= text_field_tag :max_time, params[:max_time], :class => "centered", :size => 3, :maxlength => 6
+      %td{class: "centered"}= text_field_tag :min_time, params[:min_time], class: "centered", size: 3, maxlength: 6
+      %td{class: "centered"}= text_field_tag :max_time, params[:max_time], class: "centered", size: 3, maxlength: 6
       %td= submit_tag "Search"

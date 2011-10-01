@@ -2,18 +2,18 @@ class FidePlayer < ActiveRecord::Base
   extend Util::Pagination
   extend Util::AlternativeNames
 
-  has_many :fide_ratings, :order => "period DESC", :dependent => :destroy
-  belongs_to :icu_player, :foreign_key => "icu_id"
+  has_many :fide_ratings, order: "period DESC", dependent: :destroy
+  belongs_to :icu_player, foreign_key: "icu_id"
 
   default_scope order("last_name, first_name")
 
   validates_presence_of     :last_name
-  validates_format_of       :fed, :with => /^[A-Z]{3}$/
-  validates_format_of       :gender, :with => /^(M|F)$/
-  validates_format_of       :title, :with => /^W?[GIFC]M$/, :allow_nil => true
-  validates_numericality_of :born, :only_integer => true, :greater_than => 1899, :less_than => 2010, :allow_nil => true
-  validates_numericality_of :icu_id, :only_integer => true, :greater_than => 0, :allow_nil => true
-  validates_uniqueness_of   :icu_id, :allow_nil => true
+  validates_format_of       :fed, with: /^[A-Z]{3}$/
+  validates_format_of       :gender, with: /^(M|F)$/
+  validates_format_of       :title, with: /^W?[GIFC]M$/, allow_nil: true
+  validates_numericality_of :born, only_integer: true, greater_than: 1899, less_than: 2010, allow_nil: true
+  validates_numericality_of :icu_id, only_integer: true, greater_than: 0, allow_nil: true
+  validates_uniqueness_of   :icu_id, allow_nil: true
 
   def name
     str = Array.new

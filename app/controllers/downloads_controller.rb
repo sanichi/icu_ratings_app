@@ -1,5 +1,5 @@
 class DownloadsController < ApplicationController
-  load_resource :except => :index
+  load_resource except: "index"
   authorize_resource
 
   def index
@@ -8,7 +8,7 @@ class DownloadsController < ApplicationController
   end
 
   def show
-    send_data(@download.data, :filename => @download.file_name, :type => @download.content_type)
+    send_data(@download.data, filename: @download.file_name, type: @download.content_type)
   end
 
   def new
@@ -21,9 +21,9 @@ class DownloadsController < ApplicationController
     if params[:commit] == "Cancel"
       redirect_to downloads_path
     elsif @download.save
-      redirect_to downloads_path, :notice => "Download was successfully created."
+      redirect_to downloads_path, notice: "Download was successfully created."
     else
-      render :action => "new"
+      render action: "new"
     end
   end
 
@@ -31,9 +31,9 @@ class DownloadsController < ApplicationController
     if params[:commit] == "Cancel"
       redirect_to downloads_path
     elsif @download.update_attributes(params[:download])
-      redirect_to downloads_path, :notice => "Download was successfully updated."
+      redirect_to downloads_path, notice: "Download was successfully updated."
     else
-      render :action => "edit"
+      render action: "edit"
     end
   end
 

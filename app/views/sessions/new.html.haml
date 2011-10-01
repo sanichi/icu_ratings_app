@@ -1,6 +1,6 @@
 - content_for :title, "Log in"
 
-= form_tag sessions_path, :class => "simple-form" do
+= form_tag sessions_path, class: "simple-form" do
   .input
     = label_tag :email
     = text_field_tag :email, params[:email]

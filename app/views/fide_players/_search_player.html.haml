@@ -1,5 +1,5 @@
-%h3{:class => "centered"} Tournament Player
-- changed = @player.changed_from_original?(:except => [:icu_rating, :fide_rating])
+%h3{class: "centered"} Tournament Player
+- changed = @player.changed_from_original?(except: [:icu_rating, :fide_rating])
 %table
   %tr
     %th FIDE ID
@@ -14,9 +14,9 @@
     %td= @player.fide_id
     %td= @player.name
     %td= @player.dob
-    %td{:class => "centered"}= @player.gender
-    %td{:class => "centered"}= @player.fed
-    %td{:class => "centered"}= @player.title
+    %td{class: "centered"}= @player.gender
+    %td{class: "centered"}= @player.fed
+    %td{class: "centered"}= @player.title
     %td= @player.icu_id
     %td= "#{changed ? 'Current' : 'Original'} data"
     - if changed
@@ -24,8 +24,8 @@
         %td= @player.original_fide_id
         %td= @player.original_name
         %td= @player.original_dob
-        %td{:class => "centered"}= @player.original_gender
-        %td{:class => "centered"}= @player.original_fed
-        %td{:class => "centered"}= @player.original_title
+        %td{class: "centered"}= @player.original_gender
+        %td{class: "centered"}= @player.original_fed
+        %td{class: "centered"}= @player.original_title
         %td= @player.original_icu_id
         %td Original data

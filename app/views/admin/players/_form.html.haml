@@ -1,8 +1,8 @@
-= form_for [:admin, @player], :remote => true do |f|
-  %table{:class => "right-headers noborder"}
+= form_for [:admin, @player], remote: true do |f|
+  %table{class: "right-headers noborder"}
     %tr
       %th Original data
-      %td{:class => "disabled"}= @player.original_data
+      %td{class: "disabled"}= @player.original_data
     %tr
       %th= f.label :last_name
       %td= f.text_field :last_name
@@ -11,10 +11,10 @@
       %td= f.text_field :first_name
     %tr
       %th= f.label :icu_id, "ICU ID"
-      %td= f.text_field :icu_id, :size => 6
+      %td= f.text_field :icu_id, size: 6
     %tr
       %th= f.label :fide_id, "FIDE ID"
-      %td= f.text_field :fide_id, :size => 7
+      %td= f.text_field :fide_id, size: 7
     %tr
       %th= f.label :fed, "Federation"
       %td= f.select :fed, federation_menu
@@ -26,10 +26,10 @@
       %td= f.select :gender, gender_menu("Unknown")
     %tr
       %th= f.label :dob, "Date of birth"
-      %td= f.text_field :dob, { :value => @player.dob }  # rails bug?
+      %td= f.text_field :dob, { value: @player.dob }  # rails bug?
     %tr
       %th= f.label :icu_rating, "ICU rating"
-      %td= f.text_field :icu_rating, :size => 4
+      %td= f.text_field :icu_rating, size: 4
     %tr
       %th= f.label :fide_rating, "FIDE rating"
-      %td= f.text_field :fide_rating, :size => 4
+      %td= f.text_field :fide_rating, size: 4

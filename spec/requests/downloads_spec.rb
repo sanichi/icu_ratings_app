@@ -11,7 +11,7 @@ describe "Download" do
         login_user(role) if role
         ["/downloads", "/downloads/new", "downloads/#{@download.id}", "/downloads/#{@download.id}/edit"].each do |path|
           visit path
-          page.should have_selector("span.alert", :text => /not authorized/i)
+          page.should have_selector("span.alert", text: /not authorized/i)
         end
       end
     end
@@ -33,7 +33,7 @@ describe "Download" do
     it "cannot create or update downloads" do
       ["/downloads/new", "downloads/#{@download.id}/edit"].each do |path|
         visit path
-        page.should have_selector("span.alert", :text => /not authorized/i)
+        page.should have_selector("span.alert", text: /not authorized/i)
       end
     end
 
@@ -54,11 +54,11 @@ describe "Download" do
     it "can create, view, edit and delete downloads" do
       Download.count.should == 0
       visit "/downloads/new"
-      page.should have_selector("head title", :text => "New Download")
+      page.should have_selector("head title", text: "New Download")
       page.attach_file "download[uploaded_file]", @text
-      page.fill_in "Comment", :with => "Test Text"
+      page.fill_in "Comment", with: "Test Text"
       page.click_button "Create"
-      page.should have_selector("span.notice", :text => /created/i)
+      page.should have_selector("span.notice", text: /created/i)
       Download.count.should == 1
       download = Download.first
       download.comment.should == "Test Text"
@@ -70,16 +70,16 @@ describe "Download" do
       page.driver.response.headers["Content-Type"].should == "text/plain"
       visit "/downloads"
       click_link "Edit Download"
-      page.should have_selector("head title", :text => "Update Download")
+      page.should have_selector("head title", text: "Update Download")
       page.attach_file "download[uploaded_file]", @image
-      page.fill_in "Comment", :with => "Test Image"
+      page.fill_in "Comment", with: "Test Image"
       page.click_button "Update"
-      page.should have_selector("span.notice", :text => /updated/i)
+      page.should have_selector("span.notice", text: /updated/i)
       Download.count.should == 1
       download = Download.first
       download.comment.should == "Test Image"
       click_link "Edit Download"
-      page.fill_in "Comment", :with => "Rubbish"
+      page.fill_in "Comment", with: "Rubbish"
       page.click_button "Cancel"
       download.reload
       page.click_link "download.png"
@@ -99,11 +99,11 @@ describe "Download" do
 
     it "link after 15 items" do
       visit "downloads"
-      page.should have_xpath(@xpath, :count => 15)
+      page.should have_xpath(@xpath, count: 15)
       page.click_link "next"
-      page.should have_xpath(@xpath, :count => 1)
+      page.should have_xpath(@xpath, count: 1)
       page.click_link "prev"
-      page.should have_xpath(@xpath, :count => 15)
+      page.should have_xpath(@xpath, count: 15)
     end
   end
 end

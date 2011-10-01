@@ -8,10 +8,10 @@ class Upload < ActiveRecord::Base
   belongs_to :tournament
   belongs_to :user
 
-  validates_inclusion_of    :format, :in => FORMATS.map(&:last)
+  validates_inclusion_of    :format, in: FORMATS.map(&:last)
   validates_presence_of     :file_type, :content_type
-  validates_numericality_of :size, :only_integer => true, :greater_than => 0
-  validates_numericality_of :user_id, :only_integer => true, :greater_than => 0, :message => "(%{value}) is invalid"
+  validates_numericality_of :size, only_integer: true, greater_than: 0
+  validates_numericality_of :user_id, only_integer: true, greater_than: 0, message: "(%{value}) is invalid"
 
   # Extract (parse) an ICU::Tournament from an uploaded file and then build a Tournament from that.
   def extract(params, user_id)
@@ -55,7 +55,7 @@ class Upload < ActiveRecord::Base
     matches = matches.where("uploads.name LIKE ?", "%#{params[:name]}%") if params[:name].present?
     matches = matches.where("uploads.format = ?", params[:format]) if params[:format].present?
     matches = matches.where("uploads.created_at LIKE ?", "%#{params[:created_at]}%") if params[:created_at].present?
-    matches = matches.where(:user_id => params[:user_id].to_i) if params[:user_id].to_i > 0
+    matches = matches.where(user_id: params[:user_id].to_i) if params[:user_id].to_i > 0
     paginate(matches, path, params)
   end
 end

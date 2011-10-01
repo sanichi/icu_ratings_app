@@ -1,6 +1,6 @@
 %table
   %tr
-    %td{:class => :floater}
+    %td{class: "floater"}
     %th ICU ID
     %th Last Name
     %th First Name
@@ -11,27 +11,27 @@
     %th Title
   - if @icu_players.count == 0
     %tr
-      %td{:class => :floater}
-      %td{:colspan => 8, :class => "centered"} No matches
+      %td{class: "floater"}
+      %td{class: "centered", colspan: 8} No matches
   - else
     - @icu_players.matches.each do |p|
-      %tr{:class => p.master_id || p.deceased ? "disabled" : ""}
-        %td{:class => "floater"}
+      %tr{class: p.master_id || p.deceased ? "disabled" : ""}
+        %td{class: "floater"}
           - if @player && can?(:edit, @player.tournament)
-            = link_to admin_player_path(@player, :icu_id => p.master_id || p.id, :authenticity_token => form_authenticity_token), :method => :put, :remote => true do
-              = image_tag "icons/link.png", :alt => "Link tournament player to this ICU player"
-        %td= link_to p.id, p, :remote => true
+            = link_to admin_player_path(@player, icu_id: p.master_id || p.id, authenticity_token: form_authenticity_token), method: :put, remote: true do
+              = image_tag "icons/link.png", alt: "Link tournament player to this ICU player"
+        %td= link_to p.id, p, remote: true
         %td= p.last_name
         %td= p.first_name
         %td= p.club
         %td= p.dob
         - if p.master_id || p.deceased
-          %td{:class => "centered", :colspan => 3}= p.master_id ? "dup of #{p.master_id}" : "deceased"
+          %td{class: "centered", colspan: 3}= p.master_id ? "dup of #{p.master_id}" : "deceased"
         - else
-          %td{:class => "centered"}= p.gender
-          %td{:class => "centered"}= p.fed
-          %td{:class => "centered"}= p.title
+          %td{class: "centered"}= p.gender
+          %td{class: "centered"}= p.fed
+          %td{class: "centered"}= p.title
     - if @icu_players.multi_page
       %tr
-        %td{:class => :floater}
-        %td{:colspan => 8, :class => "centered"}= pagination_links(@icu_players)
+        %td{class: "floater"}
+        %td{class: "centered", colspan: 8}= pagination_links(@icu_players)

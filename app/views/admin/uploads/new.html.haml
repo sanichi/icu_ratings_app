@@ -5,9 +5,9 @@
 .header
   %span File Upload
 
-= form_for [:admin, @upload], :html => {:multipart => true, :class => "simple-form"} do |f|
+= form_for [:admin, @upload], html: {multipart: true, class: "simple-form"} do |f|
   - if @upload.errors.any?
-    = render :partial => "shared/errors", :locals => { :thing => @upload, :name => "upload" }
+    = render partial: "shared/errors", locals: { thing: @upload, name: "upload" }
   .input
     = f.label :format, "File format"
     = f.select :format, options_for_select(upload_format_menu, Upload::DEFAULT_FORMAT)
@@ -16,10 +16,10 @@
     = file_field_tag :file
   .input
     = label_tag :name, "Tournament name"
-    = text_field_tag :name, nil, :size => 20
+    = text_field_tag :name, nil, size: 20
   .input
     = label_tag :start, "Tournament start date"
-    = text_field_tag :start, nil, :size => 10
+    = text_field_tag :start, nil, size: 10
   .input
     = label_tag :feds, "Federations"
     = select_tag :feds, options_for_select([["Skip if invalid", "skip"], ["Error if invalid", ''], ["Ignore all", "ignore"]])
@@ -36,9 +36,9 @@
       The types listed in the
       %em File format
       menu. Help on each supported format is available below - use the menu to show the help for each.
-    %dt{:class => "SwissPerfect"} Swiss Perfect
-    %dd{:class => "SwissPerfect"}
-      = image_tag "help/swiss_perfect.png", :align => "right", :alt => "Example of Swiss Perfect files in a ZIP archive", :class => "left-padded"
+    %dt{class: "SwissPerfect"} Swiss Perfect
+    %dd{class: "SwissPerfect"}
+      = image_tag "help/swiss_perfect.png", align: "right", alt: "Example of Swiss Perfect files in a ZIP archive", class: "left-padded"
       %p
         Put all three Swiss Perfect files (INI, SCO and TRN) into
         an otherwise empty ZIP archive and upload that file.
@@ -47,9 +47,9 @@
         Since Swiss Perfect has no way to specify the start date of the tournament, please specify it in the
         %em Tournament start date
         input.
-    %dt{:class => "SPExport"} Swiss Perfect Export
-    %dd{:class => "SPExport"}
-      = image_tag "help/spexport.png", :align => "right", :alt => "Part of file exported from Swiss Perfect", :class => "left-padded"
+    %dt{class: "SPExport"} Swiss Perfect Export
+    %dd{class: "SPExport"}
+      = image_tag "help/spexport.png", align: "right", alt: "Part of file exported from Swiss Perfect", class: "left-padded"
       %p
         This type of file is produced by Swiss Perfect via
         %em File &rarr; Export View &rarr; As Text
@@ -60,20 +60,20 @@
         %em include column headers
         are all selected when the file is saved.
       %p Since these files are missing the tournament name and the start date, please specify both in the upload form.
-    %dt{:class => "Krause"} FIDE (Krause)
-    %dd{:class => "Krause"}
-      = image_tag "help/krause.png", :align => "right", :alt => "Part of a FIDE (Krause) formatted report", :class => "left-padded"
+    %dt{class: "Krause"} FIDE (Krause)
+    %dd{class: "Krause"}
+      = image_tag "help/krause.png", align: "right", alt: "Part of a FIDE (Krause) formatted report", class: "left-padded"
       %p
         This
-        = link_to "format", "http://www.fide.com/component/content/article/5-whats-news/2245-736-general-data-exchange-format-for-tournament-results", :target => "_fide_com"
+        = link_to "format", "http://www.fide.com/component/content/article/5-whats-news/2245-736-general-data-exchange-format-for-tournament-results", target: "_fide_com"
         is used by FIDE for rating reports and was developed by Christian Krause, a FIDE arbiter.
       %p
         It can only represent ratings and IDs from one source, so please specify which using the menu provided.
         In practice, some applications that export this format have a tendancy to produce invalid federation codes,
         so please also indicate what action should be taken if any are found.
-    %dt{:class => "ForeignCSV"} ICU Foreign Tournament Report
-    %dd{:class => "ForeignCSV"}
-      = image_tag "help/foreign_csv.png", :align => "right", :alt => "Part of an ICU foreign tournament report", :class => "left-padded"
+    %dt{class: "ForeignCSV"} ICU Foreign Tournament Report
+    %dd{class: "ForeignCSV"}
+      = image_tag "help/foreign_csv.png", align: "right", alt: "Part of an ICU foreign tournament report", class: "left-padded"
       %p
         = succeed "." do
           See the

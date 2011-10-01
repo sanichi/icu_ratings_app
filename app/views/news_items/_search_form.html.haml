@@ -1,6 +1,6 @@
-= form_tag news_items_path, :method => "get", :remote => true do
+= form_tag news_items_path, method: "get", remote: true do
   = hidden_field_tag :per_page, 20
-  %table{:class => "invisible"}
+  %table{class: "invisible"}
     %tr
       %th= label_tag :headline
       %th= label_tag :story
@@ -8,8 +8,8 @@
       %th= label_tag :user_id, "Reporter"
       %th
     %tr
-      %td= text_field_tag :headline, params[:headline], :class => "centered", :size => 15
-      %td= text_field_tag :story, params[:story], :class => "centered", :size => 15
+      %td= text_field_tag :headline, params[:headline], class: "centered", size: 15
+      %td= text_field_tag :story, params[:story], class: "centered", size: 15
       %td= select_tag :order, options_for_select([["created date", "created"], ["last updated date", "updated"]], params[:order] || "created")
       %td= select_tag :user_id, options_for_select(user_menu(:news_items, "Any"), params[:user_id])
       %td= submit_tag "Search"

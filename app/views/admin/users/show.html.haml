@@ -3,25 +3,25 @@
 .header
   %span= @user.email
 
-%table{:class => "right-headers cushioned"}
+%table{class: "right-headers cushioned"}
   %tr
     %th Email
     %td= @user.email
-    %td{:class => "floater"}
+    %td{class: "floater"}
   - if can? :manage, User
     %tr
       %th Preferred Email
-      %td{:id => "user_preferred_email"}= @user.preferred_email
-      %td{:class => "floater"}
-        = link_to edit_admin_user_path(@user), :remote => true do
-          = image_tag "icons/edit.png", :alt => "Edit User"
+      %td{id: "user_preferred_email"}= @user.preferred_email
+      %td{class: "floater"}
+        = link_to edit_admin_user_path(@user), remote: true do
+          = image_tag "icons/edit.png", alt: "Edit User"
   %tr
     %th Player
     - if @user.icu_player
-      %td= link_to @user.icu_player.name, @user.icu_player, :remote => true
+      %td= link_to @user.icu_player.name, @user.icu_player, remote: true
     - else
-      %td{:class => :error} None
-    %td{:class => "floater", :rowspan => 3}
+      %td{class: :error} None
+    %td{class: "floater", rowspan: 3}
   %tr
     %th ICU ID
     %td= @user.icu_id
@@ -30,26 +30,26 @@
     %td= @user.expiry
   %tr
     %th Role
-    %td{:id => "user_role"}= @user.role
-    %td{:class => "floater"}
-      = link_to edit_admin_user_path(@user), :remote => true do
-        = image_tag "icons/edit.png", :alt => "Edit User"
+    %td{id: "user_role"}= @user.role
+    %td{class: "floater"}
+      = link_to edit_admin_user_path(@user), remote: true do
+        = image_tag "icons/edit.png", alt: "Edit User"
 
 %table
   %tr
-    %td= link_to "Logins by this User", admin_logins_path(:email => @user.email)
-    %td{:class => "floater"}
-      = link_to admin_logins_path(:email => @user.email) do
-        = image_tag "icons/search.png", :alt => "Search Logins by Email"
+    %td= link_to "Logins by this User", admin_logins_path(email: @user.email)
+    %td{class: "floater"}
+      = link_to admin_logins_path(email: @user.email) do
+        = image_tag "icons/search.png", alt: "Search Logins by Email"
   %tr
-    %td= link_to "Logins by this Player", admin_logins_path(:icu_id => @user.icu_id)
-    %td{:class => "floater"}
-      = link_to admin_logins_path(:email => @user.icu_id) do
-        = image_tag "icons/search.png", :alt => "Search Logins by Player"
+    %td= link_to "Logins by this Player", admin_logins_path(icu_id: @user.icu_id)
+    %td{class: "floater"}
+      = link_to admin_logins_path(email: @user.icu_id) do
+        = image_tag "icons/search.png", alt: "Search Logins by Player"
   - if can? :manage, User
     %tr
-      %td= link_to "Login as this User", sessions_path(:email => @user.email, :password => @user.password), :method => :post
-      %td{:class => "floater"}
+      %td= link_to "Login as this User", sessions_path(email: @user.email, password: @user.password), method: :post
+      %td{class: "floater"}
 
 = icu_player_details_dialog
-= render "shared/dialog", :id => "update_user", :width => 600
+= render "shared/dialog", id: "update_user", width: 600

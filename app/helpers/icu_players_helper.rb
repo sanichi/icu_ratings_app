@@ -4,7 +4,7 @@ module IcuPlayersHelper
 
     case how
     when :personal
-      {:dob => "DOB", :gender => nil, :club => nil}.each_pair do |attr, label|
+      { dob: "DOB", gender: nil, club: nil }.each_pair do |attr, label|
         value = player.send(attr)
         parts.push "#{label || attr}: #{value}" unless value.blank?
       end
@@ -14,10 +14,10 @@ module IcuPlayersHelper
     when :fide
       fide_player = player.fide_player
       if fide_player
-        link = link_to fide_player.id, fide_player, :remote => true
+        link = link_to fide_player.id, fide_player, remote: true
         parts.push "FIDE ID: #{link}, #{foreign_url_for(fide_player)}"
       end
-      {:fed => "federation", :title => nil}.each_pair do |attr, label|
+      { fed: "federation", title: nil }.each_pair do |attr, label|
         value = player.send(attr)
         parts.push "#{label || attr}: #{value}" unless value.blank?
       end

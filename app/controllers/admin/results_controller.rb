@@ -1,10 +1,10 @@
 module Admin
   class ResultsController < ApplicationController
-    load_and_authorize_resource :except => :new
+    load_and_authorize_resource except: "new"
 
     def new
       @player = Player.find(params[:player_id])
-      @result = @player.results.build(:round => params[:round].to_i)
+      @result = @player.results.build(round: params[:round].to_i)
       authorize! :new, @result
       @tournament = @player.tournament
       @opponents = @tournament.possible_opponents(@result)

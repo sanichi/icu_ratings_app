@@ -2,7 +2,7 @@ class CreateFideRatings < ActiveRecord::Migration
   def self.up
     create_table :fide_ratings do |t|
       t.integer  :fide_player_id
-      t.integer  :rating, :games, :limit => 2
+      t.integer  :rating, :games, limit: 2
       t.date     :period
 
       t.timestamps

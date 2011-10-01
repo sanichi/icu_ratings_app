@@ -1,5 +1,5 @@
 class IcuPlayersController < ApplicationController
-  load_resource :except => :index
+  load_resource except: "index"
   authorize_resource
 
   def index
@@ -12,6 +12,6 @@ class IcuPlayersController < ApplicationController
   end
 
   def show
-    @old_rating_histories = OldRatingHistory.search({ :icu_player_id => params[:id], :per_page => 5 }, admin_old_rating_histories_path)
+    @old_rating_histories = OldRatingHistory.search({ icu_player_id: params[:id], per_page: 5 }, admin_old_rating_histories_path)
   end
 end

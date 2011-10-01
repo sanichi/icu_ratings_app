@@ -8,17 +8,17 @@ describe User do
 
     it "should not allow duplicate emails (case insensitively)" do
       user = Factory(:user)
-      lambda { Factory(:user, :email => user.email) }.should raise_error(/email.*already.*taken/i)
-      lambda { Factory(:user, :email => user.email.upcase) }.should raise_error(/email.*already.*taken/i)
+      lambda { Factory(:user, email: user.email) }.should raise_error(/email.*already.*taken/i)
+      lambda { Factory(:user, email: user.email.upcase) }.should raise_error(/email.*already.*taken/i)
     end
 
     it "should reject invalid roles" do
-      lambda { Factory(:user, :role => "superuser") }.should raise_error(/role.*invalid/i)
+      lambda { Factory(:user, role: "superuser") }.should raise_error(/role.*invalid/i)
     end
 
     it "should have a minimum expiry date" do
-      lambda { Factory(:user, :expiry => "2003-12-31") }.should raise_error(/expiry must be/i)
-      lambda { Factory(:user, :expiry => "2005-12-31") }.should_not raise_error
+      lambda { Factory(:user, expiry: "2003-12-31") }.should raise_error(/expiry must be/i)
+      lambda { Factory(:user, expiry: "2005-12-31") }.should_not raise_error
     end
   end
 
@@ -34,7 +34,7 @@ describe User do
     end
 
     it "tournament reporters" do
-      user = Factory(:user, :role => "reporter")
+      user = Factory(:user, role: "reporter")
       user.role?(:member).should be_true
       user.role?(:reporter).should be_true
       user.role?(:officer).should be_false
@@ -44,7 +44,7 @@ describe User do
     end
 
     it "rating officers" do
-      user = Factory(:user, :role => "officer")
+      user = Factory(:user, role: "officer")
       user.role?(:member).should be_true
       user.role?(:reporter).should be_true
       user.role?(:officer).should be_true
@@ -54,7 +54,7 @@ describe User do
     end
 
     it "administrators" do
-      user = Factory(:user, :role => "admin")
+      user = Factory(:user, role: "admin")
       user.role?(:member).should be_true
       user.role?(:reporter).should be_true
       user.role?(:officer).should be_true
@@ -65,7 +65,7 @@ describe User do
 
     it "invalid roles" do
       ["invalid", "", nil].each do |role|
-        user = Factory.build(:user, :role => role)
+        user = Factory.build(:user, role: role)
         user.role?(:member).should be_false
         user.role?(:reporter).should be_false
         user.role?(:officer).should be_false

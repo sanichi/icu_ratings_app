@@ -1,11 +1,11 @@
-%table{:class => "right-headers cushioned"}
+%table{class: "right-headers cushioned"}
   %tr
     %th Name
     %td= @tournament.name
     - if can? :edit, @tournament
-      %td{:class => "floater top", :rowspan => 10}
-        = link_to edit_admin_tournament_path(@tournament), :remote => true do
-          = image_tag "icons/edit.png", :alt => "Edit Tournament"
+      %td{class: "floater top", rowspan: 10}
+        = link_to edit_admin_tournament_path(@tournament), remote: true do
+          = image_tag "icons/edit.png", alt: "Edit Tournament"
   %tr
     %th Start Date
     %td= @tournament.start
@@ -35,18 +35,18 @@
     %td= @tournament.time_control
   %tr
     %th Tie Break Rules
-    %td{:id => "show_tie_breaks"}= @tournament.tie_breaks
+    %td{id: "show_tie_breaks"}= @tournament.tie_breaks
     - if can? :edit, @tournament
-      %td{:class => "floater"}
-        = link_to edit_admin_tournament_path(@tournament, :tie_breaks => ""), :remote => true do
-          = image_tag "icons/edit.png", :alt => "Edit Tie Breaks"
+      %td{class: "floater"}
+        = link_to edit_admin_tournament_path(@tournament, tie_breaks: ""), remote: true do
+          = image_tag "icons/edit.png", alt: "Edit Tie Breaks"
   %tr
     %th Ranking
-    %td{:id => "show_ranking"}= @tournament.ranking_summary.fetch(:description)
+    %td{id: "show_ranking"}= @tournament.ranking_summary.fetch(:description)
     - if can? :edit, @tournament
-      %td{:class => "floater top", :rowspan => 2}
-        = link_to edit_admin_tournament_path(@tournament, :ranks => ""), :remote => true do
-          = image_tag "icons/rank.png", :alt => "Rank Tournament"
+      %td{class: "floater top", rowspan: 2}
+        = link_to edit_admin_tournament_path(@tournament, ranks: ""), remote: true do
+          = image_tag "icons/rank.png", alt: "Rank Tournament"
   %tr
     %th Upload
     %td= @tournament.upload ? link_to(@tournament.upload.created_at.strftime('%Y-%m-%d'), [:admin, @tournament.upload]) : ''
@@ -54,13 +54,13 @@
     %th Reporter
     %td= @tournament.user.name
     - if can? :manage, @tournament
-      %td{:class => "floater top"}
-        = link_to edit_admin_tournament_path(@tournament, :reporter => ""), :remote => true do
-          = image_tag "icons/edit.png", :alt => "Change Reporter"
+      %td{class: "floater top"}
+        = link_to edit_admin_tournament_path(@tournament, reporter: ""), remote: true do
+          = image_tag "icons/edit.png", alt: "Change Reporter"
 
-%table{:class => "left"}
+%table{class: "left"}
   %tr
     %td
-      = link_to admin_tournament_path(@tournament, :format => "js"), :remote => true do
-        = image_tag "icons/export.png", :alt => "Export Tournament"
-      = link_to "Export", admin_tournament_path(@tournament, :format => "js"), :remote => true
+      = link_to admin_tournament_path(@tournament, format: "js"), remote: true do
+        = image_tag "icons/export.png", alt: "Export Tournament"
+      = link_to "Export", admin_tournament_path(@tournament, format: "js"), remote: true

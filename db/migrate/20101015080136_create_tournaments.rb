@@ -3,8 +3,8 @@ class CreateTournaments < ActiveRecord::Migration
     create_table :tournaments do |t|
       t.string   :name, :city, :site, :arbiter, :deputy, :tie_breaks, :time_control
       t.date     :start, :finish
-      t.string   :fed, :limit => 3
-      t.integer  :rounds, :limit => 1
+      t.string   :fed, limit: 3
+      t.integer  :rounds, limit: 1
       t.integer  :user_id
 
       t.string   :original_name, :original_tie_breaks

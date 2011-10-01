@@ -7,19 +7,19 @@
     %th Time Ago
   - if @logins.count == 0
     %tr
-      %td{:colspan => 5, :class => "centered"} No matches
+      %td{colspan: 5, class: "centered"} No matches
   - else
     - @logins.matches.each do |login|
       %tr
         %td= link_to login.user.email, [:admin, login.user]
         - icu_player = login.user.icu_player
         - if icu_player
-          %td= link_to icu_player.name, icu_player, :remote => true
+          %td= link_to icu_player.name, icu_player, remote: true
         - else
-          %td{:class => :error} None
+          %td{class: :error} None
         %td= login.problem
         %td= login.ip
         %td= time_ago_in_words login.created_at, true
   - if @logins.multi_page
     %tr
-      %th{:colspan => 5, :class => "centered"}= pagination_links(@logins)
+      %th{colspan: 5, class: "centered"}= pagination_links(@logins)

@@ -20,8 +20,8 @@ describe Tournament do
     end
 
     before(:each) do
-      @t = test_tournament("bunratty_masters_2011.tab", :fide => true, :user_id => 1)
-      @icut = @t.icu_tournament(:renumber => :rank)
+      @t = test_tournament("bunratty_masters_2011.tab", fide: true, user_id: 1)
+      @icut = @t.icu_tournament(renumber: :rank)
     end
 
     it "should create an ICU::Tournament copy" do
@@ -41,7 +41,7 @@ describe Tournament do
 
   context "#tie_break_selections" do
     before(:each) do
-      @t = Tournament.new(:name => 'Test', :start => "2000-01-01")
+      @t = Tournament.new(name: 'Test', start: "2000-01-01")
     end
 
     it "should create an ordered array of a tie break rule paired with a true or false value" do

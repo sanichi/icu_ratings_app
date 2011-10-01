@@ -1,6 +1,6 @@
 %table
   %tr
-    %td{:class => :floater}
+    %td{class: "floater"}
     %th FIDE ID
     %th Last Name
     %th First Name
@@ -11,24 +11,24 @@
     %th Title
   - if @fide_players.count == 0
     %tr
-      %td{:class => :floater}
-      %td{:colspan => 8, :class => "centered"} No matches
+      %td{class: "floater"}
+      %td{class: "centered", colspan: 8} No matches
   - else
     - @fide_players.matches.each do |p|
       %tr
-        %td{:class => "floater"}
+        %td{class: "floater"}
           - if @player
-            = link_to admin_player_path(@player, :fide_id => p.id, :authenticity_token => form_authenticity_token), :method => :put, :remote => true do
-              = image_tag "icons/link.png", :alt => "Link tournament player to this FIDE player"
-        %td= link_to p.id, p, :remote => true
+            = link_to admin_player_path(@player, fide_id: p.id, authenticity_token: form_authenticity_token), method: :put, remote: true do
+              = image_tag "icons/link.png", alt: "Link tournament player to this FIDE player"
+        %td= link_to p.id, p, remote: true
         %td= p.last_name
         %td= p.first_name
         %td= p.born
-        %td{:class => "centered"}= p.gender
-        %td{:class => "centered"}= p.fed
-        %td{:class => "centered"}= p.rating
-        %td{:class => "centered"}= p.title
+        %td{class: "centered"}= p.gender
+        %td{class: "centered"}= p.fed
+        %td{class: "centered"}= p.rating
+        %td{class: "centered"}= p.title
     - if @fide_players.multi_page
       %tr
-        %td{:class => "floater"}
-        %th{:colspan => 8, :class => "centered"}= pagination_links(@fide_players)
+        %td{class: "floater"}
+        %th{class: "centered", colspan: 8}= pagination_links(@fide_players)

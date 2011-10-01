@@ -10,7 +10,7 @@ class NewsItem < ActiveRecord::Base
 
   def self.search(params, path)
     params[:order] = "created" unless params[:order].to_s.match(/\A(created|updated)\Z/)
-    matches = includes(:user => :icu_player)
+    matches = includes(user: :icu_player)
     matches = matches.order("news_items.#{params[:order]}_at DESC")
     matches = matches.where("headline LIKE ?", "%#{params[:headline]}%") unless params[:headline].blank?
     matches = matches.where("story LIKE ?", "%#{params[:story]}%") unless params[:story].blank?

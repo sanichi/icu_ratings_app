@@ -1,14 +1,14 @@
-= form_for @news_item, :html => { :class => "simple-form wide short-labels" } do |f|
+= form_for @news_item, html: { class: "simple-form wide short-labels" } do |f|
   - if @news_item.errors.any?
-    = render :partial => "shared/errors", :locals => { :thing => @news_item, :name => "news item" }
+    = render partial: "shared/errors", locals: { thing: @news_item, name: "news item" }
   - if @news_item.user_id || current_user
-    = f.hidden_field :user_id, :value => @news_item.user_id || current_user.id
+    = f.hidden_field :user_id, value: @news_item.user_id || current_user.id
   .input
     = f.label :headline
-    = f.text_field :headline, :size => 80, :maxlength => 256
+    = f.text_field :headline, size: 80, maxlength: 256
   .input
     = f.label :story
-    = f.text_area :story, :size => "80x20"
+    = f.text_area :story, size: "80x20"
   .input
     = f.submit @news_item.new_record? ? "Create" : "Update"
-    = f.submit "Cancel", :class => "extra"
+    = f.submit "Cancel", class: "extra"

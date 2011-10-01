@@ -3,8 +3,8 @@ class Download < ActiveRecord::Base
   include Util::Model
 
   validates_presence_of :data, :content_type, :file_name
-  validates_length_of   :data, :maximum => 1.megabyte
-  validates_length_of   :comment, :maximum => 80
+  validates_length_of   :data, maximum: 1.megabyte
+  validates_length_of   :comment, maximum: 80
   
   def uploaded_file=(file)
     self.file_name    = base_part_of(file.original_filename)

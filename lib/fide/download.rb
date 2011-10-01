@@ -99,7 +99,7 @@ module FIDE
               end
               born = $1 if rest =~ /((19|20)\d\d)[^\d]*$/
               gender = rest =~ /w/ ? 'F' : 'M'
-              @their_players[id] = { :last_name => ln, :first_name => fn, :title => title, :fed => fed, :rating => rating, :games => games, :born => born, :gender => gender }
+              @their_players[id] = { last_name: ln, first_name: fn, title: title, fed: fed, rating: rating, games: games, born: born, gender: gender }
             end
           else
             @invalid.push("#{lineno}: #{line}") unless line.match(/^\s*(0\s*)?$/)
@@ -132,7 +132,7 @@ module FIDE
             @creates.push(id)
           end
           if oplr.valid?
-            oplr.save(:validation => false) if oplr.changed?
+            oplr.save(validation: false) if oplr.changed?
             if rating && games
               ofr = @our_ratings[id]
               if ofr
@@ -140,7 +140,7 @@ module FIDE
                 ofr.games = games
                 if ofr.valid?
                   if ofr.changed?
-                    ofr.save(:validation => false)
+                    ofr.save(validation: false)
                     @changes[:rating] += 1
                   end
                 else
@@ -148,7 +148,7 @@ module FIDE
                   raise SyncError.new("too many invalid records") if @invalid.size > 10
                 end
               else
-                oplr.fide_ratings.create(:period => @period, :rating => rating, :games => games)
+                oplr.fide_ratings.create(period: @period, rating: rating, games: games)
                 @changes[:rating] += 1 if @our_players[id]
               end
             end
@@ -280,7 +280,7 @@ module FIDE
         icu_id = '\N'
 
         # Read the previously saved data file line by line.
-        File.open(@data, :encoding => "ISO-8859-1").each_line do |line|
+        File.open(@data, encoding: "ISO-8859-1").each_line do |line|
           line.chomp!
           @count+= 1
 
@@ -443,7 +443,7 @@ module FIDE
     end
 
     def event(success)
-      Event.create(:name => @name, :report => report, :time => (Time.now - @start).to_i, :success => success)
+      Event.create(name: @name, report: report, time: (Time.now - @start).to_i, success: success)
     end
   end
 end

@@ -17,10 +17,10 @@ describe SessionsController do
 
     it "should log in a valid user" do
       visit log_in_path
-      page.fill_in "Email", :with => @user.email
-      page.fill_in "Password", :with => @user.password
+      page.fill_in "Email", with: @user.email
+      page.fill_in "Password", with: @user.password
       click_button "Log in"
-      page.should have_selector("span.notice", :text => /logged in as #{@user.icu_player.name(false)}/i)
+      page.should have_selector("span.notice", text: /logged in as #{@user.icu_player.name(false)}/i)
     end
   end
 end

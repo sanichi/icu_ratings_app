@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
   extend Util::Pagination
 
-  belongs_to :icu_player, :foreign_key => "icu_id"
+  belongs_to :icu_player, foreign_key: "icu_id"
   has_many :logins
   has_many :uploads
   has_many :tournaments
@@ -14,13 +14,13 @@ class User < ActiveRecord::Base
   
   before_validation :normalise_attributes
 
-  validates_format_of       :email, :with => EMAIL, :message => "(%{value}) is invalid"
-  validates_format_of       :preferred_email, :with => EMAIL, :allow_nil => true, :message => "(%{value}) is invalid"
-  validates_uniqueness_of   :email, :case_sensitive => false
+  validates_format_of       :email, with: EMAIL, message: "(%{value}) is invalid"
+  validates_format_of       :preferred_email, with: EMAIL, allow_nil: true, message: "(%{value}) is invalid"
+  validates_uniqueness_of   :email, case_sensitive: false
   validates_presence_of     :password
-  validates_inclusion_of    :role, :in => ROLES, :message => "(%{value}) is invalid"
-  validates_numericality_of :icu_id, :only_integer => true, :greater_than => 0, :message => "(%{value}) is invalid"
-  validates_date            :expiry, :on_or_after => "2004-12-31", :message => "(%{value}) is invalid"
+  validates_inclusion_of    :role, in: ROLES, message: "(%{value}) is invalid"
+  validates_numericality_of :icu_id, only_integer: true, greater_than: 0, message: "(%{value}) is invalid"
+  validates_date            :expiry, on_or_after: "2004-12-31", message: "(%{value}) is invalid"
 
   default_scope includes(:icu_player)
 
@@ -54,7 +54,7 @@ class User < ActiveRecord::Base
   end
 
   def login_event(ip, switch, problem)
-    logins.create(:ip => ip, :problem => problem, :role => role) unless switch
+    logins.create(ip: ip, problem: problem, role: role) unless switch
     raise "Sorry, your ICU membership expired on #{expiry}" if problem == "expiry"
     raise "Invalid email or password" if problem == "password"
   end

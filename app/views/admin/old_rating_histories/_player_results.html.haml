@@ -1,5 +1,5 @@
 %p
-  = raw "Old tournaments (#{link_to "details", admin_old_rating_histories_path(:icu_player_id => icu_id)}):"
+  = raw "Old tournaments (#{link_to "details", admin_old_rating_histories_path(icu_player_id: icu_id)}):"
   - if @old_rating_histories.multi_page
     = pagination_links(@old_rating_histories)
 %ul

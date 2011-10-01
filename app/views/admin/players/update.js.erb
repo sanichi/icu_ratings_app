@@ -3,5 +3,5 @@
   $.each(["update_player", "search_icu_player", "search_fide_player"], function(i, name) { $("#dialog_" + name).dialog("close") });
   $("#dialog_status").html("<%= escape_javascript(render('status')) %>");
 <% else %>
-  alert("<%= escape_javascript(render('shared/error', :object => @player, :title => 'Error updating player:')) %>")
+  alert("<%= escape_javascript(render('shared/error', object: @player, title: 'Error updating player:')) %>")
 <% end %>

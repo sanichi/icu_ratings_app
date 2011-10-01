@@ -1,4 +1,4 @@
-%table{:class => "right-headers"}
+%table{class: "right-headers"}
   %tr
     %th Name
     %td= @tournament.name
@@ -31,7 +31,7 @@
     %td= @tournament.time_control
   %tr
     %th Tie Break Rules
-    %td{:id => "show_tie_breaks"}= @tournament.tie_breaks
+    %td{id: "show_tie_breaks"}= @tournament.tie_breaks
   - if @tournament.upload && can?(:read, @tournament.upload)
     %tr
       %th Upload

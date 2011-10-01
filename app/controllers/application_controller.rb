@@ -5,9 +5,9 @@ class ApplicationController < ActionController::Base
 
   rescue_from CanCan::AccessDenied do |exception|
     if request.xhr?
-      render "shared/alert", :locals => { :message => exception.message }
+      render "shared/alert", locals: { message: exception.message }
     else
-      redirect_to log_in_path, :alert => exception.message
+      redirect_to log_in_path, alert: exception.message
     end
   end
 end

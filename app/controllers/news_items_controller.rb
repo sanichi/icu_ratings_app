@@ -1,5 +1,5 @@
 class NewsItemsController < ApplicationController
-  load_resource :except => :index
+  load_resource except: "index"
   authorize_resource
 
   def index
@@ -10,7 +10,7 @@ class NewsItemsController < ApplicationController
   def show
     respond_to do |format|
       format.html
-      format.text { render :text => @news_item.story }
+      format.text { render text: @news_item.story }
     end
   end
 
@@ -24,9 +24,9 @@ class NewsItemsController < ApplicationController
     if params[:commit] == "Cancel"
       redirect_to news_items_path
     elsif @news_item.save
-      redirect_to @news_item, :notice => "News was successfully created."
+      redirect_to @news_item, notice: "News was successfully created."
     else
-      render :action => "new"
+      render action: "new"
     end
   end
 
@@ -34,9 +34,9 @@ class NewsItemsController < ApplicationController
     if params[:commit] == "Cancel"
       redirect_to @news_item
     elsif @news_item.update_attributes(params[:news_item])
-      redirect_to @news_item, :notice => "News was successfully updated."
+      redirect_to @news_item, notice: "News was successfully updated."
     else
-      render :action => "edit"
+      render action: "edit"
     end
   end
 

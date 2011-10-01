@@ -7,7 +7,7 @@ set :bundle_without, [:darwin, :development, :test]
 set :application, "ratings.icu.ie"
 role :app, application
 role :web, application
-role :db,  application, :primary => true
+role :db,  application, primary: true
 
 set :user, "mjo"
 set :deploy_to, "/var/apps/ratings"
@@ -20,7 +20,7 @@ set :branch, "master"
 
 namespace :deploy do
   desc "Tell Passenger to restart."
-  task :restart, :roles => :web do
+  task :restart, roles: :web do
     run "touch #{deploy_to}/current/tmp/restart.txt"
   end
 
@@ -45,7 +45,7 @@ namespace :deploy do
   end
 
   desc "Make sure there is something to deploy."
-  task :check_revision, :roles => :web do
+  task :check_revision, roles: :web do
     unless `git rev-parse HEAD` == `git rev-parse origin/master`
       puts "WARNING: HEAD is not the same as origin/master"
       puts "Run `git push` to sync changes."
@@ -55,18 +55,18 @@ namespace :deploy do
 
   namespace :web do
     desc "Present a maintenance page to visitors using REASON and BACK enviroment variables (or defaults)."
-    task :disable, :roles => :web, :except => { :no_release => true } do
+    task :disable, roles: :web, except: { no_release: true } do
       require 'haml'
       file = "#{shared_path}/system/#{maintenance_basename}.html"
       on_rollback { run "rm #{file}" }
 
       template = File.read("app/views/layouts/maintenance.html.haml")
-      engine = Haml::Engine.new(template, :format => :html5, :attr_wrapper => '"')
+      engine = Haml::Engine.new(template, format: :html5, attr_wrapper: '"')
       reason = ENV["REASON"] || "maintenance"
       back = ENV["BACK"] || "shortly"
       page = engine.render(binding)
 
-      put page, file, :mode => 0644
+      put page, file, mode: 0644
     end
   end
 end

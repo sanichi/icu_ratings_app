@@ -1,6 +1,6 @@
 module Admin
   class TournamentsController < ApplicationController
-    load_resource :except => :index
+    load_resource except: "index"
     authorize_resource
 
     def index
@@ -11,7 +11,7 @@ module Admin
     def show
       respond_to do |format|
         format.html { @players = @tournament.players.includes(:results) }
-        format.text { render :text => @tournament.export(params) }
+        format.text { render text: @tournament.export(params) }
         format.js   { render :export }
       end
     end

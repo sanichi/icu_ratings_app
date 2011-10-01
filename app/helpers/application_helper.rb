@@ -1,6 +1,6 @@
 module ApplicationHelper
   def flash_messages
-    render "shared/flash", :flash => flash
+    render "shared/flash", flash: flash
   end
 
   def score_html(score, args={})
@@ -24,7 +24,7 @@ module ApplicationHelper
     str.html_safe
   end
 
-  def federation_menu(opt={:top => 'IRL', :none => 'None'})
+  def federation_menu(opt = { top: 'IRL', none: 'None' })
     ICU::Federation.menu(opt)
   end
 
@@ -95,12 +95,12 @@ module ApplicationHelper
       target ||= "_fide_com"
     end
     return nil unless host && path
-    link_to text, "http://#{host}/#{path}", :target => target, :class => "external"
+    link_to text, "http://#{host}/#{path}", target: target, class: "external"
   end
   
   # Returns a plain link to the main ICU site.
   def link_to_icu(label, path="")
-    link_to label, "http://www.icu.ie/#{path}", :target => "_icu_ie", :class => "external"
+    link_to label, "http://www.icu.ie/#{path}", target: "_icu_ie", class: "external"
   end
 
   # Returns an ICU email link.
@@ -111,23 +111,23 @@ module ApplicationHelper
       when :ratings     then "Rating Officer"
       else "ICU"
     end
-    mail_to "#{officer}@icu.ie", name, :encode => "hex"
+    mail_to "#{officer}@icu.ie", name, encode: "hex"
   end
 
   # Returns a string showing results displayed plus next and previous links.
   def pagination_links(pager)
     links = Array.new
-    links.push(link_to "next", pager.next_page, :remote => true) if pager.before_end
-    links.push(link_to "prev", pager.prev_page, :remote => true) if pager.after_start
+    links.push(link_to "next", pager.next_page, remote: true) if pager.before_end
+    links.push(link_to "prev", pager.prev_page, remote: true) if pager.after_start
     raw "#{pager.sequence} of #{pluralize(pager.count, "match")}#{links.size > 0 ? ": " : ""}#{links.join(", ")}"
   end
 
   # These dialogs are used in more than one place so are defined here.
   def icu_player_details_dialog
-    render "shared/dialog.html", :id => "icu_player_details", :width => 800, :button => false, :cancel => "Dismiss", :title => "ICU Player"
+    render "shared/dialog.html", id: "icu_player_details", width: 800, button: false, cancel: "Dismiss", title: "ICU Player"
   end
   def fide_player_details_dialog
-    render "shared/dialog.html", :id => "fide_player_details", :width => 800, :button => false, :cancel => "Dismiss", :title => "FIDE Player"
+    render "shared/dialog.html", id: "fide_player_details", width: 800, button: false, cancel: "Dismiss", title: "FIDE Player"
   end
 
   # Returns a summary of created and updated datetimes.
@@ -138,10 +138,10 @@ module ApplicationHelper
       created = created.to_date
       updated = updated.to_date
     end
-    summary = "created <span>#{I18n.l(created, :format => :long)}</span>"
+    summary = "created <span>#{I18n.l(created, format: :long)}</span>"
     unless updated == created
       format = created.year == updated.year ? :short : :long
-      summary << "; updated <span>#{I18n.l(updated, :format => format)}<span>"
+      summary << "; updated <span>#{I18n.l(updated, format: format)}<span>"
     end
     raw summary
   end

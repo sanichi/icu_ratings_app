@@ -4,12 +4,12 @@ require 'spec_helper'
 describe Admin::UploadsController do
   def sample_players
     IcuPlayer.all.each { |p| p.delete }
-    @ryan   = Factory(:icu_player, :id => 6897,  :last_name => "Griffiths", :first_name => "Ryan-Rhys")
-    @jamie  = Factory(:icu_player, :id => 5226,  :last_name => "Flynn",     :first_name => "Jamie")
-    @leon   = Factory(:icu_player, :id => 6409,  :last_name => "Hulleman",  :first_name => "Leon")
-    @thomas = Factory(:icu_player, :id => 10914, :last_name => "Dunne",     :first_name => "Thomas")
-    @peter  = Factory(:icu_player, :id => 159,   :last_name => "Cafolla",   :first_name => "Peter")
-    @tony   = Factory(:icu_player, :id => 456,   :last_name => "Fox",       :first_name => "Tony")
+    @ryan   = Factory(:icu_player, id: 6897,  last_name: "Griffiths", first_name: "Ryan-Rhys")
+    @jamie  = Factory(:icu_player, id: 5226,  last_name: "Flynn",     first_name: "Jamie")
+    @leon   = Factory(:icu_player, id: 6409,  last_name: "Hulleman",  first_name: "Leon")
+    @thomas = Factory(:icu_player, id: 10914, last_name: "Dunne",     first_name: "Thomas")
+    @peter  = Factory(:icu_player, id: 159,   last_name: "Cafolla",   first_name: "Peter")
+    @tony   = Factory(:icu_player, id: 456,   last_name: "Fox",       first_name: "Tony")
   end
 
   describe "test_upload utility" do
@@ -22,17 +22,17 @@ describe Admin::UploadsController do
 
   describe "POST 'create'" do
     before(:each) do
-      session[:user_id] = Factory(:user, :role => "reporter").id
+      session[:user_id] = Factory(:user, role: "reporter").id
     end
 
     describe "valid SwissPerfect file" do
       before(:each) do
         @params =
         {
-          :file   => test_upload("junior_championships_u19_2010.zip"),
-          :upload => { :format => "SwissPerfect" },
-          :start  => "2010-04-11",
-          :feds   => "",
+          file:   test_upload("junior_championships_u19_2010.zip"),
+          upload: { format: "SwissPerfect" },
+          start:  "2010-04-11",
+          feds:   "",
         }
         sample_players
       end
@@ -43,7 +43,7 @@ describe Admin::UploadsController do
 
         Upload.count.should == 1
         Tournament.count.should == 1
-        Player.where(:status => "ok").count.should == 4
+        Player.where(status: "ok").count.should == 4
         @thomas.players.size.should == 1
         @ryan.players.size.should == 1
         @jamie.players.size.should == 1
@@ -71,9 +71,9 @@ describe Admin::UploadsController do
       before(:each) do
         @params =
         {
-          :file   => test_upload("junior_championships_u19_2010.tab"),
-          :upload => { :format => "Krause" },
-          :feds   => "",
+          file:   test_upload("junior_championships_u19_2010.tab"),
+          upload: { format: "Krause" },
+          feds:   "",
         }
         sample_players
       end
@@ -84,7 +84,7 @@ describe Admin::UploadsController do
 
         Upload.count.should == 1
         Tournament.count.should == 1
-        Player.where(:status => "ok").count.should == 4
+        Player.where(status: "ok").count.should == 4
         @thomas.players.size.should == 1
         @ryan.players.size.should == 1
         @jamie.players.size.should == 1
@@ -116,10 +116,10 @@ describe Admin::UploadsController do
       before(:each) do
         @params =
         {
-          :file   => test_upload("junior_championships_u19_2010.txt"),
-          :upload => { :format => "SPExport" },
-          :name   => "U19 All Ireland",
-          :start  => "2010-04-11",
+          file:   test_upload("junior_championships_u19_2010.txt"),
+          upload: { format: "SPExport" },
+          name:   "U19 All Ireland",
+          start:  "2010-04-11",
         }
         sample_players
       end
@@ -130,7 +130,7 @@ describe Admin::UploadsController do
 
         Upload.count.should == 1
         Tournament.count.should == 1
-        Player.where(:status => "ok").count.should == 4
+        Player.where(status: "ok").count.should == 4
         @thomas.players.size.should == 1
         @ryan.players.size.should == 1
         @jamie.players.size.should == 1
@@ -162,8 +162,8 @@ describe Admin::UploadsController do
       before(:each) do
         @params =
         {
-          :file       => test_upload("isle_of_man_2007.csv"),
-          :upload     => { :format => "ForeignCSV" },
+          file:   test_upload("isle_of_man_2007.csv"),
+          upload: { format: "ForeignCSV" },
         }
         sample_players
       end
@@ -174,16 +174,16 @@ describe Admin::UploadsController do
 
         Upload.count.should == 1
         Tournament.count.should == 1
-        Player.where(:status => "ok").count.should == 15
-        Player.where(:category => "icu_player").count.should == 2
-        Player.where(:category => "foreign_player").count.should == 12
+        Player.where(status: "ok").count.should == 15
+        Player.where(category: "icu_player").count.should == 2
+        Player.where(category: "foreign_player").count.should == 12
         @peter.players.size.should == 1
         @tony.players.size.should == 1
 
         tournament = Tournament.last
         tournament.name.should == "Isle of Man Masters, 2007"
         tournament.start.to_s.should == "2007-09-22"
-        peter, tony = tournament.players.where(:category => "icu_player").order(:last_name)
+        peter, tony = tournament.players.where(category: "icu_player").order(:last_name)
         doreen = peter.results.find_by_round(5).opponent
         tony.name.should == "Fox, Anthony"
         tony.results.size.should == 9
@@ -193,7 +193,7 @@ describe Admin::UploadsController do
         tony.results.find_by_round(6).rateable.should be_false
         tony.results.find_by_round(9).result.should == "D"
         peter.results.size.should == 9
-        peter.results.where(:rateable => true).size.should == 9  # should this be 8?
+        peter.results.where(rateable: true).size.should == 9  # should this be 8?
         peter.score.should == 3.0
         peter.results.map(&:opponent).map(&:fed).join("|").should == "ENG|NED|IRL|IRL|GER|ENG|ISR|AUS|SCO"
         peter.results.map(&:opponent).map(&:fide_rating).join("|").should == "2198||2100|2394|2151|2282|2205|2200|2223"
@@ -210,10 +210,10 @@ describe Admin::UploadsController do
       before(:each) do
         @params =
         {
-          :file   => test_upload("rathmines_senior_2011.zip"),
-          :upload => { :format => "SwissPerfect" },
-          :start  => "2011-04-04",
-          :feds   => "",
+          file:   test_upload("rathmines_senior_2011.zip"),
+          upload: { format: "SwissPerfect" },
+          start:  "2011-04-04",
+          feds:   "",
         }
       end
 

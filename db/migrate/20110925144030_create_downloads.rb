@@ -4,7 +4,7 @@ class CreateDownloads < ActiveRecord::Migration
       t.string :comment
       t.string :file_name
       t.string :content_type
-      t.binary :data, :limit => 1.megabyte
+      t.binary :data, limit: 1.megabyte
 
       t.timestamps
     end

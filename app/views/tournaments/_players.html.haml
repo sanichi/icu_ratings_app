@@ -1,18 +1,18 @@
-%table{:class => "cushioned"}
+%table{class: "cushioned"}
   %tr
-    %td{:colspan => "#{@rankable ? 2 : 1}"}
+    %td{colspan: "#{@rankable ? 2 : 1}"}
     - 1.upto(@tournament.rounds) do |r|
-      %td{:class => "centered"}= r
+      %td{class: "centered"}= r
     %td
   - @players.each do |player|
     %tr
-      %td{:id => player_id(player), :class => player_class(player)}= player.name
+      %td{id: player_id(player), class: player_class(player)}= player.name
       - if @rankable
-        %td{:class => "centered"}= player.rank
+        %td{class: "centered"}= player.rank
       - 1.upto(@tournament.rounds) do |r|
         - result = player.result_in_round(r)
         - if result
-          %td{:id => result_id(result), :class => result_class(result)}= score_html(result.score, :rateable => result.rateable)
+          %td{id: result_id(result), class: result_class(result)}= score_html(result.score, rateable: result.rateable)
         - else
           %td
-      %td{:class => "centered"}= score_html(player.score)
+      %td{class: "centered"}= score_html(player.score)

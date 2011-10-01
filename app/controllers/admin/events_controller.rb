@@ -1,6 +1,6 @@
 module Admin
   class EventsController < ApplicationController
-    load_resource :except => :index
+    load_resource except: "index"
     authorize_resource
     
     def index

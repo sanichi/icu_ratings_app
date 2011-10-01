@@ -8,7 +8,7 @@
     = link_to @tournament.name, admin_tournament_path(@tournament)
 
 - if @prev && @next
-  %table{:class => "cushioned"}
+  %table{class: "cushioned"}
     %tr
       %td= link_to raw("&larr; #{@prev.last_name}"), [:admin, @prev]
       %td= link_to raw("#{@next.last_name} &rarr;"), [:admin, @next]
@@ -20,9 +20,9 @@
     %td#results
       = render "results"
 
-= render "shared/dialog.html", :id => "update_player"
-= render "shared/dialog.html", :id => "search_icu_player", :width => 1000, :button => false
-= render "shared/dialog.html", :id => "search_fide_player", :width => 1000, :button => false
-= render "shared/dialog.html", :id => "status", :button => false, :cancel => "Dismiss", :html => render("status")
+= render "shared/dialog.html", id: "update_player"
+= render "shared/dialog.html", id: "search_icu_player", width: 1000, button: false
+= render "shared/dialog.html", id: "search_fide_player", width: 1000, button: false
+= render "shared/dialog.html", id: "status", button: false, cancel: "Dismiss", html: render("status")
 = icu_player_details_dialog
 = fide_player_details_dialog

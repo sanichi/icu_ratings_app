@@ -4,24 +4,24 @@
     %th Time Ago
     %th Secs
     %th OK
-    %th{:class => "floater"}
+    %th{class: "floater"}
   - if @events.count == 0
     %tr
-      %td{:colspan => 4, :class => "centered"} No matches
+      %td{colspan: 4, class: "centered"} No matches
   - else
     - @events.matches.each do |event|
       %tr
         %td= event.name
         %td= time_ago_in_words event.created_at, true        
-        %td{:class => "centered"}= event.time
-        %td{:class => "centered"}
-          = image_tag "icons/#{event.success ? 'tick' : 'exclamation'}.png", :alt => event.success ? "OK" : "problem"
-        %td{:class => "floater"}
-          = link_to admin_event_path(event), :remote => true do
-            = image_tag "icons/show.png", :alt => "Show event details"
-          = link_to admin_event_path(event), :confirm => "Are you sure you want to delete this event?", :method => :delete do
-            = image_tag "icons/bin.png", :alt => "Delete event"
+        %td{class: "centered"}= event.time
+        %td{class: "centered"}
+          = image_tag "icons/#{event.success ? 'tick' : 'exclamation'}.png", alt: event.success ? "OK" : "problem"
+        %td{class: "floater"}
+          = link_to admin_event_path(event), remote: true do
+            = image_tag "icons/show.png", alt: "Show event details"
+          = link_to admin_event_path(event), confirm: "Are you sure you want to delete this event?", method: :delete do
+            = image_tag "icons/bin.png", alt: "Delete event"
   - if @events.multi_page
     %tr
-      %th{:colspan => 4, :class => "centered"}= pagination_links(@events)
-      %th{:class => "floater"}
+      %th{class: "centered", colspan: 4}= pagination_links(@events)
+      %th{class: "floater"}

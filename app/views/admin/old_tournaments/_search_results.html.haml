@@ -5,13 +5,13 @@
     %th Players
   - if @old_tournaments.count == 0
     %tr
-      %td{:colspan => 3, :class => "centered"} No matches
+      %td{colspan: 3, class: "centered"} No matches
   - else
     - @old_tournaments.matches.each do |t|
       %tr
-        %td= link_to t.name, admin_old_rating_histories_path(:old_tournament_id => t.id)
+        %td= link_to t.name, admin_old_rating_histories_path(old_tournament_id: t.id)
         %td= t.date
-        %td{:class => "centered"}= t.player_count
+        %td{class: "centered"}= t.player_count
   - if @old_tournaments.multi_page
     %tr
-      %td{:colspan => 3, :class => "centered"}= pagination_links(@old_tournaments)
+      %td{colspan: 3, class: "centered"}= pagination_links(@old_tournaments)

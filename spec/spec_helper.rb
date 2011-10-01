@@ -44,10 +44,10 @@ def test_upload(name, arg={})
   FileUtils.cp(path, tempfile.path)
   hash =
   {
-    :filename => name,
-    :type     => arg[:type],
-    :tempfile => tempfile,
-    :head     => "Content-Disposition: form-data; name=\"#{arg[:param]}\"; filename=\"#{name}\"\r\nContent-Type: #{arg[:type]}\r\n"
+    filename: name,
+    type:     arg[:type],
+    tempfile: tempfile,
+    head:     "Content-Disposition: form-data; name=\"#{arg[:param]}\"; filename=\"#{name}\"\r\nContent-Type: #{arg[:type]}\r\n"
   }
   ActionDispatch::Http::UploadedFile.new(hash)
 end
@@ -84,10 +84,10 @@ end
 
 # Create and login a user with a given role.
 def login_user(role)
-  user = Factory(:user, :role => role)
+  user = Factory(:user, role: role)
   visit "/log_in"
-  page.fill_in "Email", :with => user.email
-  page.fill_in "Password", :with => user.password
+  page.fill_in "Email", with: user.email
+  page.fill_in "Password", with: user.password
   click_button "Log in"
   user
 end

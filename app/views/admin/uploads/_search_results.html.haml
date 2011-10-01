@@ -7,7 +7,7 @@
     %th Tournament
   - if @uploads.count == 0
     %tr
-      %td{:colspan => 4, :class => "centered"} No matches
+      %td{colspan: 4, class: "centered"} No matches
   - @uploads.matches.each do |u|
     %tr
       %td= link_to u.name, [:admin, u]
@@ -17,9 +17,9 @@
       %td= u.tournament ? link_to(u.tournament.name, [:admin, u.tournament]) : ''
   - if @uploads.multi_page
     %tr
-      %td{:colspan => 5, :class => "centered"}= pagination_links(@uploads)
+      %td{colspan: 5, class: "centered"}= pagination_links(@uploads)
 
-%table{:class => "turbaned"}
+%table{class: "turbaned"}
   %tr
     %td
       = link_to "New Upload", new_admin_upload_path

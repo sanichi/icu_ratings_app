@@ -4,7 +4,7 @@ class CreateOldTournaments < ActiveRecord::Migration
     create_table :old_tournaments do |t|
       t.string   :name
       t.date     :date
-      t.integer  :player_count, :limit => 2
+      t.integer  :player_count, limit: 2
     end
 
     # This is fast but it needs the column order to match and the DB user to have FILE privilege.

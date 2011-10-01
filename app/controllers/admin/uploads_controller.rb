@@ -12,28 +12,28 @@ module Admin
     end
 
     def new
-      @upload = Upload.new(:format => Upload::DEFAULT_FORMAT)
+      @upload = Upload.new(format: Upload::DEFAULT_FORMAT)
       authorize!(:new, @upload)
     end
 
     def create
-      @upload = Upload.new(params[:upload].merge!(:user_id => session[:user_id]))
+      @upload = Upload.new(params[:upload].merge!(user_id: session[:user_id]))
       authorize!(:create, @upload)
       @tournament = @upload.extract(params, session[:user_id])
       if @upload.save
         if @tournament
           if @tournament.save
             @tournament.renumber_opponents
-            redirect_to [:admin, @tournament], :notice => "New tournament created"
+            redirect_to [:admin, @tournament], notice: "New tournament created"
           else
             @upload.update_attribute :error, @tournament.error_summary
-            redirect_to @upload, :alert => "Invalid tournament"
+            redirect_to @upload, alert: "Invalid tournament"
           end
         else
-          redirect_to [:admin, @upload], :alert => "Cannot extract tournament from file"
+          redirect_to [:admin, @upload], alert: "Cannot extract tournament from file"
         end
       else
-        render :action => 'new'
+        render action: "new"
       end
     end
     
@@ -41,7 +41,7 @@ module Admin
       @upload = Upload.find(params[:id])
       authorize!(:destroy, @upload)
       if @upload.tournament.present?
-        redirect_to [:admin, @upload], :alert => "You can't delete an upload which is associated with tournament"
+        redirect_to [:admin, @upload], alert: "You can't delete an upload which is associated with tournament"
       else
         @upload.destroy
         redirect_to admin_uploads_url

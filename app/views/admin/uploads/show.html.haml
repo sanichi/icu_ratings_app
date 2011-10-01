@@ -3,7 +3,7 @@
 .header
   %span Upload
 
-%table{:class => "right-headers"}
+%table{class: "right-headers"}
   - if @upload.tournament
     %tr
       %th Tournament
@@ -35,7 +35,7 @@
       %td= @upload.error
 
 - if can?(:destroy, @upload) && @upload.tournament.blank?
-  %table{:class => "turbaned"}
+  %table{class: "turbaned"}
     %tr
       %td
-        = link_to "Delete", [:admin, @upload], :confirm => 'Are you sure?', :method => :delete
+        = link_to "Delete", [:admin, @upload], confirm: "Are you sure?", method: :delete

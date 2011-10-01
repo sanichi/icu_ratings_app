@@ -1,9 +1,9 @@
 %table
-  %tr{:class => "splitter"}
+  %tr{class: "splitter"}
     %td
-      %table{:class => "right-headers"}
+      %table{class: "right-headers"}
         %tr
-          %td{:class => "floater centered", :colspan => 2}
+          %td{class: "floater centered", colspan: 2}
             %h3= @fide_player.name
         %tr
           %th FIDE ID
@@ -32,12 +32,12 @@
             %th ICU ID
             %td
               = succeed "," do
-                = link_to icu_player.id, icu_player, :remote => true
+                = link_to icu_player.id, icu_player, remote: true
               = foreign_url_for(icu_player)
     %td
       %table
         %tr
-          %td{:class => "centered floater", :colspan => 3}
+          %td{class: "centered floater", colspan: 3}
             %h3 Recent Ratings
         %tr
           %th Date
@@ -49,11 +49,11 @@
           - if i < limit || ratings.size <= limit + 2 || i + 1 == ratings.size
             %tr
               %td= rating.period
-              %td{:class => "centered"}= rating.rating
-              %td{:class => "centered"}= rating.games
+              %td{class: "centered"}= rating.rating
+              %td{class: "centered"}= rating.games
           - elsif i == limit
             %tr
-              %td{:colspan => 3, :class => "centered"}= "... #{ratings.size - limit - 1} more ..."
+              %td{class: "centered", colspan: 3}= "... #{ratings.size - limit - 1} more ..."
         - if @fide_player.fide_ratings.size == 0
           %tr
-            %td{:class => "centered", :colspan => 3} None available
+            %td{class: "centered", colspan: 3} None available
