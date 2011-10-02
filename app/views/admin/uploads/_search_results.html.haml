@@ -7,7 +7,7 @@
     %th Tournament
   - if @uploads.count == 0
     %tr
-      %td{colspan: 4, class: "centered"} No matches
+      %td{colspan: 5, class: "centered"} No matches
   - @uploads.matches.each do |u|
     %tr
       %td= link_to u.name, [:admin, u]

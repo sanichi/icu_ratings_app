@@ -8,6 +8,7 @@
   - if @events.count == 0
     %tr
       %td{colspan: 4, class: "centered"} No matches
+      %td{class: "floater"}
   - else
     - @events.matches.each do |event|
       %tr
