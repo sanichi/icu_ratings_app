@@ -2,6 +2,7 @@
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
+require 'database_cleaner'
 require 'util/hacks'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
@@ -12,22 +13,20 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 Util::Hacks.fix_mime_types
 
 RSpec.configure do |config|
-  # == Mock Framework
-  #
-  # If you prefer to use mocha, flexmock or RR, uncomment the appropriate line:
-  #
-  # config.mock_with :mocha
-  # config.mock_with :flexmock
-  # config.mock_with :rr
+  # Mock framework.
   config.mock_with :rspec
 
-  # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  # config.fixture_path = "#{::Rails.root}/spec/fixtures"
-
-  # If you're not using ActiveRecord, or you'd prefer not to run each of your
-  # examples within a transaction, remove the following line or assign false
-  # instead of true.
-  config.use_transactional_fixtures = true
+  # To be able to use selenium tests we use database_cleaner with truncation
+  # strategy for all tests (slower but more reliable). See Railscasts 257.
+  config.use_transactional_fixtures = false
+  unless config.use_transactional_fixtures
+    config.before(:suite) do
+      DatabaseCleaner.strategy = :truncation
+    end
+    config.after(:each) do
+      DatabaseCleaner.clean
+    end
+  end
 end
 
 # Return exactly the same type of object used for file uploads.

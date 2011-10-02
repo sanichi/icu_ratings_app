@@ -63,7 +63,8 @@ describe "Upload" do
         @file = "#{Rails.root}/spec/files/invalid.txt"
       end
 
-      it "can delete uploads they don't own" do
+      it "can delete uploads they don't own", js: true do
+        Upload.count.should == 0
         visit "/admin/uploads/new"
         page.select "FIDE-Krause", from: "upload_format"
         page.attach_file "file", @file
@@ -75,6 +76,8 @@ describe "Upload" do
         upload.user.should_not == @user
         visit "/admin/uploads/#{upload.id}"
         page.click_link("Delete")
+        page.driver.browser.switch_to.alert.accept
+        page.current_path.should == "/admin/uploads"
         Upload.count.should == 0
       end
     end

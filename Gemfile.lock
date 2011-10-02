@@ -49,6 +49,7 @@ GEM
       ffi (~> 1.0.6)
     chronic (0.6.4)
     coderay (0.9.8)
+    database_cleaner (0.6.7)
     dbf (1.2.9)
       activesupport (>= 2.3.5)
       fastercsv (>= 1.4.0)
@@ -176,6 +177,7 @@ DEPENDENCIES
   cancan (~> 1.6)
   capistrano
   capybara
+  database_cleaner
   escape_utils
   factory_girl_rails
   faker
