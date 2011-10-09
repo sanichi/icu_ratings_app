@@ -8,7 +8,7 @@ describe "Download" do
 
     it "cannot create, update or view downloads" do
       [nil, "member"].each do |role|
-        login_user(role) if role
+        login(role) if role
         ["/downloads", "/downloads/new", "downloads/#{@download.id}", "/downloads/#{@download.id}/edit"].each do |path|
           visit path
           page.should have_selector("span.alert", text: /not authorized/i)
@@ -19,7 +19,7 @@ describe "Download" do
 
   describe "reporters" do
     before(:each) do
-      login_user("reporter")
+      login("reporter")
       @download = Factory(:download)
     end
 
@@ -46,9 +46,9 @@ describe "Download" do
 
   describe "officers" do
     before(:each) do
-      login_user("officer")
-      @text = "#{Rails.root}/spec/files/download.txt"
-      @image = "#{Rails.root}/spec/files/download.png"
+      login("officer")
+      @text = test_file_path("download.txt")
+      @image = test_file_path("download.png")
     end
 
     it "can create, view, edit and delete downloads" do
@@ -92,7 +92,7 @@ describe "Download" do
 
   describe "paging" do
     before(:each) do
-      login_user("reporter")
+      login("reporter")
       (1..16).each { Factory(:download) }
       @xpath = '//a[contains(.,".txt") and starts-with(@href,"/downloads/")]'
     end

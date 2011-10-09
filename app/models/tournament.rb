@@ -2,10 +2,11 @@ class Tournament < ActiveRecord::Base
   extend Util::Pagination
 
   FEDS = ICU::Federation.codes
+  STAGE = %w[unrated staged rated changed]
   TIEBREAK = "(?:#{ICU::TieBreak.rules.map(&:id).join('|')})"
 
-  has_one    :upload
-  has_many   :players, include: :results
+  has_one    :upload, dependent: :destroy
+  has_many   :players, dependent: :destroy, include: :results
   belongs_to :user
 
   default_scope order("start DESC, finish DESC, name")
@@ -14,21 +15,22 @@ class Tournament < ActiveRecord::Base
 
   before_validation :normalise_attributes
 
-  validates_presence_of     :name, :start
+  validates_presence_of     :name, :start, :status
   validates_date            :start, after: '1900-01-01'
   validates_date            :finish, after: '1900-01-01', allow_nil: true
   validate                  :finish_on_or_after_start
   validates_inclusion_of    :fed, in: FEDS, allow_nil: true, message: '(%{value}) is invalid'
+  validates_inclusion_of    :stage, in: STAGE, message: '(%{value}) is invalid'
   validates_format_of       :tie_breaks, with: /^#{TIEBREAK}(?:,#{TIEBREAK})*$/, allow_nil: true
   validates_numericality_of :user_id, only_integer: true, greater_than: 0, message: "(%{value}) is invalid"
 
   # Build a Tournament from an icu_tournament object parsed from an uploaded file.
   def self.build_from_icut(icut, upload=nil)
     self.new do |tournament|
-      %w{name start finish rounds fed city site arbiter deputy time_control}.each do |attr|
+      %w[name start finish rounds fed city site arbiter deputy time_control].each do |attr|
         tournament.send("#{attr}=", icut.send(attr)) unless icut.send(attr).blank?
       end
-      %w{name start finish}.each do |key|
+      %w[name start finish].each do |key|
         tournament.send("original_#{key}=", icut.send(key)) unless icut.send(key).blank?
       end
       unless icut.tie_breaks.size == 0
@@ -62,7 +64,7 @@ class Tournament < ActiveRecord::Base
   # Return an ICU::Tournament instance built from a database Tournament.
   def icu_tournament(opts={})
     icut = ICU::Tournament.new(name, start)
-    %w{finish rounds fed city site arbiter deputy time_control}.each do |attr|
+    %w[finish rounds fed city site arbiter deputy time_control].each do |attr|
       icut.send("#{attr}=", self.send(attr)) unless self.send(attr).blank?
     end
     icut.tie_breaks = tie_breaks.split(',') unless tie_breaks.blank?
@@ -142,9 +144,10 @@ class Tournament < ActiveRecord::Base
     available
   end
 
-  # Return a hash describing the players' ranking numbers.
+  # Return a hash describing the players' ranking numbers (e.g. if they're consistent or not).
   def ranking_summary
     r2s, min, max, dup = Hash.new, nil, nil, false
+    # The minimum and maximum ranking numbers.
     players.reject{ |p| p.rank.nil? }.each do |p|
       dup = true if r2s[p.rank]
       r2s[p.rank] = p.score
@@ -160,8 +163,8 @@ class Tournament < ActiveRecord::Base
       when max != players.size            then "should end with #{players.size}"
       else (min..max).find { |r| r > min && r2s[r-1] < r2s[r] }
     end
-    # Turn the invalidity into a boolean, symbol and string.
-    # Calling code should not rely on the string value which is for the UI and may change.
+    # Turn the invalidity into a hash with various values including a string description.
+    # Calling code should not rely on the description which is for the UI and may change.
     case invalid
     when nil
       symbol = :valid
@@ -237,15 +240,29 @@ class Tournament < ActiveRecord::Base
     samples.join("; ")
   end
 
+  # Return a summary of the orinial data.
   def original_data
     data = Array.new
-    %w{name start finish tie_breaks}.each do |key|
+    %w[name start finish tie_breaks].each do |key|
       val = self.send("original_#{key}")
       next if val.blank?
       val.gsub!(/,/, "|") if key == "tie_breaks"
       data.push val
     end
     data.join(", ")
+  end
+
+  def deletable?
+    stage == "unrated"
+  end
+
+  def status_ok?
+    status == "ok"
+  end
+
+  def check_status
+    status = calculate_status
+    update_attribute(:status, status) unless status == self.status
   end
 
   private
@@ -255,15 +272,15 @@ class Tournament < ActiveRecord::Base
   end
 
   def normalise_attributes
-    %w{start finish fed city site arbiter deputy time_control tie_breaks}.each do |attr|
+    %w[start finish fed city site arbiter deputy time_control tie_breaks].each do |attr|
       self.send("#{attr}=", nil) if self.send(attr).to_s.match(/^\s*$/)
     end
   end
 
   # Translate from CGI params to export options.
   def export_params(params)
-    format = %w{Krause SPExport ForeignCSV}.find { |f| f == params[:type] } || 'Krause'
-    order = %w{rank name}.find { |o| o == params[:order] }
+    format = %w[Krause SPExport ForeignCSV].find { |f| f == params[:type] } || 'Krause'
+    order = %w[rank name].find { |o| o == params[:order] }
     params = params[format.downcase]
     params = Hash.new unless params.respond_to?(:keys)
     opts = Hash.new
@@ -288,5 +305,30 @@ class Tournament < ActiveRecord::Base
       end
     end
     [format, order, opts]
+  end
+
+  def calculate_status
+    errors = Array.new
+    check_player_count(errors)
+    check_player_status(errors)
+    check_player_category(errors)
+    return "ok" if errors.empty?
+    errors.join("|")
+  end
+
+  def check_player_count(errors)
+    return if players.count > 1
+    errors.push("a minimum of 2 players are required")
+  end
+
+  def check_player_status(errors)
+    bad = players.inject(0) { |m, p| m += 1 unless p.status_ok?; m }
+    return if bad == 0
+    errors.push("#{bad} player#{bad == 1 ? ' has' : 's have'} a bad status")
+  end
+
+  def check_player_category(errors)
+    return if 0 < players.inject(0) { |m, p| m += 1 if p.category == "icu_player"; m }
+    errors.push("at least 1 ICU player is required")
   end
 end

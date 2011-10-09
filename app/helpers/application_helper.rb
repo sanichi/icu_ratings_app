@@ -47,7 +47,7 @@ module ApplicationHelper
   end
 
   def result_menu
-    %w{Draw Win Loss}.map{ |r| [r, r[0]] }
+    %w[Draw Win Loss].map{ |r| [r, r[0]] }
   end
 
   def reporter_menu
@@ -61,7 +61,7 @@ module ApplicationHelper
   end
 
   def title_menu(none=nil)
-    menu = %w{GM IM FM CM NM WGM WIM WFM WCM WNM}.map{ |t| Array.new(2, t) }
+    menu = %w[GM IM FM CM NM WGM WIM WFM WCM WNM].map{ |t| Array.new(2, t) }
     menu.unshift([none, ""]) if none
     menu
   end
@@ -78,7 +78,7 @@ module ApplicationHelper
     menu
   end
 
-  # Returns links to objects on various external sites.
+  # Returns links to objects on some specific external sites.
   def foreign_url_for(obj, opt={})
     host, path = nil, nil
     text, target = opt.values_at(:text, :target)

@@ -25,7 +25,7 @@
     = select_tag :feds, options_for_select([["Skip if invalid", "skip"], ["Error if invalid", ''], ["Ignore all", "ignore"]])
   .input
     = label_tag :ratings, "Ratings"
-    = select_tag :ratings, options_for_select(%w{ICU FIDE}.map { |r| [r, r] })
+    = select_tag :ratings, options_for_select(%w[ICU FIDE].map { |r| [r, r] })
   .input
     = f.submit "Upload"
 

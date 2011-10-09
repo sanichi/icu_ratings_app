@@ -23,7 +23,9 @@
     %td= @tournament.city
   %tr
     %th Site
-    %td= @tournament.site
+    %td
+      - site = @tournament.site
+      = link_to_if site =~ /^http/, truncate(site, :length => 50), site, class: "external", target: "_external"
   %tr
     %th Arbiter
     %td= @tournament.arbiter
@@ -54,13 +56,23 @@
     %th Reporter
     %td= @tournament.user.name
     - if can? :manage, @tournament
-      %td{class: "floater top"}
+      %td{class: "floater top", rowspan: 3}
         = link_to edit_admin_tournament_path(@tournament, reporter: ""), remote: true do
           = image_tag "icons/edit.png", alt: "Change Reporter"
+  %tr
+    %th Status
+    - if @tournament.status_ok?
+      %td= @tournament.status
+    - else
+      %td{class: "error centered"}
+        %a{href: "javascript: $('#dialog_status').dialog('open'); void(0)"} Problems
+  %tr
+    %th Stage
+    %td= @tournament.stage
 
 %table{class: "left"}
   %tr
-    %td
-      = link_to admin_tournament_path(@tournament, format: "js"), remote: true do
-        = image_tag "icons/export.png", alt: "Export Tournament"
-      = link_to "Export", admin_tournament_path(@tournament, format: "js"), remote: true
+    %td= link_to "Export", admin_tournament_path(@tournament, format: "js"), remote: true
+    - if can?(:modify, @tournament) && @tournament.deletable?
+      %td
+        = link_to "Delete", [:admin, @tournament], confirm: "Are you sure?", method: :delete

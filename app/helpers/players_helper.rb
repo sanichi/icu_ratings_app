@@ -1,6 +1,6 @@
 module PlayersHelper
   def category_icon(player)
-    if player.status_ok
+    if player.status_ok?
       image = case player.category
               when "icu_player"     then "user_green"
               when "fide_player"    then "user_blue"

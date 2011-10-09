@@ -5,9 +5,9 @@ class Result < ActiveRecord::Base
   before_validation :normalise_attributes
 
   validates_numericality_of :round, only_integer: true, greater_than: 0
-  validates_inclusion_of    :result, in: %w(W L D), message: "should be W, L or D (and not %{value})"
+  validates_inclusion_of    :result, in: %w[W L D], message: "should be W, L or D (and not %{value})"
   validates_inclusion_of    :rateable, in: [true, false], message: "should be true or false (and not %{value})"
-  validates_inclusion_of    :colour, in: %w(W B), allow_nil: true, message: "should be W or B (and not %{value})"
+  validates_inclusion_of    :colour, in: %w[W B], allow_nil: true, message: "should be W or B (and not %{value})"
 
   def score()           case result when 'W'; 1.0 when 'L'; 0.0 else 0.5 end end
   def opposite_result() case result when 'W'; 'L' when 'L'; 'W' else 'D' end end

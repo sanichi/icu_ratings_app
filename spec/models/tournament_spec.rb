@@ -5,9 +5,9 @@ describe Tournament do
     def player_signature(t, n)
       p = t.player(n)
       sig = Array.new
-      %w{num rank first_name last_name fed title gender rating fide_rating id fide_id dob}.each { |attr| sig << p.send(attr) }
+      %w[num rank first_name last_name fed title gender rating fide_rating id fide_id dob].each { |attr| sig << p.send(attr) }
       p.results.each do |r|
-        rsig = %w{round score colour}.map { |attr| r.send(attr) }.join('')
+        rsig = %w[round score colour].map { |attr| r.send(attr) }.join('')
         rsig.concat(r.rateable ? 'r' : 'u')
         if r.opponent
           o = t.player(r.opponent)
@@ -20,7 +20,7 @@ describe Tournament do
     end
 
     before(:each) do
-      @t = test_tournament("bunratty_masters_2011.tab", fide: true, user_id: 1)
+      @t = test_tournament("bunratty_masters_2011.tab", 1, ratings: "FIDE")
       @icut = @t.icu_tournament(renumber: :rank)
     end
 
@@ -29,7 +29,7 @@ describe Tournament do
       @icut.name.should == @t.name
       @icut.start.should == @t.start.to_s
       @icut.finish.should == (@t.finish ? @t.finish.to_s : nil)
-      %w{rounds fed city site arbiter deputy time_control}.each do |attr|
+      %w[rounds fed city site arbiter deputy time_control].each do |attr|
         @icut.send(attr).should == @t.send(attr)
       end
       @icut.players.size.should == @t.players.size

@@ -2,7 +2,7 @@
   %span Contacts
 
 #contacts
-  - %w{officer reporter admin}.each do |role|
+  - %w[officer reporter admin].each do |role|
     - contacts = @contacts[role]
     - unless contacts.empty?
       %h3{class: "left"}= t role, count: contacts.size

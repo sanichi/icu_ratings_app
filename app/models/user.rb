@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
   has_many :tournaments
   has_many :news_items
 
-  ROLES = %w{member reporter officer admin}  # MUST be in order lowest to highest (see role?)
+  ROLES = %w[member reporter officer admin]  # MUST be in order lowest to highest (see role?)
   EMAIL = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i
 
   attr_accessible :role, :preferred_email
@@ -68,7 +68,7 @@ class User < ActiveRecord::Base
   end
   
   def normalise_attributes
-    %w{preferred_email}.each do |attr|
+    %w[preferred_email].each do |attr|
       self.send("#{attr}=", nil) if self.send(attr).to_s.blank?
     end
   end

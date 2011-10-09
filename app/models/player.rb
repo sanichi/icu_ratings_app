@@ -1,12 +1,13 @@
 class Player < ActiveRecord::Base
   FEDS = ICU::Federation.codes
-  TITLES = %w{GM IM FM CM NM WGM WIM WFM WCM WNM}
-  GENDERS = %W{M F}
+  TITLES = %w[GM IM FM CM NM WGM WIM WFM WCM WNM]
+  GENDERS = %w[M F]
+  CATEGORY = %w[icu_player fide_player foreign_player new_player]
 
   belongs_to :tournament, include: :players
   belongs_to :icu_player, foreign_key: "icu_id"
   belongs_to :fide_player, foreign_key: "fide_id"
-  has_many :results, include: :opponent
+  has_many :results, dependent: :destroy, include: :opponent
 
   attr_accessible :first_name, :last_name, :icu_id, :fide_id, :fed, :title, :gender, :dob, :icu_rating, :fide_rating
 
@@ -22,13 +23,13 @@ class Player < ActiveRecord::Base
   validates_numericality_of :icu_rating, :original_icu_rating, :fide_rating, :original_fide_rating, only_integer: true, greater_than: 0, allow_nil: true
   validates_numericality_of :rank, only_integer: true, greater_than: 0, allow_nil: true
   validates_numericality_of :num, only_integer: true, greater_than: 0
-  validates_inclusion_of    :category, in: %w(icu_player fide_player foreign_player new_player), allow_nil: true, message: '(%{value}) is invalid'
+  validates_inclusion_of    :category, in: CATEGORY, allow_nil: true, message: '(%{value}) is invalid'
   validates_presence_of     :status
 
   def self.build_from_icut(icup, tournament)
     # Build basic player from an attribute hash (these must be unprotected attributes).
     attrs = {}
-    %w{first_name last_name fide_id fed title gender dob fide_rating}.each do |key|
+    %w[first_name last_name fide_id fed title gender dob fide_rating].each do |key|
       attrs[key.to_sym] = icup.send(key) unless icup.send(key).blank?
     end
     attrs[:icu_id] = icup.id unless icup.id.blank?
@@ -43,7 +44,7 @@ class Player < ActiveRecord::Base
     player.original_name = icup.original_name
     player.original_icu_id = icup.id unless icup.id.blank?
     player.original_icu_rating = icup.rating unless icup.rating.blank?
-    %w{fide_id fed title gender dob fide_rating}.each do |key|
+    %w[fide_id fed title gender dob fide_rating].each do |key|
       player.send("original_#{key}=", icup.send(key)) unless icup.send(key).blank?
     end
 
@@ -57,7 +58,7 @@ class Player < ActiveRecord::Base
     last_first ? "#{last_name}, #{first_name}" : "#{first_name} #{last_name}"
   end
 
-  def status_ok
+  def status_ok?
     status == "ok"
   end
 
@@ -71,7 +72,7 @@ class Player < ActiveRecord::Base
 
   def original_data
     data = Array.new
-    %w{name icu_id fide_id fed title gender dob icu_rating fide_rating}.each do |key|
+    %w[name icu_id fide_id fed title gender dob icu_rating fide_rating].each do |key|
       val = self.send("original_#{key}")
       data.push val if val.present?
     end
@@ -79,7 +80,7 @@ class Player < ActiveRecord::Base
   end
 
   def changed_from_original?(opt={})
-    keys = %w{name icu_id fide_id fed title gender dob icu_rating fide_rating}
+    keys = %w[name icu_id fide_id fed title gender dob icu_rating fide_rating]
     case
     when opt[:only]
       only = opt[:only].instance_of?(Array) ? opt[:only].map(&:to_s) : [opt[:only].to_s]
@@ -135,7 +136,7 @@ class Player < ActiveRecord::Base
         match = false
         errors.push("Match with duplicate ICU player")
       else
-        %w(dob fed gender title).each do |attr|
+        %w[dob fed gender title].each do |attr|
           a = icu_player.send(attr).presence || next
           b = self.send(attr).presence || next
           unless a == b
@@ -160,7 +161,7 @@ class Player < ActiveRecord::Base
         match = false
         errors.push "FIDE name mismatch: #{fide_player.name}" if fed == "IRL"  # TODO: relax when we get all FIDE players
       end
-      %w(fed gender title).each do |attr|
+      %w[fed gender title].each do |attr|
         a = fide_player.send(attr).presence || next
         b = self.send(attr).presence || next
         unless a == b
@@ -182,7 +183,7 @@ class Player < ActiveRecord::Base
   end
 
   def normalise_attributes
-    %w{fed title gender dob}.each do |attr|
+    %w[fed title gender dob].each do |attr|
       self.send("#{attr}=", nil) if self.send(attr).to_s.match(/^\s*$/)
     end
   end

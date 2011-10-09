@@ -10,7 +10,7 @@ describe "Upload" do
 
   describe "members" do
     it "cannot upload files" do
-      login_user("member")
+      login("member")
       visit "/admin/uploads/new"
       page.should have_selector("span.alert", text: /not authorized/i)
     end
@@ -19,8 +19,8 @@ describe "Upload" do
   describe "invalid files" do
     describe "reporters" do
       before(:each) do
-        @user = login_user("reporter")
-        @file = "#{Rails.root}/spec/files/invalid.txt"
+        @user = login("reporter")
+        @file = test_file_path("invalid.txt")
       end
 
       it "can upload and then delete" do
@@ -50,7 +50,7 @@ describe "Upload" do
         Upload.count.should == 1
         upload = Upload.first
         upload.user.should == @user
-        @user = login_user("reporter")
+        @user = login("reporter")
         upload.user.should_not == @user
         visit "/admin/uploads/#{upload.id}"
         page.should_not have_link("Delete")
@@ -59,8 +59,8 @@ describe "Upload" do
 
     describe "officers" do
       before(:each) do
-        @user = login_user("officer")
-        @file = "#{Rails.root}/spec/files/invalid.txt"
+        @user = login("officer")
+        @file = test_file_path("invalid.txt")
       end
 
       it "can delete uploads they don't own", js: true do
@@ -72,7 +72,7 @@ describe "Upload" do
         Upload.count.should == 1
         upload = Upload.first
         upload.user.should == @user
-        @user = login_user("officer")
+        @user = login("officer")
         upload.user.should_not == @user
         visit "/admin/uploads/#{upload.id}"
         page.click_link("Delete")

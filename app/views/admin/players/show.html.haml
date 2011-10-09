@@ -23,6 +23,7 @@
 = render "shared/dialog.html", id: "update_player"
 = render "shared/dialog.html", id: "search_icu_player", width: 1000, button: false
 = render "shared/dialog.html", id: "search_fide_player", width: 1000, button: false
-= render "shared/dialog.html", id: "status", button: false, cancel: "Dismiss", html: render("status")
 = icu_player_details_dialog
 = fide_player_details_dialog
+- html = render partial: "shared/pipe_list", locals: { :error => @player.status }
+= render "shared/dialog.html", id: "status", button: false, cancel: "Dismiss", html: html

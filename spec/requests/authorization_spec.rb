@@ -1,10 +1,10 @@
 require 'spec_helper'
 
 describe "authorized links after logging in" do
-  %w{member reporter officer admin}.each do |role|
+  %w[member reporter officer admin].each do |role|
     describe "#{role}s" do
       before(:each) do
-        @user = login_user(role)
+        @user = login(role)
       end
 
       after(:each) do
@@ -12,21 +12,21 @@ describe "authorized links after logging in" do
       end
 
       {
-        "/admin/events"               => %w{admin officer},
-        "/admin/logins"               => %w{admin},
-        "/admin/old_tournaments"      => %w{admin officer reporter},
-        "/admin/old_rating_histories" => %w{admin officer reporter},
-        "/admin/tournaments"          => %w{admin officer reporter},
-        "/admin/uploads"              => %w{admin officer reporter},
-        "/admin/uploads/new"          => %w{admin officer reporter},
-        "/admin/users"                => %w{admin},
-        "/fide_players"               => %w{admin officer reporter},
-        "/icu_players"                => %w{admin officer reporter},
-        "/news_items"                 => %w{admin officer reporter member},
-        "/news_items/new"             => %w{admin officer reporter},
-        "/downloads"                  => %w{admin officer reporter},
-        "/downloads/new"              => %w{admin officer},
-        "/tournaments"                => %w{admin officer reporter member},
+        "/admin/events"               => %w[admin officer],
+        "/admin/logins"               => %w[admin],
+        "/admin/old_tournaments"      => %w[admin officer reporter],
+        "/admin/old_rating_histories" => %w[admin officer reporter],
+        "/admin/tournaments"          => %w[admin officer reporter],
+        "/admin/uploads"              => %w[admin officer reporter],
+        "/admin/uploads/new"          => %w[admin officer reporter],
+        "/admin/users"                => %w[admin],
+        "/fide_players"               => %w[admin officer reporter],
+        "/icu_players"                => %w[admin officer reporter],
+        "/news_items"                 => %w[admin officer reporter member],
+        "/news_items/new"             => %w[admin officer reporter],
+        "/downloads"                  => %w[admin officer reporter],
+        "/downloads/new"              => %w[admin officer],
+        "/tournaments"                => %w[admin officer reporter member],
       }.each do |target, authorized|
         if authorized.include?(role)
           it "get link to and can follow #{target}" do

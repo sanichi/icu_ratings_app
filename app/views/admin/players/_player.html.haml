@@ -52,7 +52,7 @@
     %td= @player.category
   %tr
     %th Status
-    - if @player.status_ok
+    - if @player.status_ok?
       %td= @player.status
     - else
       %td{class: "error centered"}

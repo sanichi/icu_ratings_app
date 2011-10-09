@@ -17,7 +17,7 @@ Ratings::Application.routes.draw do
   namespace "admin" do
     resources :events,               only: [:index, :show, :destroy]
     resources :uploads,              only: [:index, :show, :new, :create, :destroy]
-    resources :tournaments,          only: [:index, :show, :edit, :update]
+    resources :tournaments,          only: [:index, :show, :edit, :update, :destroy]
     resources :players,              only: [:index, :show, :edit, :update]
     resources :results,              only: [:new, :create, :edit, :update]
     resources :users,                only: [:index, :show, :edit, :update]

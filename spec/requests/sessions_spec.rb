@@ -69,28 +69,28 @@ describe "Sessions" do
 
   describe "switching user" do
     it "from a member, reporter or officer it logs an event" do
-      login_user("member")
+      login("member")
       Login.count.should == 1
-      login_user("reporter")
+      login("reporter")
       Login.count.should == 2
-      login_user("officer")
+      login("officer")
       Login.count.should == 3
-      login_user("admin")
+      login("admin")
       Login.count.should == 4
     end
 
     it "from an admin, it does not log an event" do
-      login_user("admin")
+      login("admin")
       Login.count.should == 1
-      login_user("member")
+      login("member")
       Login.count.should == 1
-      login_user("admin")
+      login("admin")
       Login.count.should == 2
-      login_user("reporter")
+      login("reporter")
       Login.count.should == 2
-      login_user("admin")
+      login("admin")
       Login.count.should == 3
-      login_user("reporter")
+      login("reporter")
       Login.count.should == 3
     end
   end

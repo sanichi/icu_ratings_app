@@ -17,7 +17,7 @@ describe Player do
       )
       @p.num = 1
       @p.original_name = @p.name
-      %w{icu_id fide_id fed title gender dob icu_rating fide_rating}.each { |key| @p.send("original_#{key}=", @p.send(key)) }
+      %w[icu_id fide_id fed title gender dob icu_rating fide_rating].each { |key| @p.send("original_#{key}=", @p.send(key)) }
       @p.save!
     end
     
@@ -34,10 +34,10 @@ describe Player do
       @p.changed_from_original?(except: "name").should be_false
       @p.changed_from_original?(only: [:icu_id, :fide_rating]).should be_false
       @p.changed_from_original?(only: [:name, :fide_rating]).should be_true
-      @p.changed_from_original?(only: %w{name dob}).should be_true
+      @p.changed_from_original?(only: %w[name dob]).should be_true
       @p.changed_from_original?(except: [:icu_id, :fide_rating]).should be_true
       @p.changed_from_original?(except: [:name, :fide_rating]).should be_false
-      @p.changed_from_original?(except: %w{name fed}).should be_false
+      @p.changed_from_original?(except: %w[name fed]).should be_false
     end
     
     it "should not be sensitive to a reversal of the original name" do

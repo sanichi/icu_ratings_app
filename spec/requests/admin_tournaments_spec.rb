@@ -3,8 +3,8 @@ require 'spec_helper'
 describe "Tournament" do
   describe "editing" do
     before(:each) do
-      @user = login_user("reporter")
-      @file = "#{Rails.root}/spec/files/bunratty_masters_2011.tab"
+      @user = login("reporter")
+      @file = test_file_path("bunratty_masters_2011.tab")
     end
 
     it "reporters can edit their own tournaments and players, officers can change reporter" do
@@ -32,7 +32,7 @@ describe "Tournament" do
       page.should have_selector(:xpath, "//a[starts-with(@href,'/icu_players') and @data-remote='true']")
       page.should have_selector(:xpath, "//a[starts-with(@href,'/fide_players') and @data-remote='true']")
       page.should have_selector(:xpath, "//a[starts-with(@href,'/admin/results') and @data-remote='true']", count: 6)
-      login_user("reporter")
+      login("reporter")
       visit tpath
       page.should have_selector("div span", text: "Bunratty 2011")
       page.should have_no_selector(:xpath, "//a[starts-with(@href,'#{tpath}/edit')]")
@@ -42,7 +42,7 @@ describe "Tournament" do
       page.should have_no_selector(:xpath, "//a[starts-with(@href,'/icu_players') and @data-remote='true']")
       page.should have_no_selector(:xpath, "//a[starts-with(@href,'/fide_players') and @data-remote='true']")
       page.should have_no_selector(:xpath, "//a[starts-with(@href,'/admin/results')]")
-      login_user("officer")
+      login("officer")
       visit tpath
       page.should have_selector(:xpath, "//a[@href='#{tpath}/edit?reporter=' and @data-remote='true']")
     end

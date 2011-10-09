@@ -52,23 +52,23 @@ def test_upload(name, arg={})
 end
 
 # Return a saved Tournament derived from one of the test files.
-def test_tournament(name, arg={})
-  path = test_file_path(name)
+def test_tournament(file, user_id, arg={})
   opt = Hash.new
-  case name
-  when /\.(zip|txt)$/
-    parser = "ICU::Tournament::#{$1 == 'zip' ? 'SwissPerfect' : 'SPExport'}".constantize.new
+  case file
+  when /\.zip$/
     opt[:start] = arg[:start] || "2011-03-06"
-    opt[:name] = arg[:name] if arg.has_key?(:name)
+  when /\.txt$/
+    opt[:start] = arg[:start] || "2011-03-06"
+    opt[:name] = arg[:name] || "Tournament"
   when /\.tab$/
-    parser = ICU::Tournament::Krause.new
-    opt[:fide] = arg[:fide] if arg.has_key?(:fide)
-  when /\.csv$/
-    parser = ICU::Tournament::ForeignCSV.new
+    opt[:fide] = arg[:ratings] == "FIDE"
   end
-  icut = parser.parse_file!(path, opt)
+  parser = get_parser(file)
+  icut = parser.parse_file!(test_file_path(file), opt)
   tournament = Tournament.build_from_icut(icut)
-  tournament.user_id = arg[:user_id] if arg[:user_id]
+  tournament.user_id = user_id
+  tournament.save!
+  tournament.upload = Factory(:upload, name: file, user_id: user_id, tournament_id: tournament.id)
   tournament.save!
   tournament.renumber_opponents
   tournament
@@ -82,11 +82,23 @@ def test_file_path(name)
 end
 
 # Create and login a user with a given role.
-def login_user(role)
-  user = Factory(:user, role: role)
+def login(user)
+  user = Factory(:user, role: user) if user.instance_of?(String)
   visit "/log_in"
   page.fill_in "Email", with: user.email
   page.fill_in "Password", with: user.password
   click_button "Log in"
   user
+end
+
+private
+
+def get_parser(file)
+  parser = case file
+    when /\.txt$/ then "SPExport"
+    when /\.zip$/ then "SwissPerfect"
+    when /\.tab$/ then "Krause"
+    when /\.csv$/ then "ForeignCSV"
+  end
+  "ICU::Tournament::#{parser}".constantize.new
 end

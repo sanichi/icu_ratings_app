@@ -83,7 +83,7 @@ module ICU
         @their_players = @client.query(players_sql).inject({}) do |players, player|
           id = player.delete(:plr_id)
           player[:plr_address1] = (1..4).map { |i| player.delete("plr_address#{i}".to_sym) }.reject { |a| a.blank? }.join(", ")
-          player[:plr_phone_home] = %w{home work mobile}.map { |n| [n, player.delete("plr_phone_#{n}".to_sym)] }.reject { |p| p[1].blank? }.map { |d| d.join(": ") }.join(", ")
+          player[:plr_phone_home] = %w[home work mobile].map { |n| [n, player.delete("plr_phone_#{n}".to_sym)] }.reject { |p| p[1].blank? }.map { |d| d.join(": ") }.join(", ")
           players[id] = player.keys.inject({}) do |hash, their_key|
             our_key = MAP[their_key]
             if our_key

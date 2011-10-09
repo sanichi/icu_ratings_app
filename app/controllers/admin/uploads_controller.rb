@@ -44,7 +44,7 @@ module Admin
         redirect_to [:admin, @upload], alert: "You can't delete an upload which is associated with tournament"
       else
         @upload.destroy
-        redirect_to admin_uploads_url
+        redirect_to admin_uploads_path
       end
     end
   end

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "NewsItem" do
   describe "officers" do
     before(:each) do
-      @user = login_user("officer")
+      @user = login("officer")
       @news = Factory(:news_item)
     end
 
@@ -49,7 +49,7 @@ describe "NewsItem" do
 
   describe "reporters" do
     before(:each) do
-      @user = login_user("reporter")
+      @user = login("reporter")
       @news = Factory(:news_item)
     end
 
@@ -85,7 +85,7 @@ describe "NewsItem" do
   
   describe "members" do
     before(:each) do
-      @user = login_user("member")
+      @user = login("member")
       @news = [ Factory(:news_item), Factory(:news_item, user: @user) ]
     end
 

@@ -11,3 +11,7 @@
 = render "shared/dialog.html", id: "update_tournament"
 = render "shared/dialog.html", id: "export_tournament", width: 400, button: "Export", autoclose: true
 = render "shared/dialog.html", id: "rank_tournament", width: 300, button: "OK"
+- unless @tournament.status_ok?
+  - html = render partial: "shared/pipe_list", locals: { error: @tournament.status }
+  = render "shared/dialog.html", id: "status", button: false, cancel: "Dismiss", html: html
+

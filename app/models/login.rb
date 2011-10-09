@@ -3,7 +3,7 @@ class Login < ActiveRecord::Base
 
   belongs_to :user
 
-  PROBLEMS = %w{none password expiry}
+  PROBLEMS = %w[none password expiry]
 
   validates_presence_of  :user_id, :ip
   validates_inclusion_of :problem, in: PROBLEMS, message: "(%{value}) is invalid"
