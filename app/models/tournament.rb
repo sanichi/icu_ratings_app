@@ -113,10 +113,14 @@ class Tournament < ActiveRecord::Base
 
   # The name and year of a tournament.
   def long_name
-    year = start.year.to_s
-    return name if name.include?(year)
-    year+= "-#{finish.year.to_s[2..3]}" if finish && finish.year > start.year
-    "#{name} (#{year})"
+    return name if name.match(/(19|20)\d\d/) || !(start || finish)
+    year = start.year.to_s if start
+    if year
+      year+= "-#{finish.year.to_s[2..3]}" if finish && finish.year > start.year
+    else
+      year = finish.year.to_s
+    end
+    "#{name} #{year}"
   end
 
   # Players in rank order or, if the ranking is invalid, in name order.

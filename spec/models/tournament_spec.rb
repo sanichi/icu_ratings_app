@@ -62,4 +62,32 @@ describe Tournament do
       @t.tie_break_selections.map(&:last).join('_').should match(/^false(_false){8}$/)
     end
   end
+
+  context "#long_name" do
+    before(:each) do
+      @t = Tournament.new(name: "Test")
+    end
+
+    it "adds the start or end year or both if there's not already a year present" do
+      @t.long_name.should == "Test"
+      @t.start = "2010-10-09"
+      @t.long_name.should == "Test 2010"
+      @t.finish = "2011-04-15"
+      @t.long_name.should == "Test 2010-11"
+      @t.start = nil
+      @t.long_name.should == "Test 2011"
+      @t.start = @t.finish
+      @t.long_name.should == "Test 2011"
+    end
+
+    it "does nothing if the name already contains a year" do
+      @t.name = "Test 2009"
+      @t.start = "2010-10-09"
+      @t.long_name.should == "Test 2009"
+      @t.finish = "2011-04-15"
+      @t.long_name.should == "Test 2009"
+      @t.name = "Test 1999"
+      @t.long_name.should == "Test 1999"
+    end
+  end
 end

@@ -36,3 +36,14 @@
   %tr
     %th Reporter
     %td= @tournament.user.name
+  %tr
+    %th Status
+    %td= @tournament.status == "ok" ? "ok" : "problems"
+  %tr
+    %th Stage
+    %td= @tournament.stage
+
+- if can? :modify, @tournament
+  %table{class: "turbaned left"}
+    %tr
+      %td= link_to "Admin", [:admin, @tournament]

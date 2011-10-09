@@ -67,6 +67,7 @@
 
 %table{class: "left"}
   %tr
+    %td= link_to "Display", @tournament
     %td= link_to "Export", admin_tournament_path(@tournament, format: "js"), remote: true
     - if can?(:modify, @tournament) && @tournament.deletable?
       %td
