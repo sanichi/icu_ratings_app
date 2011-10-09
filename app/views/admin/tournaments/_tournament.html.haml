@@ -1,9 +1,9 @@
 %table{class: "right-headers cushioned"}
   %tr
     %th Name
-    %td= @tournament.name
+    %td= link_to_if @tournament.site =~ /^http/, @tournament.name, @tournament.site, class: "external", target: "_external"
     - if can? :edit, @tournament
-      %td{class: "floater top", rowspan: 10}
+      %td{class: "floater top", rowspan: 9}
         = link_to edit_admin_tournament_path(@tournament), remote: true do
           = image_tag "icons/edit.png", alt: "Edit Tournament"
   %tr
@@ -21,11 +21,6 @@
   %tr
     %th City
     %td= @tournament.city
-  %tr
-    %th Site
-    %td
-      - site = @tournament.site
-      = link_to_if site =~ /^http/, truncate(site, :length => 50), site, class: "external", target: "_external"
   %tr
     %th Arbiter
     %td= @tournament.arbiter

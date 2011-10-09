@@ -1,7 +1,7 @@
 %table{class: "right-headers"}
   %tr
     %th Name
-    %td= @tournament.name
+    %td= link_to_if @tournament.site =~ /^http/, @tournament.name, @tournament.site, class: "external", target: "_external"
   %tr
     %th Start Date
     %td= @tournament.start
@@ -17,9 +17,6 @@
   %tr
     %th City
     %td= @tournament.city
-  %tr
-    %th Site
-    %td= @tournament.site
   %tr
     %th Arbiter
     %td= @tournament.arbiter
