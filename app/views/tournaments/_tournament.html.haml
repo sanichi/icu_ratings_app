@@ -29,10 +29,10 @@
   %tr
     %th Tie Break Rules
     %td{id: "show_tie_breaks"}= @tournament.tie_breaks
-  - if @tournament.upload && can?(:read, @tournament.upload)
+  - if @tournament.upload
     %tr
-      %th Upload
-      %td= @tournament.upload ? link_to(@tournament.upload.created_at.strftime('%Y-%m-%d'), [:admin, @tournament.upload]) : ''
+      %th Reported
+      %td= link_to_if can?(:read, @tournament.upload), @tournament.upload.created_at.strftime('%Y-%m-%d'), [:admin, @tournament.upload]
   %tr
     %th Reporter
     %td= @tournament.user.name
