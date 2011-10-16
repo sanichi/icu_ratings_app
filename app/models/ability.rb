@@ -8,6 +8,8 @@ class Ability
     can :read, NewsItem
 
     return unless user.role? :member
+    
+    can :show, IcuPlayer, id: user.icu_id
 
     return unless user.role? :reporter
 

@@ -20,7 +20,7 @@
           - if @player && can?(:edit, @player.tournament)
             = link_to admin_player_path(@player, icu_id: p.master_id || p.id, authenticity_token: form_authenticity_token), method: :put, remote: true do
               = image_tag "icons/link.png", alt: "Link tournament player to this ICU player"
-        %td= link_to p.id, p, remote: true
+        %td= link_to p.id, icu_player_path(p, format: "js"), remote: true
         %td= p.last_name
         %td= p.first_name
         %td= p.club

@@ -49,3 +49,8 @@
       = link_to "Log out", log_out_path
     - else
       = link_to "Log in", log_in_path
+  - if current_user
+    %li
+      = link_to current_user.icu_player do
+        - alt = "#{current_user.name} (#{current_user.role})"
+        = image_tag "icons/#{current_user.role}.png", alt: alt, title: alt

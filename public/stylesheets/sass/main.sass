@@ -89,6 +89,19 @@ $crnr-med: 5px
     +rounded-corners($radius)
     a
       :color $sp-col !important
+      
+=blurb($size, $pad, $radius, $weight: normal)
+  :text-align center
+  :font
+    :size $size
+    :weight $weight
+  :padding $pad
+  span
+    :color $col
+    :background-color $tab-bg-col
+    :border $tab-bdr
+    :padding $radius
+    +rounded-corners($radius)
 
 =label()
   :color $tab-hd-col !important
@@ -223,8 +236,11 @@ form
       &:first-child
         :margin-left 0
 
-img.left-padded
-  :padding-left 10px
+img
+  &.left-padded
+    :padding-left 10px
+  &.inline
+    :vertical-align text-bottom
 
 //
 // Headers and footers.
@@ -250,6 +266,9 @@ img.left-padded
     :font
       :variant small-caps
       :size 30px
+  li img
+    :padding 0px 0px
+    :float none
 
 #content
   :background-color $cn-bg-col
@@ -310,6 +329,13 @@ div
     :border $alert-bdr
 
 //
+// Informational centered, rounded blurbs.
+//
+
+div.blurb
+  +blurb($small-font, $tpad, $crnr-med)
+
+//
 // Miscellaneous general classes.
 //
 
@@ -317,7 +343,7 @@ div
   :font-size $small-font
 
 .centered
-  :text-align center
+  :text-align center !important
 
 .cushioned
   :margin-bottom $vpad

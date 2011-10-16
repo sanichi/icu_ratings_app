@@ -119,6 +119,8 @@ form td label {
 
 img.left-padded {
   padding-left: 10px; }
+img.inline {
+  vertical-align: text-bottom; }
 
 #header {
   height: 100px;
@@ -138,6 +140,9 @@ img.left-padded {
     color: white;
     font-variant: small-caps;
     font-size: 30px; }
+  #header li img {
+    padding: 0px 0px;
+    float: none; }
 
 #content {
   background-color: #558ac7;
@@ -229,11 +234,25 @@ div span.alert {
   background-color: red;
   border: 1px solid white; }
 
+div.blurb {
+  text-align: center;
+  font-size: 12px;
+  font-weight: normal;
+  padding: 2px; }
+  div.blurb span {
+    color: #384a5b;
+    background-color: white;
+    border: 1px solid #506c90;
+    padding: 5px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px; }
+
 .note {
   font-size: 12px; }
 
 .centered {
-  text-align: center; }
+  text-align: center !important; }
 
 .cushioned {
   margin-bottom: 20px; }

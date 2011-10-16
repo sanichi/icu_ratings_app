@@ -10,6 +10,8 @@ Factory.define :icu_player do |p|
   p.phone_numbers nil
   p.fed           "IRL"
   p.title         nil
+  p.joined        { Date.today - 365 * rand(35) }
+  p.dob           { joined - 365 * (10 + rand(50)) }
   p.gender        "M"
   p.deceased      false
   p.note          nil

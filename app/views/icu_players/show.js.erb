@@ -1,5 +1,5 @@
 $("#dialog_icu_player_details")
-  .html("<%= escape_javascript(render('show')) %>")
+  .html("<%= escape_javascript(render('show_with_old_histories')) %>")
   .dialog("open")
   .focus()  // combined effect is to remove ...
   .blur();  // ... focus from first link in FF

@@ -12,6 +12,9 @@ class IcuPlayersController < ApplicationController
   end
 
   def show
-    @old_rating_histories = OldRatingHistory.search({ icu_player_id: params[:id], per_page: 5 }, admin_old_rating_histories_path)
+    respond_to do |format|
+      format.html
+      format.js { @old_rating_histories = OldRatingHistory.search({ icu_player_id: params[:id], per_page: 5 }, admin_old_rating_histories_path) }
+    end
   end
 end

@@ -1,0 +1,72 @@
+.header
+  %span= @icu_player.name
+
+- if current_user.icu_id == @icu_player.id
+  %div.blurb.cushioned
+    %span
+      Logged in as 
+      %em= current_user.role
+      =image_tag "icons/#{current_user.role}.png", alt: current_user.role, class: "inline"
+
+%table
+  %tr.splitter
+    %td
+      %table{class: "right-headers"}
+        %tr
+          %th{class: "centered", colspan: 2} Personal Details
+        %tr
+          %th First Name
+          %td= @icu_player.first_name
+        %tr
+          %th Last Name
+          %td= @icu_player.last_name
+        %tr
+          %th Date of Birth
+          %td= @icu_player.dob || "Unknown"
+        %tr
+          %th Gender
+          %td= @icu_player.gender || "Unknown (male assumed)"
+        %tr
+          %th Club
+          %td= @icu_player.club || "None"
+        %tr
+          %th Email
+          %td= @icu_player.email || "Unknown"
+        - if @icu_player.deceased
+          %tr
+            %th Deceased
+            %td Yes
+        - if @icu_player.master
+          %tr
+            %th Duplicate
+            %td
+              Yes, of
+              = link_to @icu_player.master_id, @icu_player.master
+    %td
+      %table{class: "right-headers"}
+        %tr
+          %th{class: "centered", colspan: 2} ICU Data
+        %tr
+          %th ID
+          %td= @icu_player.id
+        %tr
+          %th Date joined
+          %td= @icu_player.joined || "Unknown"
+        %tr
+          %th{class: "centered", colspan: 2} FIDE Data
+        %tr
+          %th ID
+          %td= @icu_player.fide_player ? foreign_url_for(@icu_player.fide_player) : "None"
+        %tr
+          %th Federation
+          %td= @icu_player.fed || "Unknown (IRL assumed)"
+        %tr
+          %th Title
+          - title = @icu_player.title
+          %td= title && title != "NM" ? title : "None"
+
+- if current_user.icu_id == @icu_player.id && !@icu_player.master_id
+  %div.blurb.turbaned
+    %span
+      If any of your details are wrong or missing please contact the
+      = mail_to_icu :membership

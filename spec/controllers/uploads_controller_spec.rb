@@ -4,10 +4,10 @@ require 'spec_helper'
 describe Admin::UploadsController do
   def sample_players
     IcuPlayer.all.each { |p| p.delete }
-    @ryan   = Factory(:icu_player, id: 6897,  last_name: "Griffiths", first_name: "Ryan-Rhys")
+    @ryan   = Factory(:icu_player, id: 6897,  last_name: "Griffiths", first_name: "Ryan-Rhys", dob: "1993-12-20")
     @jamie  = Factory(:icu_player, id: 5226,  last_name: "Flynn",     first_name: "Jamie")
     @leon   = Factory(:icu_player, id: 6409,  last_name: "Hulleman",  first_name: "Leon")
-    @thomas = Factory(:icu_player, id: 10914, last_name: "Dunne",     first_name: "Thomas")
+    @thomas = Factory(:icu_player, id: 10914, last_name: "Dunne",     first_name: "Thomas", dob: "1992-01-16")
     @peter  = Factory(:icu_player, id: 159,   last_name: "Cafolla",   first_name: "Peter")
     @tony   = Factory(:icu_player, id: 456,   last_name: "Fox",       first_name: "Tony")
   end

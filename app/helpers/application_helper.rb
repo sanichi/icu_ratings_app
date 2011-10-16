@@ -107,6 +107,7 @@ module ApplicationHelper
   def mail_to_icu(officer=:ratings)
     name = case officer.to_sym
       when :chairperson then "Chairperson"
+      when :membership  then "Membership Officer"
       when :treasurer   then "Treasurer"
       when :ratings     then "Rating Officer"
       else "ICU"
