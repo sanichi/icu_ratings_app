@@ -70,3 +70,26 @@
     %span
       If any of your details are wrong or missing please contact the
       = mail_to_icu :membership
+
+#help
+  %dl
+    %dt What type of users does this site support?
+    %dd
+      %p
+        = image_tag "icons/guest.png", alt: "Guest", title: "Guest", class: "inline"
+        Guests (i.e. users who are not logged in) can view tournament tables and news.
+      %p
+        = image_tag "icons/member.png", alt: "Member", title: "Member", class: "inline"
+        Members can also see details of their own and other players' ratings.
+      %p
+        = image_tag "icons/reporter.png", alt: "Reporter", title: "Reporter", class: "inline"
+        Reporters can also upload tournaments and edit those that they uploaded.
+        Members must request authorization from the
+        = mail_to_icu
+        in order to become reporters.
+      %p
+        = image_tag "icons/officer.png", alt: "Officer", title: "Officer", class: "inline"
+        Officers can also edit and rate any tournament and publish rating lists.
+      %p
+        = image_tag "icons/admin.png", alt: "Admin", title: "Admin", class: "inline"
+        Administrators can also perform application monitoring and maintenance tasks.
