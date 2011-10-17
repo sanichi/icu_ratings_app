@@ -22,10 +22,10 @@
     = text_field_tag :start, nil, size: 10
   .input
     = label_tag :feds, "Federations"
-    = select_tag :feds, options_for_select([["Skip if invalid", "skip"], ["Error if invalid", ''], ["Ignore all", "ignore"]])
+    = select_tag :feds, options_for_select([["Error if invalid", ''], ["Skip if invalid", "skip"], ["Ignore all", "ignore"]])
   .input
     = label_tag :round_dates, "Round dates"
-    = select_tag :round_dates, options_for_select([["Error if invalid", ''], ["Ignore", "ignore"]])
+    = select_tag :round_dates, options_for_select([["Error if invalid", ''], ["Ignore all", "ignore"]])
   .input
     = label_tag :ratings, "Ratings"
     = select_tag :ratings, options_for_select(%w[ICU FIDE].map { |r| [r, r] })
