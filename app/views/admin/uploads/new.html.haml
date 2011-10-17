@@ -24,6 +24,9 @@
     = label_tag :feds, "Federations"
     = select_tag :feds, options_for_select([["Skip if invalid", "skip"], ["Error if invalid", ''], ["Ignore all", "ignore"]])
   .input
+    = label_tag :round_dates, "Round dates"
+    = select_tag :round_dates, options_for_select([["Error if invalid", ''], ["Ignore", "ignore"]])
+  .input
     = label_tag :ratings, "Ratings"
     = select_tag :ratings, options_for_select(%w[ICU FIDE].map { |r| [r, r] })
   .input
@@ -69,8 +72,8 @@
         is used by FIDE for rating reports and was developed by Christian Krause, a FIDE arbiter.
       %p
         It can only represent ratings and IDs from one source, so please specify which using the menu provided.
-        In practice, some applications that export this format have a tendancy to produce invalid federation codes,
-        so please also indicate what action should be taken if any are found.
+        In practice, some applications that export this format have a tendancy to produce invalid federation codes
+        and/or invalid round dates, so please also indicate what action should be taken in the event of any such issues.
     %dt{class: "ForeignCSV"} ICU Foreign Tournament Report
     %dd{class: "ForeignCSV"}
       = image_tag "help/foreign_csv.png", align: "right", alt: "Part of an ICU foreign tournament report", class: "left-padded"

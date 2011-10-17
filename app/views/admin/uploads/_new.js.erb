@@ -4,10 +4,10 @@ function toggle_file_format() {
   toggle_help_sections(selected);
 }
 function toggle_upload_options(selected) {
-  $.each(["name", "start", "feds", "ratings"], function(i, key) { toggle_upload_option(key, "off") });
+  $.each(["name", "start", "feds", "ratings", "round_dates"], function(i, key) { toggle_upload_option(key, "off") });
   var on = [];
   switch(selected) {
-    case "Krause":       on.push("feds", "ratings"); break;
+    case "Krause":       on.push("feds", "ratings", "round_dates"); break;
     case "SwissPerfect": on.push("feds", "start"); break;
     case "SPExport":     on.push("feds", "start", "name"); break;
   }

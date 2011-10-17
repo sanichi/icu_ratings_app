@@ -112,6 +112,36 @@ describe Admin::UploadsController do
       end
     end
 
+    describe "Krause file with invalid round dates" do
+      before(:each) do
+        @params =
+        {
+          file:   test_upload("galway_major_2011.tab"),
+          upload: { format: "Krause" },
+          feds:   "",
+        }
+      end
+
+      it "should fail" do
+        post "create", @params
+        Tournament.count.should == 0
+        Upload.count.should == 1
+        upload = Upload.last
+        response.should redirect_to(admin_upload_path(upload.id))
+        upload.error.should match(/date.*not match/)
+      end
+
+      it "should suceed if round dates are ignored" do
+        @params[:round_dates] = "ignore"
+        post "create", @params
+        Tournament.count.should == 1
+        Upload.count.should == 1
+        tournament = Tournament.last
+        response.should redirect_to(admin_tournament_path(tournament.id))
+        tournament.name.should == "Galway Major 2011"
+      end
+    end
+
     describe "valid SwissPerfect export file" do
       before(:each) do
         @params =

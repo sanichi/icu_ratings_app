@@ -78,7 +78,7 @@ GEM
     icu_name (1.0.6)
       activesupport (~> 3.0.10)
       i18n (>= 0.5.0)
-    icu_tournament (1.5.4)
+    icu_tournament (1.5.5)
       dbf (~> 1.2.5)
       icu_name (>= 1.0.0)
       rubyzip (~> 0.9.4)

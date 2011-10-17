@@ -33,8 +33,9 @@ class Upload < ActiveRecord::Base
       opts[:name]  = params[:name]
       opts[:start] = params[:start]
     when "Krause"
-      opts[:fide] = params[:ratings] == "FIDE"
-      opts[:fed]  = params[:feds] if params[:feds].match(/^(skip|ignore)$/)
+      opts[:fide]         = params[:ratings] == "FIDE"
+      opts[:fed]          = params[:feds] if params[:feds].match(/^(skip|ignore)$/)
+      opts[:round_dates]  = params[:round_dates] if params[:round_dates] == "ignore"
     end
 
     begin
