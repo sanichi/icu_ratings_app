@@ -5,7 +5,7 @@
   - %w[officer reporter admin].each do |role|
     - contacts = @contacts[role]
     - unless contacts.empty?
-      %h3{class: "left"}= t role, count: contacts.size
+      %h3{class: "left"}= t(role, count: contacts.size)
       %ul
         - contacts.each do |contact|
           %li= mail_to contact.best_email, contact.name(false), encode: "javascript"

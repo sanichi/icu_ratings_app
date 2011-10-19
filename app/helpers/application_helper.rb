@@ -66,6 +66,18 @@ module ApplicationHelper
     menu
   end
 
+  def tournament_status_menu(any=nil)
+    menu = [["OK", "ok"], ["Problems", "problems"]]
+    menu.unshift([any, ""]) if any
+    menu
+  end
+
+  def tournament_stage_menu(any=nil)
+    menu = Tournament::STAGE.map{ |s| [t(s), s] }
+    menu.unshift([any, ""]) if any
+    menu
+  end
+
   def upload_format_menu(none=nil)
     menu = Upload::FORMATS
     menu.unshift([none, ""]) if none
@@ -97,7 +109,7 @@ module ApplicationHelper
     return nil unless host && path
     link_to text, "http://#{host}/#{path}", target: target, class: "external"
   end
-  
+
   # Returns a plain link to the main ICU site.
   def link_to_icu(label, path="")
     link_to label, "http://www.icu.ie/#{path}", target: "_icu_ie", class: "external"

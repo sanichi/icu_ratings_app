@@ -2,7 +2,7 @@ class Tournament < ActiveRecord::Base
   extend Util::Pagination
 
   FEDS = ICU::Federation.codes
-  STAGE = %w[unrated staged rated changed]
+  STAGE = %w[unrated rated]
   TIEBREAK = "(?:#{ICU::TieBreak.rules.map(&:id).join('|')})"
 
   has_one    :upload, dependent: :destroy
@@ -46,13 +46,42 @@ class Tournament < ActiveRecord::Base
   # Search and paginate.
   def self.search(params, path)
     matches = Tournament.includes(:upload)
+
+    # Name or parts thereof.
     if params[:name].present?
       params[:name].strip.split(/\s+/).each do |term|
         matches = matches.where("tournaments.name LIKE ?", "%#{term}%")
       end
     end
-    matches = matches.joins(:players).where(players: { icu_id: params[:icu_id].to_i }) if params[:icu_id].to_i > 0
-    matches = matches.where(user_id: params[:user_id].to_i) if params[:user_id].to_i > 0
+
+    # Year.
+    year = params[:year].to_i
+    matches = matches.where("tournaments.start LIKE '#{year}-%' OR tournaments.finish LIKE '#{year}-%'") if year > 0
+
+    # Player.
+    icu_id = params[:icu_id].to_i
+    first_name = params[:first_name].strip if params[:first_name].present?
+    last_name  = params[:last_name].strip  if params[:last_name].present?
+    if icu_id > 0 || first_name || last_name
+      matches = matches.joins(:players)
+      matches = matches.where(players: { icu_id: params[:icu_id].to_i })      if icu_id > 0
+      matches = matches.where("players.first_name LIKE ?", "%#{first_name}%") if first_name
+      matches = matches.where("players.last_name  LIKE ?", "%#{last_name}%")  if last_name
+    end
+
+    # Reporter.
+    user_id = params[:user_id].to_i
+    matches = matches.where(user_id: user_id) if user_id > 0
+
+    # If the status menu is absent, we only show status "ok" tournaments.
+    status = params[:status] || "ok"
+    matches = matches.where("tournaments.status  = 'ok'") if status == "ok"
+    matches = matches.where("tournaments.status != 'ok'") if status == "problems"
+
+    # Stage.
+    stage = params[:stage].presence
+    matches = matches.where(stage: stage) if stage
+
     paginate(matches, path, params)
   end
 

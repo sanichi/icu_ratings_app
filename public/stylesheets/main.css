@@ -67,6 +67,8 @@ table {
     vertical-align: top; }
   table td.disabled, table th.disabled {
     color: #999999; }
+  table td.underlined, table th.underlined {
+    border-bottom: 1px solid #4b70b3 !important; }
   table td.section, table th.section {
     vertical-align: top;
     padding: 2em 3em; }
@@ -160,6 +162,8 @@ img.inline {
   .sf-menu a {
     padding: 0.5em 0.5em;
     color: #b0b5c4 !important; }
+    .sf-menu a.emphasize {
+      color: white !important; }
   .sf-menu li {
     background: #063263; }
   .sf-menu li li {
