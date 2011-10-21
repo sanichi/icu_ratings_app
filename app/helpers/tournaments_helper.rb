@@ -15,9 +15,11 @@ module TournamentsHelper
   end
 
   def result_class(result)
-    [result.player, result.opponent].inject("result centered") do |id, p|
-      id += " P-#{p.id}" if p;
-      id
+    cls = %w[result centered]
+    cls << result.colour if result.colour
+    [result.player, result.opponent].inject(cls.join(" ")) do |cl, p|
+      cl += " P-#{p.id}" if p;
+      cl
     end
   end
 end
