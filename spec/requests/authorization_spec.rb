@@ -13,6 +13,7 @@ describe "authorized links after logging in" do
 
       {
         "/admin/events"               => %w[admin officer],
+        "/admin/failures"             => %w[admin],
         "/admin/logins"               => %w[admin],
         "/admin/old_tournaments"      => %w[admin officer reporter],
         "/admin/old_rating_histories" => %w[admin officer reporter],

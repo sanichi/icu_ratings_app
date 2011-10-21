@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111002102406) do
+ActiveRecord::Schema.define(:version => 20111021155802) do
 
   create_table "downloads", :force => true do |t|
     t.string   "comment"
@@ -27,6 +27,12 @@ ActiveRecord::Schema.define(:version => 20111002102406) do
     t.integer  "time",       :limit => 2
     t.text     "report"
     t.boolean  "success"
+    t.datetime "created_at"
+  end
+
+  create_table "failures", :force => true do |t|
+    t.string   "name"
+    t.text     "details"
     t.datetime "created_at"
   end
 

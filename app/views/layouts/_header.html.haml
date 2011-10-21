@@ -43,6 +43,8 @@
           %li= link_to "Logins", admin_logins_path
         - if can? :read, Event
           %li= link_to "Events", admin_events_path
+        - if can? :read, Failure
+          %li= link_to "Failures", admin_failures_path
   %li= link_to "Help", "#", id: "help-link", class: "emphasize"
   %li
     - if current_user

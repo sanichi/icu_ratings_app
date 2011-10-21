@@ -13,7 +13,7 @@ module Admin
 
     def destroy
       @event.destroy
-      redirect_to admin_events_url
+      redirect_to admin_events_path
     end
   end
 end
