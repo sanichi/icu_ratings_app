@@ -1,14 +1,28 @@
 %table
   %tr
+    %th
     %th Name
     %th Start
   - if @tournaments.count == 0
     %tr
-      %td{colspan: 2, class: "centered"} No matches
+      %td{colspan: 3, class: "centered"} No matches
   - @tournaments.matches.each do |t|
+    - stage = t.stage
     %tr
+      %td= image_tag "icons/#{stage}.png", alt: stage, title: stage
       %td= link_to t.long_name, t
       %td= t.start
   - if @tournaments.multi_page
     %tr
-      %td{colspan: 2, class: "centered"}= pagination_links(@tournaments)
+      %td{colspan: 3, class: "centered"}= pagination_links(@tournaments)
+
+#help
+  %dl
+    %dt What are the different stages a tournament can be at?
+    %dd
+      %p
+        = image_tag "/images/icons/unrated.png", class: "inline"
+        Unrated, but intended to be rated when ready.
+      %p
+        = image_tag "/images/icons/rated.png", class: "inline"
+        Already rated.

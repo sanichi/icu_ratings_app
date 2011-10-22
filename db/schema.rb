@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111021155802) do
+ActiveRecord::Schema.define(:version => 20111022080423) do
 
   create_table "downloads", :force => true do |t|
     t.string   "comment"
@@ -193,7 +193,7 @@ ActiveRecord::Schema.define(:version => 20111021155802) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "status",                            :default => "ok"
-    t.string   "stage",               :limit => 20, :default => "unrated"
+    t.string   "stage",               :limit => 20, :default => "scratch"
   end
 
   add_index "tournaments", ["stage"], :name => "index_tournaments_on_stage"

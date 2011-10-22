@@ -64,7 +64,7 @@ describe "Tournament" do
       tournament = Tournament.first
       tournament.name.should == "Rathmines Senior 2011"
       tournament.status.should_not == "ok"
-      tournament.stage.should == "unrated"
+      tournament.stage.should == "scratch"
     end
 
     it "SPExport" do
@@ -74,7 +74,7 @@ describe "Tournament" do
       tournament = Tournament.first
       tournament.name.should == name
       tournament.status.should_not == "ok"
-      tournament.stage.should == "unrated"
+      tournament.stage.should == "scratch"
     end
 
     it "Krause" do
@@ -83,7 +83,7 @@ describe "Tournament" do
       tournament = Tournament.first
       tournament.name.should == "Bunratty 2011"
       tournament.status.should_not == "ok"
-      tournament.stage.should == "unrated"
+      tournament.stage.should == "scratch"
     end
 
     it "CSV" do
@@ -92,7 +92,51 @@ describe "Tournament" do
       tournament = Tournament.first
       tournament.name.should == "Isle of Man Masters, 2007"
       tournament.status.should_not == "ok"
-      tournament.stage.should == "unrated"
+      tournament.stage.should == "scratch"
+    end
+  end
+
+  describe "listing" do
+    before(:each) do
+      u = Factory(:user, role: "reporter")
+      @t1 = test_tournament("bunratty_masters_2011.tab", u.id)
+      @t2 = test_tournament("junior_championships_u19_2010.txt", u.id)
+    end
+    
+    it "should not display tournaments whose status is not 'ok'" do
+      [@t1, @t2].each do |t|
+        t.update_attribute(:status, "problem")
+        t.update_attribute(:stage, "unrated")
+      end
+      visit "/tournaments"
+      page.should have_no_selector(:xpath, "//a[@href='/tournaments/#{@t1.id}']")
+      page.should have_no_selector(:xpath, "//a[@href='/tournaments/#{@t2.id}']")
+      @t1.update_attribute(:status, "ok")
+      visit "/tournaments"
+      page.should have_selector(:xpath, "//a[@href='/tournaments/#{@t1.id}']")
+      page.should have_no_selector(:xpath, "//a[@href='/tournaments/#{@t2.id}']")
+      @t2.update_attribute(:status, "ok")
+      visit "/tournaments"
+      page.should have_selector(:xpath, "//a[@href='/tournaments/#{@t1.id}']")
+      page.should have_selector(:xpath, "//a[@href='/tournaments/#{@t2.id}']")
+    end
+
+    it "should not display tournaments at the 'scratch' stage" do
+      [@t1, @t2].each do |t|
+        t.update_attribute(:status, "ok")
+        t.update_attribute(:stage, "scratch")
+      end
+      visit "/tournaments"
+      page.should have_no_selector(:xpath, "//a[@href='/tournaments/#{@t1.id}']")
+      page.should have_no_selector(:xpath, "//a[@href='/tournaments/#{@t2.id}']")
+      @t1.update_attribute(:stage, "unrated")
+      visit "/tournaments"
+      page.should have_selector(:xpath, "//a[@href='/tournaments/#{@t1.id}']")
+      page.should have_no_selector(:xpath, "//a[@href='/tournaments/#{@t2.id}']")
+      @t2.update_attribute(:stage, "unrated")
+      visit "/tournaments"
+      page.should have_selector(:xpath, "//a[@href='/tournaments/#{@t1.id}']")
+      page.should have_selector(:xpath, "//a[@href='/tournaments/#{@t2.id}']")
     end
   end
 

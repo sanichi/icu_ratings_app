@@ -2,7 +2,8 @@ class Tournament < ActiveRecord::Base
   extend Util::Pagination
 
   FEDS = ICU::Federation.codes
-  STAGE = %w[unrated rated]
+  STAGE = %w[scratch unrated rated]
+  STAGE_UPDATABLE = %w[scratch unrated]
   TIEBREAK = "(?:#{ICU::TieBreak.rules.map(&:id).join('|')})"
 
   has_one    :upload, dependent: :destroy
@@ -11,7 +12,7 @@ class Tournament < ActiveRecord::Base
 
   default_scope order("start DESC, finish DESC, name")
 
-  attr_accessible :name, :start, :finish, :fed, :city, :site, :arbiter, :deputy, :time_control, :tie_breaks, :user_id
+  attr_accessible :name, :start, :finish, :fed, :city, :site, :arbiter, :deputy, :time_control, :tie_breaks, :user_id, :stage
 
   before_validation :normalise_attributes
 
@@ -68,26 +69,35 @@ class Tournament < ActiveRecord::Base
       matches = matches.where("players.first_name LIKE ?", "%#{first_name}%") if first_name
       matches = matches.where("players.last_name  LIKE ?", "%#{last_name}%")  if last_name
     end
+    
+    if params[:admin]
+      # Reporter.
+      user_id = params[:user_id].to_i
+      matches = matches.where(user_id: user_id) if user_id > 0
 
-    # Reporter.
-    user_id = params[:user_id].to_i
-    matches = matches.where(user_id: user_id) if user_id > 0
+      # Status.
+      status = params[:status]
+      matches = matches.where("tournaments.status  = 'ok'") if status == "ok"
+      matches = matches.where("tournaments.status != 'ok'") if status == "problems"
 
-    # If the status menu is absent, we only show status "ok" tournaments.
-    status = params[:status] || "ok"
-    matches = matches.where("tournaments.status  = 'ok'") if status == "ok"
-    matches = matches.where("tournaments.status != 'ok'") if status == "problems"
+      # Stage.
+      stage = params[:stage]
+      matches = matches.where(stage: stage) if stage.present?
+    else
+      # Only "ok" status.
+      matches = matches.where(status: "ok")
+      logger.info "ZZZ #{matches.to_sql} -- #{Tournament.where(status: 'ok').count}"
 
-    # Stage.
-    stage = params[:stage].presence
-    matches = matches.where(stage: stage) if stage
+      # Never "scratch" stage.
+      matches = matches.where("tournaments.stage != 'scratch'")
+    end
 
     paginate(matches, path, params)
   end
 
-  # The latest tournaments.
+  # The latest tournaments for members and guests.
   def self.latest(limit=10)
-    Tournament.limit(limit)
+    Tournament.where(status: "ok").where(stage: ["unrated", "rated"]).limit(limit)
   end
 
   # Return an ICU::Tournament instance built from a database Tournament.
@@ -286,7 +296,11 @@ class Tournament < ActiveRecord::Base
   end
 
   def deletable?
-    stage == "unrated"
+    stage == "unrated" || stage == "scratch"
+  end
+
+  def stage_updatable?
+    STAGE_UPDATABLE.include?(stage)
   end
 
   def status_ok?

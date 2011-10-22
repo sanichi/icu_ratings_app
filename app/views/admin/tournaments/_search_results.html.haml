@@ -1,18 +1,46 @@
 %table
   %tr
+    %th
+    %th
     %th Name
     %th Start
     %th Upload
     %th Reporter
   - if @tournaments.count == 0
     %tr
-      %td{colspan: 4, class: "centered"} No matches
+      %td{colspan: 6, class: "centered"} No matches
   - @tournaments.matches.each do |t|
+    - stage = t.stage
+    - status = t.status == "ok" ? "ok" : "problems"
     %tr
+      %td= image_tag "icons/#{stage}.png", alt: stage, title: stage
+      %td= image_tag "icons/#{status}.png", alt: status, title: status
       %td= link_to t.long_name, [:admin, t]
       %td= t.start
       %td= t.upload ? link_to(t.upload.created_at.strftime("%Y-%m-%d"), [:admin, t.upload]) : ""
       %td= t.user.name
   - if @tournaments.multi_page
     %tr
-      %td{colspan: 4, class: "centered"}= pagination_links(@tournaments)
+      %td{colspan: 6, class: "centered"}= pagination_links(@tournaments)
+
+#help
+  %dl
+    %dt What are the different stages a tournament can be at?
+    %dd
+      %p
+        = image_tag "/images/icons/scratch.png", class: "inline", alt: "scratch"
+        Scratch. Not intended for rating and will not be visible to members.
+      %p
+        = image_tag "/images/icons/unrated.png", class: "inline", alt: "unrated"
+        Unrated, but intended to be rated when ready.
+      %p
+        = image_tag "/images/icons/rated.png", class: "inline", alt: "rated"
+        Already rated.
+    %dt What are the different statuses a tournament can have?
+    %dd
+      %p
+        = image_tag "/images/icons/ok.png", class: "inline", alt: "ok"
+        OK. The tournament has no problems.
+      %p
+        = image_tag "/images/icons/problems.png", class: "inline", alt: "problems"
+        The tournament has issues and will not be visible to members.

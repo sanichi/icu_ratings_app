@@ -4,6 +4,7 @@ module Admin
     authorize_resource
 
     def index
+      params[:admin] = true
       @tournaments = Tournament.search(params, admin_tournaments_path)
       render :results if request.xhr?
     end
@@ -27,6 +28,8 @@ module Admin
         :edit_ranks
       when params[:reporter]
         :edit_reporter
+      when params[:stage]
+        :edit_stage
       else
         :edit
       end

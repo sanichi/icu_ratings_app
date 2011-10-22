@@ -2,23 +2,21 @@
   = hidden_field_tag :per_page, params[:per_page]
   %table{class: "invisible"}
     %tr
-      %th{colspan: 3, class: "underlined"} Tournament
+      %th{colspan: 2, class: "underlined"} Tournament
       %th{colspan: 3, class: "underlined"} Player
     %tr
       %th= label_tag :name, "Name"
       %th= label_tag :year, "Year"
-      %th= label_tag :stage, "Stage"
       %th= label_tag :first_name, "First Name"
       %th= label_tag :last_name, "Last Name"
       %th= label_tag :icu_id, "ID"
     %tr
       %td= text_field_tag :name, params[:name], class: "centered", size: 20
       %td= text_field_tag :year, params[:year], class: "centered", size: 4
-      %td= select_tag :stage, options_for_select(tournament_stage_menu("Any"), params[:stage])
       %td= text_field_tag :first_name, params[:first_name], class: "centered", size: 10
       %td= text_field_tag :last_name, params[:last_name], class: "centered", size: 15
       %td= text_field_tag :icu_id, params[:icu_id], class: "centered", size: 10
   %table{class: "invisible turbaned"}
     %tr
-      %td{colspan: 3, class: "centered"}= submit_tag "Search"
+      %td= submit_tag "Search"
 

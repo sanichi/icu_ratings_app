@@ -1,0 +1,5 @@
+= form_for [:admin, @tournament], remote: true do |f|
+  %table{class: "right-headers noborder"}
+    %tr
+      %th= f.label :stage, "Stage"
+      %td= f.select :stage, tournament_stage_update_menu
