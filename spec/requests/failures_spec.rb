@@ -3,17 +3,30 @@ require 'spec_helper'
 describe "Failure" do
   describe "administrators" do
     before(:each) do
-      20.times { Factory(:failure) }
       login("admin")
     end
 
-    it "can list with pagination" do
-      visit "admin/failures"
+    it "listing" do
+      20.times { Factory(:failure) }
+      visit "/admin/failures"
       page.should have_selector("td", :text => "RuntimeError", :count => 15)
       click_link "next"
       page.should have_selector("td", :text => "RuntimeError", :count => 5)
       page.should have_no_link("next")
       page.should have_link("prev")
+    end
+
+    it "details", js: true do
+      Factory(:failure, details: "Woopsee!")
+      visit "/admin/failures"
+      click_link "Show failure details"
+      page.should have_selector("pre", :text => "Woopsee!")
+    end
+    
+    it "simulation" do
+      Failure.count.should == 0
+      lambda { visit "/admin/failures/new" }.should raise_error("Simulated Failure")
+      Failure.count.should == 1
     end
   end
 
