@@ -13,7 +13,7 @@
     - @events.matches.each do |event|
       %tr
         %td= event.name
-        %td= time_ago_in_words event.created_at, true        
+        %td= time_ago_in_words(event.created_at, true)
         %td{class: "centered"}= event.time
         %td{class: "centered"}
           = image_tag "icons/#{event.success ? 'tick' : 'exclamation'}.png", alt: event.success ? "OK" : "problem"

@@ -46,6 +46,12 @@ module ApplicationHelper
     menu
   end
 
+  def published_menu(any=nil)
+    menu = [["Yes", "true"], ["No", "false"]]
+    menu.unshift([any, ""]) if any
+    menu
+  end
+
   def result_menu
     %w[Draw Win Loss].map{ |r| [r, r[0]] }
   end

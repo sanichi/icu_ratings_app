@@ -68,18 +68,19 @@ describe "NewsItem" do
       page.fill_in "Story", with: story
       page.click_button "Create"
       page.should have_link("Markdown")
-      NewsItem.where(headline: headline, story: story).should have(1).item
+      NewsItem.where(headline: headline, story: story, published: false).should have(1).item
       page.click_link "Edit"
       headline = "Changed Headline"
       page.fill_in "Headline", with: headline
+      page.check "Published"
       page.click_button "Update"
-      NewsItem.where(headline: headline, story: story).should have(1).item
+      NewsItem.where(headline: headline, story: story, published: true).should have(1).item
       page.click_link "Edit"      
       page.fill_in "Headline", with: "Rubbish"
       page.click_button "Cancel"
-      NewsItem.where(headline: headline, story: story).should have(1).item
+      NewsItem.where(headline: headline).should have(1).item
       page.click_link "Delete"
-      NewsItem.where(headline: headline, story: story).should have(0).items
+      NewsItem.where(headline: headline).should have(0).item
     end
   end
   
@@ -128,6 +129,20 @@ describe "NewsItem" do
       page.should have_selector("span.alert", text: /authoriz/i)
       visit "/news_items/new"
       page.should have_selector("span.alert", text: /authoriz/i)
+    end
+  end
+
+  describe "home_page" do
+    before(:each) do
+      @news = (1..3).map { |i| Factory(:news_item, published: false) }
+    end
+
+    it "has only published items" do
+      visit "/home"
+      page.should have_no_selector(:xpath, "//a[starts-with(@href,'/news_items/')]")
+      @news.each { |n| n.update_attribute(:published, true) }
+      visit "/home"
+      page.should have_selector(:xpath, "//a[starts-with(@href,'/news_items/')]", count: @news.size)
     end
   end
 end

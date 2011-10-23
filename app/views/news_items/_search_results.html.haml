@@ -1,19 +1,26 @@
+- extra = can?(:manage, NewsItem) ? 1 : 0
+
 %table
   %tr
+    - if extra == 1
+      %th
     %th Headline
-    %th Created
-    %th Updated
+    %th Created Ago
+    %th Updated Ago
     %th Reporter
   - if @news_items.count == 0
     %tr
-      %td{colspan: 4, class: "centered"} No matches
+      %td{colspan: 4 + extra, class: "centered"} No matches
   - else
     - @news_items.matches.each do |news|
       %tr
+        - if extra == 1
+          - state = news.published ? "published" : "unpublished"
+          %td= image_tag "/images/icons/#{state}.png", alt: state
         %td= link_to news.headline, news
-        %td{class: "centered"}= l news.created_at.to_date, format: :long
-        %td{class: "centered"}= l news.updated_at.to_date, format: :long
+        %td= time_ago_in_words(news.created_at, true)
+        %td= time_ago_in_words(news.updated_at, true)
         %td= news.user.name
   - if @news_items.multi_page
     %tr
-      %td{colspan: 4, class: "centered"}= pagination_links(@news_item)
+      %td{colspan: 4 + extra, class: "centered"}= pagination_links(@news_item)

@@ -3,6 +3,7 @@ class NewsItemsController < ApplicationController
   authorize_resource
 
   def index
+    params[:create] = can?(:create, NewsItem)
     @news_items = NewsItem.search(params, news_items_path)
     render :results if request.xhr?
   end

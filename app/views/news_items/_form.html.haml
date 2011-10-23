@@ -7,6 +7,9 @@
     = f.label :headline
     = f.text_field :headline, size: 80, maxlength: 256
   .input
+    = f.label :published
+    = f.check_box :published, {}, "true", "false"
+  .input
     = f.label :story
     = f.text_area :story, size: "80x20"
   .input

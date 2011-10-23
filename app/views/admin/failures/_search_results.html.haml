@@ -11,7 +11,7 @@
     - @failures.matches.each do |failure|
       %tr
         %td= failure.name
-        %td= time_ago_in_words failure.created_at, true        
+        %td= time_ago_in_words(failure.created_at, true)
         %td{class: "floater"}
           = link_to admin_failure_path(failure), remote: true do
             = image_tag "icons/show.png", alt: "Show failure details"

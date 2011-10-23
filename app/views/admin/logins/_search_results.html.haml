@@ -19,7 +19,7 @@
           %td{class: :error} None
         %td= login.problem
         %td= login.ip
-        %td= time_ago_in_words login.created_at, true
+        %td= time_ago_in_words(login.created_at, true)
   - if @logins.multi_page
     %tr
       %th{colspan: 5, class: "centered"}= pagination_links(@logins)
