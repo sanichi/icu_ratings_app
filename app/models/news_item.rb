@@ -12,11 +12,11 @@ class NewsItem < ActiveRecord::Base
   end
 
   def self.search(params, path)
-    params[:order] = "created" unless params[:order].to_s.match(/\A(created|updated)\Z/)
     matches = includes(user: :icu_player)
+    order = params[:order].to_s.match(/^(created|updated)$/) ? params[:order] : "created"
+    matches = matches.order("news_items.#{order}_at DESC")
     matches = matches.where("news_items.headline LIKE ?", "%#{params[:headline]}%") if params[:headline].present?
     matches = matches.where("news_items.story LIKE ?", "%#{params[:story]}%")       if params[:story].present?
-    matches = matches.order("news_items.#{params[:order]}_at DESC")                 if params[:order].present? && params[:order].match(/^(created|updaed)$/)
     if params[:create]
       matches = matches.where(published: true)  if params[:published] == "true"
       matches = matches.where(published: false) if params[:published] == "false"
