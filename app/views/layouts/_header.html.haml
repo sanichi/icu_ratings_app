@@ -18,11 +18,11 @@
         - if can? :create, Upload
           %li= link_to "New", new_admin_upload_path
         - if can? :read, Tournament
-          %li= link_to "Search", admin_tournaments_path
-        - if can? :read, OldTournament
-          %li= link_to "Old", admin_old_tournaments_path
+          %li= link_to "Admin", admin_tournaments_path
         - if can? :read, Upload
           %li= link_to "Uploads", admin_uploads_path
+        - if can? :read, OldTournament
+          %li= link_to "Old", admin_old_tournaments_path
   - if can? :read, IcuPlayer
     %li
       = link_to "Players", icu_players_path
