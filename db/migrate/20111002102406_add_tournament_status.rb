@@ -1,4 +1,4 @@
-class AddTournamentStatusColumn < ActiveRecord::Migration
+class AddTournamentStatus < ActiveRecord::Migration
   def self.up
     add_column :tournaments, :status, :string, default: "ok"
     add_column :tournaments, :stage, :string, limit: 20, default: "unrated"
