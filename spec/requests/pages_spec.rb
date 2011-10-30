@@ -21,15 +21,11 @@ describe "Pages" do
       end
     end
 
-    it "admins substitute for officers if there are none of the later" do
+    it "a single admin becomes an officer if there are no officers" do
       @officers.each { |officer| officer.delete }
       visit "/contacts"
-      {
-        "Rating Officer"        => 1,
-        "Website Administrator" => 1,
-      }.each_pair do |h, n|
-        page.find("h3", text: h).find(:xpath, "following-sibling::ul").all("li").should have(n).items
-      end
+      page.find("h3", text: "Rating Officer").find(:xpath, "following-sibling::ul").all("li").should have(1).items
+      page.should have_no_selector("h3", text: "Website Administrator")
     end
   end
 end

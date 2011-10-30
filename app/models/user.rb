@@ -33,9 +33,12 @@ class User < ActiveRecord::Base
   end
 
   def self.contacts
-    users = User.where("role != 'member'").joins(:icu_player).order("last_name, first_name")
+    users = User.where("role != 'member'").joins(:icu_player).order("first_name, last_name")
     users = users.inject(Hash.new { |h, k| h[k] = [] }) { |hash, user| hash[user.role] << user; hash }
-    users["officer"] = users["admin"] if users["officer"].size == 0
+    if users["officer"].size == 0 && users["admin"].size == 1
+      users["officer"] = users["admin"]
+      users["admin"] = []
+    end
     users
   end
 
