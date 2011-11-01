@@ -29,28 +29,6 @@ RSpec.configure do |config|
   end
 end
 
-# Return exactly the same type of object used for file uploads.
-def test_upload(name, arg={})
-  path = test_file_path(name)
-  if arg[:type].blank?
-    arg[:type] = case name
-      when /\.zip$/ then "application/octet-stream"
-      else "text/plain"
-    end
-  end
-  arg[:param] = name if arg[:param].blank?
-  tempfile = Tempfile.new('foo')
-  FileUtils.cp(path, tempfile.path)
-  hash =
-  {
-    filename: name,
-    type:     arg[:type],
-    tempfile: tempfile,
-    head:     "Content-Disposition: form-data; name=\"#{arg[:param]}\"; filename=\"#{name}\"\r\nContent-Type: #{arg[:type]}\r\n"
-  }
-  ActionDispatch::Http::UploadedFile.new(hash)
-end
-
 # Return a saved Tournament derived from one of the test files.
 def test_tournament(file, user_id, arg={})
   opt = Hash.new

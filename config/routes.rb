@@ -26,6 +26,6 @@ Ratings::Application.routes.draw do
     resources :uploads,              only: [:index, :show, :new, :create, :destroy]
     resources :users,                only: [:index, :show, :edit, :update]
   end
-  
+
   match "*url" => "pages#not_found"
 end

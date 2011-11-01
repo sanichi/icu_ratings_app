@@ -1,22 +1,27 @@
 source "http://rubygems.org"
 
-gem "rails", "3.0.10"
-gem "mysql2", "0.2.6"
-
+gem "rails", "3.1.1"
+gem "mysql2"
 gem "haml"
 gem "sass"
 gem "icu_tournament"
 gem "icu_name"
 gem "validates_timeliness"
 gem "whenever", :require => false
-gem "escape_utils"
 gem "redcarpet"
 gem "cancan", "~> 1.6"
+gem 'jquery-rails'
+
+group :assets do
+  gem 'sass-rails', " ~> 3.1.0"
+  gem 'coffee-rails', " ~> 3.1.0"
+  gem 'uglifier'
+end
 
 group :development do
-  gem "hirb"
   gem "capistrano"
   gem "pry"
+  gem "hirb"
 end
 
 group :test, :darwin do

@@ -1,5 +1,5 @@
 class CreateTournaments < ActiveRecord::Migration
-  def self.up
+  def change
     create_table :tournaments do |t|
       t.string   :name, :city, :site, :arbiter, :deputy, :tie_breaks, :time_control
       t.date     :start, :finish
@@ -14,9 +14,5 @@ class CreateTournaments < ActiveRecord::Migration
     end
 
     add_index :tournaments, :user_id
-  end
-
-  def self.down
-    drop_table :tournaments
   end
 end

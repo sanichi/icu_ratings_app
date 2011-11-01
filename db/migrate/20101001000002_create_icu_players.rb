@@ -1,5 +1,5 @@
 class CreateIcuPlayers < ActiveRecord::Migration
-  def self.up
+  def change
     create_table :icu_players do |t|
       t.string   :first_name, :last_name, :email, :club, :address, :phone_numbers
       t.string   :fed, :title, limit: 3
@@ -13,9 +13,5 @@ class CreateIcuPlayers < ActiveRecord::Migration
     end
     
     add_index :icu_players, [:last_name, :first_name]
-  end
-
-  def self.down
-    drop_table :icu_players
   end
 end

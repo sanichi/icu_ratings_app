@@ -1,5 +1,5 @@
 class CreateNewsItems < ActiveRecord::Migration
-  def self.up
+  def change
     create_table :news_items do |t|
       t.string   :headline
       t.text     :story
@@ -9,9 +9,5 @@ class CreateNewsItems < ActiveRecord::Migration
     end
 
     add_index :news_items, :user_id
-  end
-
-  def self.down
-    drop_table :news_items
   end
 end

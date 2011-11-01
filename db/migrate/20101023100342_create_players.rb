@@ -1,5 +1,5 @@
 class CreatePlayers < ActiveRecord::Migration
-  def self.up
+  def change
     create_table :players do |t|
       t.string   :first_name, :last_name
       t.string   :fed, :title, limit: 3
@@ -24,9 +24,5 @@ class CreatePlayers < ActiveRecord::Migration
     add_index :players, :tournament_id
     add_index :players, :icu_id
     add_index :players, :fide_id
-  end
-
-  def self.down
-    drop_table :players
   end
 end

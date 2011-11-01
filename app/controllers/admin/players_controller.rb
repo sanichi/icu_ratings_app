@@ -11,8 +11,9 @@ module Admin
     def show
       @tournament = @player.tournament
       if @tournament.players.size > 2
-        @prev = @tournament.players.find_by_num(@player.num - 1) || @tournament.players.order("num").find(:last)
-        @next = @tournament.players.find_by_num(@player.num + 1) || @tournament.players.order("num").find(:first)
+        # Note that player.find_by_num started going into an infinte loop here after the upgrate to rails 3.1.
+        @prev = @tournament.players.where("num = ?", @player.num - 1).first || @tournament.players.order("num").last
+        @next = @tournament.players.where("num = ?", @player.num + 1).first || @tournament.players.order("num").first
       end
     end
 

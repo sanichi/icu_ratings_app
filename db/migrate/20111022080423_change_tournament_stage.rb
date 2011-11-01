@@ -1,9 +1,13 @@
 class ChangeTournamentStage < ActiveRecord::Migration
-  def self.up
-    change_column :tournaments, :stage, :string, limit: 20, default: "scratch"
+  def up
+    change_table :tournaments do |t|
+      t.change_default :stage, "scratch"
+    end
   end
 
-  def self.down
-    change_column :tournaments, :stage, :string, limit: 20, default: "unrated"
+  def down
+    change_table :tournaments do |t|
+      t.change_default :stage, "unrated"
+    end
   end
 end

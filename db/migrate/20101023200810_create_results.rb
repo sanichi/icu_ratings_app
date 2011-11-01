@@ -1,5 +1,5 @@
 class CreateResults < ActiveRecord::Migration
-  def self.up
+  def change
     create_table :results do |t|
       t.integer  :round, limit: 1
       t.integer  :player_id, :opponent_id
@@ -11,9 +11,5 @@ class CreateResults < ActiveRecord::Migration
     
     add_index :results, :player_id
     add_index :results, :opponent_id
-  end
-
-  def self.down
-    drop_table :results
   end
 end

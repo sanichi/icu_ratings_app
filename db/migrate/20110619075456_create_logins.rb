@@ -1,5 +1,5 @@
 class CreateLogins < ActiveRecord::Migration
-  def self.up
+  def change
     create_table :logins do |t|
       t.integer  :user_id
       t.string   :ip, limit: 39
@@ -7,9 +7,5 @@ class CreateLogins < ActiveRecord::Migration
       t.string   :role, limit: 20
       t.datetime :created_at
     end
-  end
-
-  def self.down
-    drop_table :logins
   end
 end
