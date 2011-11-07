@@ -18,6 +18,9 @@ set :scm, :git
 set :repository, "git://github.com/sanichi/icu_ratings_app.git"
 set :branch, "master"
 
+# With the asset pipeline, the directories in public touched by deploy:finalize_update no longer exist.
+set :normalize_asset_timestamps, false
+
 namespace :deploy do
   desc "Tell Passenger to restart."
   task :restart, roles: :web do
