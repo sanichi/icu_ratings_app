@@ -10,12 +10,13 @@ gem "validates_timeliness"
 gem "whenever", :require => false
 gem "redcarpet"
 gem "cancan", "~> 1.6"
-gem 'jquery-rails'
+gem "jquery-rails"
+gem "therubyracer"
 
 group :assets do
-  gem 'sass-rails', " ~> 3.1.0"
-  gem 'coffee-rails', " ~> 3.1.0"
-  gem 'uglifier'
+  gem "sass-rails", "~> 3.1.0"
+  gem "coffee-rails", "~> 3.1.0"
+  gem "uglifier"
 end
 
 group :development do

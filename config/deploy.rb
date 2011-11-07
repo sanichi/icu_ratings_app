@@ -76,4 +76,4 @@ end
 before "deploy", "deploy:check_revision"
 after "deploy", "deploy:cleanup"
 after "deploy:setup", "deploy:setup_shared"
-after "deploy:update_code", "deploy:symlink_extras"
+before "deploy:assets:precompile", "deploy:symlink_extras"
