@@ -11,7 +11,7 @@ gem "whenever", :require => false
 gem "redcarpet"
 gem "cancan", "~> 1.6"
 gem "jquery-rails"
-gem "therubyracer"
+gem "therubyracer", :require => "v8"
 
 group :assets do
   gem "sass-rails", "~> 3.1.0"
