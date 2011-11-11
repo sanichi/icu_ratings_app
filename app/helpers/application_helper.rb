@@ -88,9 +88,9 @@ module ApplicationHelper
     Tournament::STAGE_UPDATABLE.map{ |s| [t(s), s] }
   end
 
-  def upload_format_menu(none=nil)
-    menu = Upload::FORMATS
-    menu.unshift([none, ""]) if none
+  def upload_format_menu(any=nil)
+    menu = Upload::FORMATS.dup
+    menu.unshift([any, ""]) if any
     menu
   end
 
