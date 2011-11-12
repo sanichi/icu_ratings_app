@@ -1,0 +1,23 @@
+.header
+  %span Old Ratings
+
+= render "search_form"
+
+#old_rating_results.turbaned
+  = render "search_results"
+
+#help
+  %dl
+    %dt What is meant by "old ratings"?
+    %dd
+      These are inherited from the last rating list produced by the old rating
+      system (in September 2011) just before it was replaced by the current system.
+    %dt Why are some full ratings associated with less than 20 games?
+    %dd
+      The old rating system created new ICU players using FIDE ratings (or
+      equivalent) for the opponents of Irish players in foreign tournaments
+      (such as Olympiads, IM tournaments and junior internationals). This
+      led to the creation of thousands of ICU players with a small number of
+      rated games (often just one) but with full ratings. In addition, some
+      game counts inherited from the old system were underestimates because
+      they did not include games played before the old system was established.

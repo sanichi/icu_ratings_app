@@ -1,9 +1,9 @@
 class OldTournament < ActiveRecord::Base
   extend Util::Pagination
-    
+
   has_many :old_rating_histories
   has_many :icu_players, through: :old_rating_histories
-  
+
   default_scope order("date DESC, name")
 
   def self.search(params, path)

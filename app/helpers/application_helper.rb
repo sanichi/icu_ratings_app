@@ -40,6 +40,12 @@ module ApplicationHelper
     menu
   end
 
+  def old_rating_type_menu(any=nil)
+    menu = [["Full", "full"], ["Provisional", "provisional"]]
+    menu.unshift([any, ""]) if any
+    menu
+  end
+
   def problem_menu(any=nil)
     menu = Login::PROBLEMS.map { |r| [r.capitalize, r] }
     menu.unshift([any, ""]) if any

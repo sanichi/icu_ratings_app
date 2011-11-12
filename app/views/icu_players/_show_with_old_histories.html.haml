@@ -1,7 +1,7 @@
 %h3= @icu_player.name
 
 %ul
-  - %w[deceased duplicate personal icu fide email phones address note].each do |how|
+  - %w[deceased duplicate personal icu fide email phones address note old_rating].each do |how|
     - summary = summarize(@icu_player, how.to_sym)
     - if summary.present?
       %li= summary

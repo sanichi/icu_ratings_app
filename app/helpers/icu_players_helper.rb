@@ -35,6 +35,9 @@ module IcuPlayersHelper
       note = player.note
       note.sub!(/\s*From Access database.*$/m, '') if note.present?  # This common bit of text is not worth the extra space.
       parts.push "Note: #{note}" if note.present?
+    when :old_rating
+      old = player.old_rating
+      parts.push "Old rating: %d (%s, %s)" % [old.rating, old.type, pluralize(old.games, "game")] if old
     end
 
     return nil unless parts.size > 0

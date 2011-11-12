@@ -24,7 +24,7 @@ class Ability
     can :create, NewsItem
     can :modify, NewsItem, user_id: user.id
 
-    can :read, [FidePlayer, IcuPlayer, OldRatingHistory, OldTournament]
+    can :read, [FidePlayer, IcuPlayer, OldRatingHistory, OldTournament, OldRating]
 
     return unless user.role? :officer
 

@@ -18,6 +18,7 @@ Ratings::Application.routes.draw do
     resources :events,               only: [:index, :show, :destroy]
     resources :failures,             only: [:index, :show, :destroy, :new]
     resources :logins,               only: [:index]
+    resources :old_ratings,          only: [:index]
     resources :old_rating_histories, only: [:index]
     resources :old_tournaments,      only: [:index]
     resources :players,              only: [:index, :show, :edit, :update]
