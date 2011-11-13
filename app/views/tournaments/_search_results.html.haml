@@ -15,14 +15,3 @@
   - if @tournaments.multi_page
     %tr
       %td{colspan: 3, class: "centered"}= pagination_links(@tournaments)
-
-#help
-  %dl
-    %dt What are the different stages a tournament can be at?
-    %dd
-      %p
-        = image_tag "icons/unrated.png", class: "inline"
-        Unrated, but intended to be rated when ready.
-      %p
-        = image_tag "icons/rated.png", class: "inline"
-        Already rated.
