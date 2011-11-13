@@ -9,7 +9,7 @@
       a { font-size: 8pt; color: #B0B0B3; text-decoration: none; }
       a:hover { text-decoration: underline }
   %body
-    %h1 ICU Ratings is Unavailable
+    %h1 ICU Ratings - Temporarily Unavailable
     %div
       %p
         = succeed "." do
@@ -19,6 +19,6 @@
           = Time.now.utc.strftime('%a %e %b %H:%M %Z')
       %p
         = succeed "." do
-          Sorry for the inconvenience. We'll be back
+          Sorry for any inconvenience. We'll be back
           = back
     %a{href: "mailto:admin@icu.ie"} Contact Us
