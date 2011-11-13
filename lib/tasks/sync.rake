@@ -17,18 +17,18 @@ namespace :sync do
     ICU::Database::FIDE.new.sync
   end
 
-  desc "Synchronize Irish FIDE players to the full download file from fide.com"
+  desc "Synchronize Irish FIDE players to the full download file from fide.com (use [F] to force)"
   task :irish_fide_players, [:force] => :environment do |t, args|
     args.with_defaults(force: "No")
     FIDE::Download::Irish.new.sync_fide_players(args[:force].match(/^(Y(es)?|F(orce)?)$/i))
   end
 
-  desc "Synchronize Non-Irish FIDE players to the latest download file from fide.com"
+  desc "Synchronize Non-Irish FIDE players to the latest download file from fide.com (use [F] to force)"
   task :other_fide_players, [:force] => :environment do |t, args|
     args.with_defaults(force: "No")
     FIDE::Download::Other.new.sync_fide_players(args[:force].match(/^(Y(es)?|F(orce)?)$/i))
   end
   
-  desc "Synchronize everything, in the correct order, after a complete rollback"
+  desc "Synchronize everything in the correct order"
   task all: [:icu_players, :icu_users, :irish_fide_players, :other_fide_players, :icu_fide_data]
 end

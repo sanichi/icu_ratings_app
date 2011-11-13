@@ -30,7 +30,7 @@
         %li= link_to "ICU Players", icu_players_path
         %li= link_to "FIDE Players", fide_players_path
         - if can? :read, OldRating
-          %li= link_to "Old Ratings", admin_old_ratings_path
+          %li= link_to "Last Old Ratings", admin_old_ratings_path
   - if can? :read, Download
     %li
       = link_to "Admin", downloads_path

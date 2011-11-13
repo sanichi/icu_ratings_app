@@ -300,12 +300,12 @@ module ICU
       def get_their_fide_ratings
         @num_fide_ratings = 0
         @fide_ratings = @client.query("SELECT fr_fide_id, fr_date, fr_rating, fr_games FROM fide_ratings").inject({}) do |map, data|
-          fide_player_id = data[:fr_fide_id]
+          fide_id = data[:fr_fide_id]
           period = Date.parse("#{data[:fr_date]}-01")
           rating = data[:fr_rating]
           games = data[:fr_games]
-          map[fide_player_id] ||= Hash.new
-          map[fide_player_id][period] = [rating, games]
+          map[fide_id] ||= Hash.new
+          map[fide_id][period] = [rating, games]
           @num_fide_ratings += 1
           map
         end

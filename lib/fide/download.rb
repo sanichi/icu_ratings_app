@@ -111,7 +111,7 @@ module FIDE
 
       def update_our_players
         @our_players = FidePlayer.all.inject({}) { |h,p| h[p.id] = p; h }
-        @our_ratings = FideRating.find_all_by_period(@period).inject({}) { |h,r| h[r.fide_player_id] = r; h }
+        @our_ratings = FideRating.find_all_by_period(@period).inject({}) { |h,r| h[r.fide_id] = r; h }
         @updates = []
         @creates = []
         @invalid = []
