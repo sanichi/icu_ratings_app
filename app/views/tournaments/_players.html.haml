@@ -1,9 +1,9 @@
 %table{class: "cushioned"}
   %tr
-    %td{colspan: "#{@rankable ? 2 : 1}"}
+    %th{colspan: "#{@rankable ? 2 : 1}"}
     - 1.upto(@tournament.rounds) do |r|
-      %td{class: "centered"}= r
-    %td
+      %th{class: "round"}= r
+    %th
   - @players.each do |player|
     %tr
       %td{id: player_id(player), class: player_class(player)}= player.name

@@ -90,7 +90,7 @@ $crnr-med: 5px
     +rounded-corners($radius)
     a
       :color $sp-col !important
-      
+
 =blurb($size, $pad, $radius, $weight: normal)
   :text-align center
   :font
@@ -167,6 +167,9 @@ table
       :margin 0
   th
     +label()
+    &.round
+      :width 15px
+      :text-align center
   td.centered
     :text-align center
   td.on-right
@@ -185,7 +188,7 @@ table
     &.underlined
       :border-bottom 1px solid $hd-col !important
     &.B
-      :background-color $tab-bg-col-black     
+      :background-color $tab-bg-col-black
     &.section
       :vertical-align top
       :padding 2em 3em

@@ -77,7 +77,7 @@ describe "Upload" do
         upload.user.should_not == @user
         visit "/admin/uploads/#{upload.id}"
         page.click_link("Delete")
-        page.driver.browser.switch_to.alert.accept
+        # page.driver.browser.switch_to.alert.accept # don't use a confirmation here any more
         page.current_path.should == "/admin/uploads"
         Upload.count.should == 0
       end

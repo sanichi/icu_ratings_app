@@ -3,7 +3,7 @@
     %th
     %th Name
     - 1.upto(@tournament.rounds) do |r|
-      %th= r
+      %th{class: "round"}= r
     %th Pts
     %th Rnk
   - @players.each do |player|
