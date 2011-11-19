@@ -1,0 +1,26 @@
+%table
+  %tr
+    %th Player
+    %th List
+    %th Rating
+    %th Fed
+    %th Club
+  - if @icu_ratings.count == 0
+    %tr
+      %td{colspan: 5, class: "centered"} No matches
+  - else
+    - icu_id = Proc.new { |r| r.icu_id }
+    - name   = Proc.new { |r| r.icu_player ? r.icu_player.name : r.icu_id.to_s }
+    - list   = Proc.new { |r| humanize_icu_list(r.list) }
+    - fed    = Proc.new { |r| r.icu_player ? r.icu_player.fed.to_s : "" }
+    - club   = Proc.new { |r| r.icu_player ? r.icu_player.club.to_s : "" }
+    - @icu_ratings.matches.each_with_index do |r, i|
+      %tr
+        = render partial: "shared/rowspan", locals: { rowspan: @icu_ratings.rowspan(i, icu_id, name), attrs: { title: r.icu_id } }
+        = render partial: "shared/rowspan", locals: { rowspan: @icu_ratings.rowspan(i, list) }
+        %td{class: "#{r.type}"}= r.rating
+        = render partial: "shared/rowspan", locals: { rowspan: @icu_ratings.rowspan(i, fed) }
+        = render partial: "shared/rowspan", locals: { rowspan: @icu_ratings.rowspan(i, club) }
+  - if @icu_ratings.multi_page
+    %tr
+      %td{colspan: 5, class: "centered"}= pagination_links(@icu_ratings)

@@ -1,0 +1,25 @@
+= form_tag icu_ratings_path, method: "get", remote: true do
+  = hidden_field_tag :per_page, params[:per_page]
+  %table{class: "invisible"}
+    %tr
+      %th= label_tag :last_name, "Last Name"
+      %th= label_tag :first_name, "First Name"
+      %th= label_tag :club, "Club"
+      %th= label_tag :icu_id, "ICU ID"
+      %th
+    %tr
+      %td= text_field_tag :last_name, params[:last_name], class: "centered", size: 10
+      %td= text_field_tag :first_name, params[:first_name], class: "centered", size: 10
+      %td= text_field_tag :club, params[:club], class: "centered", size: 10
+      %td= text_field_tag :icu_id, params[:icu_id], class: "centered", size: 10
+  %table{class: "invisible"}
+    %tr
+      %th= label_tag :list, "List"
+      %th= label_tag :type, "Rating Type"
+      %th= label_tag :fed, "Federation"
+      %th
+    %tr
+      %td= select_tag :list, options_for_select(icu_rating_list_menu("Any"), params[:list])
+      %td= select_tag :type, options_for_select(rating_type_menu("Any"), params[:type])
+      %td= select_tag :fed, options_for_select(federation_menu(top: "IRL", none: "Any", unknown: "Unknown", foreign: "Foreign", irl_unk: "Ireland or Unknown"), params[:fed])
+      %td= submit_tag "Search"

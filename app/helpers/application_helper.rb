@@ -25,7 +25,11 @@ module ApplicationHelper
   end
 
   def federation_menu(opt = { top: 'IRL', none: 'None' })
-    ICU::Federation.menu(opt)
+    menu = ICU::Federation.menu(opt)
+    menu.insert(1, [opt[:irl_unk], "IR?"]) if opt[:irl_unk]
+    menu.insert(1, [opt[:unknown], "???"]) if opt[:unknown]
+    menu.insert(1, [opt[:foreign], "XXX"]) if opt[:foreign]
+    menu
   end
 
   def colour_menu(none=nil)
@@ -40,7 +44,18 @@ module ApplicationHelper
     menu
   end
 
-  def old_rating_type_menu(any=nil)
+  def humanize_icu_list(list)
+    month = %w(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec)[list.to_s[4,2].to_i - 1]
+    "#{list.to_s[0,4]} #{month}"
+  end
+
+  def icu_rating_list_menu(any=nil)
+    menu = IcuRating.lists.map { |list| [humanize_icu_list(list), list]}
+    menu.unshift([any, ""]) if any
+    menu
+  end
+
+  def rating_type_menu(any=nil)
     menu = [["Full", "full"], ["Provisional", "provisional"]]
     menu.unshift([any, ""]) if any
     menu
@@ -180,5 +195,11 @@ module ApplicationHelper
     start = 2011
     finish = Date.today.year
     raw "&copy; ICU %s" % (finish > start ? "#{start}-#{finish}" : start.to_s)
+  end
+  
+  # A HAML specific way of adding attributes to rowspan cells (see shared/_rowspan.html.haml).
+  def rowspan_attrs(rows, attrs)
+    attrs[:rowspan] = rows if rows > 1
+    attrs
   end
 end

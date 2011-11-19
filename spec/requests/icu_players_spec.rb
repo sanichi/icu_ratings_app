@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "IcuPlayer" do
+describe IcuPlayer do
   describe "show" do
     describe "member" do
       before(:each) do

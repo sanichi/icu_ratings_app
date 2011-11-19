@@ -10,6 +10,6 @@
     %tr
       %td= text_field_tag :last_name, params[:last_name], class: "centered", size: 15
       %td= text_field_tag :first_name, params[:first_name], class: "centered", size: 10
-      %td= select_tag :type, options_for_select(old_rating_type_menu("Any"), params[:type])
+      %td= select_tag :type, options_for_select(rating_type_menu("Any"), params[:type])
       %td= text_field_tag :icu_id, params[:icu_id], class: "centered", size: 10
       %td= submit_tag "Search"

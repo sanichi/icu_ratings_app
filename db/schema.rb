@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111113135417) do
+ActiveRecord::Schema.define(:version => 20111116193323) do
 
   create_table "downloads", :force => true do |t|
     t.string   "comment"
@@ -83,6 +83,17 @@ ActiveRecord::Schema.define(:version => 20111113135417) do
   end
 
   add_index "icu_players", ["last_name", "first_name"], :name => "index_icu_players_on_last_name_and_first_name"
+
+  create_table "icu_ratings", :force => true do |t|
+    t.integer "list",   :limit => 3
+    t.integer "icu_id"
+    t.integer "rating", :limit => 2
+    t.boolean "full",                :default => false
+  end
+
+  add_index "icu_ratings", ["icu_id"], :name => "index_icu_ratings_on_icu_id"
+  add_index "icu_ratings", ["list", "icu_id"], :name => "index_icu_ratings_on_list_and_icu_id", :unique => true
+  add_index "icu_ratings", ["list"], :name => "index_icu_ratings_on_list"
 
   create_table "logins", :force => true do |t|
     t.integer  "user_id"

@@ -7,16 +7,16 @@ describe "OldRating" do
       Factory(:old_rating, rating: 2198, games: 329, icu_player: Factory(:icu_player, id: 1350, first_name: "Mark", last_name: "Orr"))
       Factory(:old_rating, rating: 1349, games: 51, icu_player: Factory(:icu_player, id: 1349, first_name: "John", last_name: "Orr"))
       Factory(:old_rating, rating: -58, games: 4, full: false, icu_player: Factory(:icu_player, id: 10349, first_name: "Aoife", last_name: "Bannon"))
-      @fmt1 = "//div[@id='old_rating_results']/table//tr[td[.='%s'] and td[.='%d'] and td[.='%d'] and td[.='%d'] and td[.='%s']]"
+      @fmt1 = "//div[@id='old_rating_results']/table//tr[td[.='%s'] and td[.='%d'] and td[.='%d' and @class='%s'] and td[.='%d']]"
       @fmt2 = "//div[@id='old_rating_results']/table//tr[td[.='%d']]"
     end
 
     it "list can be searched for names, IDs and types", js: true do
       visit "/admin/old_ratings"
       page.should have_selector("#old_rating_results table tr", count: 4)
-      page.should have_selector(:xpath, @fmt1 % ["Orr, Mark", 1350, 2198, 329, "full"])
-      page.should have_selector(:xpath, @fmt1 % ["Orr, John", 1349, 1349, 51, "full"])
-      page.should have_selector(:xpath, @fmt1 % ["Bannon, Aoife", 10349, -58, 4, "provisional"])
+      page.should have_selector(:xpath, @fmt1 % ["Orr, Mark", 1350, 2198, "full", 329])
+      page.should have_selector(:xpath, @fmt1 % ["Orr, John", 1349, 1349, "full", 51])
+      page.should have_selector(:xpath, @fmt1 % ["Bannon, Aoife", 10349, -58, "provisional", 4])
       page.fill_in "Last Name", with: "Orr"
       click_button "Search"
       page.should have_selector("#old_rating_results table tr", count: 3)

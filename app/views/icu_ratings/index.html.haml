@@ -1,0 +1,40 @@
+.header
+  %span ICU Ratings
+
+= render "search_form"
+
+#icu_rating_results.turbaned
+  = render "search_results"
+
+#help
+  %dl
+    %dt What ratings are these?
+    %dd
+      %p
+        These are the published ratings of ICU members from September 2001 to the present.
+      %p
+        The ICU publishes ratings of players who compete in ICU rated tournaments
+        three times every year: January, May and September. Only players who are
+        subscribed members of the ICU at the time of publication appear in each
+        rating list. Players who were not members at the time the lists were
+        published still had their ratings calculated but they do not appear here.
+    %dt What are "provisional" and "full" ratings?
+    %dd
+      Until a player has 20 rated games their rating is considered provisional and
+      its calculation is based on average tournament performance. On this page
+      provisional ratings are indicated with an italic font. After 20 games a
+      player is considered to have a full rating and it is calculated using
+      the standard formulae of the Elo rating system.
+    %dt Why is my old club not shown?
+    %dd Unfortunately we only track a member's current club so that's all we can display here.
+    %dt Why is my federation not shown?
+    %dd
+      Because it's not specifically recorded in the database. If we ever need to
+      know it (e.g. for FIDE registration) we may assume Irish unless there is any
+      doubt in which case we will contact you. Players with unknown federation,
+      especially those with names that would pass as Irish but who are not actually
+      Irish (e.g. English), are strongly encouraged to get in touch:
+      = succeed(",") do
+        = mail_to_icu :membership
+      = succeed(".") do
+        = mail_to_icu :ratings
