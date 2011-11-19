@@ -35,8 +35,6 @@ class IcuPlayer < ActiveRecord::Base
     matches = matches.where(last_name_like(params[:last_name], params[:first_name])) unless params[:last_name].blank?
     matches = matches.where(first_name_like(params[:first_name], params[:last_name])) unless params[:first_name].blank?
     matches = matches.where("club LIKE ?", "%#{params[:club]}%") unless params[:club].blank?
-    matches = matches.where("fed = ?", params[:fed]) unless params[:fed].blank? || params[:fed] == "IRL"
-    matches = matches.where("fed = 'IRL' OR fed IS NULL") if params[:fed] == "IRL"
     matches = matches.where("gender = ?", params[:gender]) unless params[:gender].blank? || params[:gender] == "M"
     matches = matches.where("gender = 'M' OR gender IS NULL") if params[:gender] == "M"
     matches = matches.where("title = ?", params[:title]) unless params[:title].blank?
@@ -44,6 +42,20 @@ class IcuPlayer < ActiveRecord::Base
     matches = matches.where("dob > ?", Time.now.years_ago(params[:max_age].to_i)) if params[:max_age].to_i > 0
     matches = matches.where("dob LIKE ?", "%#{params[:dob]}%") if params[:dob] && params[:dob].match(/^[-\d]+$/)
     matches = matches.where("id = ?", params[:id].to_i) if params[:id].to_i > 0
+    matches = search_fed(matches, params[:fed])
     paginate(matches, path, params)
+  end
+  
+  def self.search_fed(matches, fed)
+    if fed.present?
+      case fed
+      when "???" then matches.where("fed IS NULL")
+      when "IR?" then matches.where("fed IS NULL OR fed = 'IRL'")
+      when "XXX" then matches.where("fed IS NOT NULL AND fed != 'IRL'")
+      else matches.where("fed = ?", fed)
+      end
+    else
+      matches
+    end
   end
 end

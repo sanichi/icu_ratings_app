@@ -13,18 +13,7 @@ class IcuRating < ActiveRecord::Base
     matches = matches.where(icu_id: params[:icu_id].to_i) if params[:icu_id].to_i > 0
     matches = matches.where(full: params[:type] == "full") if params[:type].present?
     matches = matches.where(list: params[:list].to_i) if params[:list].present?
-    if params[:fed].present?
-      case params[:fed]
-      when "???"
-        matches = matches.where("fed IS NULL")
-      when "IR?"
-        matches = matches.where("fed IS NULL OR fed = 'IRL'")
-      when "XXX"
-        matches = matches.where("fed IS NOT NULL AND fed != 'IRL'")
-      else
-        matches = matches.where("fed = ?", params[:fed])
-      end
-    end
+    matches = IcuPlayer.search_fed(matches, params[:fed])
     paginate(matches, path, params)
   end
 

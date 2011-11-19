@@ -26,7 +26,7 @@
       %th= label_tag :id, "ICU ID"
     %tr
       %td= select_tag :gender, options_for_select(gender_menu("Any"), params[:gender])
-      %td= select_tag :fed, options_for_select(federation_menu(top: "IRL", none: "Any"), params[:fed])
+      %td= select_tag :fed, options_for_select(federation_menu(top: "IRL", none: "Any", unknown: "Unknown", foreign: "Foreign", irl_unk: "Ireland or Unknown"), params[:fed])
       %td= select_tag :title, options_for_select(title_menu("Any"), params[:title])
       %td{class: "centered"}= text_field_tag :max_age, params[:max_age], class: "centered", size: 3, maxlength: 3
       %td{class: "centered"}= text_field_tag :min_age, params[:min_age], class: "centered", size: 3, maxlength: 3

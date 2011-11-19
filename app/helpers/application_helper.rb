@@ -163,7 +163,7 @@ module ApplicationHelper
     links = Array.new
     links.push(link_to "next", pager.next_page, remote: true) if pager.before_end
     links.push(link_to "prev", pager.prev_page, remote: true) if pager.after_start
-    raw "#{pager.sequence} of #{pluralize(pager.count, "match")}#{links.size > 0 ? ": " : ""}#{links.join(", ")}"
+    raw "#{pager.sequence} of #{pluralize(pager.total, "match")}#{links.size > 0 ? ": " : ""}#{links.join(", ")}"
   end
 
   # These dialogs are used in more than one place so are defined here.
