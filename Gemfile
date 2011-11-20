@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem "rails", "3.1.1"
+gem "rails", "3.1.2"
 gem "mysql2"
 gem "haml"
 gem "sass"
@@ -14,8 +14,8 @@ gem "jquery-rails"
 gem "therubyracer", :require => "v8"
 
 group :assets do
-  gem "sass-rails", "~> 3.1.0"
-  gem "coffee-rails", "~> 3.1.0"
+  gem "sass-rails", "3.1.5"
+  gem "coffee-rails", "3.1.1"
   gem "uglifier"
 end
 
