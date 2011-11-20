@@ -27,7 +27,6 @@
     = link_to "Ratings", icu_ratings_path
     - if can?(:read, OldRating)
       %ul
-        %li= link_to "Published Ratings", icu_ratings_path
         %li= link_to "Last Old Ratings", admin_old_ratings_path
   - if can? :read, IcuPlayer
     %li

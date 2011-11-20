@@ -7,30 +7,30 @@
     %tr
       %th= label_tag :last_name, "Last Name"
       %th= label_tag :first_name, "First Name"
-      %th= label_tag :club
+      %th= label_tag :gender
       %th= label_tag :dob, "DOB"
+      %th= label_tag :id, "ICU ID"
       %th
     %tr
       %td= text_field_tag :last_name, params[:last_name], class: "centered", size: 15
       %td= text_field_tag :first_name, params[:first_name], class: "centered", size: 10
-      %td= text_field_tag :club, params[:club], class: "centered", size: 10
+      %td= select_tag :gender, options_for_select(gender_menu("Any"), params[:gender])
       %td= text_field_tag :dob, params[:dob], class: "centered", size: 10
+      %td= text_field_tag :id, params[:id], class: "centered", size: 6, maxlength: 6
       %td= submit_tag "Search"
   %table{class: "invisible turbaned"}
     %tr
-      %th= label_tag :gender
+      %th= label_tag :club
       %th= label_tag :fed, "Federation"
       %th= label_tag :title
       %th= label_tag :max_age, "Max Age"
       %th= label_tag :min_age, "Min Age"
-      %th= label_tag :id, "ICU ID"
     %tr
-      %td= select_tag :gender, options_for_select(gender_menu("Any"), params[:gender])
+      %td= select_tag :club, options_for_select(club_menu, params[:club])
       %td= select_tag :fed, options_for_select(federation_menu(top: "IRL", none: "Any", unknown: "Unknown", foreign: "Foreign", irl_unk: "Ireland or Unknown"), params[:fed])
       %td= select_tag :title, options_for_select(title_menu("Any"), params[:title])
       %td{class: "centered"}= text_field_tag :max_age, params[:max_age], class: "centered", size: 3, maxlength: 3
       %td{class: "centered"}= text_field_tag :min_age, params[:min_age], class: "centered", size: 3, maxlength: 3
-      %td= text_field_tag :id, params[:id], class: "centered", size: 6, maxlength: 6
   %table{class: "invisible turbaned"}
     %tr
       %th

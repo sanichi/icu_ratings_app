@@ -32,12 +32,12 @@ class IcuPlayer < ActiveRecord::Base
     matches = IcuPlayer.scoped
     matches = matches.where(master_id: nil) unless params[:include_duplicates]
     matches = matches.where(deceased: false) unless params[:include_deceased]
-    matches = matches.where(last_name_like(params[:last_name], params[:first_name])) unless params[:last_name].blank?
-    matches = matches.where(first_name_like(params[:first_name], params[:last_name])) unless params[:first_name].blank?
-    matches = matches.where("club LIKE ?", "%#{params[:club]}%") unless params[:club].blank?
-    matches = matches.where("gender = ?", params[:gender]) unless params[:gender].blank? || params[:gender] == "M"
+    matches = matches.where(last_name_like(params[:last_name], params[:first_name])) if params[:last_name].present?
+    matches = matches.where(first_name_like(params[:first_name], params[:last_name])) if params[:first_name].present?
+    matches = matches.where(club: params[:club] == "None" ? nil : params[:club]) if params[:club].present?
     matches = matches.where("gender = 'M' OR gender IS NULL") if params[:gender] == "M"
-    matches = matches.where("title = ?", params[:title]) unless params[:title].blank?
+    matches = matches.where("gender = 'F'") if params[:gender] == "F"
+    matches = matches.where("title = ?", params[:title]) if params[:title].present?
     matches = matches.where("dob < ?", Time.now.years_ago(params[:min_age].to_i)) if params[:min_age].to_i > 0
     matches = matches.where("dob > ?", Time.now.years_ago(params[:max_age].to_i)) if params[:max_age].to_i > 0
     matches = matches.where("dob LIKE ?", "%#{params[:dob]}%") if params[:dob] && params[:dob].match(/^[-\d]+$/)
