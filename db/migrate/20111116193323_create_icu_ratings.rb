@@ -2,7 +2,7 @@ class CreateIcuRatings < ActiveRecord::Migration
   def up
     create_table :icu_ratings do |t|
       # Warning: column order should match CSV import file.
-      t.integer  :list, limit: 3
+      t.date     :list
       t.integer  :icu_id
       t.integer  :rating, limit: 2
       t.boolean  :full, default: false

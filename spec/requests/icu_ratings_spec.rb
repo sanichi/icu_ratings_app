@@ -3,11 +3,11 @@ require 'spec_helper'
 describe IcuRating do
   describe "list", js: true do
     before(:each) do
-      @r1 = Factory(:icu_rating, list: 201109, full:true,  icu_player: Factory(:icu_player, club: "Bangor", fed: "IRL"))
-      @r2 = Factory(:icu_rating, list: 201109, full:false, icu_player: Factory(:icu_player, club: "Galway", fed: "IRL", gender: "F"))
-      @r3 = Factory(:icu_rating, list: 201109, full:true,  icu_player: Factory(:icu_player, club: nil,      fed: "SCO"))
-      @r4 = Factory(:icu_rating, list: 201105, full:true,  icu_player: Factory(:icu_player, club: nil,      fed:  nil ))
-      @r5 = Factory(:icu_rating, list: 201105, full:false, icu_player: @r1.icu_player)
+      @r1 = Factory(:icu_rating, list: "2011-09-01", full:true,  icu_player: Factory(:icu_player, club: "Bangor", fed: "IRL"))
+      @r2 = Factory(:icu_rating, list: "2011-09-01", full:false, icu_player: Factory(:icu_player, club: "Galway", fed: "IRL", gender: "F"))
+      @r3 = Factory(:icu_rating, list: "2011-09-01", full:true,  icu_player: Factory(:icu_player, club: nil,      fed: "SCO"))
+      @r4 = Factory(:icu_rating, list: "2011-05-01", full:true,  icu_player: Factory(:icu_player, club: nil,      fed:  nil ))
+      @r5 = Factory(:icu_rating, list: "2011-05-01", full:false, icu_player: @r1.icu_player)
       @xp = "#icu_rating_results table tr"
     end
 

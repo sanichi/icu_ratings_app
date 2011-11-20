@@ -2,7 +2,10 @@ class IcuRating < ActiveRecord::Base
   extend Util::Pagination
 
   belongs_to :icu_player, foreign_key: "icu_id"
-  validates_numericality_of :list, :rating, only_integer: true
+
+  validates_date            :list, on_or_after: "2001-09-01", :on_or_before => :today
+  validates_numericality_of :rating, only_integer: true
+
   default_scope includes(:icu_player).joins(:icu_player).order("list DESC, rating DESC")
 
   def self.search(params, path)
@@ -15,7 +18,7 @@ class IcuRating < ActiveRecord::Base
     matches = matches.where("gender = 'F'") if params[:gender] == "F"
     matches = matches.where(icu_id: params[:icu_id].to_i) if params[:icu_id].to_i > 0
     matches = matches.where(full: params[:type] == "full") if params[:type].present?
-    matches = matches.where(list: params[:list].to_i) if params[:list].present?
+    matches = matches.where(list: params[:list]) if params[:list].present?
     matches = IcuPlayer.search_fed(matches, params[:fed])
     paginate(matches, path, params)
   end

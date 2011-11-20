@@ -11,7 +11,7 @@
   - else
     - icu_id = Proc.new { |r| r.icu_id }
     - name   = Proc.new { |r| r.icu_player ? r.icu_player.name : r.icu_id.to_s }
-    - list   = Proc.new { |r| humanize_icu_list(r.list) }
+    - list   = Proc.new { |r| year_month(r.list) }
     - fed    = Proc.new { |r| r.icu_player ? r.icu_player.fed.to_s : "" }
     - club   = Proc.new { |r| r.icu_player ? r.icu_player.club.to_s : "" }
     - @icu_ratings.matches.each_with_index do |r, i|

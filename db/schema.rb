@@ -85,7 +85,7 @@ ActiveRecord::Schema.define(:version => 20111116193323) do
   add_index "icu_players", ["last_name", "first_name"], :name => "index_icu_players_on_last_name_and_first_name"
 
   create_table "icu_ratings", :force => true do |t|
-    t.integer "list",   :limit => 3
+    t.date    "list"
     t.integer "icu_id"
     t.integer "rating", :limit => 2
     t.boolean "full",                :default => false

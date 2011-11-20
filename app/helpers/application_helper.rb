@@ -51,13 +51,12 @@ module ApplicationHelper
     menu
   end
 
-  def humanize_icu_list(list)
-    month = %w(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec)[list.to_s[4,2].to_i - 1]
-    "#{list.to_s[0,4]} #{month}"
+  def year_month(date)
+    "%d %s" % [date.year, %w(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec)[date.month-1]]
   end
 
   def icu_rating_list_menu(any=nil)
-    menu = IcuRating.lists.map { |list| [humanize_icu_list(list), list]}
+    menu = IcuRating.lists.map { |list| [year_month(list), list]}
     menu.unshift([any, ""]) if any
     menu
   end
