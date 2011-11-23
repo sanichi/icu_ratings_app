@@ -3,8 +3,9 @@ class IcuRating < ActiveRecord::Base
 
   belongs_to :icu_player, foreign_key: "icu_id"
 
-  validates_date            :list, on_or_after: "2001-09-01", :on_or_before => :today
   validates_numericality_of :rating, only_integer: true
+  validates_date            :list, on_or_after: "2001-09-01", :on_or_before => :today
+  validate                  :list_should_be_first_of_month
 
   default_scope includes(:icu_player).joins(:icu_player).order("list DESC, rating DESC")
 
@@ -29,5 +30,11 @@ class IcuRating < ActiveRecord::Base
 
   def self.lists
     unscoped.select("DISTINCT(list)").order("list DESC").map(&:list)
+  end
+
+  private
+
+  def list_should_be_first_of_month
+    errors.add(:list, "should be 1st day of month") unless list.day == 1
   end
 end

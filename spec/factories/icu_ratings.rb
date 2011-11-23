@@ -4,4 +4,3 @@ Factory.define :icu_rating do |r|
   r.list         "2011-09-01"
   r.full         true
 end
-

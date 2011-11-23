@@ -4,7 +4,7 @@ class Event < ActiveRecord::Base
   default_scope order("created_at DESC")
 
   def self.search(params, path)
-    matches = Event.scoped
+    matches = scoped
     matches = matches.where("name LIKE ?", "%#{params[:name]}%") unless params[:name].blank?
     matches = matches.where("report LIKE ?", "%#{params[:report]}%") unless params[:report].blank?
     matches = matches.where("success = ?", params[:success]) unless params[:success].blank?

@@ -25,8 +25,9 @@
           %li= link_to "Old", admin_old_tournaments_path
   %li
     = link_to "Ratings", icu_ratings_path
-    - if can?(:read, OldRating)
-      %ul
+    %ul
+      %li= link_to "FIDE Ratings", fide_ratings_path
+      - if can?(:read, OldRating)
         %li= link_to "Last Old Ratings", admin_old_ratings_path
   - if can? :read, IcuPlayer
     %li
@@ -34,8 +35,6 @@
       %ul
         %li= link_to "ICU Players", icu_players_path
         %li= link_to "FIDE Players", fide_players_path
-        - if can? :read, OldRating
-          %li= link_to "Last Old Ratings", admin_old_ratings_path
   - if can? :read, Download
     %li
       = link_to "Admin", downloads_path

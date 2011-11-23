@@ -10,7 +10,7 @@ class OldRating < ActiveRecord::Base
   default_scope includes(:icu_player)
 
   def self.search(params, path)
-    matches = OldRating.scoped
+    matches = scoped
     matches = matches.joins(:icu_player).order("last_name, first_name")
     matches = matches.where("last_name LIKE ?", "%#{params[:last_name]}%") if params[:last_name].present?
     matches = matches.where("first_name LIKE ?", "%#{params[:first_name]}%") if params[:first_name].present?

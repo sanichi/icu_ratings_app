@@ -29,7 +29,7 @@ class IcuPlayer < ActiveRecord::Base
   end
 
   def self.search(params, path)
-    matches = IcuPlayer.scoped
+    matches = scoped
     matches = matches.where(master_id: nil) unless params[:include_duplicates]
     matches = matches.where(deceased: false) unless params[:include_deceased]
     matches = matches.where(last_name_like(params[:last_name], params[:first_name])) if params[:last_name].present?

@@ -7,7 +7,7 @@ class OldTournament < ActiveRecord::Base
   default_scope order("date DESC, name")
 
   def self.search(params, path)
-    matches = OldTournament.scoped
+    matches = scoped
     if params[:name].present?
       params[:name].strip.split(/\s+/).each do |term|
         matches = matches.where("name LIKE ?", "%#{term}%")

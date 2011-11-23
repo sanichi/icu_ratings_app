@@ -1,0 +1,22 @@
+%table
+  %tr
+    %th Player
+    %th List
+    %th Rating
+    %th Games
+  - if @fide_ratings.count == 0
+    %tr
+      %td{colspan: 4, class: "centered"} No matches
+  - else
+    - fide_id = Proc.new { |r| r.fide_id }
+    - name    = Proc.new { |r| r.fide_player ? r.fide_player.name : r.fide_id.to_s }
+    - period  = Proc.new { |r| year_month(r.period) }
+    - @fide_ratings.matches.each_with_index do |r, i|
+      %tr
+        = render partial: "shared/rowspan", locals: { rowspan: @fide_ratings.rowspan(i, fide_id, name), attrs: { title: r.fide_id } }
+        = render partial: "shared/rowspan", locals: { rowspan: @fide_ratings.rowspan(i, period) }
+        %td= r.rating
+        %td{class: "centered"}= r.games
+  - if @fide_ratings.multi_page
+    %tr
+      %td{colspan: 4, class: "centered"}= pagination_links(@fide_ratings)

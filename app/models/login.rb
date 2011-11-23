@@ -12,7 +12,7 @@ class Login < ActiveRecord::Base
   default_scope order("logins.created_at DESC")
 
   def self.search(params, path)
-    matches = Login.scoped
+    matches = scoped
     if params[:email].present? || params[:icu_id].to_i > 0 || params[:first_name].present? || params[:last_name].present?
       matches = matches.joins(user: :icu_player)
       matches = matches.where("users.email LIKE ?", "%#{params[:email]}%") if params[:email].present?

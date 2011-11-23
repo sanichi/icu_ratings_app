@@ -52,7 +52,7 @@ class Upload < ActiveRecord::Base
 
   # Search and paginate.
   def self.search(params, path)
-    matches = Upload.includes(:tournament)
+    matches = includes(:tournament)
     matches = matches.where("uploads.name LIKE ?", "%#{params[:name]}%") if params[:name].present?
     matches = matches.where("uploads.format = ?", params[:format]) if params[:format].present?
     matches = matches.where("uploads.created_at LIKE ?", "%#{params[:created_at]}%") if params[:created_at].present?

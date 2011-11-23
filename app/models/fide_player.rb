@@ -23,7 +23,7 @@ class FidePlayer < ActiveRecord::Base
   end
 
   def self.search(params, path)
-    matches = FidePlayer.scoped
+    matches = scoped
     matches = matches.where(last_name_like(params[:last_name], params[:first_name])) unless params[:last_name].blank?
     matches = matches.where(first_name_like(params[:first_name], params[:last_name])) unless params[:first_name].blank?
     matches = matches.where("fed = ?", params[:fed]) unless params[:fed].blank?

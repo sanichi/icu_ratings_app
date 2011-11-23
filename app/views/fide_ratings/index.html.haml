@@ -1,0 +1,16 @@
+.header
+  %span FIDE Ratings
+
+= render "search_form"
+
+#fide_rating_results.turbaned
+  = render "search_results"
+
+#help
+  %dl
+    %dt What are these ratings?
+    %dd
+      The FIDE ratings of Irish players (not necessarily ICU members) from January 2000 to date.
+      Until July 2009, FIDE published lists every 3 months and, after that, every 2 months.
+    %dt How can I find out the FIDE ID of a player?
+    %dd Hover your mouse over their name.

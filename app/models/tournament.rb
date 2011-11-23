@@ -46,7 +46,7 @@ class Tournament < ActiveRecord::Base
 
   # Search and paginate.
   def self.search(params, path)
-    matches = Tournament.includes(:upload)
+    matches = includes(:upload)
 
     # Name or parts thereof.
     if params[:name].present?

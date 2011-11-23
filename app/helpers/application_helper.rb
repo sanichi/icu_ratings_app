@@ -45,14 +45,16 @@ module ApplicationHelper
     menu
   end
 
+  def fide_rating_list_menu(any=nil)
+    menu = FideRating.periods.map { |period| [year_month(period), period]}
+    menu.unshift([any, ""]) if any
+    menu
+  end
+
   def gender_menu(none=nil)
     menu = [["Male", "M"], ["Female", "F"]]
     menu.unshift([none, ""]) if none
     menu
-  end
-
-  def year_month(date)
-    "%d %s" % [date.year, %w(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec)[date.month-1]]
   end
 
   def icu_rating_list_menu(any=nil)
@@ -125,6 +127,11 @@ module ApplicationHelper
     menu = User.joins(table).group(:user_id).map{ |u| [u.name, u.id] }.sort{ |a,b| a[0] <=> b[0] }
     menu.unshift([any, ""]) if any
     menu
+  end
+
+  # Turn a date into a year-month (e.g. 2011-11-01 => 2011 Nov)
+  def year_month(date)
+    "%d %s" % [date.year, %w(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec)[date.month-1]]
   end
 
   # Returns links to objects on some specific external sites.
@@ -202,7 +209,7 @@ module ApplicationHelper
     finish = Date.today.year
     raw "&copy; ICU %s" % (finish > start ? "#{start}-#{finish}" : start.to_s)
   end
-  
+
   # A HAML specific way of adding attributes to rowspan cells (see shared/_rowspan.html.haml).
   def rowspan_attrs(rows, attrs)
     attrs[:rowspan] = rows if rows > 1
