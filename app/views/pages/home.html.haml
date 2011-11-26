@@ -37,6 +37,9 @@
       = succeed('.') do
         = link_to "FIDE", fide_ratings_path
     %dd
+    - if @ratings_graph.available?
+      %dt Is there a way to read off my exact rating from any point in the graph?
+      %dd Hover your mouse over the point.
     %dt How can I see full details of my latest rating?
     %dd
       This functionality is still in development and should be ready before September 2012.

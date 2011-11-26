@@ -1,6 +1,3 @@
-google.load("visualization", "1", {packages:["corechart"]});
-google.setOnLoadCallback(drawChart);
-
 function drawChart()
 {
   var data = new google.visualization.DataTable();
@@ -35,6 +32,7 @@ function drawChart()
       viewWindow:     { min: <%= graph.list_range.first %>, max: <%= graph.list_range.last %> },
       viewWindowMode: "explicit"
     },
+    height:    <%= graph.height %>,
     lineWidth: 1,
     pointSize: 5,
     title:     "<%= graph.icu_player.name(:title, :brackets) %>",
@@ -43,7 +41,13 @@ function drawChart()
       format:         "###0",
       viewWindow:     { min: <%= graph.rating_range.first %>, max: <%= graph.rating_range.last %> },
       viewWindowMode: "explicit"
-    }
+    },
+    width:     <%= graph.width %>
   };
   chart.draw(data, options);
 }
+<% if graph.onload %>
+  google.setOnLoadCallback(drawChart);
+<% else %>
+  drawChart();
+<% end %>

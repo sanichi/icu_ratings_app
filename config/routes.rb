@@ -9,9 +9,9 @@ Ratings::Application.routes.draw do
 
   resources :downloads
   resources :fide_players, only: [:index, :show]
-  resources :fide_ratings, only: [:index]
+  resources :fide_ratings, only: [:index, :show]
   resources :icu_players,  only: [:index, :show]
-  resources :icu_ratings,  only: [:index]
+  resources :icu_ratings,  only: [:index, :show]
   resources :news_items
   resources :sessions,     only: [:create]
   resources :tournaments,  only: [:index, :show]

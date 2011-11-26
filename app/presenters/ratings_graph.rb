@@ -1,15 +1,18 @@
 class RatingsGraph
-  attr_reader :icu_player
+  attr_reader :icu_player, :width, :height, :onload
   extend ActiveSupport::Memoizable
   Point = Struct.new(:list, :label, :rating)
 
-  def initialize(input)
+  def initialize(input, opt={})
     @icu_player =
       case input
       when User, FidePlayer then input.icu_player
       when IcuPlayer        then input
       else nil
     end
+    @width  = opt[:width]  || 700
+    @height = opt[:height] || 300
+    @onload = opt[:onload]
   end
 
   def icu_ratings

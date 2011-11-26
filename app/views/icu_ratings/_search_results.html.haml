@@ -18,7 +18,7 @@
       %tr
         = render partial: "shared/rowspan", locals: { rowspan: @icu_ratings.rowspan(i, icu_id, name), attrs: { title: r.icu_id } }
         = render partial: "shared/rowspan", locals: { rowspan: @icu_ratings.rowspan(i, list) }
-        %td{class: "#{r.type}"}= r.rating
+        %td{class: "#{r.type}"}= link_to_if current_user, r.rating, icu_rating_path(r, format: "js"), remote: true
         = render partial: "shared/rowspan", locals: { rowspan: @icu_ratings.rowspan(i, fed) }
         = render partial: "shared/rowspan", locals: { rowspan: @icu_ratings.rowspan(i, club) }
   - if @icu_ratings.multi_page

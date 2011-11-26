@@ -6,6 +6,9 @@
 #icu_rating_results.turbaned
   = render "search_results"
 
+= render "ratings_graph"
+= render "shared/dialog.html", id: "ratings_graph", width: 720, button: false, modal: false, cancel: "Dismiss", title: "Historical Ratings"
+
 #help
   %dl
     %dt What ratings are these?
@@ -39,3 +42,6 @@
       In order not to discourage learners, the ICU has a policy of rounding up
       published ratings below 700. The real ratings stored in the database are
       unaffected by this policy.
+    - unless current_user
+      %dt Why are the ratings not linked to a graph of the player's historical rating?
+      %dd You have to login for this feature.

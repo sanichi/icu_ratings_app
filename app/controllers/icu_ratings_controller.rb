@@ -3,4 +3,8 @@ class IcuRatingsController < ApplicationController
     @icu_ratings = IcuRating.search(params, icu_ratings_path)
     render :results if request.xhr?
   end
+  
+  def show
+    @ratings_graph = RatingsGraph.new(IcuRating.find(params[:id]).icu_player)
+  end
 end
