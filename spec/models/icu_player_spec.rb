@@ -28,12 +28,29 @@ describe IcuPlayer do
 
   context "name" do
     before(:each) do
-      @p = Factory(:icu_player)
+      @p = Factory(:icu_player, title: "IM", club: "Bangor")
+      @q = Factory(:icu_player, title: "GM")
+      @r = Factory(:icu_player)
     end
 
-    it "reveresed (the default) and normal" do
+    it "no options or single boolean option" do
       @p.name.should == "#{@p.last_name}, #{@p.first_name}"
+      @p.name(true).should == "#{@p.last_name}, #{@p.first_name}"
       @p.name(false).should == "#{@p.first_name} #{@p.last_name}"
+    end
+
+    it "multiple symbolic options" do
+      @p.name(:title).should == "#{@p.first_name} #{@p.last_name}, IM"
+      @p.name(:club).should == "#{@p.first_name} #{@p.last_name}, Bangor"
+      @p.name(:reversed, :title).should == "#{@p.last_name}, #{@p.first_name}, IM"
+      @p.name(:title, :brackets).should == "#{@p.first_name} #{@p.last_name} (IM)"
+      @p.name(:club, :title, :brackets).should == "#{@p.first_name} #{@p.last_name} (Bangor, IM)"
+      @p.name(:title, :club, :brackets).should == "#{@p.first_name} #{@p.last_name} (IM, Bangor)"
+      @q.name(:title, :club, :brackets).should == "#{@q.first_name} #{@q.last_name} (GM)"
+      @r.name(:title, :club, :brackets).should == "#{@r.first_name} #{@r.last_name}"
+      @p.name(:title, :club).should == "#{@p.first_name} #{@p.last_name}, IM, Bangor"
+      @q.name(:title, :club).should == "#{@q.first_name} #{@q.last_name}, GM"
+      @r.name(:title, :club).should == "#{@r.first_name} #{@r.last_name}"
     end
   end
 end

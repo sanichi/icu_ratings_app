@@ -1,0 +1,8 @@
+- content_for :head do
+  = javascript_include_tag "https://www.google.com/jsapi"
+- content_for :javascript do
+  = raw render partial: "ratings_graph.js", locals: { graph: graph }
+%table{class: "invisible cushioned"}
+  %tr
+    %td
+      #ratings_graph

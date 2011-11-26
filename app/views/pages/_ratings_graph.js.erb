@@ -1,0 +1,49 @@
+google.load("visualization", "1", {packages:["corechart"]});
+google.setOnLoadCallback(drawChart);
+
+function drawChart()
+{
+  var data = new google.visualization.DataTable();
+  data.addColumn('number', 'List');
+<% if graph.icu_ratings.size > 0 %>
+  var icu_col = data.addColumn('number', 'ICU');
+<% end %>
+<% if graph.fide_ratings.size > 0 %>
+  var fide_col = data.addColumn('number', 'FIDE');
+<% end %>
+  data.addRows(<%= graph.icu_ratings.size + graph.fide_ratings.size %>);
+  var i = 0;
+<% graph.icu_ratings.each do |r| %>
+  data.setCell(i, 0, <%= r.list %>, "<%= r.label %>");
+  data.setValue(i, icu_col, <%= r.rating %>);
+  i++;
+<% end %>
+<% graph.fide_ratings.each do |r| %>
+  data.setCell(i, 0, <%= r.list %>, "<%= r.label %>");
+  data.setValue(i, fide_col, <%= r.rating %>);
+  i++;
+<% end %>
+
+  var chart = new google.visualization.ScatterChart(document.getElementById('ratings_graph'));
+  var options =
+  {
+    colors:    ["green", "blue"],
+    fontName:  "Verdana",
+    hAxis:
+    {
+      format:         "0000",
+      viewWindow:     { min: <%= graph.list_range.first %>, max: <%= graph.list_range.last %> },
+      viewWindowMode: "explicit"
+    },
+    lineWidth: 1,
+    pointSize: 5,
+    title:     "<%= graph.icu_player.name(:title, :brackets) %>",
+    vAxis:
+    {
+      format:         "###0",
+      viewWindow:     { min: <%= graph.rating_range.first %>, max: <%= graph.rating_range.last %> },
+      viewWindowMode: "explicit"
+    }
+  };
+  chart.draw(data, options);
+}

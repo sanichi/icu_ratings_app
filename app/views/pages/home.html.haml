@@ -1,6 +1,9 @@
 - content_for :head do
   %meta{name: "google-site-verification", content: "nCJOyeKUA9Uk1ptyZZDbASyXU_o6sEo7-7VS9b0v19s"}
 
+- if @ratings_graph.available?
+  = render partial: "ratings_graph", locals: { graph: @ratings_graph }
+
 %table{class: "sections"}
   %tr
     %td{class: "section"}
@@ -20,12 +23,23 @@
 
 #help
   %dl
-    %dt How can I see my rating?
+    %dt How can I see my published ratings?
+    %dd
+      - if !current_user
+        Log in to see a graph of your published ICU and FIDE ratings.
+      - elsif @ratings_graph.available?
+        They are graphed on this page.
+      - else
+        You don't have any published ratings yet.
+      You can search for your own and other players' published ratings here:
+      = succeed(',') do
+        = link_to "ICU", icu_ratings_path
+      = succeed('.') do
+        = link_to "FIDE", fide_ratings_path
+    %dd
+    %dt How can I see full details of my latest rating?
     %dd
       This functionality is still in development and should be ready before September 2012.
-      Meanwhile, please continue to use the
-      =link_to_icu "rating list", "ratings/list.php"
-      on the main site.
     %dt How can I submit a tournament for rating?
     %dd
       - if !current_user
