@@ -25,7 +25,12 @@ class User < ActiveRecord::Base
   default_scope includes(:icu_player)
 
   def self.search(params, path)
-    matches = order(:email)
+    matches = order("users.email")
+    if params[:last_name].present? || params[:first_name].present?
+      matches = matches.joins(:icu_player)
+      matches = matches.where("icu_players.last_name LIKE ?", "%#{params[:last_name]}%") if params[:last_name].present?
+      matches = matches.where("icu_players.first_name LIKE ?", "%#{params[:first_name]}%") if params[:first_name].present?
+    end
     matches = matches.where("users.icu_id = ?", params[:icu_id].to_i) if params[:icu_id].to_i > 0
     matches = matches.where("users.role = ?", params[:role]) if params[:role].present?
     matches = matches.where("users.email LIKE ?", "%#{params[:email]}%") if params[:email].present?
