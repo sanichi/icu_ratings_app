@@ -39,7 +39,7 @@ describe IcuPlayer do
       @p.name(false).should == "#{@p.first_name} #{@p.last_name}"
     end
 
-    it "multiple symbolic options" do
+    it "symbolic options" do
       @p.name(:title).should == "#{@p.first_name} #{@p.last_name}, IM"
       @p.name(:club).should == "#{@p.first_name} #{@p.last_name}, Bangor"
       @p.name(:reversed, :title).should == "#{@p.last_name}, #{@p.first_name}, IM"

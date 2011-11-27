@@ -2,29 +2,40 @@ function drawChart()
 {
   var data = new google.visualization.DataTable();
   data.addColumn('number', 'List');
+  var colors = [], icu_col = 0, fide_col = 0, selected_col = 0, selected_row = 0;
 <% if graph.icu_ratings.size > 0 %>
-  var icu_col = data.addColumn('number', 'ICU');
+  icu_col = data.addColumn('number', 'ICU');
+  colors.push("green");
 <% end %>
 <% if graph.fide_ratings.size > 0 %>
-  var fide_col = data.addColumn('number', 'FIDE');
+  fide_col = data.addColumn('number', 'FIDE');
+  colors.push("blue");
 <% end %>
   data.addRows(<%= graph.icu_ratings.size + graph.fide_ratings.size %>);
   var i = 0;
 <% graph.icu_ratings.each do |r| %>
   data.setCell(i, 0, <%= r.list %>, "<%= r.label %>");
   data.setValue(i, icu_col, <%= r.rating %>);
+<% if r.selected %>
+  selected_col = icu_col
+  selected_row = i
+<% end %>
   i++;
 <% end %>
 <% graph.fide_ratings.each do |r| %>
   data.setCell(i, 0, <%= r.list %>, "<%= r.label %>");
   data.setValue(i, fide_col, <%= r.rating %>);
+<% if r.selected %>
+  selected_col = fide_col
+  selected_row = i
+<% end %>
   i++;
 <% end %>
 
   var chart = new google.visualization.ScatterChart(document.getElementById('ratings_graph'));
   var options =
   {
-    colors:    ["green", "blue"],
+    colors:    colors,
     fontName:  "Verdana",
     hAxis:
     {
@@ -35,7 +46,7 @@ function drawChart()
     height:    <%= graph.height %>,
     lineWidth: 1,
     pointSize: 5,
-    title:     "<%= graph.icu_player.name(:title, :brackets) %>",
+    title:     "<%= graph.title %>",
     vAxis:
     {
       format:         "###0",
@@ -45,6 +56,7 @@ function drawChart()
     width:     <%= graph.width %>
   };
   chart.draw(data, options);
+  if (selected_col) chart.setSelection([{ row: selected_row, column: selected_col }]);
 }
 <% if graph.onload %>
   google.setOnLoadCallback(drawChart);

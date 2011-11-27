@@ -15,11 +15,27 @@ class FidePlayer < ActiveRecord::Base
   validates_numericality_of :icu_id, only_integer: true, greater_than: 0, allow_nil: true
   validates_uniqueness_of   :icu_id, allow_nil: true
 
-  def name
-    str = Array.new
-    str.push last_name
-    str.push first_name if first_name
-    str.join(", ")
+  def name(*args)
+    args.push :reversed if args.empty?
+    args[0] = :reversed if args.size == 1 && args.first == true
+    args.shift if args.size == 1 && args.first == false
+    name = args.include?(:reversed) ? "#{last_name}, #{first_name}" : "#{first_name} #{last_name}"
+    more = args.inject([]) do |m, a|
+      case a
+      when :title then m.push title if title
+      end
+      m
+    end
+    more = more.empty? ? nil : more.join(", ")
+    if more
+      if args.include?(:brackets)
+        "#{name} (#{more})"
+      else
+        "#{name}, #{more}"
+      end
+    else
+      name
+    end
   end
 
   def self.search(params, path)

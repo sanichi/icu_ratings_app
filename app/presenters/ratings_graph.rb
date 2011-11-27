@@ -1,31 +1,47 @@
 class RatingsGraph
-  attr_reader :icu_player, :width, :height, :onload
+  attr_reader :title, :width, :height, :onload
   extend ActiveSupport::Memoizable
-  Point = Struct.new(:list, :label, :rating)
+  Point = Struct.new(:list, :label, :rating, :selected)
 
   def initialize(input, opt={})
-    @icu_player =
-      case input
-      when User, FidePlayer then input.icu_player
-      when IcuPlayer        then input
-      else nil
+    case input
+    when User
+      @icu_player  = input.icu_player
+    when IcuRating
+      @icu_player  = input.icu_player
+      @icu_list    = input.list
+    when FideRating
+      @fide_player = input.fide_player
+      @fide_period = input.period
+    when FidePlayer
+      @fide_player = input
+    when IcuPlayer
+      @icu_player  = input
     end
+
+    player = @icu_player || @fide_player
+    @title = player.name(:reversed, :title, :brackets) if player
+
+    @icu_player  ||= @fide_player.icu_player if @fide_player
+    @fide_player ||= @icu_player.fide_player if @icu_player
+
     @width  = opt[:width]  || 700
     @height = opt[:height] || 300
+
     @onload = opt[:onload]
   end
 
   def icu_ratings
     return [] unless @icu_player
     IcuRating.where("icu_players.id = ?", @icu_player.id).map do |r|
-      Point.new(decimal_year(r.list), r.list.strftime('%Y %b'), r.rating)
+      Point.new(decimal_year(r.list), r.list.strftime('%Y %b'), r.rating, @icu_list == r.list)
     end
   end
 
   def fide_ratings
-    return [] unless @icu_player
-    FideRating.where("fide_players.icu_id = ?", @icu_player.id).map do |r|
-      Point.new(decimal_year(r.period), r.period.strftime('%Y %b'), r.rating)
+    return [] unless @fide_player
+    FideRating.where("fide_players.id = ?", @fide_player.id).map do |r|
+      Point.new(decimal_year(r.period), r.period.strftime('%Y %b'), r.rating, @fide_period == r.period)
     end
   end
 

@@ -4,27 +4,46 @@ describe RatingsGraph do
   it "initialize from user" do
     u = Factory(:user)
     g = RatingsGraph.new(u)
-    g.icu_player.should_not be_nil
-    g.icu_player.should == u.icu_player
+    g.title.should == u.icu_player.name
+  end
+
+  it "initialize from ICU player" do
+    p = Factory(:icu_player)
+    g = RatingsGraph.new(p)
+    g.title.should == p.name
+  end
+
+  it "initialize from ICU rating" do
+    r = Factory(:icu_rating)
+    g = RatingsGraph.new(r)
+    g.title.should == r.icu_player.name
+    g.icu_ratings.size.should == 1
+    g.icu_ratings[0].selected.should be_true
   end
 
   it "initialize from FIDE player" do
     p = Factory(:fide_player)
     g = RatingsGraph.new(p)
-    g.icu_player.should_not be_nil
-    g.icu_player.should == p.icu_player
+    g.title.should == p.name
+  end
+
+  it "initialize from FIDE rating" do
+    r = Factory(:fide_rating)
+    g = RatingsGraph.new(r)
+    g.title.should == r.fide_player.name
+    g.fide_ratings.size.should == 1
+    g.fide_ratings[0].selected.should be_true
   end
 
   it "no player" do
     g = RatingsGraph.new(nil)
-    g.icu_player.should be_nil
     g.available?.should be_false
+    g.title.should be_nil
   end
 
   it "no ratings" do
     p = Factory(:icu_player)
     g = RatingsGraph.new(p)
-    g.icu_player.should == p
     g.available?.should be_false
     g.icu_ratings.should be_empty
     g.fide_ratings.should be_empty
