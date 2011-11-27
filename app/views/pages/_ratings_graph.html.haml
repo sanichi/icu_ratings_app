@@ -1,8 +1,6 @@
-- content_for :head do
-  = javascript_include_tag "https://www.google.com/jsapi"
+= render "shared/ratings_graph/head.html"
 - content_for :javascript do
-  google.load("visualization", "1", {packages:["corechart"]});
-  = raw render partial: "shared/ratings_graph.js", locals: { graph: graph }
+  = render "shared/ratings_graph/draw.js", graph: graph
 %table{class: "invisible cushioned"}
   %tr
     %td

@@ -6,8 +6,7 @@
 #fide_rating_results.turbaned
   = render "search_results"
 
-= render "ratings_graph"
-= render "shared/dialog.html", id: "ratings_graph", width: 720, button: false, modal: false, cancel: "Dismiss", title: "Historical Ratings"
+= render "shared/ratings_graph/dialog.html"
 
 #help
   %dl

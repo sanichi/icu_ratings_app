@@ -6,5 +6,6 @@ class IcuRatingsController < ApplicationController
   
   def show
     @ratings_graph = RatingsGraph.new(IcuRating.find(params[:id]).icu_player)
+    render "shared/ratings_graph/show.js"
   end
 end

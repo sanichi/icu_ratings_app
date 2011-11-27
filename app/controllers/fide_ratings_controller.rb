@@ -6,5 +6,6 @@ class FideRatingsController < ApplicationController
 
   def show
     @ratings_graph = RatingsGraph.new(FideRating.find(params[:id]).fide_player)
+    render "shared/ratings_graph/show.js"
   end
 end

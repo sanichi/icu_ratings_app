@@ -2,7 +2,7 @@
   %meta{name: "google-site-verification", content: "nCJOyeKUA9Uk1ptyZZDbASyXU_o6sEo7-7VS9b0v19s"}
 
 - if @ratings_graph.available?
-  = render partial: "ratings_graph", locals: { graph: @ratings_graph }
+  = render "ratings_graph", graph: @ratings_graph
 
 %table{class: "sections"}
   %tr
