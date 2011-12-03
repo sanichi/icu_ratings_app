@@ -21,7 +21,7 @@ end
 group :development do
   gem "capistrano"
   gem "pry"
-  gem "hirb"
+  gem "awesome_print"
 end
 
 group :test, :darwin do
