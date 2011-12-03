@@ -29,7 +29,7 @@ class Ability
     return unless user.role? :officer
 
     can :read, Event
-    can :manage, [Download, NewsItem, Tournament, Upload]
+    can :manage, [Download, FidePlayer, NewsItem, Tournament, Upload]
 
     return unless user.role? :admin
 

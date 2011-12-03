@@ -3,9 +3,14 @@ class IcuPlayersController < ApplicationController
   authorize_resource
 
   def index
-    if params[:player_id].to_i > 0 && @player = Player.find(params[:player_id])
+    if params[:player_id].to_i > 0 && @player = Player.find_by_id(params[:player_id])
+      # Trying to match a tournament player.
       [:last_name, :first_name].each { |name| params[name] ||= @player.send(name) }
       params[:include_duplicates] = true if @player.icu_player && @player.icu_player.master_id
+    elsif params[:fide_id].to_i > 0 && @fide_player = FidePlayer.find_by_id(params[:fide_id])
+      # Trying to match a FIDE player.
+      [:last_name, :first_name].each { |name| params[name] ||= @fide_player.send(name) }
+      params[:include_duplicates] = true if @fide_player.icu_player && @fide_player.icu_player.master_id
     end
     @icu_players = IcuPlayer.search(params, icu_players_path)
     render params[:results] ? :results : :search if request.xhr?

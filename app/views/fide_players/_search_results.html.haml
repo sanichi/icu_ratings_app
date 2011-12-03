@@ -9,10 +9,11 @@
     %th Fed
     %th Rating
     %th Title
+    %th ICU ID
   - if @fide_players.count == 0
     %tr
       %td{class: "floater"}
-      %td{class: "centered", colspan: 8} No matches
+      %td{class: "centered", colspan: 9} No matches
   - else
     - @fide_players.matches.each do |p|
       %tr
@@ -28,7 +29,11 @@
         %td{class: "centered"}= p.fed
         %td{class: "centered"}= p.rating
         %td{class: "centered"}= p.title
+        - if p.fed == "IRL"
+          %td{id: "icu_id_link_#{p.id}"}= render "icu_id_link", p: p
+        - else
+          %td
     - if @fide_players.multi_page
       %tr
         %td{class: "floater"}
-        %th{class: "centered", colspan: 8}= pagination_links(@fide_players)
+        %th{class: "centered", colspan: 9}= pagination_links(@fide_players)

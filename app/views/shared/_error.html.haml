@@ -1,8 +1,10 @@
+-# Turn a title plus an object's errors into a string */
 = title
-- base = object.errors.delete(:base)
+- hash = object.errors.to_hash
+- base = hash.delete(:base)
 - if base
   - base.each do |err|
     * #{err}
-- object.errors.each_pair do |key, errs|
+- hash.each_pair do |key, errs|
   - errs.each do |err|
     * #{key.to_s.humanize}: #{err}

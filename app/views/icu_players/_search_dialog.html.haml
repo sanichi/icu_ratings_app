@@ -1,6 +1,9 @@
 - if @player
   = render "search_player"
   %hr
+- elsif @fide_player
+  = render "search_fide_player"
+  %hr
 
 %h3{class: "centered"} Matching ICU Players
 #icu_player_results

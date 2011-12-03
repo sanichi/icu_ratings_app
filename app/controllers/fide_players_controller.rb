@@ -13,4 +13,12 @@ class FidePlayersController < ApplicationController
 
   def show
   end
+
+  def update
+    if params[:icu_id].to_i > 0
+      @fide_player.update_attributes(icu_id: params[:icu_id]) if @fide_player.icu_mismatches(params[:icu_id]) == 0
+    elsif params[:icu_id] == "nil"
+      @fide_player.update_attributes(icu_id: nil)
+    end
+  end
 end

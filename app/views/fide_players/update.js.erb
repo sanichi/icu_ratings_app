@@ -1,0 +1,6 @@
+<% if @fide_player.errors.size == 0 %>
+  $("#dialog_search_icu_player").dialog("close");
+  $("#icu_id_link_<%= @fide_player.id %>").html("<%= escape_javascript(render('fide_players/icu_id_link.html', p: @fide_player)) %>");
+<% else %>
+  alert("<%= escape_javascript(render('shared/error', object: @fide_player, title: 'Error updating FIDE player:')) %>");
+<% end %>

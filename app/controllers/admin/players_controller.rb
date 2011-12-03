@@ -26,9 +26,9 @@ module Admin
         @tournament = @player.tournament
       end
     end
-    
+
     private
-    
+
     def update_from_id(params)
       player = ActiveSupport::HashWithIndifferentAccess.new
       if params[:icu_id] && ip = IcuPlayer.find_by_id(params[:icu_id])

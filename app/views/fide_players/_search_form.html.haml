@@ -21,9 +21,13 @@
       %th= label_tag :max_age, "Max Age"
       %th= label_tag :min_age, "Min Age"
       %th= label_tag :id, "FIDE ID"
+      %th= label_tag :icu_id, "ICU ID"
+      %th= label_tag :icu_match, "ICU Match"
     %tr
       %td= select_tag :gender, options_for_select(gender_menu("Any"), params[:gender])
       %td= select_tag :title, options_for_select(title_menu("Any"), params[:title])
       %td{class: "centered"}= text_field_tag :max_age, params[:max_age], class: "centered", size: 3, maxlength: 3
       %td{class: "centered"}= text_field_tag :min_age, params[:min_age], class: "centered", size: 3, maxlength: 3
       %td= text_field_tag :id, params[:id], class: "centered", size: 8, maxlength: 8
+      %td= text_field_tag :icu_id, params[:icu_id], class: "centered", size: 6, maxlength: 6
+      %td= select_tag :icu_match, options_for_select([["Any", ""], ["Yes", "true"], ["No", "false"]], params[:icu_match])

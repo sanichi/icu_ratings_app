@@ -8,3 +8,42 @@
 
 = fide_player_details_dialog
 = icu_player_details_dialog
+= render "shared/dialog.html", id: "search_icu_player", width: 1000, button: false
+
+- if can? :edit, FidePlayer
+  #help
+    %dl
+      %dt Can I edit FIDE players?
+      %dd
+        For the most part, no. The FIDE player (and ratings) information in this application's
+        database is kept synchronized with FIDE's by automated background jobs.
+      %dt So is there anything at all I have control over?
+      %dd
+        Yes: you can create, remove or change what ICU player any given FIDE player
+        is associated with. However this applies to only FIDE players whose federation
+        is Ireland.
+      %dt How do I do that?
+      %dd
+        %p
+          Click on the ICU ID of the Irish FIDE player, or the question mark if no association exists yet.
+          You will be presented with a search over ICU players already initialised with the player's FIDE
+          name. This may or may not be showing any ICU matches (the same player can sometimes have different
+          ICU and FIDE names) so you may need to make some adjustments before obtaining a match.
+        %p
+          Click the
+          = image_tag "icons/link.png", alt: "Link FIDE player to this ICU player"
+          button when you've found the ICU player that matches.
+        %p
+          Click the
+          = image_tag "icons/unlink.png", alt: "Unlink FIDE player from this ICU player"
+          button to disassociate an ICU player if you think it's incorrect.
+      %dt Can I link an Irish FIDE player with any ICU player?
+      %dd
+        No, the system performs some checks to prevent incorrect matches. Check with the system
+        administrator if you are unable to create an association which you think is correct.
+      %dt Is it possible for an Irish FIDE player not to match any ICU player?
+      %dd
+        Yes. The FIDE database includes players who retired before the ICU database was established
+        and so will not have a match. It's also possible (though unlikely) for an Irish player
+        to appear in the FIDE database without having played any games in Ireland (an
+        expatriate for example).

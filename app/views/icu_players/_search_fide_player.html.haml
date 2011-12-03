@@ -1,0 +1,40 @@
+%h3{class: "centered"} FIDE Player
+%table
+  %tr
+    %th{rowspan: 2} FIDE ID
+    %th{rowspan: 2} Name
+    %th{rowspan: 2} YOB
+    %th{rowspan: 2} Sex
+    %th{rowspan: 2} Fed
+    %th{rowspan: 2} Title
+    %th{colspan: 6} Current ICU Match
+    %th{colspan: 2, class: "floater"}
+  %tr
+    %th ICU ID
+    %th Name
+    %th DOB
+    %th Sex
+    %th Fed
+    %th Title
+  %tr
+    %td= @fide_player.id
+    %td= @fide_player.name
+    %td= @fide_player.born
+    %td{class: "centered"}= @fide_player.gender
+    %td{class: "centered"}= @fide_player.fed
+    %td{class: "centered"}= @fide_player.title
+    - if p = @fide_player.icu_player
+      %td= p.id
+      %td= p.name
+      %td= p.dob
+      %td{class: "centered"}= p.gender
+      %td{class: "centered"}= p.fed
+      %td{class: "centered"}= p.title
+      %td{class: "floater"}
+        - if can?(:edit, @fide_player)
+          = link_to fide_player_path(@fide_player, icu_id: "nil", authenticity_token: form_authenticity_token), method: :put, remote: true do
+            - alt = "Unink FIDE player from this ICU player"
+            = image_tag "icons/unlink.png", alt: alt, title: alt
+    - else
+      %td{class: "centered", colspan: 6} None
+      %td{class: "floater"}
