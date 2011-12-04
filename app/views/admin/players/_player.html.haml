@@ -49,7 +49,7 @@
     %td= @player.num
   %tr
     %th Category
-    %td= @player.category
+    %td= t @player.category, default: "Unclassified"
   %tr
     %th Status
     - if @player.status_ok?
