@@ -1,5 +1,5 @@
 - content_for :head do
-  %meta{name: "google-site-verification", content: "nCJOyeKUA9Uk1ptyZZDbASyXU_o6sEo7-7VS9b0v19s"}
+  %meta{name: "google-site-verification", content: APP_CONFIG["google_site_verification"]}
 
 - if @ratings_graph.available?
   = render "ratings_graph", graph: @ratings_graph
