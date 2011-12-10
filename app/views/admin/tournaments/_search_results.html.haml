@@ -15,7 +15,7 @@
     %tr
       %td= image_tag "icons/#{stage}.png", alt: stage, title: stage
       %td= image_tag "icons/#{status}.png", alt: status, title: status
-      %td= link_to t.long_name, [:admin, t]
+      %td= link_to t.name, [:admin, t]
       %td= t.start
       %td= t.upload ? link_to(t.upload.created_at.strftime("%Y-%m-%d"), [:admin, t.upload]) : ""
       %td= t.user.name

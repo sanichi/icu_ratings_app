@@ -10,7 +10,7 @@
     - stage = t.stage
     %tr
       %td= image_tag "icons/#{stage}.png", alt: stage, title: stage
-      %td= link_to t.long_name, t
+      %td= link_to t.name, t
       %td= t.start
   - if @tournaments.multi_page
     %tr
