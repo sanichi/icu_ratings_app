@@ -272,14 +272,14 @@ module ICU
         @fide_ratings.each_pair do |fide_id, theirs|
           fide_player = @fide_players[fide_id]
           if fide_player
-            theirs.each_pair do |period, data|
+            theirs.each_pair do |list, data|
               rating, games = data
-              fide_rating = fide_player.fide_ratings.detect { |fr| fr.period == period }
+              fide_rating = fide_player.fide_ratings.detect { |fr| fr.list == list }
               if fide_rating
                 fide_rating.rating = rating
                 fide_rating.games = games
               else
-                fide_rating = fide_player.fide_ratings.build(period: period, rating: rating, games: games)
+                fide_rating = fide_player.fide_ratings.build(list: list, rating: rating, games: games)
               end
               if fide_rating.changed?
                 fide_rating.save!
@@ -301,11 +301,11 @@ module ICU
         @num_fide_ratings = 0
         @fide_ratings = @client.query("SELECT fr_fide_id, fr_date, fr_rating, fr_games FROM fide_ratings").inject({}) do |map, data|
           fide_id = data[:fr_fide_id]
-          period = Date.parse("#{data[:fr_date]}-01")
+          list = Date.parse("#{data[:fr_date]}-01")
           rating = data[:fr_rating]
           games = data[:fr_games]
           map[fide_id] ||= Hash.new
-          map[fide_id][period] = [rating, games]
+          map[fide_id][list] = [rating, games]
           @num_fide_ratings += 1
           map
         end

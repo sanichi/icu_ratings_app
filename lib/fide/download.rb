@@ -70,7 +70,7 @@ module FIDE
         raise SyncError.new("unexpected number of lines (#{lines.size})") unless @nlines > 250000
         if lines.first.match(/^ID\s*number\s*Name\s*Title?\s*Fed\s*((Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Nov|Dec)[a-z]*[12]\d)/i)
           lines.shift
-          @period = check_period("1st #{$1}")
+          @list = check_list("1st #{$1}")
         else
           raise SyncError.new("unexpected first line of file (#{lines.first.chomp})")
         end
@@ -111,7 +111,7 @@ module FIDE
 
       def update_our_players
         @our_players = FidePlayer.all.inject({}) { |h,p| h[p.id] = p; h }
-        @our_ratings = FideRating.find_all_by_period(@period).inject({}) { |h,r| h[r.fide_id] = r; h }
+        @our_ratings = FideRating.find_all_by_list(@list).inject({}) { |h,r| h[r.fide_id] = r; h }
         @updates = []
         @creates = []
         @invalid = []
@@ -148,7 +148,7 @@ module FIDE
                   raise SyncError.new("too many invalid records") if @invalid.size > 10
                 end
               else
-                oplr.fide_ratings.create(period: @period, rating: rating, games: games)
+                oplr.fide_ratings.create(list: @list, rating: rating, games: games)
                 @changes[:rating] += 1 if @our_players[id]
               end
             end
@@ -164,7 +164,7 @@ module FIDE
         str = Array.new
         str.push("link: #{@link}") if @link
         str.push("signature: #{@signature}") if @signature
-        str.push("period: #{@period}") if @period
+        str.push("list: #{@list}") if @list
         str.push("total lines: #{@nlines}") if @nlines
         str.push("info: #{@info}") if @info
         str.push "records extracted: #{@their_players.size}" if @their_players
@@ -242,7 +242,7 @@ module FIDE
         raise SyncError.new("no links detected") unless res.body.match(/href=["']?(http:\/\/ratings.fide.com\/download\/(jan|feb|mar|apr|may|jun|jul|aug|sep|nov|dec)(\d\d)frl\.zip)['"]?[^>]*>[^<]+<\/a>[^<]*<small>([^<]+)<\/small>/)
         @link, month, year, note = $1, $2, $3, $4
         @file = "#{month}#{year}frl.txt"
-        @period = check_period("1st #{month} #{year}")
+        @list = check_list("1st #{month} #{year}")
         raise SyncError.new("no updated date found in note") unless note.match(/Updated:\s+(\d[\d\w\s]+\d)\s*,/i)
         updated = Date.parse($1).to_s
         raise SyncError.new("no file size found in note") unless note.match(/Size:\s+(\d[\d\s]+\d)\s+bytes/i)
@@ -388,7 +388,7 @@ module FIDE
         str = Array.new
         str.push("link: #{@link}") if @link
         str.push("signature: #{@signature}") if @signature
-        str.push("period: #{@period}") if @period
+        str.push("list: #{@list}") if @list
         str.push("total lines: #{@count}") if @count
         str.push("info: #{@info}") if @info
         str.push "records extracted: #{@records}" if @records
@@ -429,16 +429,16 @@ module FIDE
       time.keys.map { |key| "seconds after #{key}: #{'%.1f' % time[key]}" }
     end
 
-    def check_period(period)
+    def check_list(list)
       begin
-        date = Date.parse(period)
+        date = Date.parse(list)
       rescue
-        raise SyncError.new("invalid rating period (#{period})")
+        raise SyncError.new("invalid rating list (#{list})")
       end
       today = Date.today
       diff = (today - date).to_i
-      raise SyncError.new("rating period (#{period}) is in the future") if diff < 0
-      raise SyncError.new("rating period (#{period}) is too far in the past") if diff > 90
+      raise SyncError.new("rating list (#{list}) is in the future") if diff < 0
+      raise SyncError.new("rating list (#{list}) is too far in the past") if diff > 90
       date
     end
 

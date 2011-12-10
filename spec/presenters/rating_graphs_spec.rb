@@ -74,7 +74,7 @@ describe RatingsGraph do
   end
 
   it "one FIDE rating" do
-    r = Factory(:fide_rating, rating: 2362, period: "2003-04-01")
+    r = Factory(:fide_rating, rating: 2362, list: "2003-04-01")
     g = RatingsGraph.new(r.fide_player)
     g.available?.should be_true
     g.icu_ratings.should be_empty
@@ -99,8 +99,8 @@ describe RatingsGraph do
     Factory(:icu_rating, rating: 2312, list: "2003-01-01", icu_player: p)
     Factory(:icu_rating, rating: 2201, list: "2010-09-01", icu_player: p)
     Factory(:icu_rating, rating: 2192, list: "2011-09-01", icu_player: p)
-    Factory(:fide_rating, rating: 2362, period: "2003-04-01", fide_player: f)
-    Factory(:fide_rating, rating: 2260, period: "2011-11-01", fide_player: f)
+    Factory(:fide_rating, rating: 2362, list: "2003-04-01", fide_player: f)
+    Factory(:fide_rating, rating: 2260, list: "2011-11-01", fide_player: f)
     g = RatingsGraph.new(p)
     g.available?.should be_true
     g.icu_ratings.size.should == 3

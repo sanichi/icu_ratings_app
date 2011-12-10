@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111116193323) do
+ActiveRecord::Schema.define(:version => 20111210210127) do
 
   create_table "downloads", :force => true do |t|
     t.string   "comment"
@@ -56,12 +56,13 @@ ActiveRecord::Schema.define(:version => 20111116193323) do
     t.integer  "fide_id"
     t.integer  "rating",     :limit => 2
     t.integer  "games",      :limit => 2
-    t.date     "period"
+    t.date     "list"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "fide_ratings", ["fide_id"], :name => "index_fide_ratings_on_fide_id"
+  add_index "fide_ratings", ["list"], :name => "index_fide_ratings_on_list"
 
   create_table "icu_players", :force => true do |t|
     t.string   "first_name"

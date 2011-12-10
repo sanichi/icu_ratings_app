@@ -2,7 +2,7 @@ class FidePlayer < ActiveRecord::Base
   extend Util::Pagination
   extend Util::AlternativeNames
 
-  has_many :fide_ratings, foreign_key: "fide_id", order: "period DESC", dependent: :destroy
+  has_many :fide_ratings, foreign_key: "fide_id", order: "list DESC", dependent: :destroy
   belongs_to :icu_player, foreign_key: "icu_id"
 
   default_scope order("last_name, first_name")

@@ -48,7 +48,7 @@
         - ratings.each_with_index do |rating, i|
           - if i < limit || ratings.size <= limit + 2 || i + 1 == ratings.size
             %tr
-              %td= rating.period
+              %td= rating.list
               %td{class: "centered"}= rating.rating
               %td{class: "centered"}= rating.games
           - elsif i == limit

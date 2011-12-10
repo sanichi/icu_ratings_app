@@ -12,7 +12,7 @@ class RatingsGraph
       @icu_list    = input.list
     when FideRating
       @fide_player = input.fide_player
-      @fide_period = input.period
+      @fide_list   = input.list
     when FidePlayer
       @fide_player = input
     when IcuPlayer
@@ -41,7 +41,7 @@ class RatingsGraph
   def fide_ratings
     return [] unless @fide_player
     FideRating.where("fide_players.id = ?", @fide_player.id).map do |r|
-      Point.new(decimal_year(r.period), r.period.strftime('%Y %b'), r.rating, @fide_period == r.period)
+      Point.new(decimal_year(r.list), r.list.strftime('%Y %b'), r.rating, @fide_list == r.list)
     end
   end
 

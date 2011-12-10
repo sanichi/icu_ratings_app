@@ -3,11 +3,11 @@ require 'spec_helper'
 describe FideRating do
   describe "list", js: true do
     before(:each) do
-      @r1 = Factory(:fide_rating, period: "2011-09-01", fide_player: Factory(:fide_player))
-      @r2 = Factory(:fide_rating, period: "2011-09-01", fide_player: Factory(:fide_player, gender: "F"))
-      @r3 = Factory(:fide_rating, period: "2011-09-01", fide_player: Factory(:fide_player))
-      @r4 = Factory(:fide_rating, period: "2011-07-01", fide_player: Factory(:fide_player))
-      @r5 = Factory(:fide_rating, period: "2011-07-01", fide_player: @r1.fide_player)
+      @r1 = Factory(:fide_rating, list: "2011-09-01", fide_player: Factory(:fide_player))
+      @r2 = Factory(:fide_rating, list: "2011-09-01", fide_player: Factory(:fide_player, gender: "F"))
+      @r3 = Factory(:fide_rating, list: "2011-09-01", fide_player: Factory(:fide_player))
+      @r4 = Factory(:fide_rating, list: "2011-07-01", fide_player: Factory(:fide_player))
+      @r5 = Factory(:fide_rating, list: "2011-07-01", fide_player: @r1.fide_player)
       @xp = "#fide_rating_results table tr"
     end
 
@@ -16,7 +16,7 @@ describe FideRating do
       page.should have_selector(@xp, count: 6)
     end
 
-    it "period" do
+    it "list" do
       visit fide_ratings_path
       page.select "2011 Sep", from: "List"
       click_button "Search"

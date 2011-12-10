@@ -46,7 +46,7 @@ module ApplicationHelper
   end
 
   def fide_rating_list_menu(any=nil)
-    menu = FideRating.periods.map { |period| [year_month(period), period]}
+    menu = FideRating.lists.map { |list| [year_month(list), list]}
     menu.unshift([any, ""]) if any
     menu
   end

@@ -68,9 +68,8 @@ class WAR
 
   def lists_for(type, year)
     klass = type == :icu ? IcuRating : FideRating
-    list  = type == :icu ? "list" : "period"
     years.times.inject([]) do |arry, i|
-      date = klass.unscoped.where("#{list} LIKE '#{year - i}%'").maximum(list)
+      date = klass.unscoped.where("list LIKE '#{year - i}%'").maximum(:list)
       arry.unshift(date) if date
       arry
     end
@@ -78,7 +77,7 @@ class WAR
 
   def latest_common_year
     icu  = IcuRating.unscoped.maximum(:list).try(:year)
-    fide = FideRating.unscoped.maximum(:period).try(:year)
+    fide = FideRating.unscoped.maximum(:list).try(:year)
     return unless icu && fide
     icu <= fide ? icu : fide
   end
@@ -101,10 +100,10 @@ class WAR
   def fide_players(rows)
     players = FidePlayer.unscoped.joins(:fide_ratings).includes(:fide_ratings)
     players = players.where("icu_id IN (?)", rows.keys)
-    players = players.where("period IN (?)", lists[:fide])
+    players = players.where("list IN (?)", lists[:fide])
     players.each do |player|
       row = rows[player.icu_id]
-      player.fide_ratings.each { |fide_rating| row.fide[fide_rating.period] = fide_rating.rating }
+      player.fide_ratings.each { |fide_rating| row.fide[fide_rating.list] = fide_rating.rating }
     end
   end
 
