@@ -6,9 +6,9 @@
     %th
   - @players.each do |player|
     %tr
-      %td{id: player_id(player), class: player_class(player)}= player.name
       - if @rankable
         %td{class: "centered"}= player.rank
+      %td{id: player_id(player), class: player_class(player)}= player.name
       - 1.upto(@tournament.rounds) do |r|
         - result = player.result_in_round(r)
         - if result
