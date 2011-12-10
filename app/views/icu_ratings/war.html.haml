@@ -1,0 +1,29 @@
+.header
+  %span Weighted Average Ratings
+
+= render "war_form"
+
+#war_results
+  = render "war_results"
+
+#help
+  %dl
+    %dt What are weighted average ratings used for?
+    %dd To guide ICU selection committees in determining team composition and board order for international events.
+    %dt What methods are available to calculate average ratings?
+    %dd
+      %ul
+        %li
+          The original method, devised in 2005, was a 3-year average, weighted towards
+          more recent years and slightly favouring ICU over FIDE ratings. See
+          = link_to_icu("this article", "articles/display.php?id=1")
+          for more details.
+        %li
+          The 2011 AGM voted in favour of the simplest scheme possible which just averages the
+          latest ICU and FIDE ratings with equal weighting. This comes into effect on March 12 2012.
+    %dt It's January and the latest FIDE ratings are out so why aren't they being used?
+    %dd
+      The calculation averages paired ICU and FIDE rating lists from the same year.
+      If only one of the two lists is available for a particular year then it is not used.
+      This generally only happens in early January because by the middle of the month both
+      lists are usually out.

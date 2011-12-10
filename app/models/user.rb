@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
   EMAIL = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i
 
   attr_accessible :role, :preferred_email
-  
+
   before_validation :normalise_attributes
 
   validates_format_of       :email, with: EMAIL, message: "(%{value}) is invalid"
@@ -56,9 +56,10 @@ class User < ActiveRecord::Base
     user
   end
 
-  def role?(base_role)
-    return false unless ROLES.include?(base_role.to_s) && ROLES.include?(role)
-    ROLES.index(base_role.to_s) <= ROLES.index(role)  # Needs ROLES in order lowest to highest!
+  def role?(at_least)
+    return false if new_record?
+    return false unless ROLES.include?(at_least.to_s) && ROLES.include?(role)
+    ROLES.index(at_least.to_s) <= ROLES.index(role)  # Needs ROLES in order lowest to highest!
   end
 
   def login_event(ip, switch, problem)
@@ -74,7 +75,7 @@ class User < ActiveRecord::Base
   def best_email
     preferred_email.presence || icu_player.email.presence || email
   end
-  
+
   def normalise_attributes
     %w[preferred_email].each do |attr|
       self.send("#{attr}=", nil) if self.send(attr).to_s.blank?

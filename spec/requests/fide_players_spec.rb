@@ -1,5 +1,8 @@
 require 'spec_helper'
 
+# Note: these tests are a little fragile because of the need to wait occasionally,
+# to allow things to synchronize. It would be better to find a way to avoid that.
+
 describe FidePlayer do
   describe "update ICU ID", js: true do
     before(:each) do
@@ -62,6 +65,7 @@ describe FidePlayer do
     end
 
     it "should not create a link if both names are mismatched" do
+      sleep(0.1)
       @i.update_attribute(:first_name, "Malcolm")
       @i.update_attribute(:last_name, "Algeo")
       page.click_link @link
