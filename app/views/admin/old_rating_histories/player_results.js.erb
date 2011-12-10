@@ -1,2 +1,2 @@
 $("#old_rating_history_results")
-  .html("<%= escape_javascript(render(partial: 'player_results', locals: { icu_id: params[:icu_player_id] })) %>");
+  .html("<%= escape_javascript(render('player_results', icu_id: params[:icu_player_id])) %>");

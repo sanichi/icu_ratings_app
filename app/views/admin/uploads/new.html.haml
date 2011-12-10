@@ -7,7 +7,7 @@
 
 = form_for [:admin, @upload], html: {multipart: true, class: "simple-form"} do |f|
   - if @upload.errors.any?
-    = render partial: "shared/errors", locals: { thing: @upload, name: "upload" }
+    = render "shared/errors", thing: @upload, name: "upload"
   .input
     = f.label :format, "File format"
     = f.select :format, options_for_select(upload_format_menu, Upload::DEFAULT_FORMAT)

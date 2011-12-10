@@ -1,6 +1,6 @@
 = form_for @news_item, html: { class: "simple-form wide short-labels" } do |f|
   - if @news_item.errors.any?
-    = render partial: "shared/errors", locals: { thing: @news_item, name: "news item" }
+    = render "shared/errors", thing: @news_item, name: "news item"
   - if @news_item.user_id || current_user
     = f.hidden_field :user_id, value: @news_item.user_id || current_user.id
   .input

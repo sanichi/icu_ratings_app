@@ -61,7 +61,7 @@ class WAR
   end
 
   def gender_menu
-    [["Both", ""], ["Female only", "F"]]
+    [["Men and Women", ""], ["Women only", "F"]]
   end
 
   private

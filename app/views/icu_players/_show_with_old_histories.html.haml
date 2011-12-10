@@ -8,4 +8,4 @@
 
 - if @old_rating_histories.count > 0
   #old_rating_history_results.turbaned
-    = render partial: "admin/old_rating_histories/player_results", locals: { icu_id: @icu_player.id }
+    = render "admin/old_rating_histories/player_results", icu_id: @icu_player.id

@@ -16,11 +16,11 @@
     - club   = Proc.new { |r| r.icu_player ? r.icu_player.club.to_s : "" }
     - @icu_ratings.matches.each_with_index do |r, i|
       %tr
-        = render partial: "shared/rowspan", locals: { rowspan: @icu_ratings.rowspan(i, icu_id, name), attrs: { title: r.icu_id } }
-        = render partial: "shared/rowspan", locals: { rowspan: @icu_ratings.rowspan(i, list) }
+        = render "shared/rowspan", rowspan: @icu_ratings.rowspan(i, icu_id, name), attrs: { title: r.icu_id }
+        = render "shared/rowspan", rowspan: @icu_ratings.rowspan(i, list)
         %td{class: "#{r.type}"}= link_to_if current_user, r.rating, icu_rating_path(r, format: "js"), remote: true
-        = render partial: "shared/rowspan", locals: { rowspan: @icu_ratings.rowspan(i, fed) }
-        = render partial: "shared/rowspan", locals: { rowspan: @icu_ratings.rowspan(i, club) }
+        = render "shared/rowspan", rowspan: @icu_ratings.rowspan(i, fed)
+        = render "shared/rowspan", rowspan: @icu_ratings.rowspan(i, club)
   - if @icu_ratings.multi_page
     %tr
       %td{colspan: 5, class: "centered"}= pagination_links(@icu_ratings)

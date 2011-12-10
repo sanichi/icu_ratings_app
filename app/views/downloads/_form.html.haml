@@ -1,6 +1,6 @@
 = form_for @download, html: {multipart: true, class: "simple-form wide"} do |f|
   - if @download.errors.any?
-    = render partial: "shared/errors", locals: { thing: @download, name: "download" }
+    = render "shared/errors", thing: @download, name: "download"
   .input
     = f.label :uploaded_file, "File to upload"
     = f.file_field :uploaded_file
