@@ -57,7 +57,7 @@ class WAR
   memoize :years, :types, :lists, :players
 
   def methods_menu
-    [["Three year weigted average", "war"], ["Simple average of latest ratings", "simple"]]
+    [["Three year weighted average", "war"], ["Simple average of latest ratings", "simple"]]
   end
 
   def gender_menu
