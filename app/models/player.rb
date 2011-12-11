@@ -16,14 +16,14 @@ class Player < ActiveRecord::Base
   validates_presence_of     :first_name, :last_name, :original_name
   validates_numericality_of :icu_id, :original_icu_id, only_integer: true, greater_than: 0, allow_nil: true
   validates_numericality_of :fide_id, :original_fide_id, only_integer: true, greater_than: 0, allow_nil: true
-  validates_inclusion_of    :fed, :original_fed, in: FEDS, allow_nil: true, message: '(%{value}) is invalid'
-  validates_inclusion_of    :title, :original_title, in: TITLES, allow_nil: true, message: '(%{value}) is invalid'
+  validates_inclusion_of    :fed, :original_fed, in: FEDS, allow_nil: true, message: "(%{value}) is invalid"
+  validates_inclusion_of    :title, :original_title, in: TITLES, allow_nil: true, message: "(%{value}) is invalid"
   validates_inclusion_of    :gender, :original_gender, in: GENDERS, allow_nil: true, message: "(%{value}) should be #{GENDERS.join(' or ')}"
-  validates_date            :dob, :original_dob, after: '1910-01-01', allow_nil: true
+  validates_date            :dob, :original_dob, after: "1910-01-01", on_or_before: :today, allow_nil: true
   validates_numericality_of :icu_rating, :original_icu_rating, :fide_rating, :original_fide_rating, only_integer: true, greater_than: 0, allow_nil: true
   validates_numericality_of :rank, only_integer: true, greater_than: 0, allow_nil: true
   validates_numericality_of :num, only_integer: true, greater_than: 0
-  validates_inclusion_of    :category, in: CATEGORY, allow_nil: true, message: '(%{value}) is invalid'
+  validates_inclusion_of    :category, in: CATEGORY, allow_nil: true, message: "(%{value}) is invalid"
   validates_presence_of     :status
 
   def self.build_from_icut(icup, tournament)

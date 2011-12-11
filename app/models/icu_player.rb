@@ -21,8 +21,8 @@ class IcuPlayer < ActiveRecord::Base
   validates_format_of       :gender, with: /^(M|F)$/, allow_nil: true
   validates_inclusion_of    :deceased, in: [true, false]
   validates_numericality_of :master_id, only_integer: true, greater_than: 0, allow_nil: true
-  validates_date            :dob, on_or_after: "1900-01-01", allow_nil: true
-  validates_date            :joined, on_or_after: "1960-01-01", allow_nil: true
+  validates_date            :dob, on_or_after: "1900-01-01", on_or_before: :today, allow_nil: true
+  validates_date            :joined, on_or_after: "1960-01-01", on_or_before: :today, allow_nil: true
 
   def name(*args)
     args.push :reversed if args.empty?

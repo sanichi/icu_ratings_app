@@ -6,7 +6,7 @@ class FideRating < ActiveRecord::Base
   validates_numericality_of :fide_id, only_integer: true, greater_than: 0
   validates_numericality_of :rating, only_integer: true, greater_than: 0, less_than: 3000
   validates_numericality_of :games, only_integer: true, greater_than_or_equal_to: 0, less_than: 100
-  validates_date            :list, on_or_after: "1950-01-01"
+  validates_date            :list, on_or_after: "1950-01-01", on_or_before: :today
   validates_uniqueness_of   :list, scope: :fide_id
   validate                  :list_should_be_first_of_month
 

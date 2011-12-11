@@ -17,8 +17,8 @@ class Tournament < ActiveRecord::Base
   before_validation :normalise_attributes
 
   validates_presence_of     :name, :start, :status
-  validates_date            :start, after: '1900-01-01'
-  validates_date            :finish, after: '1900-01-01', allow_nil: true
+  validates_date            :start, after: "1900-01-01", on_or_before: :today
+  validates_date            :finish, after: "1900-01-01", on_or_before: :today, allow_nil: true
   validate                  :finish_on_or_after_start
   validates_inclusion_of    :fed, in: FEDS, allow_nil: true, message: '(%{value}) is invalid'
   validates_inclusion_of    :stage, in: STAGE, message: '(%{value}) is invalid'
