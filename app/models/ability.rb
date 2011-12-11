@@ -6,11 +6,11 @@ class Ability
     user ||= User.new
 
     can :read, NewsItem
+    can :graph, IcuPlayer
 
     return unless user.role? :member
 
     can :show, IcuPlayer, id: user.icu_id
-    can :war, IcuRating
 
     return unless user.role? :reporter
 

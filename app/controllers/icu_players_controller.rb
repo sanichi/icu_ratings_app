@@ -22,4 +22,9 @@ class IcuPlayersController < ApplicationController
       format.js { @old_rating_histories = OldRatingHistory.search({ icu_player_id: params[:id], per_page: 5 }, admin_old_rating_histories_path) }
     end
   end
+
+  def graph
+    @ratings_graph = RatingsGraph.new(@icu_player)
+    render "shared/ratings_graph/show.js"
+  end
 end

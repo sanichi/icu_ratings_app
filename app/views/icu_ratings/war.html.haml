@@ -6,6 +6,8 @@
 #war_results
   = render "war_results"
 
+= render "shared/ratings_graph/dialog.html"
+
 #help
   %dl
     %dt What are weighted average ratings used for?
@@ -25,5 +27,5 @@
     %dd
       The calculation averages paired ICU and FIDE rating lists from the same year.
       If only one of the two lists is available for a particular year then it is not used.
-      This generally only happens in early January because by the middle of the month both
+      This generally only happens in early January because by the middle of that month both
       lists are usually out.

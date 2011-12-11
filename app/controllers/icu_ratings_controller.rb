@@ -1,6 +1,4 @@
 class IcuRatingsController < ApplicationController
-  authorize_resource only: :war
-
   def index
     @icu_ratings = IcuRating.search(params, icu_ratings_path)
     render :results if request.xhr?

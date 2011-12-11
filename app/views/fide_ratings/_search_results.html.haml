@@ -15,7 +15,7 @@
       %tr
         = render "shared/rowspan", rowspan: @fide_ratings.rowspan(i, fide_id, name), attrs: { title: r.fide_id }
         = render "shared/rowspan", rowspan: @fide_ratings.rowspan(i, list)
-        %td= link_to_if current_user, r.rating, fide_rating_path(r, format: "js"), remote: true
+        %td= link_to r.rating, fide_rating_path(r, format: "js"), remote: true
         %td{class: "centered"}= r.games
   - if @fide_ratings.multi_page
     %tr

@@ -10,9 +10,11 @@ Ratings::Application.routes.draw do
   resources :downloads
   resources :fide_players, only: [:index, :show, :update]
   resources :fide_ratings, only: [:index, :show]
-  resources :icu_players,  only: [:index, :show]
+  resources :icu_players,  only: [:index, :show] do
+    get :graph, on: :member
+  end
   resources :icu_ratings,  only: [:index, :show] do
-    get :war, :on => :collection
+    get :war, on: :collection
   end
   resources :news_items
   resources :sessions,     only: [:create]

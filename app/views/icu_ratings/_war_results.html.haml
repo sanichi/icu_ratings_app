@@ -13,7 +13,7 @@
     - @war.players.each_with_index do |row, i|
       %tr
         %td{class: "centered"}= i + 1
-        %td= row.player.name
+        %td= link_to row.player.name, graph_icu_player_path(row.player, format: "js"), remote: true
         - @war.types.each do |t|
           - @war.lists[t].each do |l|
             %td= row.send(t)[l]
