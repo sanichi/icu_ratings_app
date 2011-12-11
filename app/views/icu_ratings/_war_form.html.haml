@@ -1,10 +1,8 @@
-= form_tag war_icu_ratings_path, method: "get", remote: true do
+= form_tag war_icu_ratings_path, method: "get", remote: true, id: "war_form" do
   %table{class: "invisible"}
     %tr
       %th= label_tag :method
       %th= label_tag :gender
     %tr
-      %td= select_tag :method, options_for_select(@war.methods_menu, params[:method]), onchange: "$.rails.fire($('#submit_button'), 'click')"
-      %td= select_tag :gender, options_for_select(@war.gender_menu, params[:gender]), onchange: "$.rails.fire($('#submit_button'), 'click')"
-    %tr
-      %td{colspan: 2}= submit_tag "Show", id: "submit_button", style: "visibility: hidden" 
+      %td= select_tag :method, options_for_select(@war.methods_menu, params[:method]), onchange: "$.rails.handleRemote($('#war_form'))"
+      %td= select_tag :gender, options_for_select(@war.gender_menu, params[:gender]), onchange: "$.rails.handleRemote($('#war_form'))"

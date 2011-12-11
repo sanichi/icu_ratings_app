@@ -1,9 +1,10 @@
 .header
   %span Weighted Average Ratings
 
-= render "war_form"
+#war_form_div
+  = render "war_form"
 
-#war_results
+#war_results.turbaned
   = render "war_results"
 
 = render "shared/ratings_graph/dialog.html"
