@@ -10,7 +10,7 @@ class Tournament < ActiveRecord::Base
   has_many   :players, dependent: :destroy, include: :results
   belongs_to :user
 
-  default_scope order("start DESC, finish DESC, name")
+  default_scope order("start DESC, finish DESC, tournaments.name")
 
   attr_accessible :name, :start, :finish, :fed, :city, :site, :arbiter, :deputy, :time_control, :tie_breaks, :user_id, :stage
 
@@ -64,8 +64,8 @@ class Tournament < ActiveRecord::Base
     first_name = params[:first_name].strip if params[:first_name].present?
     last_name  = params[:last_name].strip  if params[:last_name].present?
     if icu_id > 0 || first_name || last_name
-      matches = matches.joins(:players)
-      matches = matches.where(players: { icu_id: params[:icu_id].to_i })      if icu_id > 0
+      matches = matches.includes(:players)  # the includes, rather than joins, prevents duplicate tournaments
+      matches = matches.where("players.icu_id = ?", icu_id)                   if icu_id > 0
       matches = matches.where("players.first_name LIKE ?", "%#{first_name}%") if first_name
       matches = matches.where("players.last_name  LIKE ?", "%#{last_name}%")  if last_name
     end
@@ -86,7 +86,6 @@ class Tournament < ActiveRecord::Base
     else
       # Only "ok" status.
       matches = matches.where(status: "ok")
-      logger.info "ZZZ #{matches.to_sql} -- #{Tournament.where(status: 'ok').count}"
 
       # Never "scratch" stage.
       matches = matches.where("tournaments.stage != 'scratch'")

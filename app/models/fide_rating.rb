@@ -15,10 +15,10 @@ class FideRating < ActiveRecord::Base
   def self.search(params, path)
     matches = scoped
     matches = matches.where(list: params[:list]) if params[:list].present?
+    matches = matches.where(fide_id: params[:fide_id].to_i) if params[:fide_id].to_i > 0
     matches = matches.where("first_name LIKE ?", "%#{params[:first_name]}%") if params[:first_name].present?
     matches = matches.where("last_name LIKE ?", "%#{params[:last_name]}%") if params[:last_name].present?
     matches = matches.where("gender = ?", params[:gender]) if params[:gender].present?
-    matches = matches.where(fide_id: params[:fide_id].to_i) if params[:fide_id].to_i > 0
     paginate(matches, path, params)
   end
 
