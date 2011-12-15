@@ -34,8 +34,12 @@ namespace :deploy do
 
   desc "Symlink extra configs and folders."
   task :symlink_extras do
-    run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
-    run "ln -nfs #{shared_path}/config/app_config.yml #{release_path}/config/app_config.yml"
+    %w{database app_config}.each do |yml|
+      run "ln -nfs #{shared_path}/config/#{yml}.yml #{release_path}/config/#{yml}.yml"
+    end
+    %w{stats}.each do |share|
+      run "ln -nfs #{shared_path}/#{share} #{release_path}/public/#{share}"
+    end
   end
 
   desc "Setup shared directory."
