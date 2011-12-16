@@ -37,7 +37,7 @@ namespace :deploy do
     %w{database app_config}.each do |yml|
       run "ln -nfs #{shared_path}/config/#{yml}.yml #{release_path}/config/#{yml}.yml"
     end
-    %w{stats}.each do |share|
+    %w{webalizer}.each do |share|
       run "ln -nfs #{shared_path}/#{share} #{release_path}/public/#{share}"
     end
   end
