@@ -1,6 +1,7 @@
 .bundle
 .sass-cache
 .DS_Store
+.tm_properties
 db/*.sqlite3
 log/*
 tmp/*
