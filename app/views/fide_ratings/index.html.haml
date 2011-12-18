@@ -1,10 +1,12 @@
-.header
-  %span FIDE Ratings
+- content_for :title, "Irish FIDE Ratings"
 
-= render "search_form"
+.header
+  %span Irish FIDE Ratings
+
+= render "form"
 
 #fide_rating_results.turbaned
-  = render "search_results"
+  = render "results"
 
 = render "shared/ratings_graph/dialog.html"
 

@@ -53,4 +53,36 @@ describe IcuPlayer do
       @r.name(:title, :club).should == "#{@r.first_name} #{@r.last_name}"
     end
   end
+
+  context "age" do
+    before(:each) do
+      @p = Factory(:icu_player, dob: nil)
+    end
+
+    it "should be nil if no dob" do
+      @p.age.should be_nil
+      @p.age(Date.parse("1900-01-01")).should be_nil
+    end
+
+    it "should be zero for date before dob" do
+      @p.dob = Date.parse("2011-12-17")
+      @p.age(Date.parse("2000-01-01")).should == 0
+    end
+
+    it "should be non-negative integer" do
+      @p.dob = Date.parse("1955-11-09")
+      @p.age(Date.parse("2011-12-17")).should == 56
+      @p.age(Date.parse("2012-11-09")).should == 57
+    end
+
+    it "should with leap years" do
+      @p.dob = Date.parse("2011-02-28")
+      @p.age(Date.parse("2012-02-27")).should == 0
+      @p.age(Date.parse("2012-02-28")).should == 1
+      @p.age(Date.parse("2012-02-29")).should == 1
+      @p.dob = Date.parse("2012-02-29")
+      @p.age(Date.parse("2013-02-28")).should == 0
+      @p.age(Date.parse("2013-03-01")).should == 1
+    end
+  end
 end

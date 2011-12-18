@@ -12,17 +12,17 @@ describe IcuPlayer do
       it "can access their own details" do
         click_link "#{@player.name} (#{@user.role})"
         page.should have_selector("div.blurb span", content: /logged in as member/i)
-        page.should have_selector(:xpath, "//tr[th[.='First Name']]/td[.='#{@player.first_name}']")
-        page.should have_selector(:xpath, "//tr[th[.='Last Name']]/td[.='#{@player.last_name}']")
-        page.should have_selector(:xpath, "//tr[th[.='Date of Birth']]/td[.='#{@player.dob}']")
-        page.should have_selector(:xpath, "//tr[th[.='Gender']]/td[.='M']")
-        page.should have_selector(:xpath, "//tr[th[.='Club']]/td[.='Bangor']")
-        page.should have_selector(:xpath, "//tr[th[.='Email']]/td[.='#{@player.email}']")
-        page.should have_selector(:xpath, "//tr[th[.='ID']]/td[.='#{@player.id}']")
-        page.should have_selector(:xpath, "//tr[th[.='Date joined']]/td[.='#{@player.joined}']")
-        page.should have_selector(:xpath, "//tr[th[.='ID']]/td[.='None']")
-        page.should have_selector(:xpath, "//tr[th[.='Federation']]/td[.='IRL']")
-        page.should have_selector(:xpath, "//tr[th[.='Title']]/td[.='IM']")
+        page.should have_selector(:xpath, %{//tr[th[.='First Name']]/td[.="#{@player.first_name}"]})
+        page.should have_selector(:xpath, %{//tr[th[.='Last Name']]/td[.="#{@player.last_name}"]})
+        page.should have_selector(:xpath, %{//tr[th[.='Date of Birth']]/td[.="#{@player.dob}"]})
+        page.should have_selector(:xpath, %{//tr[th[.='Gender']]/td[.='M']})
+        page.should have_selector(:xpath, %{//tr[th[.='Club']]/td[.='Bangor']})
+        page.should have_selector(:xpath, %{//tr[th[.='Email']]/td[.="#{@player.email}"]})
+        page.should have_selector(:xpath, %{//tr[th[.='ID']]/td[.="#{@player.id}"]})
+        page.should have_selector(:xpath, %{//tr[th[.='Date joined']]/td[.="#{@player.joined}"]})
+        page.should have_selector(:xpath, %{//tr[th[.='ID']]/td[.='None']})
+        page.should have_selector(:xpath, %{//tr[th[.='Federation']]/td[.='IRL']})
+        page.should have_selector(:xpath, %{//tr[th[.='Title']]/td[.='IM']})
         page.should have_selector("div.blurb span", text: /if.*wrong.*please contact/i)
       end
       
@@ -45,7 +45,7 @@ describe IcuPlayer do
       it "can access their own details" do
         click_link "#{@player.name} (#{@user.role})"
         page.should have_selector("div.blurb span", content: /logged in as reporter/i)
-        page.should have_selector(:xpath, "//tr[th[.='ID']]/td[.='#{@player.id}']")
+        page.should have_selector(:xpath, %{//tr[th[.='ID']]/td[.="#{@player.id}"]})
         page.should have_selector("div.blurb span", text: /if.*wrong.*please contact/i)
       end
       

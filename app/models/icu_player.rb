@@ -47,6 +47,13 @@ class IcuPlayer < ActiveRecord::Base
       name
     end
   end
+ 
+  def age(at=nil)
+    return nil unless dob
+    at ||= Date.today
+    return 0 if dob >= at
+    at.year - dob.year - ((at.month > dob.month || (at.month == dob.month && at.day >= dob.day)) ? 0 : 1)
+  end
 
   def self.search(params, path)
     matches = scoped

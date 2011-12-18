@@ -1,0 +1,30 @@
+- content_for :title, "Top Irish Juniors"
+
+.header
+  %span Top Irish Juniors
+
+#juniors_form_div
+  = render "icu_ratings/juniors/form"
+
+#juniors_results.turbaned
+  = render "icu_ratings/juniors/results"
+
+= render "shared/ratings_graph/dialog"
+
+#help
+  %dl
+    %dt What players are included in this list?
+    %dd
+      %p Those who satisfy the following criteria:
+      %ul
+        %li date of birth is known,
+        %li federation is not foreign,
+        - if @juniors.available?
+          %li
+            appeared in the
+            = year_month(@juniors.list)
+            rating list.
+    %dt If two or more players have the same rating, what is used as a tie breaker?
+    %dd DOB. Younger players come higher up than older ones.
+    %dt At what date are the players' ages calculated?
+    %dd The one shown in the "Date" menu, which you can change.

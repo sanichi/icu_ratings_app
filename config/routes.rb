@@ -14,7 +14,7 @@ Ratings::Application.routes.draw do
     get :graph, on: :member
   end
   resources :icu_ratings,  only: [:index, :show] do
-    get :war, on: :collection
+    get :war, :juniors, on: :collection
   end
   resources :news_items
   resources :sessions,     only: [:create]

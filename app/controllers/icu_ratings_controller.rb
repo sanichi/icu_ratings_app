@@ -11,6 +11,11 @@ class IcuRatingsController < ApplicationController
 
   def war
     @war = WAR.new(params)
-    render :war if request.xhr?
+    render "icu_ratings/war/#{ request.xhr? ? 'results' : 'index' }"
+  end
+
+  def juniors
+    @juniors = Juniors.new(params)
+    render "icu_ratings/juniors/#{ request.xhr? ? 'results' : 'index' }"
   end
 end
