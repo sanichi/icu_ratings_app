@@ -1,9 +1,8 @@
-- content_for :title, "File Upload"
 - content_for :javascript do
   = render "new.js"
 
 .header
-  %span File Upload
+  %span= @page_title = "File Upload"
 
 = form_for [:admin, @upload], html: {multipart: true, class: "simple-form"} do |f|
   - if @upload.errors.any?

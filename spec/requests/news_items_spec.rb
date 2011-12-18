@@ -15,7 +15,7 @@ describe "NewsItem" do
       page.fill_in "Headline", with: headline
       page.fill_in "Story", with: story
       page.click_button "Create"
-      page.should have_selector("head title", text: "ICU Ratings News")
+      page.should have_selector("head title", text: "News")
       page.should have_selector("span.notice", text: /created/i)
       page.should have_selector("span", text: headline)
       page.should have_selector("p", text: story)
@@ -30,7 +30,7 @@ describe "NewsItem" do
       page.should have_selector("span", text: headline)
       NewsItem.where(headline: headline, story: story).should have(1).item
       page.click_link "Delete"
-      page.should have_selector("head title", text: "ICU Ratings News")
+      page.should have_selector("head title", text: "News")
       NewsItem.where(headline: headline, story: story).should have(0).items
     end
 
@@ -114,10 +114,10 @@ describe "NewsItem" do
 
     it "can list and read news" do
       visit "/news_items"
-      page.should have_selector("head title", text: "ICU Ratings News")
+      page.should have_selector("head title", text: "News")
       @news.each { |news| page.should have_link(news.headline) }
       visit "/news_items/#{@news.first.id}"
-      page.should have_selector("head title", text: "ICU Ratings News")
+      page.should have_selector("head title", text: "News")
       page.should have_selector("span", text: @news.first.headline)
       page.should have_no_link "Edit"
       page.should have_no_link "Delete"

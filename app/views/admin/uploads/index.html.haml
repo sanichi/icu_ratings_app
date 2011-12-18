@@ -1,7 +1,5 @@
-- content_for :title, "Search Uploads"
-
 .header
-  %span Uploads
+  %span= @page_title = "Uploads"
 
 #search_form{class: "cushioned"}
   = render "search_form"

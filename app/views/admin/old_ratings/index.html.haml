@@ -1,5 +1,5 @@
 .header
-  %span Last Old Ratings
+  %span= @page_title = "Legacy Ratings"
 
 = render "search_form"
 
@@ -8,7 +8,7 @@
 
 #help
   %dl
-    %dt What is meant by "last old ratings"?
+    %dt What is meant by "legacy ratings"?
     %dd
       These are the ratings inherited by the current ICU rating system (this web application)
       from the previous system (which was based on a Microsoft Access database) in September 2011.

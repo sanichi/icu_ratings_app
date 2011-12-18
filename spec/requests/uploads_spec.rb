@@ -39,7 +39,7 @@ describe "Upload" do
         visit "/admin/uploads/#{upload.id}"
         page.should have_selector("head title", text: "Upload")
         page.click_link("Delete")
-        page.should have_selector("head title", text: "Search Uploads")
+        page.should have_selector("head title", text: "Uploads")
         Upload.count.should == 0
       end
 
