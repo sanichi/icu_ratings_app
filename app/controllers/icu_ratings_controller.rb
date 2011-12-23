@@ -18,4 +18,9 @@ class IcuRatingsController < ApplicationController
     @juniors = Juniors.new(params)
     render "icu_ratings/juniors/#{ request.xhr? ? 'results' : 'index' }"
   end
+  
+  def improvers
+    @improvers = Improvers.new(params)
+    render "icu_ratings/improvers/#{ request.xhr? ? 'results' : 'index' }"
+  end
 end

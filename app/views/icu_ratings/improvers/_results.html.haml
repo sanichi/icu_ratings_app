@@ -1,0 +1,22 @@
+%table
+  %tr
+    %th
+    %th Player
+    %th Age
+    %th G
+    %th Fed
+    %th Club
+    %th= year_month(@improvers.from)
+    %th= year_month(@improvers.upto)
+    %th Change
+  - @improvers.rows.each_with_index do |r, i|
+    %tr
+      %td{class: "centered"}= i + 1
+      %td= r.player.name
+      %td= r.age
+      %td= r.player.gender
+      %td= r.player.fed
+      %td= r.player.club
+      %td{class: "centered #{r.from.type}"}= link_to r.from.rating, icu_rating_path(r.from, format: "js"), remote: true
+      %td{class: "centered #{r.from.type}"}= link_to r.upto.rating, icu_rating_path(r.upto, format: "js"), remote: true
+      %td{class: "centered"}= r.diff

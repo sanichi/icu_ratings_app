@@ -1,0 +1,21 @@
+.header
+  %span= @page_title = "Top Improvers"
+
+- if @improvers.available?
+  #improvers_form_div
+    = render "icu_ratings/improvers/form"
+
+  #improvers_results.turbaned
+    = render "icu_ratings/improvers/results"
+
+  = render "shared/ratings_graph/dialog"
+
+  #help
+    %dl
+      %dt What players are included?
+      %dd Any players who appeared in both the rating lists chosen for comparison.
+      %dt Why are some players' ages blank?
+      %dd Only the ages of juniors (21 and under) are shown and the DOBs of some players are unknown.
+- else
+  .flash
+    %span{class: "alert"} Insufficient data

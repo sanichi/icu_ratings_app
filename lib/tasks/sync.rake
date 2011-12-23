@@ -30,5 +30,5 @@ namespace :sync do
   end
   
   desc "Synchronize everything in the correct order"
-  task all: [:icu_players, :icu_users, :irish_fide_players, :other_fide_players, :icu_fide_data]
+  task all: [:icu_players, :icu_users, :irish_fide_players, :other_fide_players]
 end
