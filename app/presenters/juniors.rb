@@ -12,6 +12,7 @@ class Juniors
     @least = @date.years_ago(params[:least].to_i)
 
     @gender = params[:gender]
+    @club = params[:club]
   end
 
   def list
@@ -43,6 +44,7 @@ class Juniors
     ratings = ratings.where(list: list).where("icu_players.fed = 'IRL' OR icu_players.fed IS NULL")
     ratings = ratings.where("icu_players.gender = 'M' OR icu_players.gender IS NULL") if @gender == "M"
     ratings = ratings.where("icu_players.gender = 'F'") if @gender == "F"
+    ratings = ratings.where("icu_players.club = ?", @club) if @club.present?
     ratings = ratings.where("icu_players.dob >  ?", @under)
     ratings = ratings.where("icu_players.dob <= ?", @least)
     ratings

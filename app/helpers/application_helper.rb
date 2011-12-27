@@ -32,10 +32,10 @@ module ApplicationHelper
     menu
   end
 
-  def club_menu(opt = { any: "Any", none: "None" })
+  def club_menu(none="None", any="Any")
     menu = IcuPlayer.unscoped.select("DISTINCT(club)").where("club IS NOT NULL").order("club").map { |c| [c.club, c.club] }
-    menu.unshift([opt[:none], "None"]) if opt[:none]
-    menu.unshift([opt[:any], ""]) if opt[:any]
+    menu.unshift([none, "None"]) if none
+    menu.unshift([any, ""]) if any
     menu
   end
 

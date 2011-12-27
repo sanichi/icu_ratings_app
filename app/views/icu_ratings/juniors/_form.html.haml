@@ -5,10 +5,12 @@
       %th= label_tag :least, "At Least"
       %th= label_tag :date
       %th= label_tag :gender
+      %th= label_tag :club
       %th
     %tr
       %td= select_tag :under, options_for_select(@juniors.under_menu, params[:under])
       %td= select_tag :least, options_for_select(@juniors.least_menu, params[:least])
       %td= select_tag :date, options_for_select(@juniors.date_menu, params[:date])
       %td= select_tag :gender, options_for_select(gender_menu("Any"), params[:gender])
+      %td= select_tag :club, options_for_select(club_menu(nil), params[:club])
       %td= submit_tag "Search"
