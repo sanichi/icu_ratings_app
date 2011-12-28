@@ -3,11 +3,6 @@ module Admin
     load_resource except: "index"
     authorize_resource
 
-    def index
-      @tournament = Tournament.find(params[:tournament_id])
-      @players = @tournament.players.order('num')
-    end
-
     def show
       @tournament = @player.tournament
       if @tournament.players.size > 2
