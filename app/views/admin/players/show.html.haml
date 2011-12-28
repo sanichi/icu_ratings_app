@@ -27,3 +27,21 @@
 = fide_player_details_dialog
 - html = render "shared/pipe_list", :error => @player.status
 = render "shared/dialog.html", id: "status", button: false, cancel: "Dismiss", html: html
+
+#help
+  %dl
+    %dt What are the different player categories?
+    %dd
+      %ul
+        %li
+          %b ICU
+          \- has an ICU ID and matching details in the ICU database.
+        %li
+          %b Foreign
+          \- has a non-Irish federation and an Elo rating (preferably FIDE).
+        %li
+          %b New
+          \- has no IDs or ratings.
+        %li
+          %b Invalid
+          \- all others.

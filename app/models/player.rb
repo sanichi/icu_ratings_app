@@ -2,7 +2,7 @@ class Player < ActiveRecord::Base
   FEDS = ICU::Federation.codes
   TITLES = %w[GM IM FM CM NM WGM WIM WFM WCM WNM]
   GENDERS = %w[M F]
-  CATEGORY = %w[icu_player fide_player foreign_player new_player]
+  CATEGORY = %w[icu_player foreign_player new_player]
 
   belongs_to :tournament, include: :players
   belongs_to :icu_player, foreign_key: "icu_id"
@@ -102,27 +102,35 @@ class Player < ActiveRecord::Base
 
   private
 
+  # Correlated with the Help text in admin/players/show.
   def deduce_category_and_status
     errors = Array.new
     category = nil
     
-    category = "icu_player"  if match_icu(errors)
-    category = "fide_player" if match_fide(errors) && !category
-
-    unless category
-      if fide_rating.present? && fed != "IRL"
-        category = "foreign_player"
-      elsif icu_id.blank? && fide_id.blank? && icu_rating.blank? && fide_rating.blank?
-        category = "new_player"
-      else
-        errors.push "cannot determine category"
-      end
+    # Check for FIDE errors, no longer used for category.
+    match_fide(errors)
+    
+    # Determine category.
+    case
+    when match_icu(errors)
+      category = "icu_player"
+    when fide_rating.present? && fed.present? && fed != "IRL"
+      category = "foreign_player"
+    when icu_id.blank? && fide_id.blank? && icu_rating.blank? && fide_rating.blank?
+      category = "new_player"
+    else
+      errors.push "cannot determine category"
     end
 
-    self.status = errors.empty? ? "ok" : errors.join("|")
-    self.category = category
+    if errors.empty?
+      self.status   = "ok"
+      self.category = category
+    else
+      self.status   = errors.join("|")
+      self.category = nil
+    end
   end
-  
+
   def match_icu(errors)
     return false if icu_id.blank?
     match = true
@@ -177,7 +185,7 @@ class Player < ActiveRecord::Base
       end
     else
       match = false
-      errors.push "#{fide_id}: no such FIDE player" if fed == "IRL"  # TODO: relax when we get all FIDE players
+      errors.push "#{fide_id}: no such FIDE player"
     end
     match
   end
