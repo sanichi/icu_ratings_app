@@ -51,9 +51,9 @@ module Admin
         redirect_to admin_tournaments_path
       end
     end
-    
+
     private
-    
+
     def view(file, group)
       group ? "admin/tournaments/#{group}/#{file}" : file
     end

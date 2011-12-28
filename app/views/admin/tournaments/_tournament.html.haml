@@ -57,18 +57,26 @@
   %tr
     %th Status
     - if @tournament.status_ok?
-      %td= @tournament.status
+      %td= t(@tournament.status)
     - else
       %td{class: "error centered"}
-        %a{href: "javascript: $('#dialog_status').dialog('open'); void(0)"} Problems
+        %a{href: "javascript: $('#dialog_status').dialog('open'); void(0)"}= t("problems")
   %tr
     %th Stage
-    %td= @tournament.stage
+    %td= t(@tournament.stage)
 
-%table{class: "left"}
+%table
   %tr
-    %td= link_to "Display", @tournament
-    %td= link_to "Export", admin_tournament_path(@tournament, format: "js"), remote: true
-    - if can?(:modify, @tournament) && @tournament.deletable?
-      %td
+    %td{class: "centered"}
+      = link_to "Display", @tournament
+      &bullet;
+      = link_to "Export", admin_tournament_path(@tournament, format: "js"), remote: true
+      - if can?(:modify, @tournament) && @tournament.deletable?
+        &bullet;
         = link_to "Delete", [:admin, @tournament], confirm: "Are you sure?", method: :delete
+  - Tournament::STAGE.each do |stage|
+    - if @tournament.can_move_to?(stage)
+      %tr
+        %td{colspan: 2}
+          Change stage to:
+          = link_to t(stage), [:admin, @tournament]

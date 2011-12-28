@@ -11,9 +11,8 @@
   %dl
     %dt What are the different stages a tournament can be at?
     %dd
-      %p
-        = image_tag "icons/unrated.png", class: "inline"
-        Unrated, but intended to be rated when ready.
-      %p
-        = image_tag "icons/rated.png", class: "inline"
-        Already rated.
+      - Tournament::STAGE.reject{ |s| s == "scratch" }.each do |stage|
+        %p
+          = image_tag "icons/#{stage}.png", class: "inline", alt: t(stage)
+          %b= t(stage)
+          = "- #{t(stage, scope: :desc)}."

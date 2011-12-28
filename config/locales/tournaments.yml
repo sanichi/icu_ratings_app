@@ -1,4 +1,14 @@
 en:
-  scratch: "Scratch"
+  scratch: "Unrateble"
+  unrated: "Rateable"
+  staged: "Staged"
   rated: "Rated"
-  unrated: "Unrated"
+  ok: "OK"
+  problems: "Problems"
+  desc:
+      scratch: not yet ready or intended for rating and not visible to members
+      unrated: ready for rating but not yet staged or rated
+      staged: waiting in the queue to be rated
+      rated: successfully rated
+      ok: "has no problems, can be rated and is visible to members"
+      problems: "has issues, can't be rated and is not visible to members"

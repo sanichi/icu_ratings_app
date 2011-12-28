@@ -11,20 +11,15 @@
   %dl
     %dt What are the different stages a tournament can be at?
     %dd
-      %p
-        = image_tag "icons/scratch.png", class: "inline", alt: "scratch"
-        Scratch. Not intended for rating and not visible to members.
-      %p
-        = image_tag "icons/unrated.png", class: "inline", alt: "unrated"
-        Unrated, but intended to be rated when ready.
-      %p
-        = image_tag "icons/rated.png", class: "inline", alt: "rated"
-        Already rated.
+      - Tournament::STAGE.each do |stage|
+        %p
+          = image_tag "icons/#{stage}.png", class: "inline", alt: t(stage)
+          %b= t(stage)
+          = "- #{t(stage, scope: :desc)}."
     %dt What are the different statuses a tournament can have?
     %dd
-      %p
-        = image_tag "icons/ok.png", class: "inline", alt: "ok"
-        The tournament has no problems, is visible to members and can be rated.
-      %p
-        = image_tag "icons/problems.png", class: "inline", alt: "problems"
-        There are issues to resolve before it is rateable or visible to members.
+      - %w[ok problems].each do |status|
+        %p
+          = image_tag "icons/#{status}.png", class: "inline", alt: t(status)
+          %b= t(status)
+          = "- #{t(status, scope: :desc)}."
