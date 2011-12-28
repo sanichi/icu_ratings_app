@@ -3,7 +3,6 @@ module PlayersHelper
     if player.status_ok?
       image = case player.category
               when "icu_player"     then "user_green"
-              when "fide_player"    then "user_blue"
               when "foreign_player" then "user_blue"
               when "new_player"     then "user_orange"
               else "user_red"  # shouldn't happen

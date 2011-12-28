@@ -6,7 +6,7 @@ module Admin
     def index
       params[:admin] = true
       @tournaments = Tournament.search(params, admin_tournaments_path)
-      render :results if request.xhr?
+      render view(:results, :search) if request.xhr?
     end
 
     def show
@@ -16,23 +16,12 @@ module Admin
           @tournament.check_status
         end
         format.text { render text: @tournament.export(params) }
-        format.js   { render :export }
+        format.js   { render view(:options, :export) }
       end
     end
 
     def edit
-      render case
-      when params[:tie_breaks]
-        :edit_tie_breaks
-      when params[:ranks]
-        :edit_ranks
-      when params[:reporter]
-        :edit_reporter
-      when params[:stage]
-        :edit_stage
-      else
-        :edit
-      end
+      render view(:edit, %w{ranks reporter stage tie_breaks}.find { |g| params[g] })
     end
 
     def update
@@ -46,11 +35,11 @@ module Admin
           order = :rank unless @problem
         end
         @players = @tournament.players.order(order).includes(:results)
-        render :update_ranks
+        render view(:update, :ranks)
       else
         # Updating (a) general tournament attributes, (b) tie break rules or (c) tournament reporter.
         @tournament.update_attributes(params[:tournament])
-        render params[:tournament][:tie_breaks] ? :update_tie_breaks : :update
+        render view(:update, params[:tournament][:tie_breaks] ? :tie_breaks : nil)
       end
     end
 
@@ -61,6 +50,12 @@ module Admin
         @tournament.destroy
         redirect_to admin_tournaments_path
       end
+    end
+    
+    private
+    
+    def view(file, group)
+      group ? "admin/tournaments/#{group}/#{file}" : file
     end
   end
 end
