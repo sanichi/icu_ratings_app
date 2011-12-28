@@ -113,10 +113,6 @@ module ApplicationHelper
     menu
   end
 
-  def tournament_stage_update_menu
-    Tournament::STAGE_UPDATABLE.map{ |s| [t(s), s] }
-  end
-
   def upload_format_menu(any=nil)
     menu = Upload::FORMATS.dup
     menu.unshift([any, ""]) if any

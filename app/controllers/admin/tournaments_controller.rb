@@ -21,7 +21,7 @@ module Admin
     end
 
     def edit
-      render view(:edit, %w{ranks reporter stage tie_breaks}.find { |g| params[g] })
+      render view(:edit, %w{ranks reporter tie_breaks}.find { |g| params[g] })
     end
 
     def update
@@ -37,7 +37,7 @@ module Admin
         @players = @tournament.players.order(order).includes(:results)
         render view(:update, :ranks)
       else
-        # Updating (a) general tournament attributes, (b) tie break rules or (c) tournament reporter.
+        # Updating general tournament attributes (with tie break rules as a special case).
         @tournament.update_attributes(params[:tournament])
         render view(:update, params[:tournament][:tie_breaks] ? :tie_breaks : nil)
       end
