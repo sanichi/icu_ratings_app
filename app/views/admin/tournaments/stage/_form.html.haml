@@ -1,0 +1,17 @@
+= form_for [:admin, @tournament], remote: true do |f|
+  %p{class: "centered"}
+    from
+    %b= t(@tournament.stage)
+    to
+    - options = @tournament.move_stage_options
+    - if options.size == 0
+      -# If this happens, it's a bug.
+      - option = @tournament.stage
+      = f.hidden_field :stage, value: option
+      %b= t(option)
+    - if options.size == 1
+      - option = options.first
+      = f.hidden_field :stage, value: option
+      %b= t(option)
+    - else
+      = f.select :stage, options.map { |o| [t(o), o] }

@@ -2,8 +2,7 @@ class Tournament < ActiveRecord::Base
   extend Util::Pagination
 
   FEDS = ICU::Federation.codes
-  STAGE = %w[scratch unrated rated]
-  STAGE_UPDATABLE = %w[scratch unrated]
+  STAGE = %w[initial ready queued rated]
   TIEBREAK = "(?:#{ICU::TieBreak.rules.map(&:id).join('|')})"
 
   has_one    :upload, dependent: :destroy
@@ -23,7 +22,8 @@ class Tournament < ActiveRecord::Base
   validates_inclusion_of    :fed, in: FEDS, allow_nil: true, message: '(%{value}) is invalid'
   validates_inclusion_of    :stage, in: STAGE, message: '(%{value}) is invalid'
   validates_format_of       :tie_breaks, with: /^#{TIEBREAK}(?:,#{TIEBREAK})*$/, allow_nil: true
-  validates_numericality_of :user_id, only_integer: true, greater_than: 0, message: "(%{value}) is invalid"
+  validates_numericality_of :user_id, :rounds, only_integer: true, greater_than: 0, message: "(%{value}) is invalid"
+  validates_numericality_of :rorder, only_integer: true, greater_than: 0, allow_nil: true, message: "(%{value}) is invalid"
 
   # Build a Tournament from an icu_tournament object parsed from an uploaded file.
   def self.build_from_icut(icut, upload=nil)
@@ -69,7 +69,7 @@ class Tournament < ActiveRecord::Base
       matches = matches.where("players.first_name LIKE ?", "%#{first_name}%") if first_name
       matches = matches.where("players.last_name  LIKE ?", "%#{last_name}%")  if last_name
     end
-    
+
     if params[:admin]
       # Reporter.
       user_id = params[:user_id].to_i
@@ -87,8 +87,8 @@ class Tournament < ActiveRecord::Base
       # Only "ok" status.
       matches = matches.where(status: "ok")
 
-      # Never "scratch" stage.
-      matches = matches.where("tournaments.stage != 'scratch'")
+      # Never "initial" stage.
+      matches = matches.where("tournaments.stage != 'initial'")
     end
 
     paginate(matches, path, params)
@@ -96,7 +96,7 @@ class Tournament < ActiveRecord::Base
 
   # The latest tournaments for members and guests.
   def self.latest(limit=10)
-    Tournament.where(status: "ok").where(stage: ["unrated", "rated"]).limit(limit)
+    Tournament.where(status: "ok").where("stage != 'initial'").limit(limit)
   end
 
   # Return an ICU::Tournament instance built from a database Tournament.
@@ -147,18 +147,6 @@ class Tournament < ActiveRecord::Base
         r.update_attribute(:opponent_id, map[r.opponent_id]) if r.opponent_id != map[r.opponent_id]
       end
     end
-  end
-
-  # The name and year of a tournament.
-  def long_name
-    return name if name.match(/(19|20)\d\d/) || !(start || finish)
-    year = start.year.to_s if start
-    if year
-      year+= "-#{finish.year.to_s[2..3]}" if finish && finish.year > start.year
-    else
-      year = finish.year.to_s
-    end
-    "#{name} #{year}"
   end
 
   # Players in rank order or, if the ranking is invalid, in name order.
@@ -294,12 +282,57 @@ class Tournament < ActiveRecord::Base
     data.join(", ")
   end
 
+  # Can this tournament be deleted?
   def deletable?
-    stage == "unrated" || stage == "scratch"
+    stage == "initial" || stage == "ready"
   end
 
-  def stage_updatable?
-    STAGE_UPDATABLE.include?(stage)
+  # Can this tournament be moved to a given stage from the one it's currently at?
+  def can_move_to?(new_stage)
+    case new_stage.to_s
+    when "initial" then stage == "ready"
+    when "ready"   then stage == "initial" && status_ok? || stage.match(/^queued|rated$/)
+    when "queued"  then stage == "ready"
+    else false
+    end
+  end
+
+  # What are all the stages that this tournament can move to?
+  def move_stage_options
+    STAGE.inject([]) do |options, new_stage|
+      can_move_to?(new_stage) ? options.push(new_stage) : options
+    end
+  end
+
+  # Try to move the tourament from one stage to another.
+  def move_stage(new_stage)
+    # Check for basic errors.
+    error = case
+    when !STAGE.include?(new_stage) then "is invalid"
+    when !can_move_to?(new_stage)   then "cannot move to this stage"
+    end
+    errors.add(:stage, error) and return if error
+
+    # Take care of side effects.
+    case
+    when !rorder && new_stage == "queued" then queue
+    when  rorder && new_stage == "ready"  then dequeue
+    end
+
+    # Finally, update the attribute.
+    update_attribute(:stage, new_stage)
+  end
+
+  # The next queued or rated tournament (see queue and dequeue).
+  def next_tournament
+    return if !rorder || rorder >= Tournament.unscoped.where("rorder IS NOT NULL").count
+    find_by_rorder(rorder - 1)
+  end
+
+  # The previous queued or rated tournament (see queue and dequeue).
+  def last_tournament
+    return if !rorder || rorder <= 1
+    find_by_rorder(rorder - 1)
   end
 
   def status_ok?
@@ -376,5 +409,48 @@ class Tournament < ActiveRecord::Base
   def check_player_category(errors)
     return if 0 < players.inject(0) { |m, p| m += 1 if p.category == "icu_player"; m }
     errors.push("at least 1 ICU player is required")
+  end
+
+  # Queue a tournament for rating (establish it's order in the list of tournaments).
+  def queue
+    rorder = queue_position
+    Tournament.unscoped().where("rorder >= ?", rorder).each { |t| t.update_attribute(:rorder, t.rorder + 1) }
+    update_attribute(:rorder, rorder)
+  end
+
+  # Unqueue a tournament for rating (blank it's order to remove it from the list of tournaments).
+  def dequeue
+    rorder = self.rorder
+    update_attribute(:rorder, nil)
+    Tournament.unscoped().where("rorder > ?", rorder).each { |t| t.update_attribute(:rorder, t.rorder - 1) }
+  end
+
+  # Find the right queue position.
+  def queue_position
+    count = Tournament.unscoped.where("rorder IS NOT NULL").count
+    return 1 if count == 0
+    t = Tournament.unscoped.first(conditions: { rorder: count })
+    raise "queue_position: expected tournament with order #{count}" unless t
+    return count + 1 if queue_position_higher(t)
+    return 1 if count == 1
+    queue_position_finder(1, count)
+  end
+
+  # Binary search to recursively find queue position. Invariants: p2 > p1 and solution is not higher than p2.
+  def queue_position_finder(p1, p2)
+    raise "queue_position_finder: bad invariant (#{p1}, #{p2})" unless p2 > p1
+    m = ((p1 + p2) / 2.0).floor
+    t = Tournament.unscoped.first(conditions: { rorder: m })
+    raise "queue_position_finder: expected tournament with rorder #{m}" unless t
+    higher = queue_position_higher(t)
+    return m + (higher ? 1 : 0) if m == p1                                    # p1 = m < p2 special case (stops recursion)
+    higher ? queue_position_finder(m + 1, p2) : queue_position_finder(p1, m)  # p1 < m < p2 general case
+  end
+
+  # Compare this tournament to another and return true if it should be higher in the queue and false otherwise.
+  def queue_position_higher(t)
+    return start > t.start if start != t.start
+    return rounds > t.rounds if rounds != rounds
+    id > t.id  # tie breaker
   end
 end

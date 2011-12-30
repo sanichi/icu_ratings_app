@@ -64,7 +64,7 @@ describe "Tournament" do
       tournament = Tournament.first
       tournament.name.should == "Rathmines Senior 2011"
       tournament.status.should_not == "ok"
-      tournament.stage.should == "scratch"
+      tournament.stage.should == "initial"
     end
 
     it "SPExport" do
@@ -74,7 +74,7 @@ describe "Tournament" do
       tournament = Tournament.first
       tournament.name.should == name
       tournament.status.should_not == "ok"
-      tournament.stage.should == "scratch"
+      tournament.stage.should == "initial"
     end
 
     it "Krause" do
@@ -83,7 +83,7 @@ describe "Tournament" do
       tournament = Tournament.first
       tournament.name.should == "Bunratty 2011"
       tournament.status.should_not == "ok"
-      tournament.stage.should == "scratch"
+      tournament.stage.should == "initial"
     end
 
     it "CSV" do
@@ -92,7 +92,7 @@ describe "Tournament" do
       tournament = Tournament.first
       tournament.name.should == "Isle of Man Masters, 2007"
       tournament.status.should_not == "ok"
-      tournament.stage.should == "scratch"
+      tournament.stage.should == "initial"
     end
   end
 
@@ -106,7 +106,7 @@ describe "Tournament" do
     it "should not display tournaments whose status is not 'ok'" do
       [@t1, @t2].each do |t|
         t.update_attribute(:status, "problem")
-        t.update_attribute(:stage, "unrated")
+        t.update_attribute(:stage, "ready")
       end
       visit "/tournaments"
       page.should have_no_selector(:xpath, "//a[@href='/tournaments/#{@t1.id}']")
@@ -121,19 +121,19 @@ describe "Tournament" do
       page.should have_selector(:xpath, "//a[@href='/tournaments/#{@t2.id}']")
     end
 
-    it "should not display tournaments at the 'scratch' stage" do
+    it "should not display tournaments at the 'initial' stage" do
       [@t1, @t2].each do |t|
         t.update_attribute(:status, "ok")
-        t.update_attribute(:stage, "scratch")
+        t.update_attribute(:stage, "initial")
       end
       visit "/tournaments"
       page.should have_no_selector(:xpath, "//a[@href='/tournaments/#{@t1.id}']")
       page.should have_no_selector(:xpath, "//a[@href='/tournaments/#{@t2.id}']")
-      @t1.update_attribute(:stage, "unrated")
+      @t1.update_attribute(:stage, "ready")
       visit "/tournaments"
       page.should have_selector(:xpath, "//a[@href='/tournaments/#{@t1.id}']")
       page.should have_no_selector(:xpath, "//a[@href='/tournaments/#{@t2.id}']")
-      @t2.update_attribute(:stage, "unrated")
+      @t2.update_attribute(:stage, "ready")
       visit "/tournaments"
       page.should have_selector(:xpath, "//a[@href='/tournaments/#{@t1.id}']")
       page.should have_selector(:xpath, "//a[@href='/tournaments/#{@t2.id}']")

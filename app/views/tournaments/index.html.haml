@@ -11,8 +11,8 @@
   %dl
     %dt What are the different stages a tournament can be at?
     %dd
-      - Tournament::STAGE.reject{ |s| s == "scratch" }.each do |stage|
+      - Tournament::STAGE.reject{ |s| s == "initial" }.each do |stage|
         %p
           = image_tag "icons/#{stage}.png", class: "inline", alt: t(stage)
           %b= t(stage)
-          = "- #{t(stage, scope: :desc)}."
+          = "- #{t(stage, scope: :desc)}"

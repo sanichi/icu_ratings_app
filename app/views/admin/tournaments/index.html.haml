@@ -15,11 +15,11 @@
         %p
           = image_tag "icons/#{stage}.png", class: "inline", alt: t(stage)
           %b= t(stage)
-          = "- #{t(stage, scope: :desc)}."
+          = "- #{t(stage, scope: :desc)}"
     %dt What are the different statuses a tournament can have?
     %dd
       - %w[ok problems].each do |status|
         %p
           = image_tag "icons/#{status}.png", class: "inline", alt: t(status)
           %b= t(status)
-          = "- #{t(status, scope: :desc)}."
+          = "- #{t(status, scope: :desc)}"
