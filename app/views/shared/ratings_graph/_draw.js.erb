@@ -61,5 +61,6 @@ function drawChart()
 <% if graph.onload %>
   google.setOnLoadCallback(drawChart);
 <% else %>
-  drawChart();
+  // The short delay (even 0 seems to work) is a workaround for a problem (the dialog doesn't open) that affects only Firefox.
+  setTimeout(function() { drawChart() }, 5);
 <% end %>
