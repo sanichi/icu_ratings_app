@@ -9,7 +9,7 @@ class Tournament < ActiveRecord::Base
   has_many   :players, dependent: :destroy, include: :results
   belongs_to :user
 
-  default_scope order("start DESC, finish DESC, tournaments.name")
+  scope :ordered, order("start DESC, finish DESC, tournaments.name")
 
   attr_accessible :name, :start, :finish, :fed, :city, :site, :arbiter, :deputy, :time_control, :tie_breaks, :user_id, :stage
 
@@ -46,7 +46,7 @@ class Tournament < ActiveRecord::Base
 
   # Search and paginate.
   def self.search(params, path)
-    matches = includes(:upload)
+    matches = ordered.includes(:upload)
 
     # Name or parts thereof.
     if params[:name].present?
@@ -96,7 +96,7 @@ class Tournament < ActiveRecord::Base
 
   # The latest tournaments for members and guests.
   def self.latest(limit=10)
-    Tournament.where(status: "ok").where("stage != 'initial'").limit(limit)
+    ordered.where(status: "ok").where("stage != 'initial'").limit(limit)
   end
 
   # Return an ICU::Tournament instance built from a database Tournament.
@@ -325,7 +325,7 @@ class Tournament < ActiveRecord::Base
 
   # The next queued or rated tournament (see queue and dequeue).
   def next_tournament
-    return if !rorder || rorder >= Tournament.unscoped.where("rorder IS NOT NULL").count
+    return if !rorder || rorder >= Tournament.where("rorder IS NOT NULL").count
     find_by_rorder(rorder - 1)
   end
 
@@ -414,7 +414,7 @@ class Tournament < ActiveRecord::Base
   # Queue a tournament for rating (establish it's order in the list of tournaments).
   def queue
     rorder = queue_position
-    Tournament.unscoped().where("rorder >= ?", rorder).each { |t| t.update_attribute(:rorder, t.rorder + 1) }
+    Tournament.where("rorder >= ?", rorder).each { |t| t.update_attribute(:rorder, t.rorder + 1) }
     update_attribute(:rorder, rorder)
   end
 
@@ -422,14 +422,14 @@ class Tournament < ActiveRecord::Base
   def dequeue
     rorder = self.rorder
     update_attribute(:rorder, nil)
-    Tournament.unscoped().where("rorder > ?", rorder).each { |t| t.update_attribute(:rorder, t.rorder - 1) }
+    Tournament.where("rorder > ?", rorder).each { |t| t.update_attribute(:rorder, t.rorder - 1) }
   end
 
   # Find the right queue position.
   def queue_position
-    count = Tournament.unscoped.where("rorder IS NOT NULL").count
+    count = Tournament.where("rorder IS NOT NULL").count
     return 1 if count == 0
-    t = Tournament.unscoped.first(conditions: { rorder: count })
+    t = Tournament.first(conditions: { rorder: count })
     raise "queue_position: expected tournament with order #{count}" unless t
     return count + 1 if queue_position_higher(t)
     return 1 if count == 1
@@ -440,7 +440,7 @@ class Tournament < ActiveRecord::Base
   def queue_position_finder(p1, p2)
     raise "queue_position_finder: bad invariant (#{p1}, #{p2})" unless p2 > p1
     m = ((p1 + p2) / 2.0).floor
-    t = Tournament.unscoped.first(conditions: { rorder: m })
+    t = Tournament.first(conditions: { rorder: m })
     raise "queue_position_finder: expected tournament with rorder #{m}" unless t
     higher = queue_position_higher(t)
     return m + (higher ? 1 : 0) if m == p1                                    # p1 = m < p2 special case (stops recursion)

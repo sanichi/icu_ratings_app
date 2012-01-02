@@ -12,14 +12,16 @@
         - @tournaments.each do |t|
           %li
             = link_to t.name, t
-        %li= link_to "More...", tournaments_path
+        - if @tournaments.size == @limit
+          %li= link_to "More...", tournaments_path
     %td{class: "section"}
       %h2 Latest News
       %ul{class: "home"}
         - @news_items.each do |n|
           %li
             = link_to n.headline, n
-        %li= link_to "More...", news_items_path
+        - if @news_items.size  == @limit
+          %li= link_to "More...", news_items_path
 
 #help
   %dl

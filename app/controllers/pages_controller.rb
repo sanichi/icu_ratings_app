@@ -1,7 +1,8 @@
 class PagesController < ApplicationController
   def home
-    @tournaments   = Tournament.latest
-    @news_items    = NewsItem.latest
+    @limit = 10
+    @tournaments   = Tournament.latest(@limit)
+    @news_items    = NewsItem.latest(@limit)
     @ratings_graph = RatingsGraph.new(current_user, onload: true)
   end
 

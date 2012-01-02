@@ -15,7 +15,7 @@ describe "Tournament" do
       set_ratings_option(page, file, arg)
       page.attach_file "file", test_file_path(file)
       page.click_button "Upload"
-      Tournament.unscoped.order(:id).last
+      Tournament.order(:id).last
     end
 
     def set_upload_format(page, file)
