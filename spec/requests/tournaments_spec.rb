@@ -102,7 +102,7 @@ describe "Tournament" do
       @t1 = test_tournament("bunratty_masters_2011.tab", u.id)
       @t2 = test_tournament("junior_championships_u19_2010.txt", u.id)
     end
-    
+
     it "should not display tournaments whose status is not 'ok'" do
       [@t1, @t2].each do |t|
         t.update_attribute(:status, "problem")
@@ -137,6 +137,162 @@ describe "Tournament" do
       visit "/tournaments"
       page.should have_selector(:xpath, "//a[@href='/tournaments/#{@t1.id}']")
       page.should have_selector(:xpath, "//a[@href='/tournaments/#{@t2.id}']")
+    end
+  end
+
+  describe "stageing" do
+    before(:each) do
+      tests = %w[bunratty_masters_2011.tab isle_of_man_2007.csv junior_championships_u19_2010.txt]
+      load_icu_players_for(tests)
+      u = login("reporter")
+      @t = tests.inject([]) do |m, n|
+        t = test_tournament(n, u.id)
+        t.check_status
+        m.push(t)
+      end
+      @bpath = "//button/span[contains(@class,'ui-button-text') and .='Update']"
+      @bpath = "//button/span[.='Update']"
+    end
+
+    it "stage and unstage", js: true do
+      Tournament.count.should == 3
+      Tournament.where("rorder IS NOT NULL").count.should == 0
+      @t.each do |t|
+        t.status.should == "ok"
+        t.stage.should == "initial"
+        t.rorder.should be_nil
+      end
+      @t[0].start.to_s.should == "2011-02-25"
+      @t[1].start.to_s.should == "2007-09-22"
+      @t[2].start.to_s.should == "2010-04-11"
+
+      visit "/admin/tournaments/#{@t[0].id}"
+      page.should have_selector("#show_stage", text: "Initial")
+      click_on "Update Stage"
+      page.find(:xpath, @bpath).click
+      page.should have_selector("#show_stage", text: "Ready")
+      click_on "Update Stage"
+      select "Queued", from: "tournament_stage"
+      page.find(:xpath, @bpath).click
+      page.should have_selector("#show_stage", text: "Queued")
+      Tournament.where("rorder IS NOT NULL").count.should == 1
+      @t.each { |t| t.reload }
+      @t[0].stage.should == "queued"
+      @t[0].rorder.should == 1
+      @t[0].last_tournament.should be_nil
+      @t[0].next_tournament.should be_nil
+      @t[1].rorder.should be_nil
+      @t[1].last_tournament.should be_nil
+      @t[1].next_tournament.should be_nil
+      @t[2].rorder.should be_nil
+      @t[2].last_tournament.should be_nil
+      @t[2].next_tournament.should be_nil
+
+      visit "/admin/tournaments/#{@t[1].id}"
+      page.should have_selector("#show_stage", text: "Initial")
+      click_on "Update Stage"
+      page.find(:xpath, @bpath).click
+      page.should have_selector("#show_stage", text: "Ready")
+      click_on "Update Stage"
+      select "Queued", from: "tournament_stage"
+      page.find(:xpath, @bpath).click
+      page.should have_selector("#show_stage", text: "Queued")
+      Tournament.where("rorder IS NOT NULL").count.should == 2
+      @t.each { |t| t.reload }
+      @t[1].stage.should == "queued"
+      @t[0].rorder.should == 2
+      @t[0].last_tournament.should_not be_nil
+      @t[0].last_tournament.id.should == @t[1].id
+      @t[0].next_tournament.should be_nil
+      @t[1].rorder.should == 1
+      @t[1].last_tournament.should be_nil
+      @t[1].next_tournament.should_not be_nil
+      @t[1].next_tournament.id.should == @t[0].id
+      @t[2].rorder.should be_nil
+      @t[2].last_tournament.should be_nil
+      @t[2].next_tournament.should be_nil
+
+      visit "/admin/tournaments/#{@t[2].id}"
+      page.should have_selector("#show_stage", text: "Initial")
+      click_on "Update Stage"
+      page.find(:xpath, @bpath).click
+      page.should have_selector("#show_stage", text: "Ready")
+      click_on "Update Stage"
+      select "Queued", from: "tournament_stage"
+      page.find(:xpath, @bpath).click
+      page.should have_selector("#show_stage", text: "Queued")
+      Tournament.where("rorder IS NOT NULL").count.should == 3
+      @t.each { |t| t.reload }
+      @t[2].stage.should == "queued"
+      @t[0].rorder.should == 3
+      @t[0].last_tournament.should_not be_nil
+      @t[0].last_tournament.id.should == @t[2].id
+      @t[0].next_tournament.should be_nil
+      @t[1].rorder.should == 1
+      @t[1].last_tournament.should be_nil
+      @t[1].next_tournament.should_not be_nil
+      @t[1].next_tournament.id.should == @t[2].id
+      @t[2].rorder.should == 2
+      @t[2].last_tournament.should_not be_nil
+      @t[2].last_tournament.id.should == @t[1].id
+      @t[2].next_tournament.should_not be_nil
+      @t[2].next_tournament.id.should == @t[0].id
+
+      visit "/admin/tournaments/#{@t[0].id}"
+      page.should have_selector("#show_stage", text: "Queued")
+      click_on "Update Stage"
+      page.find(:xpath, @bpath).click
+      page.should have_selector("#show_stage", text: "Ready")
+      Tournament.where("rorder IS NOT NULL").count.should == 2
+      @t.each { |t| t.reload }
+      @t[0].stage.should == "ready"
+      @t[0].rorder.should be_nil
+      @t[0].last_tournament.should be_nil
+      @t[0].next_tournament.should be_nil
+      @t[1].rorder.should == 1
+      @t[1].last_tournament.should be_nil
+      @t[1].next_tournament.should_not be_nil
+      @t[1].next_tournament.id.should == @t[2].id
+      @t[2].rorder.should == 2
+      @t[2].last_tournament.should_not be_nil
+      @t[2].last_tournament.id.should == @t[1].id
+      @t[2].next_tournament.should be_nil
+
+      visit "/admin/tournaments/#{@t[1].id}"
+      page.should have_selector("#show_stage", text: "Queued")
+      click_on "Update Stage"
+      page.find(:xpath, @bpath).click
+      page.should have_selector("#show_stage", text: "Ready")
+      Tournament.where("rorder IS NOT NULL").count.should == 1
+      @t.each { |t| t.reload }
+      @t[1].stage.should == "ready"
+      @t[0].rorder.should be_nil
+      @t[0].last_tournament.should be_nil
+      @t[0].next_tournament.should be_nil
+      @t[1].rorder.should be_nil
+      @t[1].last_tournament.should be_nil
+      @t[1].next_tournament.should be_nil
+      @t[2].rorder.should == 1
+      @t[2].last_tournament.should be_nil
+      @t[2].next_tournament.should be_nil
+
+      visit "/admin/tournaments/#{@t[2].id}"
+      page.should have_selector("#show_stage", text: "Queued")
+      click_on "Update Stage"
+      page.find(:xpath, @bpath).click
+      page.should have_selector("#show_stage", text: "Ready")
+      Tournament.where("rorder IS NOT NULL").count.should == 0
+      @t.each { |t| t.reload }
+      @t[2].stage.should == "ready"
+      @t[0].rorder.should be_nil
+      @t[0].last_tournament.should be_nil
+      @t[0].next_tournament.should be_nil
+      @t[1].rorder.should be_nil
+      @t[1].last_tournament.should be_nil
+      @t[1].next_tournament.should be_nil
+      @t[2].rorder.should be_nil
+      @t[2].last_tournament.should be_nil
+      @t[2].next_tournament.should be_nil
     end
   end
 

@@ -36,12 +36,12 @@ module Admin
         end
         @players = @tournament.players.order(order).includes(:results)
         render view(:update, :ranks)
-      when params[:tournament][:stage]
-        @tournament.move_stage(params[:tournament][:stage])
-        render view(:update, :stage)
       when params[:tournament][:tie_breaks]
         @tournament.update_attributes(params[:tournament])
         render view(:update, :tie_breaks)
+      when params[:tournament][:stage]
+        @tournament.move_stage(params[:tournament][:stage])
+        render :update
       else
         @tournament.update_attributes(params[:tournament])
         render :update

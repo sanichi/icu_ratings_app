@@ -2,9 +2,9 @@
   %tr
     %th
     %th
+    %th #
     %th Name
     %th Start
-    %th Upload
     %th Reporter
   - if @tournaments.count == 0
     %tr
@@ -15,9 +15,9 @@
     %tr
       %td= image_tag "icons/#{stage}.png", alt: t(stage), title: t(stage)
       %td= image_tag "icons/#{status}.png", alt: t(status), title: t(status)
+      %td= t.rorder
       %td= link_to t.name, [:admin, t]
       %td= t.start
-      %td= t.upload ? link_to(t.upload.created_at.strftime("%Y-%m-%d"), [:admin, t.upload]) : ""
       %td= t.user.name
   - if @tournaments.multi_page
     %tr

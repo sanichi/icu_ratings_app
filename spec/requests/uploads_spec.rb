@@ -101,7 +101,7 @@ describe "Upload" do
         page.attach_file "file", test_file_path("junior_championships_u19_2010.zip")
         page.click_button "Upload"
 
-        page.should have_selector("div span", text: "U - 19 All Ireland")
+        page.should have_selector("div span", text: "U-19 All Ireland")
 
         Upload.count.should == 1
         Tournament.count.should == 1
@@ -111,7 +111,7 @@ describe "Upload" do
         @jamie.players.size.should == 1
         @leon.players.size.should == 1
         tournament = Tournament.last
-        tournament.name.should == "U - 19 All Ireland"
+        tournament.name.should == "U-19 All Ireland"
         tournament.start.to_s.should == "2010-04-11"
         tournament.players.map(&:name).join('|').should == "Dunne, Thomas|Flynn, Jamie|Griffiths, Ryan-Rhys|Hulleman, Leon"
         thomas, jamie, ryan, leon = tournament.players
@@ -234,7 +234,7 @@ describe "Upload" do
         peter.results.where(rateable: true).size.should == 9  # should this be 8?
         peter.score.should == 3.0
         peter.results.map(&:opponent).map(&:fed).join("|").should == "ENG|NED|IRL|IRL|GER|ENG|ISR|AUS|SCO"
-        peter.results.map(&:opponent).map(&:fide_rating).join("|").should == "2198||2100|2394|2151|2282|2205|2200|2223"
+        peter.results.map(&:opponent).map(&:fide_rating).join("|").should == "2198|2227|2100|2394|2151|2282|2205|2200|2223"
         tony.results.find_by_round(7).opponent.title.should be_nil
         doreen.name.should == "Troyke, Doreen"
         doreen.fide_rating.should == 2151

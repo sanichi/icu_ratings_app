@@ -46,7 +46,7 @@ class Tournament < ActiveRecord::Base
 
   # Search and paginate.
   def self.search(params, path)
-    matches = ordered.includes(:upload)
+    matches = ordered
 
     # Name or parts thereof.
     if params[:name].present?
@@ -326,13 +326,13 @@ class Tournament < ActiveRecord::Base
   # The next queued or rated tournament (see queue and dequeue).
   def next_tournament
     return if !rorder || rorder >= Tournament.where("rorder IS NOT NULL").count
-    find_by_rorder(rorder - 1)
+    Tournament.where(rorder: rorder + 1).first
   end
 
   # The previous queued or rated tournament (see queue and dequeue).
   def last_tournament
     return if !rorder || rorder <= 1
-    find_by_rorder(rorder - 1)
+    Tournament.where(rorder: rorder - 1).first
   end
 
   def status_ok?
@@ -414,7 +414,7 @@ class Tournament < ActiveRecord::Base
   # Queue a tournament for rating (establish it's order in the list of tournaments).
   def queue
     rorder = queue_position
-    Tournament.where("rorder >= ?", rorder).each { |t| t.update_attribute(:rorder, t.rorder + 1) }
+    Tournament.where("rorder >= ?", rorder).order("rorder DESC").each { |t| t.update_attribute(:rorder, t.rorder + 1) }
     update_attribute(:rorder, rorder)
   end
 
@@ -422,7 +422,7 @@ class Tournament < ActiveRecord::Base
   def dequeue
     rorder = self.rorder
     update_attribute(:rorder, nil)
-    Tournament.where("rorder > ?", rorder).each { |t| t.update_attribute(:rorder, t.rorder - 1) }
+    Tournament.where("rorder > ?", rorder).order("rorder").each { |t| t.update_attribute(:rorder, t.rorder - 1) }
   end
 
   # Find the right queue position.
@@ -432,25 +432,25 @@ class Tournament < ActiveRecord::Base
     t = Tournament.first(conditions: { rorder: count })
     raise "queue_position: expected tournament with order #{count}" unless t
     return count + 1 if queue_position_higher(t)
-    return 1 if count == 1
     queue_position_finder(1, count)
   end
 
-  # Binary search to recursively find queue position. Invariants: p2 > p1 and solution is not higher than p2.
+  # Binary search to recursively find queue position. Invariants: p2 >= p1 and solution is not higher than p2.
   def queue_position_finder(p1, p2)
-    raise "queue_position_finder: bad invariant (#{p1}, #{p2})" unless p2 > p1
+    raise "queue_position_finder: bad invariant (#{p1}, #{p2})" unless p2 >= p1
+    return p2 if p1 == p2  # because solution is never higher than p2
     m = ((p1 + p2) / 2.0).floor
+    raise "queue_position_finder: expected mid-point (#{m}) to be less than last point (#{p2})" unless p2 > m
     t = Tournament.first(conditions: { rorder: m })
     raise "queue_position_finder: expected tournament with rorder #{m}" unless t
-    higher = queue_position_higher(t)
-    return m + (higher ? 1 : 0) if m == p1                                    # p1 = m < p2 special case (stops recursion)
-    higher ? queue_position_finder(m + 1, p2) : queue_position_finder(p1, m)  # p1 < m < p2 general case
+    queue_position_higher(t) ? queue_position_finder(m + 1, p2) : queue_position_finder(p1, m)
   end
 
   # Compare this tournament to another and return true if it should be higher in the queue and false otherwise.
   def queue_position_higher(t)
-    return start > t.start if start != t.start
+    return start  > t.start  if start  != t.start
     return rounds > t.rounds if rounds != rounds
+    return name   > t.name   if name   != t.name
     id > t.id  # tie breaker
   end
 end

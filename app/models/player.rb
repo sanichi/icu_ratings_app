@@ -106,20 +106,23 @@ class Player < ActiveRecord::Base
   def deduce_category_and_status
     errors = Array.new
     category = nil
-    
-    # Check for FIDE errors, no longer used for category.
+
+    # Check for ICU and FIDE errors.
+    match_icu(errors)
     match_fide(errors)
-    
-    # Determine category.
-    case
-    when match_icu(errors)
-      category = "icu_player"
-    when fide_rating.present? && fed.present? && fed != "IRL"
-      category = "foreign_player"
-    when icu_id.blank? && fide_id.blank? && icu_rating.blank? && fide_rating.blank?
-      category = "new_player"
-    else
-      errors.push "cannot determine category"
+
+    # Determine category, if there are no errors.
+    if errors.empty?
+      case
+      when icu_id.present?
+        category = "icu_player"
+      when fide_rating.present? && fed.present?
+        category = "foreign_player"
+      when icu_id.blank? && fide_id.blank? && icu_rating.blank? && fide_rating.blank? && fed.blank?
+        category = "new_player"
+      else
+        errors.push "cannot determine category"
+      end
     end
 
     if errors.empty?
@@ -132,62 +135,50 @@ class Player < ActiveRecord::Base
   end
 
   def match_icu(errors)
-    return false if icu_id.blank?
-    match = true
+    return if icu_id.blank?
     if icu_player
       cname = ICU::Name.new(icu_player.first_name, icu_player.last_name)
       unless cname.match(first_name, last_name)
-        match = false
         errors.push "ICU name mismatch: #{icu_player.name}"
       end
       if icu_player.master_id
-        match = false
         errors.push("Match with duplicate ICU player")
       else
-        %w[dob fed gender title].each do |attr|
+        %w[dob fed gender].each do |attr|
           a = icu_player.send(attr).presence || next
           b = self.send(attr).presence || next
           unless a == b
-            match = false unless attr == "title"  # title may change over time, so we just warn about it
             errors.push("ICU #{attr} mismatch: #{a}")
           end
         end
       end
     else
-      match = false
       errors.push "#{icu_id}: no such ICU player"
     end
-    match
   end
 
   def match_fide(errors)
-    return false if fide_id.blank?
-    match = true
+    return if fide_id.blank?
     if fide_player
       cname = ICU::Name.new(fide_player.first_name, fide_player.last_name)
       unless cname.match(first_name, last_name)
-        match = false
         errors.push "FIDE name mismatch: #{fide_player.name}" if fed == "IRL"  # TODO: relax when we get all FIDE players
       end
-      %w[fed gender title].each do |attr|
+      %w[fed gender].each do |attr|
         a = fide_player.send(attr).presence || next
         b = self.send(attr).presence || next
         unless a == b
-          match = false unless attr == "title"  # title may change over time, so we just warn about it
           errors.push("FIDE #{attr} mismatch: #{fide_player.send(attr)}") unless fide_player.send(attr) == self.send(attr)
         end
       end
       if fide_player.born.present? && self.dob.present?
         unless fide_player.born == self.dob.year
-          match = false
           errors.push("FIDE year of birth mismatch: #{fide_player.born}")
         end
       end
     else
-      match = false
       errors.push "#{fide_id}: no such FIDE player"
     end
-    match
   end
 
   def normalise_attributes

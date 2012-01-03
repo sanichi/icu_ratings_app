@@ -20,7 +20,7 @@ describe Tournament do
     end
 
     before(:each) do
-      @t = test_tournament("bunratty_masters_2011.tab", 1, ratings: "FIDE")
+      @t = test_tournament("bunratty_masters_2011.tab", 1)
       @icut = @t.icu_tournament(renumber: :rank)
     end
 
@@ -33,9 +33,9 @@ describe Tournament do
         @icut.send(attr).should == @t.send(attr)
       end
       @icut.players.size.should == @t.players.size
-      player_signature(@icut, 34).should == '34|34|David|Murray|||M||2023|972|||1LBrMP|2DWrLP|6Lu'
-      player_signature(@icut,  5).should == '5|5|Nigel|Short|ENG|GM|M||2658||400025|1965-06-01|1WWrKM|2DBrAH|3WWrSC|4LBrGJ|5DWrDF|6WBrPS'
-      player_signature(@icut, 29).should == '29|29|Alexandra|Wilson|ENG|WFM|F||2020||||1LBrMH|2LWrRW|3DBrSD|4LWrJC|5DBrRM|6WWrKO'
+      player_signature(@icut, 34).should == '34|34|David|Murray|||M|||4941|||1LBrMP|2DWrLP|6Lu'
+      player_signature(@icut,  6).should == '6|6|Nigel|Short|ENG|GM|M||2658|||1965-06-01|1WWrKM|2DBrAH|3WWrSC|4LBrGJ|5DWrDF|6WBrPS'
+      player_signature(@icut, 30).should == '30|30|Alexandra|Wilson||WCM|F|||7938|||1LBrMH|2LWrRW|3DBrSD|4LWrJC|5DBrRM|6WWrKO'
     end
   end
 

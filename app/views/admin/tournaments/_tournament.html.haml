@@ -68,6 +68,16 @@
       - if can?(:edit, @tournament) && @tournament.move_stage_options.size > 0
         = link_to edit_admin_tournament_path(@tournament, stage: ""), remote: true do
           = image_tag "icons/edit.png", alt: "Update Stage"
+  - if last_tournament = @tournament.last_tournament
+    %tr
+      %th Last Tournament
+      %td= link_to last_tournament.name, [:admin, last_tournament]
+      %td{class: "floater"}
+  - if next_tournament = @tournament.next_tournament
+    %tr
+      %th Next Tournament
+      %td= link_to next_tournament.name, [:admin, next_tournament]
+      %td{class: "floater"}
 
 %table
   %tr

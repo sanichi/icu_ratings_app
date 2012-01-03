@@ -33,16 +33,20 @@ end
 def test_tournament(file, user_id, arg={})
   opt = Hash.new
   case file
-  when /\.zip$/
-    opt[:start] = arg[:start] || "2011-03-06"
-  when /\.txt$/
-    opt[:start] = arg[:start] || "2011-03-06"
-    opt[:name] = arg[:name] || "Tournament"
-  when /\.tab$/
-    opt[:fide] = arg[:ratings] == "FIDE"
+  when "bunratty_masters_2011.tab"
+    opt[:fide] = arg.has_key?(:fide) ? arg[:fide] : true
+  when "junior_championships_u19_2010.txt"
+    opt[:start] = arg[:start].presence || "2010-04-11"
+    opt[:name] = arg[:name].presence || "U-19 All Ireland"
+  when "junior_championships_u19_2010.zip"
+    opt[:start] = arg[:start].presence || "2010-04-11"
   end
   parser = get_parser(file)
-  icut = parser.parse_file!(test_file_path(file), opt)
+  begin
+    icut = parser.parse_file!(test_file_path(file), opt)
+  rescue ArgumentError
+    icut = parser.parse_file!(test_file_path(file))
+  end
   tournament = Tournament.build_from_icut(icut)
   tournament.user_id = user_id
   tournament.save!
@@ -67,6 +71,21 @@ def login(user)
   page.fill_in "Password", with: user.password
   click_button "Log in"
   user
+end
+
+def load_icu_players_for(tournaments)
+  @tournaments_cache ||= YAML.load(File.read(File.expand_path('../factories/tournaments.yml', __FILE__)))
+  tournaments.inject([]) do |ids, t|
+    n = t.sub(/\.[a-z]+$/, "")
+    @tournaments_cache[n] ? ids.concat(@tournaments_cache[n]) : ids
+  end.uniq.each do |id|
+    load_icu_player(id)
+  end
+end
+
+def load_icu_player(id)
+  @icu_players_cache ||= YAML.load(File.read(File.expand_path('../factories/icu_players.yml', __FILE__)))
+  Factory(:icu_player, @icu_players_cache[id].merge(id: id)) if @icu_players_cache[id]
 end
 
 private
