@@ -39,7 +39,7 @@ describe "Upload" do
         visit "/admin/uploads/#{upload.id}"
         page.should have_selector("head title", text: "Upload")
         page.click_link("Delete")
-        page.should have_selector("head title", text: "Uploads")
+        page.should have_selector("head title", text: "File Upload")
         Upload.count.should == 0
       end
 
@@ -78,7 +78,7 @@ describe "Upload" do
         visit "/admin/uploads/#{upload.id}"
         page.click_link("Delete")
         # page.driver.browser.switch_to.alert.accept # don't use a confirmation here any more
-        page.current_path.should == "/admin/uploads"
+        page.current_path.should == "/admin/uploads/new"
         Upload.count.should == 0
       end
     end

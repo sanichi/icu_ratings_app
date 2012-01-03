@@ -27,7 +27,7 @@ module Admin
             redirect_to [:admin, @tournament], notice: "New tournament created"
           else
             @upload.update_attribute :error, @tournament.error_summary
-            redirect_to @upload, alert: "Invalid tournament"
+            redirect_to [:admin, @upload], alert: "Invalid tournament"
           end
         else
           redirect_to [:admin, @upload], alert: "Cannot extract tournament from file"
@@ -44,7 +44,7 @@ module Admin
         redirect_to [:admin, @upload], alert: "You can't delete an upload which is associated with tournament"
       else
         @upload.destroy
-        redirect_to admin_uploads_path
+        redirect_to new_admin_upload_path
       end
     end
   end
