@@ -7,11 +7,11 @@ module PlayersHelper
               when "new_player"     then "user_orange"
               else "user_red"  # shouldn't happen
               end
-      alt = player.category.present? ? player.category.humanize : "Unknown"
+      alt = player.category.present? ? t(player.category) : "Unknown"
     else
       image = "flag_red"
       alt = "Problem"
     end
-    image_tag "icons/#{image}.png", alt: alt
+    icon_tag image, alt
   end
 end

@@ -10,7 +10,7 @@ describe IcuPlayer do
       end
       
       it "can access their own details" do
-        click_link "#{@player.name} (#{@user.role})"
+        click_link @player.name
         page.should have_selector("div.blurb span", content: /logged in as member/i)
         page.should have_selector(:xpath, %{//tr[th[.='First Name']]/td[.="#{@player.first_name}"]})
         page.should have_selector(:xpath, %{//tr[th[.='Last Name']]/td[.="#{@player.last_name}"]})
@@ -43,7 +43,7 @@ describe IcuPlayer do
       end
       
       it "can access their own details" do
-        click_link "#{@player.name} (#{@user.role})"
+        click_link @player.name
         page.should have_selector("div.blurb span", content: /logged in as reporter/i)
         page.should have_selector(:xpath, %{//tr[th[.='ID']]/td[.="#{@player.id}"]})
         page.should have_selector("div.blurb span", text: /if.*wrong.*please contact/i)

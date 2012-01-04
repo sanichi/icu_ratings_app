@@ -7,9 +7,8 @@
     %tr
       %td{colspan: 3, class: "centered"} No matches
   - @tournaments.matches.each do |t|
-    - stage = t(t.stage)
     %tr
-      %td= image_tag "icons/#{t.stage}.png", alt: stage, title: stage
+      %td= icon_tag t.stage, t(t.stage)
       %td= link_to t.name, t
       %td= t.start
   - if @tournaments.multi_page

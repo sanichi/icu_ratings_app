@@ -14,9 +14,9 @@
         %td= time_ago_in_words(failure.created_at, true)
         %td{class: "floater"}
           = link_to admin_failure_path(failure), remote: true do
-            = image_tag "icons/show.png", alt: "Show failure details"
+            = icon_tag "show", "Show failure details"
           = link_to admin_failure_path(failure), confirm: "Are you sure you want to delete this event?", method: :delete do
-            = image_tag "icons/bin.png", alt: "Delete failure"
+            = icon_tag "bin", "Delete failure"
   - if @failures.multi_page
     %tr
       %th{class: "centered", colspan: 2}= pagination_links(@failures)

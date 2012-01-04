@@ -8,4 +8,7 @@ en:
   reporter:
     one: "Tournament Reporter"
     other: "Tournament Reporters"
+  member:
+    one: "Member"
+    other: "Members"
   

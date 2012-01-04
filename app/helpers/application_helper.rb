@@ -211,4 +211,9 @@ module ApplicationHelper
     attrs[:rowspan] = rows if rows > 1
     attrs
   end
+
+  # Shortcut for creating image tags involving icons.
+  def icon_tag(image, alt, opts={})
+    image_tag "icons/#{image}.png", { alt: alt, title: alt, size: "16x16" }.merge(opts)
+  end
 end

@@ -13,8 +13,8 @@
     - stage = t.stage
     - status = t.status == "ok" ? "ok" : "problems"
     %tr
-      %td= image_tag "icons/#{stage}.png", alt: t(stage), title: t(stage)
-      %td= image_tag "icons/#{status}.png", alt: t(status), title: t(status)
+      %td= icon_tag stage, t(stage)
+      %td= icon_tag status, t(status)
       %td= t.rorder
       %td= link_to t.name, [:admin, t]
       %td= t.start

@@ -19,12 +19,10 @@
         %td{class: "floater"}
           - if @player && can?(:edit, @player.tournament)
             = link_to admin_player_path(@player, icu_id: p.master_id || p.id, authenticity_token: form_authenticity_token), method: :put, remote: true do
-              - alt = "Link tournament player to this ICU player"
-              = image_tag "icons/link.png", alt: alt, title: alt
+              = icon_tag "link", "Link tournament player to this ICU player"
           - elsif @fide_player && can?(:edit, @fide_player)
             = link_to fide_player_path(@fide_player, icu_id: p.master_id || p.id, authenticity_token: form_authenticity_token), method: :put, remote: true do
-              - alt = "Link FIDE player to this ICU player"
-              = image_tag "icons/link.png", alt: alt, title: alt
+              = icon_tag "link", "Link FIDE player to this ICU player"
         %td= link_to p.id, icu_player_path(p, format: "js"), remote: true
         %td= p.last_name
         %td= p.first_name

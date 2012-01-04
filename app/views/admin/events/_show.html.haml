@@ -9,7 +9,7 @@
     %td{class: "centered"}= @event.created_at
     %td{class: "centered"}= @event.time
     %td{class: "centered"}
-      = image_tag "icons/#{@event.success ? 'tick' : 'exclamation'}.png", alt: @event.success ? "OK" : "problem"
+      = icon_tag @event.success ? "tick" : "exclamation", @event.success ? "OK" : "problem"
   %tr
     %td{colspan: 4}
       %pre= @event.report

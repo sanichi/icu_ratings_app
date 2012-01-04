@@ -33,8 +33,7 @@
       %td{class: "floater"}
         - if can?(:edit, @fide_player)
           = link_to fide_player_path(@fide_player, icu_id: "nil", authenticity_token: form_authenticity_token), method: :put, remote: true do
-            - alt = "Unink FIDE player from this ICU player"
-            = image_tag "icons/unlink.png", alt: alt, title: alt
+            = icon_tag "unlink", "Unink FIDE player from this ICU player"
     - else
       %td{class: "centered", colspan: 6} None
       %td{class: "floater"}

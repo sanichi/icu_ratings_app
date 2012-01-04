@@ -16,7 +16,7 @@
       %tr
         - if extra == 1
           - state = news.published ? "published" : "unpublished"
-          %td= image_tag "icons/#{state}.png", alt: state
+          %td= icon_tag state, state
         %td= link_to news.headline, news
         %td= time_ago_in_words(news.created_at, true)
         %td= time_ago_in_words(news.updated_at, true)

@@ -28,9 +28,9 @@
         - if can? :manage, Download
           %td{class: "floater"}
             = link_to edit_download_path(download) do
-              = image_tag "icons/edit.png", alt: "Edit Download"
+              = icon_tag "edit", "Edit Download"
             = link_to download, method: "delete", confirm: "Are you sure you want to delete this download?" do
-              = image_tag "icons/bin.png", alt: "Delete Download"
+              = icon_tag "bin", "Delete Download"
   - if @downloads.multi_page
     %tr
       %td{class: "centered", colspan: 6}= pagination_links(@downloads)

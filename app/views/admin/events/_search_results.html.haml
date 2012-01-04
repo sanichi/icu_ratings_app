@@ -16,12 +16,12 @@
         %td= time_ago_in_words(event.created_at, true)
         %td{class: "centered"}= event.time
         %td{class: "centered"}
-          = image_tag "icons/#{event.success ? 'tick' : 'exclamation'}.png", alt: event.success ? "OK" : "problem"
+          = icon_tag event.success ? "tick" : "exclamation", event.success ? "OK" : "problem"
         %td{class: "floater"}
           = link_to admin_event_path(event), remote: true do
-            = image_tag "icons/show.png", alt: "Show event details"
+            = icon_tag "show", "Show event details"
           = link_to admin_event_path(event), confirm: "Are you sure you want to delete this event?", method: :delete do
-            = image_tag "icons/bin.png", alt: "Delete event"
+            = icon_tag "bin", "Delete event"
   - if @events.multi_page
     %tr
       %th{class: "centered", colspan: 4}= pagination_links(@events)

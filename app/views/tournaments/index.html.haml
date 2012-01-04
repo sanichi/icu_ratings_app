@@ -13,6 +13,6 @@
     %dd
       - Tournament::STAGE.reject{ |s| s == "initial" }.each do |stage|
         %p
-          = image_tag "icons/#{stage}.png", class: "inline", alt: t(stage)
+          = icon_tag stage, t(stage), class: "inline"
           %b= t(stage)
           = "- #{t(stage, scope: :desc)}"

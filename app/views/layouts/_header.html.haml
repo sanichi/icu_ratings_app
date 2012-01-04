@@ -1,4 +1,4 @@
-= image_tag "misc/logo.png", alt: 'ICU Logo'
+= image_tag "misc/logo.png", alt: "ICU Logo", title: "ICU Logo", size: "100x100"
 %h1 ICU Ratings
 
 %ul.sf-menu
@@ -62,5 +62,4 @@
   - if current_user
     %li
       = link_to current_user.icu_player do
-        - alt = "#{current_user.name} (#{current_user.role})"
-        = image_tag "icons/#{current_user.role}.png", alt: alt, title: alt
+        = icon_tag current_user.role, "#{current_user.name} (#{t(current_user.role, count: 1)})"

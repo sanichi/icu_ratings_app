@@ -18,7 +18,7 @@
         - if can? :edit, @tournament
           %td{class: "floater"}
             = link_to edit_admin_result_path(result), remote: true do
-              = image_tag "icons/edit.png", alt: "Edit"
+              = icon_tag "edit", "Edit"
       - else
         %td
         %td
@@ -26,7 +26,7 @@
         - if can? :edit, @tournament
           %td{class: "floater"}
             = link_to new_admin_result_path(player_id: @player.id, round: r), remote: true do
-              = image_tag "icons/new.png", alt: "New"
+              = icon_tag "new", "New"
   %tr{class: "left-headers"}
     %th{colspan: 3} Total
     %td{class: "centered"}= score_html(@player.score)
