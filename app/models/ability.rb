@@ -26,6 +26,8 @@ class Ability
     can :modify, NewsItem, user_id: user.id
 
     can :read, [FidePlayer, IcuPlayer, OldRatingHistory, OldTournament, OldRating]
+    
+    can :overview, Pages::Overview
 
     return unless user.role? :officer
 

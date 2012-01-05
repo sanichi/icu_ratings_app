@@ -2,10 +2,9 @@ Ratings::Application.routes.draw do
 
   root to: "pages#home"
 
-  get "home"     => "pages#home"
-  get "contacts" => "pages#contacts"
-  get "log_in"   => "sessions#new"
-  get "log_out"  => "sessions#destroy"
+  %w[home contacts overview].each { |p| get p => "pages##{p}"}
+  get "log_in"  => "sessions#new"
+  get "log_out" => "sessions#destroy"
 
   resources :downloads
   resources :fide_players, only: [:index, :show, :update]

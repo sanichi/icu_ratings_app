@@ -1,0 +1,60 @@
+.header
+  %span= @page_title = "Overview"
+
+%table
+  %tr{class: "invisible"}
+    %td
+      %table
+        %tr
+          %th{colspan: 4 + Tournament::STAGE.size} Tournaments by Reporter
+        %tr
+          %th{rowspan: 2} Reporter
+          %th{rowspan: 2} #
+          %th{colspan: Tournament::STAGE.size} Stage
+          %th{colspan: 2} Status
+        %tr
+          - Tournament::STAGE.each do |s|
+            %th= icon_tag s, t(s), class: "inline"
+          - %w[ok problems].each do |s|
+            %th= icon_tag s, t(s), class: "inline"
+        - @overview.reporters.each do |r|
+          %tr
+            %td= r[:user].name
+            %td{class: "centered"}= r[:total]
+            - Tournament::STAGE.each do |s|
+              - n = r[:stage][s]
+              - c = "centered" + (n == 0 ? " disabled" : "")
+              %td{class: c}= link_to_if n > 0, n, admin_tournaments_path(user_id: r[:user].id, stage: s)
+            - %w[ok problems].each do |s|
+              - n = r[:status][s]
+              - c = "centered" + (n == 0 ? " disabled" : "")
+              %td{class: c}= link_to_if n > 0, n, admin_tournaments_path(user_id: r[:user].id, status: s)
+    %td
+      %table{class: "right-headers"}
+        %tr
+          %th{colspan: 3, class: "centered"} Problems
+        - @overview.problems.each_pair do |desc, data|
+          %tr
+            %th= desc
+            - n = data[:count]
+            - i = data[:icon]
+            - c = "centered" + (n == 0 ? " disabled" : "")
+            %td{class: c}= link_to_if n > 0, n, data[:path]
+            %td= icon_tag i, t(i)
+    %td
+      %table{class: "right-headers"}
+        %tr
+          %th{colspan: 3} Rating Queue
+        - @overview.queued.each_pair do |desc, data|
+          %tr
+            %th= desc
+            %td{class: "centered"}= data[:count]
+            %td= icon_tag data[:icon], t(data[:icon])
+    %td
+      %table{class: "right-headers"}
+        %tr
+          %th{colspan: 2, class: "centered"} Totals
+        - @overview.counts.each_pair do |desc, data|
+          %tr
+            %th= desc
+            %td{class: "centered"}= link_to data[:count], self.send(data[:path])

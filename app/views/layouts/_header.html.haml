@@ -39,20 +39,21 @@
         %li= link_to "FIDE", fide_players_path
   - if can? :read, Download
     %li
-      = link_to "Admin", downloads_path
+      = link_to "Admin", overview_path
       %ul
+        - if can? :read, User
+          %li= link_to "Users", admin_users_path
+        - if can? :read, Event
+          %li= link_to "Events", admin_events_path
+        - if can? :read, Failure
+          %li= link_to "Failures", admin_failures_path
+        - if can? :read, Login
+          %li= link_to "Logins", admin_logins_path
         %li
           = link_to "Downloads", downloads_path
           - if can? :create, Download
             %ul
               %li= link_to "New", new_download_path
-        - if can? :read, User
-          %li= link_to "Users", admin_users_path
-          %li= link_to "Logins", admin_logins_path
-        - if can? :read, Event
-          %li= link_to "Events", admin_events_path
-        - if can? :read, Failure
-          %li= link_to "Failures", admin_failures_path
   %li= link_to "Help", "#", id: "help-link", class: "emphasize"
   %li
     - if current_user
