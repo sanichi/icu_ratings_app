@@ -169,9 +169,11 @@ describe "Tournament" do
       visit "/admin/tournaments/#{@t[0].id}"
       page.should have_selector("#show_stage", text: "Initial")
       click_on "Update Stage"
+      sleep 0.1
       page.find(:xpath, @bpath).click
       page.should have_selector("#show_stage", text: "Ready")
       click_on "Update Stage"
+      sleep 0.1
       select "Queued", from: "tournament_stage"
       page.find(:xpath, @bpath).click
       page.should have_selector("#show_stage", text: "Queued")
@@ -191,9 +193,11 @@ describe "Tournament" do
       visit "/admin/tournaments/#{@t[1].id}"
       page.should have_selector("#show_stage", text: "Initial")
       click_on "Update Stage"
+      sleep 0.1
       page.find(:xpath, @bpath).click
       page.should have_selector("#show_stage", text: "Ready")
       click_on "Update Stage"
+      sleep 0.1
       select "Queued", from: "tournament_stage"
       page.find(:xpath, @bpath).click
       page.should have_selector("#show_stage", text: "Queued")
@@ -215,9 +219,11 @@ describe "Tournament" do
       visit "/admin/tournaments/#{@t[2].id}"
       page.should have_selector("#show_stage", text: "Initial")
       click_on "Update Stage"
+      sleep 0.1
       page.find(:xpath, @bpath).click
       page.should have_selector("#show_stage", text: "Ready")
       click_on "Update Stage"
+      sleep 0.1
       select "Queued", from: "tournament_stage"
       page.find(:xpath, @bpath).click
       page.should have_selector("#show_stage", text: "Queued")
@@ -241,6 +247,7 @@ describe "Tournament" do
       visit "/admin/tournaments/#{@t[0].id}"
       page.should have_selector("#show_stage", text: "Queued")
       click_on "Update Stage"
+      sleep 0.1
       page.find(:xpath, @bpath).click
       page.should have_selector("#show_stage", text: "Ready")
       Tournament.where("rorder IS NOT NULL").count.should == 2
@@ -261,6 +268,7 @@ describe "Tournament" do
       visit "/admin/tournaments/#{@t[1].id}"
       page.should have_selector("#show_stage", text: "Queued")
       click_on "Update Stage"
+      sleep 0.1
       page.find(:xpath, @bpath).click
       page.should have_selector("#show_stage", text: "Ready")
       Tournament.where("rorder IS NOT NULL").count.should == 1
@@ -279,6 +287,7 @@ describe "Tournament" do
       visit "/admin/tournaments/#{@t[2].id}"
       page.should have_selector("#show_stage", text: "Queued")
       click_on "Update Stage"
+      sleep 0.1
       page.find(:xpath, @bpath).click
       page.should have_selector("#show_stage", text: "Ready")
       Tournament.where("rorder IS NOT NULL").count.should == 0

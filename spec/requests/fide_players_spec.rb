@@ -13,17 +13,18 @@ describe FidePlayer do
       login("admin")
       visit fide_players_path
       page.click_link "?"
+      sleep 0.1
     end
 
     it "create a link bewteen a FIDE and ICU player then destroy it" do
       @f.icu_id.should be_nil
       page.click_link @link
-      sleep(0.1)
+      sleep 0.1
       @f.reload
       @f.icu_id.should == @i.id
       page.click_link @i.id.to_s
       page.click_link @unlink
-      sleep(0.1)
+      sleep 0.1
       @f.reload
       @f.icu_id.should be_nil
     end
@@ -32,7 +33,7 @@ describe FidePlayer do
       @i.update_attribute(:fed, "SCO")
       page.click_link @link
       page.driver.browser.switch_to.alert.dismiss
-      sleep(0.1)
+      sleep 0.1
       @f.reload
       @f.icu_id.should be_nil
     end
@@ -41,7 +42,7 @@ describe FidePlayer do
       @i.update_attribute(:title, "GM")
       page.click_link @link
       page.driver.browser.switch_to.alert.dismiss
-      sleep(0.1)
+      sleep 0.1
       @f.reload
       @f.icu_id.should be_nil
     end
@@ -50,7 +51,7 @@ describe FidePlayer do
       @i.update_attribute(:dob, "1986-06-16")
       page.click_link @link
       page.driver.browser.switch_to.alert.dismiss
-      sleep(0.1)
+      sleep 0.1
       @f.reload
       @f.icu_id.should be_nil
     end
@@ -59,18 +60,17 @@ describe FidePlayer do
       @i.update_attribute(:gender, "F")
       page.click_link @link
       page.driver.browser.switch_to.alert.dismiss
-      sleep(0.1)
+      sleep 0.1
       @f.reload
       @f.icu_id.should be_nil
     end
 
     it "should not create a link if both names are mismatched" do
-      sleep(0.1)
       @i.update_attribute(:first_name, "Malcolm")
       @i.update_attribute(:last_name, "Algeo")
       page.click_link @link
       page.driver.browser.switch_to.alert.dismiss
-      sleep(0.1)
+      sleep 0.1
       @f.reload
       @f.icu_id.should be_nil
     end
@@ -78,7 +78,7 @@ describe FidePlayer do
     it "should create a link if only one name is mismatched" do
       @i.update_attribute(:first_name, "Malcolm")
       page.click_link @link
-      sleep(0.1)
+      sleep 0.1
       @f.reload
       @f.icu_id.should == @i.id
     end
