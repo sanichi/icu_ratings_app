@@ -41,7 +41,7 @@ module Pages
 
     def problems
       p = {}
-      p["Tournament "] = { icon: "ok", count: Tournament.where("status != 'ok'").count, path: "/admin/tournaments?status=problems" }
+      p["Tournaments"] = { icon: "ok", count: Tournament.where("status != 'ok'").count, path: "/admin/tournaments?status=problems" }
       p["Events"]      = { icon: "ok", count: Event.where(success: false).count,        path: "/admin/events?success=0" }
       p["Failures"]    = { icon: "ok", count: Failure.count,                            path: "/admin/failures" }
       p.each_key { |d| p[d][:icon] = "problems" if p[d][:count] > 0 }
