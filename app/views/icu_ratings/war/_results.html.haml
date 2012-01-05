@@ -13,11 +13,11 @@
     - @war.players.each_with_index do |row, i|
       %tr
         %td{class: "centered"}= i + 1
-        %td= link_to row.player.name, graph_icu_player_path(row.player, format: "js"), remote: true
+        %td= row.player.name
         - @war.types.each do |t|
           - @war.lists[t].each do |l|
             %td= row.send(t)[l]
-        %td= row.average.round
+        %td= link_to row.average.round, graph_icu_player_path(row.player, format: "js"), remote: true
 - else
   .flash
     %span{class: "alert"} Insufficient data

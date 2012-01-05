@@ -24,7 +24,7 @@ class IcuPlayersController < ApplicationController
   end
 
   def graph
-    @ratings_graph = RatingsGraph.new(@icu_player)
+    @ratings_graph = IcuRatings::Graph.new(@icu_player)
     render "shared/ratings_graph/show.js"
   end
 end

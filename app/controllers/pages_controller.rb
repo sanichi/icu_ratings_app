@@ -3,7 +3,7 @@ class PagesController < ApplicationController
     @limit = 10
     @tournaments   = Tournament.latest(@limit)
     @news_items    = NewsItem.latest(@limit)
-    @ratings_graph = RatingsGraph.new(current_user, onload: true)
+    @ratings_graph = IcuRatings::Graph.new(current_user, onload: true)
   end
 
   def contacts

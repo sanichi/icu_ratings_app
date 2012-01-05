@@ -5,22 +5,22 @@ class IcuRatingsController < ApplicationController
   end
 
   def show
-    @ratings_graph = RatingsGraph.new(IcuRating.find(params[:id]))
+    @ratings_graph = IcuRatings::Graph.new(IcuRating.find(params[:id]))
     render "shared/ratings_graph/show.js"
   end
 
   def war
-    @war = WAR.new(params)
+    @war = IcuRatings::WAR.new(params)
     render "icu_ratings/war/#{ request.xhr? ? 'results' : 'index' }"
   end
 
   def juniors
-    @juniors = Juniors.new(params)
+    @juniors = IcuRatings::Juniors.new(params)
     render "icu_ratings/juniors/#{ request.xhr? ? 'results' : 'index' }"
   end
   
   def improvers
-    @improvers = Improvers.new(params)
+    @improvers = IcuRatings::Improvers.new(params)
     render "icu_ratings/improvers/#{ request.xhr? ? 'results' : 'index' }"
   end
 end
