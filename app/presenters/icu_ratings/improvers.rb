@@ -20,6 +20,9 @@ module IcuRatings
             @upto = @from - 1
           end
         end
+        
+        params[:from] = lists[@from]
+        params[:upto] = lists[@upto]
       end
     end
 
