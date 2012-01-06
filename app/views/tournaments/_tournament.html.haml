@@ -5,30 +5,37 @@
   %tr
     %th Start Date
     %td= @tournament.start
-  %tr
-    %th End Date
-    %td= @tournament.finish
+  - if @tournament.finish.present?
+    %tr
+      %th End Date
+      %td= @tournament.finish
   %tr
     %th Rounds
     %td= @tournament.rounds
-  %tr
-    %th Federation
-    %td= @tournament.fed
-  %tr
-    %th City
-    %td= @tournament.city
-  %tr
-    %th Arbiter
-    %td= @tournament.arbiter
-  %tr
-    %th Deputy
-    %td= @tournament.deputy
-  %tr
-    %th Time Control
-    %td= @tournament.time_control
-  %tr
-    %th Tie Break Rules
-    %td{id: "show_tie_breaks"}= @tournament.tie_breaks
+  - if @tournament.fed.present?
+    %tr
+      %th Federation
+      %td= @tournament.fed
+  - if @tournament.city.present?
+    %tr
+      %th City
+      %td= @tournament.city
+  - if @tournament.arbiter.present?
+    %tr
+      %th Arbiter
+      %td= @tournament.arbiter
+  - if @tournament.deputy.present?
+    %tr
+      %th Deputy
+      %td= @tournament.deputy
+  - if @tournament.time_control.present?
+    %tr
+      %th Time Control
+      %td= @tournament.time_control
+  - if @tournament.tie_breaks.present?
+    %tr
+      %th Tie Break Rules
+      %td= @tournament.tie_breaks
   - if @tournament.upload
     %tr
       %th Reported
@@ -38,10 +45,10 @@
     %td= @tournament.user.name
   %tr
     %th Status
-    %td= @tournament.status == "ok" ? "ok" : "problems"
+    %td= t(@tournament.status == "ok" ? "ok" : "problems")
   %tr
     %th Stage
-    %td= @tournament.stage
+    %td= t(@tournament.stage)
 
 - if can? :modify, @tournament
   %table{class: "turbaned"}
