@@ -65,7 +65,7 @@
     %th Stage
     %td{id: "show_stage"}= t(@tournament.stage)
     %td{class: "floater top"}
-      - if can?(:edit, @tournament) && @tournament.move_stage_options.size > 0
+      - if can?(:edit, @tournament) && @tournament.move_stage_options(current_user).size > 0
         = link_to edit_admin_tournament_path(@tournament, stage: ""), remote: true do
           = icon_tag "edit", "Update Stage"
   - if last_tournament = @tournament.last_tournament

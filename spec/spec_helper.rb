@@ -65,7 +65,11 @@ end
 
 # Create and login a user with a given role.
 def login(user)
-  user = Factory(:user, role: user) if user.instance_of?(String)
+  if user == "guest"
+    visit "/log_out"
+    return
+  end
+  user = Factory(:user, role: user.to_s) unless user.instance_of?(User)
   visit "/log_in"
   page.fill_in "Email", with: user.email
   page.fill_in "Password", with: user.password
@@ -75,6 +79,7 @@ end
 
 def load_icu_players_for(tournaments)
   @tournaments_cache ||= YAML.load(File.read(File.expand_path('../factories/tournaments.yml', __FILE__)))
+  tournaments = [tournaments] unless tournaments.is_a?(Array)
   tournaments.inject([]) do |ids, t|
     n = t.sub(/\.[a-z]+$/, "")
     @tournaments_cache[n] ? ids.concat(@tournaments_cache[n]) : ids

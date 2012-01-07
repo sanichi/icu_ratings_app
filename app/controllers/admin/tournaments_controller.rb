@@ -40,7 +40,7 @@ module Admin
         @tournament.update_attributes(params[:tournament])
         render view(:update, :tie_breaks)
       when params[:tournament][:stage]
-        @tournament.move_stage(params[:tournament][:stage])
+        @tournament.move_stage(params[:tournament][:stage], current_user)
         render :update
       else
         @tournament.update_attributes(params[:tournament])

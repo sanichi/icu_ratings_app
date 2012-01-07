@@ -50,7 +50,7 @@
     %th Stage
     %td= t(@tournament.stage)
 
-- if can? :modify, @tournament
+- if can? :modify, Tournament
   %table{class: "turbaned"}
     %tr
       %td= link_to "Admin", [:admin, @tournament]

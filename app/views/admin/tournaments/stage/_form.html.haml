@@ -3,7 +3,7 @@
     from
     %b= t(@tournament.stage)
     to
-    - options = @tournament.move_stage_options
+    - options = @tournament.move_stage_options(current_user)
     - if options.size == 0
       -# If this happens, it's a bug.
       - option = @tournament.stage

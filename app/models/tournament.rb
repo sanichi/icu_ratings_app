@@ -287,29 +287,19 @@ class Tournament < ActiveRecord::Base
     stage == "initial" || stage == "ready"
   end
 
-  # Can this tournament be moved to a given stage from the one it's currently at?
-  def can_move_to?(new_stage)
-    case new_stage.to_s
-    when "initial" then stage == "ready"
-    when "ready"   then stage == "initial" && status_ok? || stage.match(/^queued|rated$/)
-    when "queued"  then stage == "ready"
-    else false
-    end
-  end
-
   # What are all the stages that this tournament can move to?
-  def move_stage_options
+  def move_stage_options(user)
     STAGE.inject([]) do |options, new_stage|
-      can_move_to?(new_stage) ? options.push(new_stage) : options
+      can_move_to?(new_stage, user) ? options.push(new_stage) : options
     end
   end
 
   # Try to move the tourament from one stage to another.
-  def move_stage(new_stage)
+  def move_stage(new_stage, user)
     # Check for basic errors.
     error = case
-    when !STAGE.include?(new_stage) then "is invalid"
-    when !can_move_to?(new_stage)   then "cannot move to this stage"
+    when !STAGE.include?(new_stage)     then "is invalid"
+    when !can_move_to?(new_stage, user) then "cannot move to this stage"
     end
     errors.add(:stage, error) and return if error
 
@@ -409,6 +399,17 @@ class Tournament < ActiveRecord::Base
   def check_player_category(errors)
     return if 0 < players.inject(0) { |m, p| m += 1 if p.category == "icu_player"; m }
     errors.push("at least 1 ICU player is required")
+  end
+
+  # Can this tournament be moved to a given stage from the one it's currently at?
+  def can_move_to?(new_stage, user)
+    return false unless user
+    case new_stage.to_s
+    when "initial" then stage == "ready"
+    when "queued"  then stage.match(/^ready|rated/) && user.role?(:officer)
+    when "ready"   then stage.match(/^queued|rated$/) && user.role?(:officer) || stage == "initial" && status_ok?
+    else false
+    end
   end
 
   # Queue a tournament for rating (establish it's order in the list of tournaments).
