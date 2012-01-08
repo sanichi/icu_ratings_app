@@ -8,7 +8,7 @@ gem "icu_tournament"
 gem "icu_name"
 gem "validates_timeliness"
 gem "whenever", :require => false
-gem "redcarpet"
+gem "redcarpet", "~> 1.17.2"  # The 2.0 version has a changed API
 gem "cancan", "~> 1.6"
 gem "jquery-rails"
 gem "therubyracer", :require => "v8"
