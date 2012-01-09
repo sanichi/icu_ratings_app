@@ -4,6 +4,7 @@ module Pages
 
     def reporters
       reporters = {}
+      # First, tournaments with users.
       Tournament.includes(:user).all.each do |t|
         hash = reporters[t.user_id]
         unless hash
@@ -15,7 +16,13 @@ module Pages
         hash[:stage][t.stage] += 1
         hash[:status][t.status == "ok" ? "ok" : "problems"] += 1
       end
-      reporters.values.sort { |a,b| b[:total] <=> a[:total] }
+      # Second, reporters without tournaments.
+      User.where("users.role = 'reporter'").joins('LEFT OUTER JOIN tournaments ON users.id = tournaments.user_id').where("tournaments.user_id IS NULL").each do |u|
+        hash = { user: u, total: 0, status: { "ok" => 0, "problems" => 0 } }
+        hash[:stage] = Tournament::STAGE.inject({}) { |h,s| h[s] = 0; h }
+        reporters[u.id] = hash
+      end
+      reporters.values.sort { |a,b| [b[:total], a[:user].name] <=> [a[:total], b[:user].name] }
     end
 
     def queued
