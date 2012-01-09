@@ -150,7 +150,7 @@ GEM
     rb-fsevent (0.4.3.1)
     rdoc (3.12)
       json (~> 1.4)
-    redcarpet (1.17.2)
+    redcarpet (2.0.1)
     rspec (2.8.0)
       rspec-core (~> 2.8.0)
       rspec-expectations (~> 2.8.0)
@@ -224,7 +224,7 @@ DEPENDENCIES
   pry
   rails (= 3.1.3)
   rb-fsevent
-  redcarpet (~> 1.17.2)
+  redcarpet
   rspec-rails
   sass
   sass-rails (>= 3.1.5)

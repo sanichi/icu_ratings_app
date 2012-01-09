@@ -1,5 +1,7 @@
 class NewsItem < ActiveRecord::Base
   extend Util::Pagination
+  
+  EXTENSIONS = { autolink: true, strikethrough: true, superscript: true, no_intra_emphasis: true }
 
   belongs_to :user
   before_validation :normalise_attributes
@@ -8,7 +10,8 @@ class NewsItem < ActiveRecord::Base
   validates_inclusion_of :published, in: [true, false]
 
   def html_story
-    Redcarpet.new(story).to_html.html_safe
+    markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, EXTENSIONS)
+    markdown.render(story).html_safe
   end
 
   def self.search(params, path)
