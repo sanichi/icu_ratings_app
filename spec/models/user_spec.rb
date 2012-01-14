@@ -89,10 +89,26 @@ describe User do
       @user.icu_player.email = nil
       @user.best_email.should == @user.email
     end
-    
+
     it "unless there is a preferred email, in which case that takes precedence" do
       @user.preferred_email = Faker::Internet.email
       @user.best_email.should == @user.preferred_email
+    end
+  end
+
+  context "password_ok?" do
+    before(:each) do
+      @p = 'icuicj'
+      @u1 = Factory(:user, password: @p)
+      @u2 = Factory(:user, password: "be3ab3d3be49b8304b8604a3268dfcf2", salt: "b3f0f553a916b0e8ab6b2469cabd200f")
+    end
+
+    it "without salt" do
+      @u1.password_ok?(@p).should be_true
+    end
+
+    it "with salt" do
+      @u2.password_ok?(@p).should be_true
     end
   end
 end

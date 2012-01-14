@@ -50,7 +50,7 @@ class User < ActiveRecord::Base
   def self.authenticate!(params, ip, switch)
     user = find_by_email(params[:email])
     raise "Invalid email or password" unless user
-    user.login_event(ip, switch, "password") unless user.password == params[:password]
+    user.login_event(ip, switch, "password") unless user.password_ok?(params[:password])
     user.login_event(ip, switch, "expiry") if user.expiry.past?
     user.login_event(ip, switch, "none")
     user
@@ -80,5 +80,19 @@ class User < ActiveRecord::Base
     %w[preferred_email].each do |attr|
       self.send("#{attr}=", nil) if self.send(attr).to_s.blank?
     end
+  end
+
+  def password_ok?(pass)
+    if salt_set?
+      password == eval(APP_CONFIG["hasher"])
+    else
+      password == pass
+    end
+  end
+
+  private
+
+  def salt_set?
+    salt.present? && salt.length == 32
   end
 end

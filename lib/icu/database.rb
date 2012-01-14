@@ -148,6 +148,7 @@ module ICU
         mem_id:       :id,
         mem_email:    :email,
         mem_password: :password,
+        mem_salt:     :salt,
         mem_icu_id:   :icu_id,
         mem_expiry:   :expiry,
       }

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111228122336) do
+ActiveRecord::Schema.define(:version => 20120114120616) do
 
   create_table "downloads", :force => true do |t|
     t.string   "comment"
@@ -242,12 +242,13 @@ ActiveRecord::Schema.define(:version => 20111228122336) do
   create_table "users", :force => true do |t|
     t.string   "email",           :limit => 50
     t.string   "preferred_email", :limit => 50
-    t.string   "password",        :limit => 20
+    t.string   "password",        :limit => 32
     t.string   "role",            :limit => 20, :default => "member"
     t.integer  "icu_id"
     t.date     "expiry"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "salt",            :limit => 32
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
