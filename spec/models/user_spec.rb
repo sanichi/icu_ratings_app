@@ -110,5 +110,10 @@ describe User do
     it "with salt" do
       @u2.password_ok?(@p).should be_true
     end
+
+    it "with salt special case" do
+      @u2.password_ok?(@u2.password, false).should be_false
+      @u2.password_ok?(@u2.password,  true).should be_true
+    end
   end
 end
