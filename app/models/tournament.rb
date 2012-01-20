@@ -9,7 +9,7 @@ class Tournament < ActiveRecord::Base
   has_many   :players, dependent: :destroy, include: :results
   belongs_to :user
 
-  scope :ordered, order("start DESC, finish DESC, tournaments.name")
+  scope :ordered, order("start DESC, rorder DESC, tournaments.name")
 
   attr_accessible :name, :start, :finish, :fed, :city, :site, :arbiter, :deputy, :time_control, :tie_breaks, :user_id, :stage
 
