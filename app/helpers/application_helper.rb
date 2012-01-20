@@ -150,6 +150,19 @@ module ApplicationHelper
     link_to text, "http://#{host}/#{path}", target: target, class: "external"
   end
 
+  # General foreign link.
+  def foreign_url(text, url, target=nil)
+    opt = { class: "external" }
+    unless target
+      target = case url
+        when /^https?:\/\/(www\.)?icu\.ie/i   then "_icu_ie"
+        when /^https?:\/\/(www\.)?fide\.com/i then "_fide_com"
+      end
+    end
+    opt[:target] = target if target
+    link_to text, url, opt
+  end
+
   # Returns a plain link to the main ICU site.
   def link_to_icu(label, path="")
     link_to label, "http://www.icu.ie/#{path}", target: "_icu_ie", class: "external"
