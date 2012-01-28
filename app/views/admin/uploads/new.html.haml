@@ -1,5 +1,5 @@
 - content_for :javascript do
-  = render "new.js"
+  = render partial: "new", formats: :js
 
 .header
   %span= @page_title = "File Upload"

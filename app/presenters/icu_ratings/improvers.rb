@@ -1,6 +1,5 @@
 module IcuRatings
   class Improvers
-    extend ActiveSupport::Memoizable
     Row = Struct.new(:player, :from, :upto, :diff, :age)
 
     def initialize(params)
@@ -27,14 +26,15 @@ module IcuRatings
     end
 
     def dates
-      IcuRating.unscoped.select("DISTINCT(list)").order("list DESC").map(&:list)
+      @dates ||= IcuRating.unscoped.select("DISTINCT(list)").order("list DESC").map(&:list)
     end
 
     def lists
-      dates.map(&:to_s)
+      @lists ||= dates.map(&:to_s)
     end
 
     def rows
+      return @rows if @rows
       players = IcuPlayer.unscoped.joins(:icu_ratings).includes(:icu_ratings)
       players = players.where("list IN (?)", [lists[@from], lists[@upto]]).order("list DESC")
       rows = players.inject([]) do |m, p|
@@ -49,10 +49,8 @@ module IcuRatings
           m
         end
       end
-      rows.sort{ |a, b| b.diff <=> a.diff || a.name <=> b.name }.first(20)
+      @rows = rows.sort{ |a, b| b.diff <=> a.diff || a.name <=> b.name }.first(20)
     end
-
-    memoize :dates, :lists, :rows
 
     def available?
       lists.size > 1

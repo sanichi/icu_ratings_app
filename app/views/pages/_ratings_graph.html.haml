@@ -1,6 +1,6 @@
-= render "shared/ratings_graph/head.html"
+= render "shared/ratings_graph/head"
 - content_for :javascript do
-  = render "shared/ratings_graph/draw.js", graph: graph
+  = render partial: "shared/ratings_graph/draw", formats: :js, locals: { graph: graph }
 %table{class: "invisible cushioned"}
   %tr
     %td

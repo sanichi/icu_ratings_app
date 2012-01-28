@@ -190,10 +190,10 @@ module ApplicationHelper
 
   # These dialogs are used in more than one place so are defined here.
   def icu_player_details_dialog
-    render "shared/dialog.html", id: "icu_player_details", width: 800, button: false, cancel: "Dismiss", title: "ICU Player"
+    render "shared/dialog", id: "icu_player_details", width: 800, button: false, cancel: "Dismiss", title: "ICU Player"
   end
   def fide_player_details_dialog
-    render "shared/dialog.html", id: "fide_player_details", width: 800, button: false, cancel: "Dismiss", title: "FIDE Player"
+    render "shared/dialog", id: "fide_player_details", width: 800, button: false, cancel: "Dismiss", title: "FIDE Player"
   end
 
   # Returns a summary of created and updated datetimes.

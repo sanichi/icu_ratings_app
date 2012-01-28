@@ -1,5 +1,5 @@
 - content_for :javascript do
-  = render "admin/results/update_rateable.js"
+  = render partial: "admin/results/update_rateable", formats: :js
 
 %div.small-header
   %span
@@ -20,13 +20,13 @@
     %td#results
       = render "results"
 
-= render "shared/dialog.html", id: "update_player"
-= render "shared/dialog.html", id: "search_icu_player", width: 1000, button: false
-= render "shared/dialog.html", id: "search_fide_player", width: 1000, button: false
+= render "shared/dialog", id: "update_player"
+= render "shared/dialog", id: "search_icu_player", width: 1000, button: false
+= render "shared/dialog", id: "search_fide_player", width: 1000, button: false
 = icu_player_details_dialog
 = fide_player_details_dialog
 - html = render "shared/pipe_list", :error => @player.status
-= render "shared/dialog.html", id: "status", button: false, cancel: "Dismiss", html: html
+= render "shared/dialog", id: "status", button: false, cancel: "Dismiss", html: html
 
 #help
   %dl

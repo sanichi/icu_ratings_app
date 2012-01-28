@@ -1,7 +1,6 @@
 module IcuRatings
   class Graph
     attr_reader :title, :width, :height, :onload
-    extend ActiveSupport::Memoizable
     Point = Struct.new(:list, :label, :rating, :selected)
 
     def initialize(input, opt={})
@@ -34,14 +33,14 @@ module IcuRatings
 
     def icu_ratings
       return [] unless @icu_player
-      IcuRating.where("icu_players.id = ?", @icu_player.id).map do |r|
+      @icu_ratings ||= IcuRating.where("icu_players.id = ?", @icu_player.id).map do |r|
         Point.new(decimal_year(r.list), r.list.strftime('%Y %b'), r.rating, @icu_list == r.list)
       end
     end
 
     def fide_ratings
       return [] unless @fide_player
-      FideRating.where("fide_players.id = ?", @fide_player.id).map do |r|
+      @fide_ratings ||= FideRating.where("fide_players.id = ?", @fide_player.id).map do |r|
         Point.new(decimal_year(r.list), r.list.strftime('%Y %b'), r.rating, @fide_list == r.list)
       end
     end
@@ -51,38 +50,36 @@ module IcuRatings
     end
 
     def min_rating
-      limit(:rating, 1000) { |m, r| r < m }
+      @min_rating ||= limit(:rating, 1000) { |m, r| r < m }
     end
 
     def max_rating
-      limit(:rating, 2000) { |m, r| r > m }
+      @max_rating ||= limit(:rating, 2000) { |m, r| r > m }
     end
 
     def rating_range
+      return @rating_range if @rating_range
       min = (min_rating / 100.0).floor * 100
       max = (max_rating / 100.0).ceil  * 100
       min, max = min - 100, max + 100 if min == max
-      [min, max]
+      @rating_range = [min, max]
     end
 
     def first_list
-      limit(:list, Date.today.year) { |m, d| d < m }
+      @first_list ||= limit(:list, Date.today.year) { |m, d| d < m }
     end
 
     def last_list
-      limit(:list, Date.today.year) { |m, d| d > m }
+      @last_list ||= limit(:list, Date.today.year) { |m, d| d > m }
     end
 
     def list_range
+      return @list_range if @list_range
       min = first_list.floor
       max = last_list.ceil
       min, max = min - 1, max + 1 if min == max
-      [min, max]
+      @list_range ||= [min, max]
     end
-
-    memoize :icu_ratings, :fide_ratings
-    memoize :min_rating, :max_rating, :rating_range
-    memoize :first_list, :last_list, :list_range
 
     private
 

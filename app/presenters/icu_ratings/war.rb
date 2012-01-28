@@ -1,6 +1,5 @@
 module IcuRatings
   class WAR
-    extend ActiveSupport::Memoizable
     Row = Struct.new(:player, :icu, :fide, :average)
 
     def initialize(params)
@@ -16,25 +15,28 @@ module IcuRatings
     end
 
     def years
-      @rating_weight.size
+      @years ||= @rating_weight.size
     end
 
     def types
-      @type_weight.keys
+      @types ||= @type_weight.keys
     end
 
     def available?
-      lists && lists.select{ |type, list| list.size == years }.size == types.size
+      lists.select{ |type, list| list.size == years }.size == types.size
     end
 
     # Compute something like this: { icu: [date1, date2, date3], fide: [date1, date2, date3] }.
     def lists
-      year = latest_common_year || return
-      types.inject({}) { |hash, type| hash[type] = lists_for(type, year); hash }
+      return @lists if @lists
+      year = latest_common_year
+      @lists = year ? types.inject({}) { |hash, type| hash[type] = lists_for(type, year); hash } : []
     end
 
     # Return an array of ordered Row objects for display, one row per player.
     def players
+      return @players if @players
+
       # Get raw rating data, initially using a hash to tie ICU and FIDE ratings together for each player.
       rows = icu_players
       fide_players(rows)
@@ -51,11 +53,9 @@ module IcuRatings
       # Sort the array.
       rows.sort! { |a,b| b.average <=> a.average }
 
-      # Finally, truncate and return.
-      rows[0..@maximum-1]
+      # Finally, truncate, cache and return.
+      @players = rows[0..@maximum-1]
     end
-
-    memoize :years, :types, :lists, :players
 
     def methods_menu
       [["Three year weighted average", "war"], ["Simple average of latest ratings", "simple"]]
