@@ -1,6 +1,9 @@
 = image_tag "misc/logo.png", alt: "ICU Logo", title: "ICU Logo", size: "100x100"
 %h1 ICU Ratings
 
+- if admin? && Rails.root.join("public", "system", "maintenance.html").exist?
+  #maintenance Maintenance Mode
+
 %ul.sf-menu
   %li
     = link_to "Home", home_path

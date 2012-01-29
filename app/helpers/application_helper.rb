@@ -229,4 +229,9 @@ module ApplicationHelper
   def icon_tag(image, alt, opts={})
     image_tag "icons/#{image}.png", { alt: alt, title: alt, size: "16x16" }.merge(opts)
   end
+  
+  # Is an administrator logged in?
+  def admin?
+    current_user && current_user.role?("admin")
+  end
 end
