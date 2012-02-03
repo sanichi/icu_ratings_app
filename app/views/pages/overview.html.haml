@@ -58,3 +58,15 @@
           %tr
             %th= desc
             %td{class: "centered"}= link_to data[:count], self.send(data[:path])
+  %tr{class: "invisible"}
+    %td{colspan: 4}
+      %table
+        %tr
+          %th{colspan: 2} Environment Variables
+        %tr
+          %th Name
+          %th Value
+        - @overview.environment.each_pair do |name, value|
+          %tr{class: "note"}
+            %td= name
+            %td= value
