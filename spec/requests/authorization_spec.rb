@@ -35,6 +35,7 @@ describe "authorized links for" do
         "/news_items"            => %w[admin officer reporter member guest],
         "/news_items/new"        => %w[admin officer reporter],
         "/overview"              => %w[admin officer reporter],
+        "/system_info"           => %w[admin],
         "/tournaments"           => %w[admin officer reporter member guest],
       }.each do |target, authorized|
         if authorized.include?(role)

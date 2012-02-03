@@ -2,7 +2,7 @@ Ratings::Application.routes.draw do
 
   root to: "pages#home"
 
-  %w[home contacts overview].each { |p| get p => "pages##{p}"}
+  %w[home contacts overview system_info].each { |p| get p => "pages##{p}"}
   get "log_in"  => "sessions#new"
   get "log_out" => "sessions#destroy"
 

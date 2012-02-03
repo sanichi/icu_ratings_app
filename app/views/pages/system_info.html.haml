@@ -1,0 +1,12 @@
+- @page_title = "System Info"
+
+%table
+  %tr
+    %th{colspan: 2} Environment Variables
+  %tr
+    %th Name
+    %th Value
+  - @system_info.environment.each_pair do |name, value|
+    %tr{class: "note"}
+      %td= name
+      %td= value
