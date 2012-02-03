@@ -30,12 +30,14 @@ module IcuRatings
     def date_range
       return @date_range if @date_range
       today = Date.today
-      first = today.beginning_of_month
+      date = today.beginning_of_year
+      last = date.next_year
       range = []
-      6.times.each { |m| range.push first.months_ago(6 - m) }
-      range.push first
-      range.push today unless today == first
-      6.times.each { |m| range.push first.months_since(m + 1) }
+      while date <= last
+        range.push date
+        range.push today if date.year == today.year && date.month == today.month && date.day != today.day
+        date = date.next_month
+      end
       @date_range = range.map(&:to_s)
     end
 

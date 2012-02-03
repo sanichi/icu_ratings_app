@@ -42,8 +42,8 @@ module IcuRatings
         ratings.should include(@r3)
         date_range = j.date_range
         date_range.size.should == 14
-        date_range.first.should == "2011-06-01"
-        date_range.last.should == "2012-06-01"
+        date_range.first.should == "2011-01-01"
+        date_range.last.should == "2012-01-01"
       end
 
       it "narrow age range" do
@@ -77,6 +77,48 @@ module IcuRatings
         ratings.size.should == 2
         ratings.should include(@r1)
         ratings.should include(@r2)
+      end
+    end
+
+    describe "beginning of month" do
+      before(:each) do
+        @today = Date.new(2012, 2, 1)
+        Date.stub!(:today).and_return(@today)
+      end
+
+      it "date range" do
+        j = Juniors.new({})
+        j.date_range.size.should == 13
+        j.date_range.first.should == "2012-01-01"
+        j.date_range.last.should == "2013-01-01"
+      end
+    end
+
+    describe "beginning of year" do
+      before(:each) do
+        @today = Date.new(2012, 1, 1)
+        Date.stub!(:today).and_return(@today)
+      end
+
+      it "date range" do
+        j = Juniors.new({})
+        j.date_range.size.should == 13
+        j.date_range.first.should == "2012-01-01"
+        j.date_range.last.should == "2013-01-01"
+      end
+    end
+
+    describe "end of year" do
+      before(:each) do
+        @today = Date.new(2012, 12, 31)
+        Date.stub!(:today).and_return(@today)
+      end
+
+      it "date range" do
+        j = Juniors.new({})
+        j.date_range.size.should == 14
+        j.date_range.first.should == "2012-01-01"
+        j.date_range.last.should == "2013-01-01"
       end
     end
   end
