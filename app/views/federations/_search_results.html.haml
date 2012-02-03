@@ -1,0 +1,11 @@
+%table
+  %tr
+    %th Code
+    %th Federation
+  - if @federations.size == 0
+    %tr
+      %td{class: "centered", colspan: 2} No matches
+  - @federations.each do |f|
+    %tr
+      %td= f.last
+      %td= f.first

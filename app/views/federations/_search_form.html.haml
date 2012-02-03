@@ -1,0 +1,8 @@
+= form_tag federations_path, method: "get", remote: true, id: "fed_form" do
+  %table{class: "invisible"}
+    %tr
+      %th= label_tag :match, "Match"
+      %th= label_tag :order, "Order"
+    %tr
+      %td= text_field_tag :match, params[:match], class: "centered", size: 10
+      %td= select_tag :order, options_for_select([["by name", "name"], ["by code", "code"]], params[:order]), onchange: "$.rails.handleRemote($('#fed_form'))"

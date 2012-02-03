@@ -7,6 +7,7 @@ Ratings::Application.routes.draw do
   get "log_out" => "sessions#destroy"
 
   resources :downloads
+  resources :federations,  only: [:index]
   resources :fide_players, only: [:index, :show, :update]
   resources :fide_ratings, only: [:index, :show]
   resources :icu_players,  only: [:index, :show] do
