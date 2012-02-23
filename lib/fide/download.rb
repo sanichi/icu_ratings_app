@@ -413,7 +413,7 @@ module FIDE
       uri = URI.parse(@link)
       res = Net::HTTP.get_response(uri)
       raise SyncError.new("unexpected response for download file (#{res.code})") unless res.code == "200"
-      raise SyncError.new("unexpected content-type (#{res.content_type})") unless res.content_type == "application/x-zip-compressed"
+      raise SyncError.new("unexpected content-type (#{res.content_type})") unless res.content_type.match(/^application\/(zip|x-zip-compressed)$/)
       raise SyncError.new("unexpected zip archive encoding (#{res.body.encoding.name})") unless res.body.encoding.name == "ASCII-8BIT"
       @zip = Tempfile.new("fide_ratings.zip")
       @zip.syswrite(res.body)
