@@ -1,9 +1,11 @@
-Factory.define :user do |u|
-  u.email           { Faker::Internet.email }
-  u.password        "password"
-  u.salt            nil
-  u.role            "member"
-  u.expiry          Date.today.at_end_of_year
-  u.association     :icu_player
-  u.preferred_email nil
+FactoryGirl.define do
+  factory :user do
+    email           { Faker::Internet.email }
+    password        "password"
+    salt            nil
+    role            "member"
+    expiry          Date.today.at_end_of_year
+    association     :icu_player
+    preferred_email nil
+  end
 end

@@ -1,5 +1,6 @@
 %table
   %tr
+    %th{class: "floater"}
     %th
     %th
     %th #
@@ -8,11 +9,15 @@
     %th Reporter
   - if @tournaments.count == 0
     %tr
+      %td{class: "floater"}
       %td{colspan: 6, class: "centered"} No matches
   - @tournaments.matches.each do |t|
     - stage = t.stage
     - status = t.status == "ok" ? "ok" : "problems"
     %tr
+      %td{class: "floater"}
+        - if t == @next_for_rating
+          = icon_tag "next_for_rating", "Next Tournament for Rating"
       %td= icon_tag stage, t(stage)
       %td= icon_tag status, t(status)
       %td= t.rorder

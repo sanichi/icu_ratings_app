@@ -1,6 +1,6 @@
 class Download < ActiveRecord::Base
-  extend Util::Pagination
-  include Util::Model
+  extend ICU::Util::Pagination
+  include ICU::Util::Model
 
   validates_presence_of :data, :content_type, :file_name
   validates_length_of   :data, maximum: 1.megabyte

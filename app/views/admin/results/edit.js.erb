@@ -1,5 +1,5 @@
 $("#dialog_update_player")
-  .html("<%= escape_javascript(render('form')) %>")
+  .html("<%= j render('form') %>")
   .dialog("option", "title", "Update Result")
   .dialog("open");
 $("#result_result").focus();

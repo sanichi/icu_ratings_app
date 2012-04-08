@@ -12,7 +12,7 @@ describe SessionsController do
 
   describe "POST create" do
     before(:each) do
-      @user = Factory(:user)
+      @user = FactoryGirl.create(:user)
     end
 
     it "should log in a valid user" do

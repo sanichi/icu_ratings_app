@@ -47,7 +47,7 @@
         - @overview.queued.each_pair do |desc, data|
           %tr
             %th= desc
-            %td{class: "centered"}= data[:count]
+            %td{class: "centered"}= data[:count] || link_to_if(data[:tournament], data[:rorder], [:admin, data[:tournament]])
             %td= icon_tag data[:icon], t(data[:icon])
     %td
       %table{class: "right-headers"}

@@ -5,7 +5,7 @@ var sortable_tie_breaks = function() {
   $('#tournament_tie_breaks').val(tie_breaks);
 }
 $("#dialog_update_tournament")
-  .html("<%= escape_javascript(render('admin/tournaments/tie_breaks/form')) %>")
+  .html("<%= j render('admin/tournaments/tie_breaks/form') %>")
   .dialog("option", "title", "Update Tie Breaks")
   .dialog("open");
 $('#sortable_tie_breaks')

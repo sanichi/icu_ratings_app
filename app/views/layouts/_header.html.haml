@@ -18,10 +18,10 @@
     = link_to "Tournaments", tournaments_path
     - if can?(:manage, Upload) || can?(:read, OldTournament)
       %ul
-        - if can? :create, Upload
-          %li= link_to "New", new_admin_upload_path
         - if can? :read, Tournament
           %li= link_to "Admin", admin_tournaments_path
+        - if can? :create, Upload
+          %li= link_to "New", new_admin_upload_path
         - if can? :read, Upload
           %li= link_to "Uploads", admin_uploads_path
         - if can? :read, OldTournament

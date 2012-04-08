@@ -71,7 +71,13 @@ class Result < ActiveRecord::Base
 
     true
   end
-  
+
+  # Calculate part of a player's signature for detecting changes in input data for rating calculations.
+  # Round numbers are added for human readability even though they don't affect rating calculations.
+  def signature
+    "#{round}#{result}#{opponent_id}"
+  end
+
   private
 
   def normalise_attributes

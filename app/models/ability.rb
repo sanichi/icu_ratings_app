@@ -11,6 +11,7 @@ class Ability
     return unless user.role? :member
 
     can :show, IcuPlayer, id: user.icu_id
+    can :show, Player
 
     return unless user.role? :reporter
 

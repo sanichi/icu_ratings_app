@@ -1,5 +1,5 @@
 class Login < ActiveRecord::Base
-  extend Util::Pagination
+  extend ICU::Util::Pagination
 
   belongs_to :user
 

@@ -1,9 +1,10 @@
 module Admin
   class PlayersController < ApplicationController
-    load_resource except: "index"
+    load_resource except: ["index", "show"]
     authorize_resource
 
     def show
+      @player = Player.includes(results: [:opponent]).find(params[:id])
       @tournament = @player.tournament
       if @tournament.players.size > 2
         # Note that player.find_by_num started going into an infinte loop here after the upgrate to rails 3.1.

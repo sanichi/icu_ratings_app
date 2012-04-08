@@ -1,5 +1,5 @@
 class OldRating < ActiveRecord::Base
-  extend Util::Pagination
+  extend ICU::Util::Pagination
   
   belongs_to :icu_player, foreign_key: "icu_id"
 

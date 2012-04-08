@@ -1,5 +1,5 @@
 class NewsItem < ActiveRecord::Base
-  extend Util::Pagination
+  extend ICU::Util::Pagination
   
   EXTENSIONS = { autolink: true, strikethrough: true, superscript: true, no_intra_emphasis: true }
 

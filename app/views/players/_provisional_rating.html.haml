@@ -1,0 +1,24 @@
+%tr
+  %th Old rating
+  %td= @player.old_rating
+  %td{rowspan: 2}= render "last_player"
+%tr
+  %th Old games count
+  %td= @player.old_games
+%tr
+  %th Performance
+  %td= round(@player.performance_rating, 1)
+  %td= explain_trn_rating(@player)
+%tr
+  %th= t "ratings.new_rating"
+  %td= @player.new_rating
+  %td= explain_provisional_rating(@player)
+= render "more_info"
+%tr
+  %th= t "ratings.change"
+  %td= sign(@player.rating_change)
+  %td= explain_provisional_change(@player)
+%tr
+  %th= t "ratings.new_games"
+  %td= @player.new_games
+  %td= explain_provisional_games(@player)

@@ -1,4 +1,4 @@
 $("#dialog_search_fide_player")
-  .html("<%= escape_javascript(render('search_dialog')) %>")
+  .html("<%= j render('search_dialog') %>")
   .dialog("option", "title", "Find FIDE Player")
   .dialog("open");

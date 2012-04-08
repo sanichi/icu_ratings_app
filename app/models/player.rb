@@ -5,9 +5,10 @@ class Player < ActiveRecord::Base
   CATEGORY = %w[icu_player foreign_player new_player]
 
   belongs_to :tournament, include: :players
+  belongs_to :last_player, class_name: "Player"
   belongs_to :icu_player, foreign_key: "icu_id"
   belongs_to :fide_player, foreign_key: "fide_id"
-  has_many :results, dependent: :destroy, include: :opponent
+  has_many :results, dependent: :destroy
 
   attr_accessible :first_name, :last_name, :icu_id, :fide_id, :fed, :title, :gender, :dob, :icu_rating, :fide_rating
 
@@ -58,7 +59,8 @@ class Player < ActiveRecord::Base
     last_first ? "#{last_name}, #{first_name}" : "#{first_name} #{last_name}"
   end
 
-  def status_ok?
+  def status_ok?(recalculate=false)
+    deduce_category_and_status if recalculate
     status == "ok"
   end
 
@@ -98,6 +100,163 @@ class Player < ActiveRecord::Base
       end
     end
     false
+  end
+
+  # Get the old rating and games for one player in a tournament.
+  def get_old_rating(rorder)
+    case category
+    when "icu_player"
+      if latest = Player.get_last_rating(icu_id, rorder)
+        update_column_if_changed(:old_rating, latest.new_rating)
+        update_column_if_changed(:old_games, latest.new_games)
+      elsif old = OldRating.find_by_icu_id(icu_id)
+        update_column_if_changed(:old_rating, old.rating)
+        update_column_if_changed(:old_games, old.games)
+      else
+        update_column_if_changed(:old_rating, nil)
+        update_column_if_changed(:old_games, 0)
+      end
+    when "new_player"
+      update_column_if_changed(:old_rating, nil)
+      update_column_if_changed(:old_games, 0)
+    when "foreign_player"
+      update_column_if_changed(:old_rating, fide_rating)
+      update_column_if_changed(:old_games, 0)
+    else
+      raise "player #{id} (#{name}) has " + (category ? "invalid category (#{category})" : "no category")
+    end
+    update_column_if_changed(:last_player_id, latest ? latest.id : nil)
+  end
+
+  # Get a player's rating from his last rated tournament.
+  def self.get_last_rating(icu_id, rorder)
+    joins(:tournament).where("tournaments.stage = 'rated' AND tournaments.rorder < #{rorder}").where(icu_id: icu_id).order("tournaments.rorder").last
+  end
+
+  # Set the k-factor for an ICU player with a full rating.
+  def get_k_factor(start)
+    return unless category == "icu_player" && old_rating && old_games && old_games >= 20
+    args = { start: start, rating: old_rating }
+    args[:dob]    = icu_player.dob    || "1950-01-01"
+    args[:joined] = icu_player.joined || "1975-01-01"
+    update_column_if_changed(:k_factor, ICU::RatedPlayer.kfactor(args))
+  end
+
+  # Add this player to an ICU::RatedTournament.
+  def add_player(t)
+    case category
+    when "icu_player"
+      case icu_player_type
+      when "full_rating"        then t.add_player(id, rating: old_rating, kfactor: k_factor)
+      when "provisional_rating" then t.add_player(id, rating: old_rating, games: old_games)
+      when "first_tournament"   then t.add_player(id)
+      else raise "can't add ICU player #{id} (#{name}) for rating calculation"
+      end
+    when "new_player"           then t.add_player(id)
+    when "foreign_player"       then t.add_player(id, rating: old_rating)
+    else raise "player #{id} (#{p.name}) has " + (category ? "invalid category (#{category})" : "no category")
+    end
+  end
+
+  # Add this player's results to an ICU::RatedTournament. The player is assumed to be already added.
+  def add_results(t)
+    results.each do |r|
+      t.add_result(r.round, r.player_id, r.opponent_id, r.result) if r.rateable
+    end
+  end
+
+  # Extract this player's rating calculations from an ICU::RatedPlayer.
+  def get_ratings(p)
+    count = p.results.size
+    if count > 0
+      case category
+      when "icu_player", "new_player"
+        update_column_if_changed(:new_rating, p.new_rating.round)
+        update_column_if_changed(:new_games, old_games + count)
+        update_column_if_changed(:trn_rating, p.performance.round)
+        update_column_if_changed(:actual_score, p.score)
+        update_column_if_changed(:expected_score, p.expected_score)
+      when "foreign_player"
+        update_column_if_changed(:new_rating, old_rating)
+        update_column_if_changed(:new_games, old_games)
+        update_column_if_changed(:trn_rating, p.performance.round)
+        update_column_if_changed(:actual_score, p.score)
+        update_column_if_changed(:expected_score, p.expected_score)
+      end
+    else
+      update_column_if_changed(:new_rating, old_rating)
+      update_column_if_changed(:new_games, old_games)
+      [:trn_rating, :bonus, :actual_score, :expected_score].each { |a| update_column_if_changed(a, nil) }
+    end
+    update_column_if_changed(:bonus, count > 0 && category == "icu_player" && icu_player_type == "full_rating" ? p.bonus : nil)
+    results.each do |r|
+      pr = p.results.find { |s| s.round == r.round }
+      if pr
+        r.update_column_if_changed(:expected_score, pr.expected_score)
+        r.update_column_if_changed(:rating_change, pr.rating_change)
+      else
+        r.update_column_if_changed(:expected_score, nil)
+        r.update_column_if_changed(:rating_change, nil)
+      end
+    end
+  end
+
+  # Calculate a signature for detecting changes to rating data.
+  def signature
+    results.find_all{ |r| r.rateable }.map(&:signature).join(" ")
+  end
+
+  # Given it's an ICU player, what sub-category is it?
+  def icu_player_type
+    @icu_player_type ||= case
+    when old_rating && k_factor  then "full_rating"
+    when old_rating && old_games then "provisional_rating"
+    when !old_rating             then "first_tournament"
+    else "undefined"
+    end
+  end
+
+  # The rating used for this player when calculating ratings of the opponents.
+  # The tournament must be rated first to give a meaningful answer.
+  def start_rating
+    @start_rating ||= category == "icu_player" && icu_player_type == "full_rating" && bonus == 0 ? old_rating : new_rating
+  end
+
+  # The average of the opponents' start ratings.
+  # The tournament must be rated first to give a meaningful answer.
+  def ave_opp_rating
+    return @ave_opp_rating if @ave_opp_rating
+    ave = 0.0
+    num = 0
+    results.each do |r|
+      if r.rateable
+        num+= 1
+        ave+= r.opponent.start_rating || 0.0
+      end
+    end
+    @ave_opp_rating = num == 0 ? ave : ave / num
+  end
+
+  # Total number of rateable games.
+  def rateable_games
+    @rateable_games ||= results.to_a.count{ |r| r.rateable }
+  end
+
+  # The total score in rateable games.
+  def rateable_score
+    @rateable_score ||= results.inject(0.0) { |t, r| t + (r.rateable ? r.score : 0.0) }
+  end
+
+  # A player's change in rating. The tournament must be rated first to give a meaningful answer.
+  def rating_change
+    @rating_change ||= new_rating.to_i - old_rating.to_i
+  end
+
+  # A player's performance rating. For provisional players, ICU::RatedPlayer.trn_rating
+  # only reports the weighted average with the last rating so we need an independendent
+  # way to get it.
+  def performance_rating
+    @performance_rating ||= rateable_games == 0 ? 0.0 : (ave_opp_rating + 400.0 * (2.0 * rateable_score - rateable_games) / rateable_games)
   end
 
   private

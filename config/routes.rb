@@ -19,6 +19,7 @@ Ratings::Application.routes.draw do
   resources :news_items
   resources :sessions,     only: [:create]
   resources :tournaments,  only: [:index, :show]
+  resources :players,      only: [:show]
 
   namespace "admin" do
     resources :events,               only: [:index, :show, :destroy]

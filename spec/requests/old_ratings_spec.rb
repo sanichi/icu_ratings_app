@@ -4,9 +4,12 @@ describe "OldRating" do
   describe "listing" do
     before(:each) do
       login("reporter")
-      Factory(:old_rating, rating: 2198, games: 329, icu_player: Factory(:icu_player, id: 1350, first_name: "Mark", last_name: "Orr"))
-      Factory(:old_rating, rating: 1349, games: 51, icu_player: Factory(:icu_player, id: 1349, first_name: "John", last_name: "Orr"))
-      Factory(:old_rating, rating: -58, games: 4, full: false, icu_player: Factory(:icu_player, id: 10349, first_name: "Aoife", last_name: "Bannon"))
+      FactoryGirl.create(:icu_player, id: 1350, first_name: "Mark", last_name: "Orr")
+      FactoryGirl.create(:icu_player, id: 1349, first_name: "John", last_name: "Orr")
+      FactoryGirl.create(:icu_player, id: 10349, first_name: "Aoife", last_name: "Bannon")
+      FactoryGirl.create(:old_rating, rating: 2198, games: 329, icu_id: 1350)
+      FactoryGirl.create(:old_rating, rating: 1349, games: 51, icu_id: 1349)
+      FactoryGirl.create(:old_rating, rating: -58, games: 4, full: false, icu_id: 10349)
       @fmt1 = "//div[@id='old_rating_results']/table//tr[td[.='%s'] and td[.='%d'] and td[.='%d' and @class='%s'] and td[.='%d']]"
       @fmt2 = "//div[@id='old_rating_results']/table//tr[td[.='%d']]"
     end

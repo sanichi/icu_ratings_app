@@ -1,6 +1,8 @@
-Factory.define :news_item do |n|
-  n.headline    { Faker::Lorem.sentence }
-  n.story       { Faker::Lorem.paragraphs }
-  n.published   true
-  n.association :user
+FactoryGirl.define do
+  factory :news_item do
+    headline    { Faker::Lorem.sentence }
+    story       { Faker::Lorem.paragraphs }
+    published   true
+    association :user
+  end
 end

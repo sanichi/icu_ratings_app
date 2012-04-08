@@ -1,10 +1,11 @@
 source "http://rubygems.org"
 
-gem "rails", "3.2.1"
+gem "rails", "3.2.2"
 gem "mysql2"
 gem "haml"
 gem "sass"
 gem "icu_tournament"
+gem "icu_ratings"
 gem "icu_name"
 gem "validates_timeliness"
 gem "whenever", :require => false
@@ -20,13 +21,6 @@ end
 
 group :development do
   gem "capistrano"
-  gem "pry"
-  gem "awesome_print"
-end
-
-group :test, :darwin do
-  gem "rb-fsevent", :require => false
-  gem "growl", :require => false
 end
 
 group :test, :development do
@@ -35,6 +29,5 @@ group :test, :development do
   gem "launchy"
   gem "factory_girl_rails"
   gem "faker"
-  gem "guard-rspec"
   gem "database_cleaner"
 end

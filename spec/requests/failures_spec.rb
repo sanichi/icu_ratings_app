@@ -7,7 +7,7 @@ describe "Failure" do
     end
 
     it "listing" do
-      20.times { Factory(:failure) }
+      20.times { FactoryGirl.create(:failure) }
       visit "/admin/failures"
       page.should have_selector("td", :text => "RuntimeError", :count => 15)
       click_link "next"
@@ -17,7 +17,7 @@ describe "Failure" do
     end
 
     it "details", js: true do
-      Factory(:failure, details: "Woopsee!")
+      FactoryGirl.create(:failure, details: "Woopsee!")
       visit "/admin/failures"
       click_link "Show failure details"
       page.should have_selector("pre", :text => "Woopsee!")

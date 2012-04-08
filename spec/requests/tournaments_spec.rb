@@ -98,7 +98,7 @@ describe "Tournament" do
 
   describe "listing" do
     before(:each) do
-      u = Factory(:user, role: "reporter")
+      u = FactoryGirl.create(:user, role: "reporter")
       @t1 = test_tournament("bunratty_masters_2011.tab", u.id)
       @t2 = test_tournament("junior_championships_u19_2010.txt", u.id)
     end
@@ -160,7 +160,7 @@ describe "Tournament" do
         u = login("officer")
         @t = tests.inject([]) do |m, n|
           t = test_tournament(n, u.id)
-          t.check_status
+          t.reset_status
           m.push(t)
         end
       end
@@ -212,13 +212,11 @@ describe "Tournament" do
         @t.each { |t| t.reload }
         @t[1].stage.should == "queued"
         @t[0].rorder.should == 2
-        @t[0].last_tournament.should_not be_nil
-        @t[0].last_tournament.id.should == @t[1].id
+        @t[0].last_tournament.should == @t[1]
         @t[0].next_tournament.should be_nil
         @t[1].rorder.should == 1
         @t[1].last_tournament.should be_nil
-        @t[1].next_tournament.should_not be_nil
-        @t[1].next_tournament.id.should == @t[0].id
+        @t[1].next_tournament.should == @t[0]
         @t[2].rorder.should be_nil
         @t[2].last_tournament.should be_nil
         @t[2].next_tournament.should be_nil
@@ -236,18 +234,14 @@ describe "Tournament" do
         @t.each { |t| t.reload }
         @t[2].stage.should == "queued"
         @t[0].rorder.should == 3
-        @t[0].last_tournament.should_not be_nil
-        @t[0].last_tournament.id.should == @t[2].id
+        @t[0].last_tournament.should == @t[2]
         @t[0].next_tournament.should be_nil
         @t[1].rorder.should == 1
         @t[1].last_tournament.should be_nil
-        @t[1].next_tournament.should_not be_nil
-        @t[1].next_tournament.id.should == @t[2].id
+        @t[1].next_tournament.should == @t[2]
         @t[2].rorder.should == 2
-        @t[2].last_tournament.should_not be_nil
-        @t[2].last_tournament.id.should == @t[1].id
-        @t[2].next_tournament.should_not be_nil
-        @t[2].next_tournament.id.should == @t[0].id
+        @t[2].last_tournament.should == @t[1]
+        @t[2].next_tournament.should == @t[0]
 
         visit "/admin/tournaments/#{@t[0].id}"
         page.should have_selector(@stgid, text: "Queued")
@@ -262,11 +256,9 @@ describe "Tournament" do
         @t[0].next_tournament.should be_nil
         @t[1].rorder.should == 1
         @t[1].last_tournament.should be_nil
-        @t[1].next_tournament.should_not be_nil
-        @t[1].next_tournament.id.should == @t[2].id
+        @t[1].next_tournament.should == @t[2]
         @t[2].rorder.should == 2
-        @t[2].last_tournament.should_not be_nil
-        @t[2].last_tournament.id.should == @t[1].id
+        @t[2].last_tournament.should == @t[1]
         @t[2].next_tournament.should be_nil
 
         visit "/admin/tournaments/#{@t[1].id}"
@@ -313,7 +305,7 @@ describe "Tournament" do
         load_icu_players_for(test)
         @u = login("reporter")
         @t = test_tournament(test, @u.id)
-        @t.check_status
+        @t.reset_status
         @t.update_attribute(:stage, "ready")
       end
 

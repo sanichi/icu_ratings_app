@@ -1,19 +1,21 @@
 class Tournament < ActiveRecord::Base
-  extend Util::Pagination
+  extend ICU::Util::Pagination
 
   FEDS = ICU::Federation.codes
   STAGE = %w[initial ready queued rated]
   TIEBREAK = "(?:#{ICU::TieBreak.rules.map(&:id).join('|')})"
 
   has_one    :upload, dependent: :destroy
-  has_many   :players, dependent: :destroy, include: :results
+  has_many   :players, dependent: :destroy
   belongs_to :user
+  belongs_to :last_tournament, class_name: "Tournament"
+  belongs_to :next_tournament, class_name: "Tournament"
 
   scope :ordered, order("start DESC, rorder DESC, tournaments.name")
 
   attr_accessible :name, :start, :finish, :fed, :city, :site, :arbiter, :deputy, :time_control, :tie_breaks, :user_id, :stage
 
-  before_validation :normalise_attributes
+  before_validation :normalise_attributes, :requeue
 
   validates_presence_of     :name, :start, :status
   validates_date            :start, after: "1900-01-01", on_or_before: :today
@@ -144,15 +146,19 @@ class Tournament < ActiveRecord::Base
     map = players.inject({}) { |h, p| h[p.num] = p.id; h }
     players.each do |p|
       p.results.each do |r|
-        r.update_attribute(:opponent_id, map[r.opponent_id]) if r.opponent_id != map[r.opponent_id]
+        r.update_column_if_changed(:opponent_id, map[r.opponent_id])
       end
     end
   end
 
-  # Players in rank order or, if the ranking is invalid, in name order.
+  # The players in rank order or, if the ranking is invalid, in name order.
   def ordered_players(rankable=nil)
     rankable ||= self.rankable
-    players.order(rankable ? "rank" : "last_name, first_name")
+    if rankable
+      players.sort { |a,b| a.rank <=> b.rank }
+    else
+      players.sort { |a,b| a.name <=> b.name }
+    end
   end
 
   # Return a menu of all possible opponents for a player given a round.
@@ -228,7 +234,7 @@ class Tournament < ActiveRecord::Base
     icut.rerank
     players.each do |player|
       icup = icut.player(player.id)
-      player.update_attribute(:rank, icup.rank) unless player.rank == icup.rank
+      player.update_column_if_changed(:rank, icup.rank)
     end
   end
 
@@ -268,6 +274,15 @@ class Tournament < ActiveRecord::Base
     return nil if samples.empty?
     return samples.first if short
     samples.join("; ")
+  end
+
+  # Return the name with years. E.g. "Bunratty Masters 2012", "Armstrong League 2011-12".
+  def name_with_year
+    s = start.year.to_s
+    return name if name.include?(s)
+    f = finish.year.to_s if finish
+    s << "-" + f[-2] if f && f != s
+    "#{name} #{s}"
   end
 
   # Return a summary of the orinial data.
@@ -310,28 +325,67 @@ class Tournament < ActiveRecord::Base
     end
 
     # Finally, update the attribute.
-    update_attribute(:stage, new_stage)
+    update_column(:stage, new_stage)
   end
 
-  # The next queued or rated tournament (see queue and dequeue).
-  def next_tournament
-    return if !rorder || rorder >= Tournament.where("rorder IS NOT NULL").count
-    Tournament.where(rorder: rorder + 1).first
-  end
-
-  # The previous queued or rated tournament (see queue and dequeue).
-  def last_tournament
-    return if !rorder || rorder <= 1
-    Tournament.where(rorder: rorder - 1).first
-  end
-
-  def status_ok?
+  # Check if the current status has acceptable value.
+  def status_ok?(recalculate=false)
+    reset_status(recalculate)
     status == "ok"
   end
 
-  def check_status
-    status = calculate_status
-    update_attribute(:status, status) unless status == self.status
+  # Recalculate and reset the status.
+  def reset_status(recalculate=false)
+    status = calculate_status(recalculate)
+    update_column_if_changed(:status, status)
+  end
+
+  # What is the first tournament due for rating or re-rating? Note that queued and rated
+  # tournaments should have order and ordered tournaments should either be queued or rated.
+  def self.next_for_rating
+    first_queued    = where(stage: "queued").order(:rorder).limit(1).first
+    first_changed   = where(stage: "rated").where("last_signature != curr_signature").order(:rorder).limit(1).first
+    first_moved     = where(stage: "rated").where("last_tournament_id != old_last_tournament_id").order(:rorder).limit(1).first
+    first_outofdate = find_by_sql(first_outofdate_sql).first
+    firsts          = [first_queued, first_changed, first_moved, first_outofdate].reject! { |i| i.nil? }
+    return nil if firsts.empty?
+    firsts.sort{ |a,b| a.rorder <=> b.rorder }.first
+  end
+
+  def self.first_outofdate_sql
+    <<-'HERE'
+    SELECT t2.*
+    FROM tournaments t1, tournaments t2
+    WHERE t1.rorder + 1 = t2.rorder AND (t1.last_rated > t2.last_rated OR (t1.last_rated = t2.last_rated AND t1.last_rated_msec > t2.last_rated_msec))
+    ORDER BY t2.rorder
+    LIMIT 1
+    HERE
+  end
+
+  # Rate this tournament. Returning an error message or nil.
+  def rate
+    rate!
+  rescue => e
+    e.message
+  end
+
+  # Rate this tournament. Return nil or throw an exception.
+  def rate!
+    check_rateable
+    transaction do
+      get_old_ratings
+      get_k_factors
+      icut = calculate_ratings
+      update_player_ratings(icut)
+      update_tournament_after_rating
+    end
+    nil
+  end
+
+  # Check for any changes before Tournament#show.
+  def check_for_changes
+    reset_status
+    reset_signatures(false)
   end
 
   private
@@ -376,10 +430,10 @@ class Tournament < ActiveRecord::Base
     [format, order, opts]
   end
 
-  def calculate_status
+  def calculate_status(recalculate)
     errors = Array.new
     check_player_count(errors)
-    check_player_status(errors)
+    check_player_status(errors, recalculate)
     check_player_category(errors)
     return "ok" if errors.empty?
     errors.join("|")
@@ -390,8 +444,8 @@ class Tournament < ActiveRecord::Base
     errors.push("a minimum of 2 players are required")
   end
 
-  def check_player_status(errors)
-    bad = players.inject(0) { |m, p| m += 1 unless p.status_ok?; m }
+  def check_player_status(errors, recalculate)
+    bad = players.inject(0) { |m, p| m += 1 unless p.status_ok?(recalculate); m }
     return if bad == 0
     errors.push("#{bad} player#{bad == 1 ? ' has' : 's have'} a bad status")
   end
@@ -412,18 +466,43 @@ class Tournament < ActiveRecord::Base
     end
   end
 
+  # Is the tournament stage suitable for rating (or rerating).
+  def rateable?
+    stage == "queued" || stage == "rated"
+  end
+
   # Queue a tournament for rating (establish it's order in the list of tournaments).
   def queue
     rorder = queue_position
-    Tournament.where("rorder >= ?", rorder).order("rorder DESC").each { |t| t.update_attribute(:rorder, t.rorder + 1) }
-    update_attribute(:rorder, rorder)
+    Tournament.where("rorder >= ?", rorder).order("rorder DESC").each { |t| t.update_column(:rorder, t.rorder + 1) }
+    update_column(:rorder, rorder)
+    a, b = calc_last_tournament, calc_next_tournament
+    update_column(:last_tournament_id, a.try(:id))
+    a.update_column(:next_tournament_id, id) if a
+    update_column(:next_tournament_id, b.try(:id))
+    b.update_column(:last_tournament_id, id) if b
   end
 
   # Unqueue a tournament for rating (blank it's order to remove it from the list of tournaments).
   def dequeue
+    a, b = last_tournament, next_tournament
     rorder = self.rorder
-    update_attribute(:rorder, nil)
-    Tournament.where("rorder > ?", rorder).order("rorder").each { |t| t.update_attribute(:rorder, t.rorder - 1) }
+    [:rorder, :last_tournament_id, :next_tournament_id].each { |col| update_column(col, nil) }
+    Tournament.where("rorder > ?", rorder).order("rorder").each { |t| t.update_column(:rorder, t.rorder - 1) }
+    a.update_column(:next_tournament_id, b.try(:id)) if a
+    b.update_column(:last_tournament_id, a.try(:id)) if b
+  end
+
+  # Requeue a queued or rated tournament in mid_edit (i.e. in a callback) if any of the changes could affect it's queue position, assuming it has one.
+  # In between dequeue and queue the tournament will have an inconsistent state (stage is "rated" or "queued" but no rorder) but only temporarily.
+  def requeue
+    return unless self.rorder
+    return if rorder_changed?
+    return unless start_changed? || name_changed? || rounds_changed?
+    a, b = last_tournament, next_tournament
+    return unless (a && !queue_position_higher(a)) || (b && queue_position_higher(b))
+    dequeue
+    queue
   end
 
   # Find the right queue position.
@@ -453,5 +532,76 @@ class Tournament < ActiveRecord::Base
     return rounds > t.rounds if rounds != rounds
     return name   > t.name   if name   != t.name
     id > t.id  # tie breaker
+  end
+
+  # Calculate the next queued or rated tournament after this one (see queue and dequeue).
+  def calc_next_tournament
+    return if !rorder || rorder >= Tournament.where("rorder IS NOT NULL").count
+    Tournament.where(rorder: rorder + 1).first
+  end
+
+  # Calculate the previous queued or rated tournament before this one (see queue and dequeue).
+  def calc_last_tournament
+    return if !rorder || rorder <= 1
+    Tournament.where(rorder: rorder - 1).first
+  end
+
+  # Check a tournament is ready to be rated.
+  def check_rateable
+    raise "tournament stage (#{stage}) is not suitable for rating" unless rateable?
+    raise "tournament status (#{status}) is not suitable for rating" unless status_ok?(true)
+  end
+
+  # Get the start ratings of all players.
+  def get_old_ratings
+    players.each { |p| p.get_old_rating(rorder) }
+  end
+
+  # Set k-factors for ICU players.
+  def get_k_factors
+    players.each { |p| p.get_k_factor(start) }
+  end
+
+  # Add players and results to an ICU::RatedTournament instance and rate it.
+  def calculate_ratings
+    t = ICU::RatedTournament.new(desc: "Scratch")
+    players.each { |p| p.add_player t }
+    players.each { |p| p.add_results t }
+    t.rate!
+    t
+  end
+
+  # Get player ratings from and ICU::RatedTournament after a successful rating calculation.
+  def update_player_ratings(t)
+    players.each { |p| p.get_ratings t.player(p.id) }
+  end
+
+  # Update tournament data after a successful rating calculation.
+  def update_tournament_after_rating
+    now = Time.now
+    msec = ((now.to_f - now.to_i) * 1000).to_i
+    update_column(:first_rated, now) unless first_rated
+    update_column(:last_rated, now)
+    update_column(:last_rated_msec, msec)
+    update_column(:reratings, reratings + 1)
+    update_column_if_changed(:stage, "rated")
+    update_column_if_changed(:old_last_tournament_id, last_tournament_id)
+    reset_signatures(true)
+  end
+
+  # Set the last and current signatures for the tournament and each player after the tournament has been rated,
+  # or just reset the current signatures so we can detect when the tournament has changed and needs re-rating.
+  def reset_signatures(set_last)
+    return unless stage == "rated"
+    players_signature = ""
+    players.sort{ |a,b| a.id <=> b.id }.each do |p|
+      signature = p.signature
+      p.update_column_if_changed(:curr_signature, signature)
+      p.update_column_if_changed(:last_signature, signature) if set_last
+      players_signature << signature
+    end
+    players_signature = Digest::MD5.hexdigest(players_signature)
+    update_column_if_changed(:curr_signature, players_signature)
+    update_column_if_changed(:last_signature, players_signature) if set_last
   end
 end

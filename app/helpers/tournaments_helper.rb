@@ -8,18 +8,16 @@ module TournamentsHelper
   end
 
   def result_id(result)
-    [result.player, result.opponent].inject("R-#{result.round}") do |id, p|
-      id += "-#{p.id}" if p;
-      id
-    end
+    id = "R-#{result.round}-#{result.player_id}"
+    id+= "-#{result.opponent_id}" if result.opponent_id
+    id
   end
 
   def result_class(result)
     cls = %w[result centered]
     cls << result.colour if result.colour
-    [result.player, result.opponent].inject(cls.join(" ")) do |cl, p|
-      cl += " P-#{p.id}" if p;
-      cl
-    end
+    cls << "P-#{result.player_id}"
+    cls << "P-#{result.opponent_id}" if result.opponent_id
+    cls.join(" ")
   end
 end

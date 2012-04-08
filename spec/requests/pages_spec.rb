@@ -3,10 +3,10 @@ require 'spec_helper'
 describe "Pages" do
   describe "contacts" do
     before(:each) do
-      @members   = (1..4).map { |i| Factory(:user, role: "member") }
-      @reporters = (1..3).map { |i| Factory(:user, role: "reporter") }
-      @officers  = (1..2).map { |i| Factory(:user, role: "officer") }
-      @admins    = (1..1).map { |i| Factory(:user, role: "admin") }
+      @members   = (1..4).map { |i| FactoryGirl.create(:user, role: "member") }
+      @reporters = (1..3).map { |i| FactoryGirl.create(:user, role: "reporter") }
+      @officers  = (1..2).map { |i| FactoryGirl.create(:user, role: "officer") }
+      @admins    = (1..1).map { |i| FactoryGirl.create(:user, role: "admin") }
     end
 
     it "should have correctly pluralized headers and correct numbers of contacts under each" do

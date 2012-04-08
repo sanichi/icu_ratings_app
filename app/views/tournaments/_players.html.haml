@@ -1,6 +1,11 @@
+- link_player = @tournament.stage == "rated" && can?(:show, Player)
+- show_rating = link_player
+- show_title  = @players.find_all{ |p| p.title }.size > 0
+
 %table{class: "cushioned"}
   %tr
-    %th{colspan: "#{@rankable ? 2 : 1}"}
+    - span = 1 + (@rankable ? 1 : 0) + (show_title ? 1 : 0) + (show_rating ? 1 : 0)
+    %th{colspan: span}
     - 1.upto(@tournament.rounds) do |r|
       %th{class: "round"}= r
     %th
@@ -8,7 +13,11 @@
     %tr
       - if @rankable
         %td{class: "centered"}= player.rank
-      %td{id: player_id(player), class: player_class(player)}= player.name
+      %td{id: player_id(player), class: player_class(player)}= link_to_if link_player, player.name, player
+      - if show_title
+        %td{class: "centered narrow"}= short_title(player.title)
+      - if show_rating
+        %td= player.old_rating
       - 1.upto(@tournament.rounds) do |r|
         - result = player.result_in_round(r)
         - if result

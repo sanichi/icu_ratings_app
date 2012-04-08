@@ -3,8 +3,8 @@ require 'spec_helper'
 describe "Sessions" do
   describe "logging in" do
     before(:each) do
-      @user = Factory(:user)
-      @loser = Factory(:user, expiry: 1.year.ago.at_end_of_year)
+      @user = FactoryGirl.create(:user)
+      @loser = FactoryGirl.create(:user, expiry: 1.year.ago.at_end_of_year)
       visit "/log_in"
     end
     

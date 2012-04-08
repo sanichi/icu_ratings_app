@@ -1,5 +1,5 @@
 class FideRating < ActiveRecord::Base
-  extend Util::Pagination
+  extend ICU::Util::Pagination
 
   belongs_to :fide_player, foreign_key: "fide_id"
 

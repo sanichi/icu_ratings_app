@@ -16,8 +16,8 @@ describe FidePlayer do
 
   context "name" do
     before(:each) do
-      @p = Factory(:fide_player, title: "IM")
-      @r = Factory(:fide_player)
+      @p = FactoryGirl.create(:fide_player, title: "IM")
+      @r = FactoryGirl.create(:fide_player)
     end
 
     it "no options or single boolean option" do

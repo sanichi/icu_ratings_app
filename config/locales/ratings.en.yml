@@ -1,0 +1,21 @@
+en:
+  ratings:
+    new_rating: New rating
+    old_rating: Old rating
+    new_games: New games
+    old_games: Old games
+    old_rating_games: Old rating/games
+    new_rating_games: New rating/games
+    bonus: Bonus
+    change: Rating change
+    performance: Performance
+    no_games: No rateable games
+    calculation: Rating Calculation
+    more_info: Additional Information
+    results:
+      round: Rnd
+      opponent: Opp
+      rating: Rng
+      result: Res
+      expected: Exp
+      change: Chg

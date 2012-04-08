@@ -3,5 +3,5 @@
   = render partial: "shared/ratings_graph/draw", formats: :js, locals: { graph: graph }
 %table{class: "invisible cushioned"}
   %tr
-    %td
+    %td{class: "nopadding"}
       #ratings_graph{width: graph.width, height: graph.height}

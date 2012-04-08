@@ -28,6 +28,12 @@
 - html = render "shared/pipe_list", :error => @player.status
 = render "shared/dialog", id: "status", button: false, cancel: "Dismiss", html: html
 
+
+- if @tournament.stage == "rated"
+  %table{class: "turbaned"}
+    %tr
+      %td= link_to "Member View", @player
+
 #help
   %dl
     %dt What are the different player categories?
@@ -44,4 +50,4 @@
           \- has no IDs or ratings
         %li
           %b Invalid
-          \- any player whose details are invalid or inconsistent
+          \- all others, including players with IDs whose details don't match our records

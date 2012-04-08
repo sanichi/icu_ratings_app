@@ -1,6 +1,8 @@
-Factory.define :old_rating do |o|
-  o.association  :icu_player
-  o.rating       { rand(2400) }
-  o.games        { rand(500) }
-  o.full         true
+FactoryGirl.define do
+  factory :old_rating do
+    icu_id       :icu_id
+    rating       { rand(2400) }
+    games        { rand(500) }
+    full         true
+  end
 end

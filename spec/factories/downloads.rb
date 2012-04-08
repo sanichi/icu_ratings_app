@@ -1,6 +1,8 @@
-Factory.define :download do |d|
-  d.comment      { Faker::Lorem.sentence.truncate(80) }
-  d.data         { Faker::Lorem.paragraphs }
-  d.file_name    { Faker::Lorem.words(1).first + ".txt" }
-  d.content_type "text/plain"
+FactoryGirl.define do
+  factory :download do
+    comment      { Faker::Lorem.sentence.truncate(80) }
+    data         { Faker::Lorem.paragraphs }
+    file_name    { Faker::Lorem.words(1).first + ".txt" }
+    content_type "text/plain"
+  end
 end

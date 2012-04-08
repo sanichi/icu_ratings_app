@@ -4,7 +4,7 @@ describe "NewsItem" do
   describe "officers" do
     before(:each) do
       @user = login("officer")
-      @news = Factory(:news_item)
+      @news = FactoryGirl.create(:news_item)
     end
 
     it "can create, edit and delete a news items" do
@@ -50,7 +50,7 @@ describe "NewsItem" do
   describe "reporters" do
     before(:each) do
       @user = login("reporter")
-      @news = Factory(:news_item)
+      @news = FactoryGirl.create(:news_item)
     end
 
     it "cannot edit other's news items" do
@@ -87,7 +87,7 @@ describe "NewsItem" do
   describe "members" do
     before(:each) do
       @user = login("member")
-      @news = [ Factory(:news_item), Factory(:news_item, user: @user) ]
+      @news = [ FactoryGirl.create(:news_item), FactoryGirl.create(:news_item, user: @user) ]
     end
 
     it "cannot manage news, even their own" do
@@ -109,7 +109,7 @@ describe "NewsItem" do
 
   describe "anyone" do
     before(:each) do
-      @news = (1..3).map { |i| Factory(:news_item) }
+      @news = (1..3).map { |i| FactoryGirl.create(:news_item) }
     end
 
     it "can list and read news" do
@@ -134,7 +134,7 @@ describe "NewsItem" do
 
   describe "home_page" do
     before(:each) do
-      @news = (1..3).map { |i| Factory(:news_item, published: false) }
+      @news = (1..3).map { |i| FactoryGirl.create(:news_item, published: false) }
     end
 
     it "has only published items" do

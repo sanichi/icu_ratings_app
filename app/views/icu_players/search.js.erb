@@ -1,4 +1,4 @@
 $("#dialog_search_icu_player")
-  .html("<%= escape_javascript(render('search_dialog')) %>")
+  .html("<%= j render('search_dialog') %>")
   .dialog("option", "title", "Find ICU Player")
   .dialog("open");

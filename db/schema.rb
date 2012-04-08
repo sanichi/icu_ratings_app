@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120114120616) do
+ActiveRecord::Schema.define(:version => 20120205154556) do
 
   create_table "downloads", :force => true do |t|
     t.string   "comment"
@@ -176,6 +176,18 @@ ActiveRecord::Schema.define(:version => 20120114120616) do
     t.date     "original_dob"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "old_rating",           :limit => 2
+    t.integer  "new_rating",           :limit => 2
+    t.integer  "trn_rating",           :limit => 2
+    t.integer  "old_games",            :limit => 2
+    t.integer  "new_games",            :limit => 2
+    t.integer  "bonus",                :limit => 2
+    t.integer  "k_factor",             :limit => 1
+    t.integer  "last_player_id"
+    t.decimal  "actual_score",                      :precision => 3, :scale => 1
+    t.decimal  "expected_score",                    :precision => 8, :scale => 6
+    t.string   "last_signature"
+    t.string   "curr_signature"
   end
 
   add_index "players", ["fide_id"], :name => "index_players_on_fide_id"
@@ -183,14 +195,16 @@ ActiveRecord::Schema.define(:version => 20120114120616) do
   add_index "players", ["tournament_id"], :name => "index_players_on_tournament_id"
 
   create_table "results", :force => true do |t|
-    t.integer  "round",       :limit => 1
+    t.integer  "round",          :limit => 1
     t.integer  "player_id"
     t.integer  "opponent_id"
-    t.string   "result",      :limit => 1
-    t.string   "colour",      :limit => 1
+    t.string   "result",         :limit => 1
+    t.string   "colour",         :limit => 1
     t.boolean  "rateable"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.decimal  "expected_score",              :precision => 8, :scale => 6
+    t.decimal  "rating_change",               :precision => 8, :scale => 6
   end
 
   add_index "results", ["opponent_id"], :name => "index_results_on_opponent_id"
@@ -206,8 +220,8 @@ ActiveRecord::Schema.define(:version => 20120114120616) do
     t.string   "time_control"
     t.date     "start"
     t.date     "finish"
-    t.string   "fed",                 :limit => 3
-    t.integer  "rounds",              :limit => 1
+    t.string   "fed",                    :limit => 3
+    t.integer  "rounds",                 :limit => 1
     t.integer  "user_id"
     t.string   "original_name"
     t.string   "original_tie_breaks"
@@ -215,11 +229,26 @@ ActiveRecord::Schema.define(:version => 20120114120616) do
     t.date     "original_finish"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "status",                            :default => "ok"
-    t.string   "stage",               :limit => 20, :default => "initial"
+    t.string   "status",                               :default => "ok"
+    t.string   "stage",                  :limit => 20, :default => "initial"
     t.integer  "rorder"
+    t.integer  "reratings",              :limit => 2,  :default => 0
+    t.integer  "next_tournament_id"
+    t.integer  "last_tournament_id"
+    t.integer  "old_last_tournament_id"
+    t.datetime "first_rated"
+    t.datetime "last_rated"
+    t.integer  "last_rated_msec",        :limit => 2
+    t.string   "last_signature",         :limit => 32
+    t.string   "curr_signature",         :limit => 32
   end
 
+  add_index "tournaments", ["curr_signature"], :name => "index_tournaments_on_curr_signature"
+  add_index "tournaments", ["last_rated"], :name => "index_tournaments_on_last_rated"
+  add_index "tournaments", ["last_rated_msec"], :name => "index_tournaments_on_last_rated_msec"
+  add_index "tournaments", ["last_signature"], :name => "index_tournaments_on_last_signature"
+  add_index "tournaments", ["last_tournament_id"], :name => "index_tournaments_on_last_tournament_id"
+  add_index "tournaments", ["old_last_tournament_id"], :name => "index_tournaments_on_old_last_tournament_id"
   add_index "tournaments", ["rorder"], :name => "index_tournaments_on_rorder", :unique => true
   add_index "tournaments", ["stage"], :name => "index_tournaments_on_stage"
   add_index "tournaments", ["user_id"], :name => "index_tournaments_on_user_id"

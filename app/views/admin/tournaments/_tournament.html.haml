@@ -68,23 +68,61 @@
       - if can?(:edit, @tournament) && @tournament.move_stage_options(current_user).size > 0
         = link_to edit_admin_tournament_path(@tournament, stage: ""), remote: true do
           = icon_tag "edit", "Update Stage"
-  - if last_tournament = @tournament.last_tournament
+  - if @tournament.rorder
     %tr
-      %th Last Tournament
-      %td= link_to last_tournament.name, [:admin, last_tournament]
-      %td{class: "floater"}
-  - if next_tournament = @tournament.next_tournament
-    %tr
-      %th Next Tournament
-      %td= link_to next_tournament.name, [:admin, next_tournament]
-      %td{class: "floater"}
+      %th Rating Order
+      %td
+        = "#{@tournament.rorder} of #{@rordered}"
+      %th{class: "floater"}
+    - if last_tournament = @tournament.last_tournament
+      %tr
+        %th Previous Tournament
+        %td
+          = last_tournament.rorder
+          = link_to last_tournament.name, [:admin, last_tournament]
+        %td{class: "floater"}
+    - if next_tournament = @tournament.next_tournament
+      %tr
+        %th Next Tournament
+        %td
+          = next_tournament.rorder
+          = link_to next_tournament.name, [:admin, next_tournament]
+        %td{class: "floater"}
+    - if @next_for_rating
+      %tr
+        %th Next for Rating
+        %td
+          - if @next_for_rating == @tournament
+            = "this tournament"
+          - else
+            = @next_for_rating.rorder
+            = link_to @next_for_rating.name, [:admin, @next_for_rating]
+        %th{class: "floater"}
+    - if @tournament.stage == "rated"
+      %tr
+        %th First Rated
+        %td= @tournament.first_rated.to_s(:db)
+        %th{class: "floater"}
+      - if @tournament.first_rated != @tournament.last_rated
+        %tr
+          %th Last Rated
+          %td= @tournament.last_rated.to_s(:db)
+          %th{class: "floater"}
+        %tr
+          %th Number of Reratings
+          %td= @tournament.reratings - 1
+          %th{class: "floater"}
 
 %table
   %tr
     %td{class: "centered"}
-      = link_to "Display", @tournament
-      &bull;
+      = link_to "Member View", @tournament
+      &bullet;
       = link_to "Export", admin_tournament_path(@tournament, format: "js"), remote: true
-      - if can?(:modify, @tournament) && @tournament.deletable?
-        &bull;
-        = link_to "Delete", [:admin, @tournament], confirm: "Are you sure?", method: :delete
+      - if can?(:modify, @tournament)
+        - if @tournament.deletable?
+          &bullet;
+          = link_to "Delete", [:admin, @tournament], confirm: "Are you sure you want to delete this tournament?", method: :delete
+        - if @tournament == @next_for_rating
+          &bullet;
+          = link_to "Rate", admin_tournament_path(@tournament, rate: "", format: "js"), method: :put, remote: true

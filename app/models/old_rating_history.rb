@@ -1,5 +1,5 @@
 class OldRatingHistory < ActiveRecord::Base
-  extend Util::Pagination
+  extend ICU::Util::Pagination
 
   belongs_to :old_tournament
   belongs_to :icu_player

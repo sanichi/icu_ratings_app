@@ -1,6 +1,6 @@
 class IcuPlayer < ActiveRecord::Base
-  extend Util::Pagination
-  extend Util::AlternativeNames
+  extend ICU::Util::Pagination
+  extend ICU::Util::AlternativeNames
 
   belongs_to :master, class_name: "IcuPlayer", foreign_key: :master_id
   has_many   :duplicates, class_name: "IcuPlayer"

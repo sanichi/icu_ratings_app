@@ -1,6 +1,6 @@
 <% if @tournament.errors.size == 0 %>
-  $("#show_tie_breaks").html("<%= escape_javascript(@tournament.tie_breaks) %>");
+  $("#show_tie_breaks").html("<%= j @tournament.tie_breaks %>");
   $("#dialog_update_tournament").dialog("close");
 <% else %>
-  alert("<%= escape_javascript(render('shared/error', object: @tournament, title: 'Error updating tie breaks:')) %>")
+  alert("<%= j render('shared/error', object: @tournament, title: 'Error updating tie breaks:') %>")
 <% end %>

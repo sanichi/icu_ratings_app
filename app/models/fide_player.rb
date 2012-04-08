@@ -1,6 +1,6 @@
 class FidePlayer < ActiveRecord::Base
-  extend Util::Pagination
-  extend Util::AlternativeNames
+  extend ICU::Util::Pagination
+  extend ICU::Util::AlternativeNames
 
   has_many :fide_ratings, foreign_key: "fide_id", order: "list DESC", dependent: :destroy
   belongs_to :icu_player, foreign_key: "icu_id"

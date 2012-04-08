@@ -1,0 +1,15 @@
+%table{class: table_class}
+  %tr
+    %th Foreign Player
+    %td{colspan: 2}= "#{@player.name} (#{@player.fed})"
+  = render "more_info"
+  %tr
+    %th Rating
+    %td= @player.old_rating
+    %td= "FIDE or other Elo"
+  %tr
+    %th Performance
+    %td= @player.trn_rating
+    %td= explain_trn_rating(@player)
+
+= render "results"

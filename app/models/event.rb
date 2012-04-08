@@ -1,5 +1,5 @@
 class Event < ActiveRecord::Base
-  extend Util::Pagination
+  extend ICU::Util::Pagination
 
   default_scope order("created_at DESC")
 

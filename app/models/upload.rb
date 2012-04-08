@@ -1,6 +1,6 @@
 class Upload < ActiveRecord::Base
-  extend Util::Pagination
-  include Util::Model
+  extend ICU::Util::Pagination
+  include ICU::Util::Model
 
   FORMATS = [['Swiss Perfect', 'SwissPerfect'], ['Swiss Perfect Export', 'SPExport'], ['FIDE-Krause', 'Krause'], ['ICU-CSV', 'ForeignCSV']]
   DEFAULT_FORMAT = 'SwissPerfect'

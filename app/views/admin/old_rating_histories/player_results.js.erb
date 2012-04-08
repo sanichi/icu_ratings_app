@@ -1,2 +1,2 @@
 $("#old_rating_history_results")
-  .html("<%= escape_javascript(render('player_results', icu_id: params[:icu_player_id])) %>");
+  .html("<%= j render('player_results', icu_id: params[:icu_player_id]) %>");

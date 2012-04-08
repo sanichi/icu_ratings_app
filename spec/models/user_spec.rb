@@ -3,28 +3,28 @@ require 'spec_helper'
 describe User do
   context "validation" do
     it "the factory test user is valid" do
-      lambda { Factory(:user) }.should_not raise_error
+      lambda { FactoryGirl.create(:user) }.should_not raise_error
     end
 
     it "should not allow duplicate emails (case insensitively)" do
-      user = Factory(:user)
-      lambda { Factory(:user, email: user.email) }.should raise_error(/email.*already.*taken/i)
-      lambda { Factory(:user, email: user.email.upcase) }.should raise_error(/email.*already.*taken/i)
+      user = FactoryGirl.create(:user)
+      lambda { FactoryGirl.create(:user, email: user.email) }.should raise_error(/email.*already.*taken/i)
+      lambda { FactoryGirl.create(:user, email: user.email.upcase) }.should raise_error(/email.*already.*taken/i)
     end
 
     it "should reject invalid roles" do
-      lambda { Factory(:user, role: "superuser") }.should raise_error(/role.*invalid/i)
+      lambda { FactoryGirl.create(:user, role: "superuser") }.should raise_error(/role.*invalid/i)
     end
 
     it "should have a minimum expiry date" do
-      lambda { Factory(:user, expiry: "2003-12-31") }.should raise_error(/expiry must be/i)
-      lambda { Factory(:user, expiry: "2005-12-31") }.should_not raise_error
+      lambda { FactoryGirl.create(:user, expiry: "2003-12-31") }.should raise_error(/expiry must be/i)
+      lambda { FactoryGirl.create(:user, expiry: "2005-12-31") }.should_not raise_error
     end
   end
 
   context "roles" do
     it "members" do
-      user = Factory(:user)
+      user = FactoryGirl.create(:user)
       user.role?(:member).should be_true
       user.role?(:reporter).should be_false
       user.role?(:officer).should be_false
@@ -34,7 +34,7 @@ describe User do
     end
 
     it "tournament reporters" do
-      user = Factory(:user, role: "reporter")
+      user = FactoryGirl.create(:user, role: "reporter")
       user.role?(:member).should be_true
       user.role?(:reporter).should be_true
       user.role?(:officer).should be_false
@@ -44,7 +44,7 @@ describe User do
     end
 
     it "rating officers" do
-      user = Factory(:user, role: "officer")
+      user = FactoryGirl.create(:user, role: "officer")
       user.role?(:member).should be_true
       user.role?(:reporter).should be_true
       user.role?(:officer).should be_true
@@ -54,7 +54,7 @@ describe User do
     end
 
     it "administrators" do
-      user = Factory(:user, role: "admin")
+      user = FactoryGirl.create(:user, role: "admin")
       user.role?(:member).should be_true
       user.role?(:reporter).should be_true
       user.role?(:officer).should be_true
@@ -65,7 +65,7 @@ describe User do
 
     it "invalid roles" do
       ["invalid", "", nil].each do |role|
-        user = Factory.build(:user, role: role)
+        user = FactoryGirl.build(:user, role: role)
         user.role?(:member).should be_false
         user.role?(:reporter).should be_false
         user.role?(:officer).should be_false
@@ -78,7 +78,7 @@ describe User do
 
   context "best email" do
     before(:each) do
-      @user = Factory(:user)
+      @user = FactoryGirl.create(:user)
     end
 
     it "should be the IcuPlayer's email" do
@@ -99,8 +99,8 @@ describe User do
   context "password_ok?" do
     before(:each) do
       @p = 'icuicj'
-      @u1 = Factory(:user, password: @p)
-      @u2 = Factory(:user, password: "be3ab3d3be49b8304b8604a3268dfcf2", salt: "b3f0f553a916b0e8ab6b2469cabd200f")
+      @u1 = FactoryGirl.create(:user, password: @p)
+      @u2 = FactoryGirl.create(:user, password: "be3ab3d3be49b8304b8604a3268dfcf2", salt: "b3f0f553a916b0e8ab6b2469cabd200f")
     end
 
     it "without salt" do

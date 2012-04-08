@@ -1,19 +1,22 @@
 module Admin
   class TournamentsController < ApplicationController
-    load_resource except: "index"
+    load_resource except: ["index", "show"]
     authorize_resource
 
     def index
       params[:admin] = true
       @tournaments = Tournament.search(params, admin_tournaments_path)
+      @next_for_rating = Tournament.next_for_rating
       render view(:results, :search) if request.xhr?
     end
 
     def show
+      @tournament = Tournament.includes(players: [:results]).find(params[:id])
       respond_to do |format|
         format.html do
-          @players = @tournament.players.includes(:results)
-          @tournament.check_status
+          @players = @tournament.players
+          @tournament.check_for_changes
+          extras
         end
         format.text { render text: @tournament.export(params) }
         format.js   { render view(:options, :export) }
@@ -36,15 +39,22 @@ module Admin
         end
         @players = @tournament.players.order(order).includes(:results)
         render view(:update, :ranks)
+      when params[:rate]
+        error = @tournament.rate
+        if error
+          render "shared/alert", locals: { message: "RATING FAILED: #{error}" }
+        else
+          render view(:update)
+        end
       when params[:tournament][:tie_breaks]
         @tournament.update_attributes(params[:tournament])
         render view(:update, :tie_breaks)
       when params[:tournament][:stage]
         @tournament.move_stage(params[:tournament][:stage], current_user)
-        render :update
+        render view(:update)
       else
         @tournament.update_attributes(params[:tournament])
-        render :update
+        render view(:update)
       end
     end
 
@@ -59,8 +69,14 @@ module Admin
 
     private
 
-    def view(file, group)
+    def view(file, group=nil)
+      extras if !group && file == :update
       group ? "admin/tournaments/#{group}/#{file}" : file
+    end
+
+    def extras
+      @next_for_rating = Tournament.next_for_rating
+      @rordered = Tournament.where("rorder is NOT NULL").count
     end
   end
 end

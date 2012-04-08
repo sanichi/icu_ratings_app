@@ -3,11 +3,11 @@ require 'spec_helper'
 describe FideRating do
   describe "list", js: true do
     before(:each) do
-      @r1 = Factory(:fide_rating, list: "2011-09-01", fide_player: Factory(:fide_player))
-      @r2 = Factory(:fide_rating, list: "2011-09-01", fide_player: Factory(:fide_player, gender: "F"))
-      @r3 = Factory(:fide_rating, list: "2011-09-01", fide_player: Factory(:fide_player))
-      @r4 = Factory(:fide_rating, list: "2011-07-01", fide_player: Factory(:fide_player))
-      @r5 = Factory(:fide_rating, list: "2011-07-01", fide_player: @r1.fide_player)
+      @r1 = FactoryGirl.create(:fide_rating, list: "2011-09-01", fide_player: FactoryGirl.create(:fide_player))
+      @r2 = FactoryGirl.create(:fide_rating, list: "2011-09-01", fide_player: FactoryGirl.create(:fide_player, gender: "F"))
+      @r3 = FactoryGirl.create(:fide_rating, list: "2011-09-01", fide_player: FactoryGirl.create(:fide_player))
+      @r4 = FactoryGirl.create(:fide_rating, list: "2011-07-01", fide_player: FactoryGirl.create(:fide_player))
+      @r5 = FactoryGirl.create(:fide_rating, list: "2011-07-01", fide_player: @r1.fide_player)
       @xp = "#fide_rating_results table tr"
     end
 

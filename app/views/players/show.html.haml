@@ -1,0 +1,71 @@
+%div.small-header
+  %span= link_to @tournament.name_with_year, @tournament
+
+= render @player.rateable_games == 0 ? "no_rateable_games" : @player.category, table_class: "right-headers cushioned"
+
+- if can? :modify, @tournament
+  %table{class: "turbaned"}
+    %tr
+      %td= link_to "Admin View", [:admin, @player]
+
+#help
+  %table{class: "right-headers"}
+    %tr
+      %th{class: "centered", colspan: 2} Definitions
+    %tr
+      %th= t "ratings.new_rating"
+      %td Rating after the tournament (rounded)
+    %tr
+      %th= t "ratings.old_rating"
+      %td Rating from last tournament played or inherited from old rating system
+    %tr
+      %th= t "ratings.new_games"
+      %td Total number of rated games after the tournament
+    %tr
+      %th= t "ratings.old_games"
+      %td Total number of rated games before the tournament
+    %tr
+      %th= t "ratings.change"
+      %td Change in rating (rounded)
+    %tr
+      %th= t "ratings.performance"
+      %td Performance rating (a.k.a. tournament rating)
+    %tr
+      %th= t "ratings.bonus"
+      %td Bonus (only applicable to ICU players with full ratings)
+    %tr
+      %th= t "ratings.results.round"
+      %td Round number
+    %tr
+      %th= t "ratings.results.opponent"
+      %td Opponent's name
+    %tr
+      %th= t "ratings.results.rating"
+      %td Opponent's effective rating (see below) per game and averaged
+    %tr
+      %th= t "ratings.results.result"
+      %td Result against opponent
+    %tr
+      %th= t "ratings.results.expected"
+      %td Expected score per game and summed
+    %tr
+      %th= t "ratings.results.change"
+      %td Change in rating per game and summed (all rounded)
+  %table{class: "turbaned"}
+    %tr
+      %th{colspan: 2} Opponent's effective rating
+    %tr
+      %td ICU player with full rating and no bonus
+      %td Old rating
+    %tr
+      %td ICU player with full rating and bonus
+      %td{rowspan: 4} New rating
+    %tr
+      %td ICU player with provisional rating
+    %tr
+      %td ICU player with no rating
+    %tr
+      %td Non-ICU player with no rating
+    %tr
+      %td Foreign player
+      %td FIDE or Elo equivalent rating

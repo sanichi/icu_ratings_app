@@ -1,5 +1,5 @@
 class OldTournament < ActiveRecord::Base
-  extend Util::Pagination
+  extend ICU::Util::Pagination
 
   has_many :old_rating_histories
   has_many :icu_players, through: :old_rating_histories

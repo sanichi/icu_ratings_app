@@ -3,14 +3,14 @@ ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
 require 'database_cleaner'
-require 'util/hacks'
+require 'icu/util/hacks'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
 # Permit Capybara to recognize ".tab" as a text/plain when file is uploaded.
-Util::Hacks.fix_mime_types
+ICU::Util::Hacks.fix_mime_types
 
 RSpec.configure do |config|
   # Mock framework.
@@ -33,7 +33,7 @@ end
 def test_tournament(file, user_id, arg={})
   opt = Hash.new
   case file
-  when "bunratty_masters_2011.tab"
+  when "bunratty_masters_2011.tab", "kilkenny_masters_2011.tab"
     opt[:fide] = arg.has_key?(:fide) ? arg[:fide] : true
   when "junior_championships_u19_2010.txt"
     opt[:start] = arg[:start].presence || "2010-04-11"
@@ -50,7 +50,7 @@ def test_tournament(file, user_id, arg={})
   tournament = Tournament.build_from_icut(icut)
   tournament.user_id = user_id
   tournament.save!
-  tournament.upload = Factory(:upload, name: file, user_id: user_id, tournament_id: tournament.id)
+  tournament.upload = FactoryGirl.create(:upload, name: file, user_id: user_id, tournament_id: tournament.id)
   tournament.save!
   tournament.renumber_opponents
   tournament
@@ -69,7 +69,7 @@ def login(user)
     visit "/log_out"
     return
   end
-  user = Factory(:user, role: user.to_s) unless user.instance_of?(User)
+  user = FactoryGirl.create(:user, role: user.to_s) unless user.instance_of?(User)
   visit "/log_in"
   page.fill_in "Email", with: user.email
   page.fill_in "Password", with: user.password
@@ -77,20 +77,43 @@ def login(user)
   user
 end
 
+# Load players in the given tournament(s) only and return hash from ICU ID to record.
 def load_icu_players_for(tournaments)
-  @tournaments_cache ||= YAML.load(File.read(File.expand_path('../factories/tournaments.yml', __FILE__)))
+  @tournaments_cache = YAML.load(File.read(File.expand_path('../factories/tournaments.yml', __FILE__)))
   tournaments = [tournaments] unless tournaments.is_a?(Array)
-  tournaments.inject([]) do |ids, t|
-    n = t.sub(/\.[a-z]+$/, "")
-    @tournaments_cache[n] ? ids.concat(@tournaments_cache[n]) : ids
-  end.uniq.each do |id|
-    load_icu_player(id)
+  tournaments.inject([]) do |a, t|
+    name = t.sub(/\.[a-z]+$/, "")
+    @tournaments_cache[name] ? a.concat(@tournaments_cache[name]) : a
+  end.uniq.inject({}) do |h, id|
+    h[id] = load_icu_player(id)
+    h
   end
 end
 
+# Load all players in all tournaments and return hash from ICU ID to record.
+def load_icu_players
+  @icu_players_cache ||= YAML.load(File.read(File.expand_path('../factories/icu_players.yml', __FILE__)))
+  @icu_players_cache.inject({}) do |h, (id, data)|
+    h[id] = FactoryGirl.create(:icu_player, data.merge(id: id))
+    h
+  end
+end
+
+# Load a single ICU player given by ID.
 def load_icu_player(id)
   @icu_players_cache ||= YAML.load(File.read(File.expand_path('../factories/icu_players.yml', __FILE__)))
-  Factory(:icu_player, @icu_players_cache[id].merge(id: id)) if @icu_players_cache[id]
+  @icu_players_cache[id] ? FactoryGirl.create(:icu_player, @icu_players_cache[id].merge(id: id)) : nil
+end
+
+# Load all old ratings and return hash from ICU ID to record.
+def load_old_ratings
+  return @old_ratings_cache if @old_ratings_cache
+  hash = YAML.load(File.read(File.expand_path('../factories/old_ratings.yml', __FILE__)))
+  @old_ratings_cache = hash.keys.inject({}) do |memo, icu_id|
+    data = hash[icu_id]
+    memo[icu_id] = FactoryGirl.create(:old_rating, icu_id: icu_id, rating: data[0], games: data[1], full: data[2])
+    memo
+  end
 end
 
 private

@@ -23,6 +23,21 @@ module ApplicationHelper
     end
     str.html_safe
   end
+  
+  # Round a floating point number for display. Input of nil allowed.
+  def round(num, decimals=3)
+    return "" unless num
+    "%.#{decimals}f" % num
+  end
+
+  # A signed integer (e.g "-10", "+125", "0"). Nil allowed.
+  def sign(num, opt={decimals: 0, space: false})
+    return "" unless num
+    sgn = num < 0 ? "-" : "+"
+    spc = opt[:space] ? ' ' : ''
+    num = num.abs
+    "#{sgn}#{spc}#{num}"
+  end
 
   def federation_menu(opt = { top: 'IRL', none: 'None' })
     menu = ICU::Federation.menu(opt)
@@ -123,6 +138,16 @@ module ApplicationHelper
     menu = User.joins(table).group(:user_id).map{ |u| [u.name, u.id] }.sort{ |a,b| a[0] <=> b[0] }
     menu.unshift([any, ""]) if any
     menu
+  end
+
+  # Return a abbreviated form of a title (e.g. WFM => wf).
+  def short_title(title)
+    return "" unless title.present?
+    case title
+    when "IM"  then "m"
+    when "WIM" then "wm"
+    else title.sub(/M$/, "").downcase
+    end
   end
 
   # Turn a date into a year-month (e.g. 2011-11-01 => 2011 Nov)

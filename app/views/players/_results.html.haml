@@ -1,0 +1,36 @@
+- show_extra    = @player.category == "icu_player" && @player.icu_player_type == "full_rating" && @player.rateable_games > 0
+- show_last_row = @player.rateable_games > 0
+- show_rating   = @player.rateable_games > 0
+%table
+  %tr
+    %th= t "ratings.results.round"
+    %th= t "ratings.results.opponent"
+    - if show_rating
+      %th= t "ratings.results.rating"
+    %th= t "ratings.results.result"
+    - if show_extra
+      %th= t "ratings.results.expected"
+      %th= t "ratings.results.change"
+  - 1.upto(@tournament.rounds) do |r|
+    - result = @player.result_in_round(r)
+    - opp = result.opponent if result
+    - rat = opp && result.rateable
+    - col = result.colour if result
+    %tr
+      %td{class: "centered"}= r
+      %td= link_to(opp.name, opp) if opp
+      - if show_rating
+        %td{class: "centered"}= opp.start_rating if rat
+      %td{class: "centered #{col}"}= score_html(result.score, rateable: result.rateable) if result
+      - if show_extra
+        %td{class: "centered"}= round(result.expected_score) if rat
+        %td{class: "righted"}= sign(result.rating_change.round) if rat
+  - if show_last_row
+    %tr
+      %td{colspan: 2}
+      - if show_rating
+        %td{class: "centered"}= round(@player.ave_opp_rating, 1)
+      %td{class: "centered"}= round(@player.rateable_score, 1)
+      - if show_extra
+        %td{class: "centered"}= round(@player.expected_score)
+        %td{class: "righted"}= sign(@player.new_rating - @player.old_rating - @player.bonus.to_i)

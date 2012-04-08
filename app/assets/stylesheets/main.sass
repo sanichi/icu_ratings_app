@@ -29,6 +29,8 @@ $ft-col: #B0B5C4
 // Highlight colours.
 $hl-col: white
 $hl-bg-col: #73AF02
+$hl-trn-col: black
+$hl-trn-bg-col: #FFFF00
 
 // Colours for prominent headers and buttons.
 $sp-col: white
@@ -175,8 +177,8 @@ table
   td.on-right
     :text-align right
   td.hilite
-    :background-color $hl-bg-col !important
-    :color $hl-col
+    :background-color $hl-trn-bg-col !important
+    :color $hl-trn-col
   td, th
     &.floater
       :background-color transparent
@@ -187,6 +189,9 @@ table
       :color $dsbl-col
     &.underlined
       :border-bottom 1px solid $hd-col !important
+    &.narrow
+      :padding-left 4px
+      :padding-right 4px
     &.B
       :background-color $tab-bg-col-black
     &.section
@@ -362,6 +367,9 @@ div.blurb
 
 .centered
   :text-align center !important
+
+.righted
+  :text-align right !important
 
 .cushioned
   :margin-bottom $vpad

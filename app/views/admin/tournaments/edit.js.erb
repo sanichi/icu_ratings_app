@@ -1,5 +1,5 @@
 $("#dialog_update_tournament")
-  .html("<%= escape_javascript(render('form')) %>")
+  .html("<%= j render('form') %>")
   .dialog("option", "title", "Update Tournament")
   .dialog("open");
 $("#tournament_start").datepicker({

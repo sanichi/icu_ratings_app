@@ -3,19 +3,19 @@ require 'spec_helper'
 module IcuRatings
   describe Graph do
     it "initialize from user" do
-      u = Factory(:user)
+      u = FactoryGirl.create(:user)
       g = Graph.new(u)
       g.title.should == u.icu_player.name
     end
 
     it "initialize from ICU player" do
-      p = Factory(:icu_player)
+      p = FactoryGirl.create(:icu_player)
       g = Graph.new(p)
       g.title.should == p.name
     end
 
     it "initialize from ICU rating" do
-      r = Factory(:icu_rating)
+      r = FactoryGirl.create(:icu_rating)
       g = Graph.new(r)
       g.title.should == r.icu_player.name
       g.icu_ratings.size.should == 1
@@ -23,13 +23,13 @@ module IcuRatings
     end
 
     it "initialize from FIDE player" do
-      p = Factory(:fide_player)
+      p = FactoryGirl.create(:fide_player)
       g = Graph.new(p)
       g.title.should == p.name
     end
 
     it "initialize from FIDE rating" do
-      r = Factory(:fide_rating)
+      r = FactoryGirl.create(:fide_rating)
       g = Graph.new(r)
       g.title.should == r.fide_player.name
       g.fide_ratings.size.should == 1
@@ -43,7 +43,7 @@ module IcuRatings
     end
 
     it "no ratings" do
-      p = Factory(:icu_player)
+      p = FactoryGirl.create(:icu_player)
       g = Graph.new(p)
       g.available?.should be_false
       g.icu_ratings.should be_empty
@@ -55,7 +55,7 @@ module IcuRatings
     end
 
     it "one ICU rating" do
-      r = Factory(:icu_rating, rating: 2192, list: "2011-09-01")
+      r = FactoryGirl.create(:icu_rating, rating: 2192, list: "2011-09-01")
       g = Graph.new(r.icu_player)
       g.available?.should be_true
       g.fide_ratings.should be_empty
@@ -75,7 +75,7 @@ module IcuRatings
     end
 
     it "one FIDE rating" do
-      r = Factory(:fide_rating, rating: 2362, list: "2003-04-01")
+      r = FactoryGirl.create(:fide_rating, rating: 2362, list: "2003-04-01")
       g = Graph.new(r.fide_player)
       g.available?.should be_true
       g.icu_ratings.should be_empty
@@ -95,13 +95,13 @@ module IcuRatings
     end
 
     it "multiple ratings" do
-      p = Factory(:icu_player)
-      f = Factory(:fide_player, icu_player: p)
-      Factory(:icu_rating, rating: 2312, list: "2003-01-01", icu_player: p)
-      Factory(:icu_rating, rating: 2201, list: "2010-09-01", icu_player: p)
-      Factory(:icu_rating, rating: 2192, list: "2011-09-01", icu_player: p)
-      Factory(:fide_rating, rating: 2362, list: "2003-04-01", fide_player: f)
-      Factory(:fide_rating, rating: 2260, list: "2011-11-01", fide_player: f)
+      p = FactoryGirl.create(:icu_player)
+      f = FactoryGirl.create(:fide_player, icu_player: p)
+      FactoryGirl.create(:icu_rating, rating: 2312, list: "2003-01-01", icu_player: p)
+      FactoryGirl.create(:icu_rating, rating: 2201, list: "2010-09-01", icu_player: p)
+      FactoryGirl.create(:icu_rating, rating: 2192, list: "2011-09-01", icu_player: p)
+      FactoryGirl.create(:fide_rating, rating: 2362, list: "2003-04-01", fide_player: f)
+      FactoryGirl.create(:fide_rating, rating: 2260, list: "2011-11-01", fide_player: f)
       g = Graph.new(p)
       g.available?.should be_true
       g.icu_ratings.size.should == 3

@@ -1,4 +1,6 @@
-Factory.define :failure do |f|
-  f.name     "RuntimeError"
-  f.details  { Faker::Lorem.paragraphs }
+FactoryGirl.define do
+  factory :failure do
+    name     "RuntimeError"
+    details  { Faker::Lorem.paragraphs }
+  end
 end

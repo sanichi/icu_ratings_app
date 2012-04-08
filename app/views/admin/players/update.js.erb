@@ -1,7 +1,7 @@
 <% if @player.errors.size == 0 %>
-  $("#player").html("<%= escape_javascript(render('player')) %>");
+  $("#player").html("<%= j render('player') %>");
   $.each(["update_player", "search_icu_player", "search_fide_player"], function(i, name) { $("#dialog_" + name).dialog("close") });
-  $("#dialog_status").html("<%= escape_javascript(render('shared/pipe_list', error: @player.status)) %>");
+  $("#dialog_status").html("<%= j render('shared/pipe_list', error: @player.status) %>");
 <% else %>
-  alert("<%= escape_javascript(render('shared/error', object: @player, title: 'Error updating player:')) %>")
+  alert("<%= j render('shared/error', object: @player, title: 'Error updating player:') %>")
 <% end %>
