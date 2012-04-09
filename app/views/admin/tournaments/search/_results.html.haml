@@ -26,4 +26,5 @@
       %td= t.user.name
   - if @tournaments.multi_page
     %tr
+      %td{class: "floater"}
       %td{colspan: 6, class: "centered"}= pagination_links(@tournaments)
