@@ -157,9 +157,8 @@ class Tournament < ActiveRecord::Base
   end
 
   # The players in rank order or, if the ranking is invalid, in name order.
-  def ordered_players(rankable=nil)
-    rankable ||= self.rankable
-    if rankable
+  def ordered_players(opt={})
+    if !opt[:by_name] && rankable
       players.sort { |a,b| a.rank <=> b.rank }
     else
       players.sort { |a,b| a.name <=> b.name }

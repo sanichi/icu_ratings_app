@@ -14,7 +14,7 @@ module Admin
       @tournament = Tournament.includes(players: [:results]).find(params[:id])
       respond_to do |format|
         format.html do
-          @players = @tournament.players
+          @players = @tournament.ordered_players(by_name: true)
           @tournament.check_for_changes
           extras
         end
@@ -33,12 +33,12 @@ module Admin
       when params[:ranks]
         @tournament.rank if params[:rank]
         @ranking = @tournament.ranking_summary
-        @problem, order = false, :num
+        @problem, by_name = false, true
         if params[:order]
           @problem = !@ranking[:rankable]
-          order = :rank unless @problem
+          by_name = false unless @problem
         end
-        @players = @tournament.players.order(order).includes(:results)
+        @players = @tournament.ordered_players(by_name: by_name)
         render view(:update, :ranks)
       when params[:rate]
         error = @tournament.rate

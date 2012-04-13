@@ -8,6 +8,6 @@ class TournamentsController < ApplicationController
   def show
     @tournament = Tournament.includes(players: [:results]).find(params[:id])
     @rankable = @tournament.rankable
-    @players = @tournament.ordered_players(@rankable)
+    @players = @tournament.ordered_players
   end
 end
