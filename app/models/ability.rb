@@ -19,9 +19,9 @@ class Ability
     can :modify, Upload, user_id: user.id
 
     can :read, [Download, Player, Result, Tournament]
-    can :modify, Tournament, user_id: user.id
-    can :modify, Player, tournament: { user_id: user.id }
-    can :modify, Result, player: { tournament: { user_id: user.id } }
+    can :modify, Tournament, user_id: user.id, locked: false
+    can :modify, Player, tournament: { user_id: user.id, tournament: { locked: false } }
+    can :modify, Result, player: { tournament: { user_id: user.id, locked: false } }
 
     can :create, NewsItem
     can :modify, NewsItem, user_id: user.id
@@ -33,10 +33,16 @@ class Ability
     return unless user.role? :officer
 
     can :read, Event
-    can :manage, [Download, FidePlayer, NewsItem, Tournament, Upload]
+    can :manage, [Download, FidePlayer, NewsItem, Tournament, Player, Result, Upload]
+    cannot :modify, Tournament, locked: true
+    cannot :modify, Player, tournament: { locked: true }
+    cannot :modify, Result, player: { tournament: { locked: true } }
 
     return unless user.role? :admin
 
     can :manage, :all
+    cannot :modify, Tournament, locked: true
+    cannot :modify, Player, tournament: { locked: true }
+    cannot :modify, Result, player: { tournament: { locked: true } }
   end
 end

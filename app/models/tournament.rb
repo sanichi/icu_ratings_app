@@ -586,6 +586,7 @@ class Tournament < ActiveRecord::Base
     update_column(:reratings, reratings + 1)
     update_column_if_changed(:stage, "rated")
     update_column_if_changed(:old_last_tournament_id, last_tournament_id)
+    update_column_if_changed(:locked, true)
     reset_signatures(true)
   end
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120205154556) do
+ActiveRecord::Schema.define(:version => 20120411190438) do
 
   create_table "downloads", :force => true do |t|
     t.string   "comment"
@@ -241,6 +241,7 @@ ActiveRecord::Schema.define(:version => 20120205154556) do
     t.integer  "last_rated_msec",        :limit => 2
     t.string   "last_signature",         :limit => 32
     t.string   "curr_signature",         :limit => 32
+    t.boolean  "locked",                               :default => false
   end
 
   add_index "tournaments", ["curr_signature"], :name => "index_tournaments_on_curr_signature"

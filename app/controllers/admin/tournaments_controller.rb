@@ -1,6 +1,6 @@
 module Admin
   class TournamentsController < ApplicationController
-    load_resource except: ["index", "show"]
+    load_resource except: ["index", "show", "update"]
     authorize_resource
 
     def index
@@ -28,6 +28,7 @@ module Admin
     end
 
     def update
+      @tournament = Tournament.includes(players: [:results]).find(params[:id])
       case
       when params[:ranks]
         @tournament.rank if params[:rank]
@@ -46,6 +47,9 @@ module Admin
         else
           render view(:update)
         end
+      when params[:locked]
+        @tournament.update_column(:locked, params[:locked] == "false" ? false : true)
+        render view(:update, :locked)
       when params[:tournament][:tie_breaks]
         @tournament.update_attributes(params[:tournament])
         render view(:update, :tie_breaks)
@@ -56,6 +60,7 @@ module Admin
         @tournament.update_attributes(params[:tournament])
         render view(:update)
       end
+      extras
     end
 
     def destroy

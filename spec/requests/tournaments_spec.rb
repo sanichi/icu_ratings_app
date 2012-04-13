@@ -395,4 +395,48 @@ describe "Tournament" do
       end
     end
   end
+
+  describe "locking" do
+    before(:each) do
+      @r = login("reporter")
+      @o = FactoryGirl.create(:user, role: "officer")
+      @a = FactoryGirl.create(:user, role: "admin")
+      @t = test_tournament("bunratty_masters_2011.tab", @r.id)
+    end
+
+    it "should be able to make modifications if tournament is not locked" do
+      visit "/admin/tournaments/#{@t.id}"
+      page.should have_link("Edit Tournament")
+      page.should have_no_link("Lock Tournament")
+      visit "/admin/players/#{@t.players.first.id}"
+      page.should have_link("Update Player")
+      page.should have_link("Edit Result")
+      login @o
+      visit "/admin/tournaments/#{@t.id}"
+      page.should have_link("Edit Tournament")
+      page.should have_link("Lock Tournament")
+      login @a
+      visit "/admin/tournaments/#{@t.id}"
+      page.should have_link("Edit Tournament")
+      page.should have_link("Lock Tournament")
+    end
+
+    it "should not be able to make modifications if tournament is locked" do
+      @t.update_column(:locked, true)
+      visit "/admin/tournaments/#{@t.id}"
+      page.should have_no_link("Edit Tournament")
+      page.should have_no_link("UnLock Tournament")
+      visit "/admin/players/#{@t.players.first.id}"
+      page.should have_no_link("Update Player")
+      page.should have_no_link("Edit Result")
+      login @o
+      visit "/admin/tournaments/#{@t.id}"
+      page.should have_no_link("Edit Tournament")
+      page.should have_link("Unlock Tournament")
+      login @a
+      visit "/admin/tournaments/#{@t.id}"
+      page.should have_no_link("Edit Tournament")
+      page.should have_link("Unlock Tournament")
+    end
+  end
 end

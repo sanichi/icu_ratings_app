@@ -1,4 +1,5 @@
 <% if @tournament.errors.size == 0 %>
+  $("#tournament_name").text("<%= @tournament.name_with_year %>")
   $("#tournament").html("<%= j render('tournament') %>");
   $("#dialog_update_tournament").dialog("close");
 <% else %>

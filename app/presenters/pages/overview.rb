@@ -31,13 +31,15 @@ module Pages
       return @q if @q
       @q = {}
       @q["Queued"] = { icon: "ok", count: Tournament.where("rorder IS NOT NULL").count }
-      @q["Rated"]  = { icon: "ok", count: Tournament.where(status: "rated").count }
-      @q["First"]  = { icon: "ok", rorder: Tournament.minimum(:rorder)}
-      @q["Next"]   = { icon: "ok"}
-      @q["Last"]   = { icon: "ok", rorder: Tournament.maximum(:rorder)}
-      @q["Rated"][:icon] = "problems" unless @q["Rated"][:count]  == @q["Queued"][:count]
+      @q["Rated"] = { icon: "ok", count: Tournament.where(stage: "rated").count }
+      @q["Locked"] = { icon: "ok", count: Tournament.where(locked: true).count }
+      @q["First"] = { icon: "ok", rorder: Tournament.minimum(:rorder)}
+      @q["Next"] = { icon: "ok"}
+      @q["Last"] = { icon: "ok", rorder: Tournament.maximum(:rorder)}
+      @q["Rated"][:icon] = "problems" unless @q["Rated"][:count] == @q["Queued"][:count]
+      @q["Locked"][:icon] = "problems" unless @q["Rated"][:count] == @q["Locked"][:count]
       @q["First"][:icon] = "problems" unless !@q["First"][:rorder] || @q["First"][:rorder] == 1
-      @q["Last"][:icon]  = "problems" unless !@q["Last"][:rorder]  || @q["Last"][:rorder]  == @q["Queued"][:count]
+      @q["Last"][:icon] = "problems" unless !@q["Last"][:rorder] || @q["Last"][:rorder] == @q["Queued"][:count]
       @q["First"][:tournament] = Tournament.where(rorder: @q["First"][:rorder]).first if @q["First"][:rorder]
       @q["Last"][:tournament] = Tournament.where(rorder: @q["Last"][:rorder]).first if @q["Last"][:rorder]
       @q["Next"][:tournament] = Tournament.next_for_rating

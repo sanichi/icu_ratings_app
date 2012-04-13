@@ -87,6 +87,7 @@ describe Tournament do
       @t1.rorder.should == 1
       @t1.last_signature.should be_nil
       @t1.curr_signature.should be_nil
+      @t1.locked.should be_false
 
       # Rate the 1st tournament.
       @t1.rate!
@@ -245,6 +246,7 @@ describe Tournament do
       @t1.last_signature.should_not be_nil
       @t1.curr_signature.should == @t1.last_signature
       @t1.last_tournament_id.should == @t1.old_last_tournament_id
+      @t1.locked.should be_true
 
       # What tournament should be rated next?
       Tournament.next_for_rating.should == @t3

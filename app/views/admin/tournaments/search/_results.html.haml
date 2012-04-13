@@ -3,6 +3,7 @@
     %th{class: "floater"}
     %th
     %th
+    %th
     %th #
     %th Name
     %th Start
@@ -20,6 +21,7 @@
           = icon_tag "next_for_rating", "Next Tournament for Rating"
       %td= icon_tag stage, t(stage)
       %td= icon_tag status, t(status)
+      %td= icon_tag t.locked ? "lock" : "unlock", t.locked ? "Locked" : "Unlocked"
       %td= t.rorder
       %td= link_to t.name, [:admin, t]
       %td= t.start
