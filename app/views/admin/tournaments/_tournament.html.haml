@@ -53,7 +53,7 @@
     %th Reporter
     %td= @tournament.user.name
     %td{class: "floater top", rowspan: 2}
-      - if manageable
+      - if manageable && editable
         = link_to edit_admin_tournament_path(@tournament, reporter: ""), remote: true do
           = icon_tag "edit", "Change Reporter"
   %tr
