@@ -85,6 +85,11 @@ class Tournament < ActiveRecord::Base
       # Stage.
       stage = params[:stage]
       matches = matches.where(stage: stage) if stage.present?
+
+      # Lock.
+      locked = params[:locked]
+      matches = matches.where(locked: true) if locked == "true"
+      matches = matches.where(locked: false) if locked == "false"
     else
       # Only "ok" status.
       matches = matches.where(status: "ok")

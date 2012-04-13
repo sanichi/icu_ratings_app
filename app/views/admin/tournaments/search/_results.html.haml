@@ -11,7 +11,7 @@
   - if @tournaments.count == 0
     %tr
       %td{class: "floater"}
-      %td{colspan: 6, class: "centered"} No matches
+      %td{colspan: 7, class: "centered"} No matches
   - @tournaments.matches.each do |t|
     - stage = t.stage
     - status = t.status == "ok" ? "ok" : "problems"
@@ -29,4 +29,4 @@
   - if @tournaments.multi_page
     %tr
       %td{class: "floater"}
-      %td{colspan: 6, class: "centered"}= pagination_links(@tournaments)
+      %td{colspan: 7, class: "centered"}= pagination_links(@tournaments)

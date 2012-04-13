@@ -128,6 +128,12 @@ module ApplicationHelper
     menu
   end
 
+  def tournament_lock_menu(any=nil)
+    menu = [["On", "true"], ["Off", "false"]]
+    menu.unshift([any, ""]) if any
+    menu
+  end
+
   def upload_format_menu(any=nil)
     menu = Upload::FORMATS.dup
     menu.unshift([any, ""]) if any

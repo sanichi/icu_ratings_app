@@ -8,12 +8,14 @@
       %th= label_tag :year, "Year"
       %th= label_tag :status, "Status"
       %th= label_tag :stage, "Stage"
+      %th= label_tag :locked, "Lock"
       %th= label_tag :user_id, "Reporter"
     %tr
       %td= text_field_tag :name, params[:name], class: "centered", size: 20
       %td= text_field_tag :year, params[:year], class: "centered", size: 4
       %td= select_tag :status, options_for_select(tournament_status_menu("Any"), params[:status])
       %td= select_tag :stage, options_for_select(tournament_stage_menu("Any"), params[:stage])
+      %td= select_tag :locked, options_for_select(tournament_lock_menu("Any"), params[:locked])
       %td= select_tag :user_id, options_for_select(user_menu(:tournaments, "Any"), params[:user_id])
   %table{class: "invisible"}
     %tr
