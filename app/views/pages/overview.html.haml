@@ -31,18 +31,6 @@
     %td
       %table{class: "right-headers"}
         %tr
-          %th{colspan: 3, class: "centered"} Problems
-        - @overview.problems.each_pair do |desc, data|
-          %tr
-            %th= desc
-            - n = data[:count]
-            - i = data[:icon]
-            - c = "centered" + (n == 0 ? " disabled" : "")
-            %td{class: c}= link_to_if n > 0, n, data[:path]
-            %td= icon_tag i, t(i)
-    %td
-      %table{class: "right-headers"}
-        %tr
           %th{colspan: 3} Rating Queue
         - @overview.queued.each_pair do |desc, data|
           %tr
@@ -57,3 +45,15 @@
           %tr
             %th= desc
             %td{class: "centered"}= link_to data[:count], self.send(data[:path])
+    %td
+      %table{class: "right-headers"}
+        %tr
+          %th{colspan: 3, class: "centered"} Problems
+        - @overview.problems.each_pair do |desc, data|
+          %tr
+            %th= desc
+            - n = data[:count]
+            - i = data[:icon]
+            - c = "centered" + (n == 0 ? " disabled" : "")
+            %td{class: c}= link_to_if n > 0, n, data[:path]
+            %td= icon_tag i, t(i)
