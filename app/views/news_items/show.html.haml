@@ -4,6 +4,7 @@
 
 .news
   .headline
+    = "by"
     %span= @news_item.user.name(false)
     .times= timestamps_summary(@news_item)
   %hr
