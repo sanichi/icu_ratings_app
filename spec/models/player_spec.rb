@@ -48,20 +48,22 @@ describe Player do
   
   context "#signature" do
     before(:each) do
-      @t = test_tournament("bunratty_masters_2011.tab", 1)
+      f = "bunratty_masters_2011.tab"
+      load_icu_players_for(f)
+      @t = test_tournament(f, 1)
     end
     
-    it "should get right signature for player who played in every round" do
+    it "should get right signature for foreign player who played in every round" do
       p = @t.players.find_by_last_name_and_first_name("Short", "Nigel")
-      p.signature.should == "1W19 2D11 3W8 4L1 5D9 6W14"
+      p.signature.should == "2658 1W19 2D11 3W8 4L1 5D9 6W14"
     end
     
-    it "should get right signature for player who didn't play in every round" do
+    it "should get right signature for ICU player who didn't play in every round" do
       p = @t.players.find_by_last_name("Cafolla")
-      p.signature.should == "1L11 2D19 3W27 4W25 5L7"
+      p.signature.should == "159 1L11 2D19 3W27 4W25 5L7"
     end
     
-    it "should get right signature for player who didn't play in any rounds" do
+    it "should get right signature for new player who didn't play in any rounds" do
       p = @t.players.find_by_last_name("Grennel")
       p.signature.should == ""
     end

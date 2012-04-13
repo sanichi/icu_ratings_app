@@ -203,7 +203,11 @@ class Player < ActiveRecord::Base
 
   # Calculate a signature for detecting changes to rating data.
   def signature
-    results.find_all{ |r| r.rateable }.map(&:signature).join(" ")
+    sig = []
+    sig.push icu_id if category == "icu_player"
+    sig.push fide_rating if category == "foreign_player"
+    sig.push results.find_all{ |r| r.rateable }.map(&:signature).join(" ")
+    sig.find_all{ |x| x.present? }.join(" ")
   end
 
   # Given it's an ICU player, what sub-category is it?

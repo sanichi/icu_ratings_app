@@ -106,7 +106,7 @@ describe Tournament do
       p.new_games.should == 1116
       p.bonus.should == 0
       p.expected_score.should be_within(0.0001).of(1.7660)
-      p.last_signature.should == "1L11 2D19 3W27 4W25 5L7"
+      p.last_signature.should == "159 1L11 2D19 3W27 4W25 5L7"
       p.curr_signature.should == p.last_signature
 
       # ICU player with provisional rating.
@@ -123,7 +123,7 @@ describe Tournament do
       p.new_games.should == p.old_games + 6
       p.bonus.should be_nil
       p.expected_score.should be_within(0.0001).of(3.3911)
-      p.last_signature.should == "1L5 2L23 3W33 4D17 5W26 6W24"
+      p.last_signature.should == "8453 1L5 2L23 3W33 4D17 5W26 6W24"
       p.curr_signature.should == p.last_signature
 
       # ICU player with no previous rating.
@@ -140,7 +140,7 @@ describe Tournament do
       p.new_games.should == 6
       p.bonus.should be_nil
       p.expected_score.should be_within(0.0001).of(2.9319)
-      p.last_signature.should == "1W31 2D1 3L11 4D10 5W22 6L5"
+      p.last_signature.should == "12376 1W31 2D1 3L11 4D10 5W22 6L5"
       p.curr_signature.should == p.last_signature
 
       # New player, no ICU number.
@@ -174,7 +174,7 @@ describe Tournament do
       p.new_games.should == 0
       p.bonus.should be_nil
       p.expected_score.should be_within(0.0001).of(5.0379)
-      p.last_signature.should == "1W19 2D11 3W8 4L1 5D9 6W14"
+      p.last_signature.should == "2658 1W19 2D11 3W8 4L1 5D9 6W14"
       p.curr_signature.should == p.last_signature
 
       # ICU player who played no rated games in this tournament.
@@ -191,7 +191,7 @@ describe Tournament do
       p.new_games.should == 329
       p.bonus.should be_nil
       p.expected_score.should be_nil
-      p.last_signature.should == ""
+      p.last_signature.should == "1350"
       p.curr_signature.should == p.last_signature
 
       # New player, no ICU number, no rated games in this tournament.
@@ -225,7 +225,7 @@ describe Tournament do
       p.new_games.should == 0
       p.bonus.should be_nil
       p.expected_score.should be_nil
-      p.last_signature.should == ""
+      p.last_signature.should == "2550"
       p.curr_signature.should == p.last_signature
 
       # The number of players who start without any rating.
