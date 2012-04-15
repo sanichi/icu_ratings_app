@@ -21,6 +21,7 @@ end
 
 group :development do
   gem "capistrano"
+  gem "quiet_assets"
 end
 
 group :test, :development do
