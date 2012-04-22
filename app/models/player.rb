@@ -281,7 +281,7 @@ class Player < ActiveRecord::Base
         category = "icu_player"
       when fide_rating.present? && fed.present?
         category = "foreign_player"
-      when icu_id.blank? && fide_id.blank? && icu_rating.blank? && fide_rating.blank?
+      when icu_id.blank? && icu_rating.blank? && fide_rating.blank?
         category = "new_player"
       else
         errors.push "cannot determine category"
