@@ -15,11 +15,11 @@ class Tournament < ActiveRecord::Base
 
   attr_accessible :name, :start, :finish, :fed, :city, :site, :arbiter, :deputy, :time_control, :tie_breaks, :user_id, :stage
 
-  before_validation :normalise_attributes, :requeue
+  before_validation :normalise_attributes, :guess_finish, :requeue
 
   validates_presence_of     :name, :start, :status
   validates_date            :start, after: "1900-01-01", on_or_before: :today
-  validates_date            :finish, after: "1900-01-01", on_or_before: :today, allow_nil: true
+  validates_date            :finish, after: "1900-01-01", on_or_before: :today
   validate                  :finish_on_or_after_start
   validates_inclusion_of    :fed, in: FEDS, allow_nil: true, message: '(%{value}) is invalid'
   validates_inclusion_of    :stage, in: STAGE, message: '(%{value}) is invalid'
@@ -288,11 +288,6 @@ class Tournament < ActiveRecord::Base
     s << "-" + f[-2] if f && f != s
     "#{name} #{s}"
   end
-  
-  # Date used for ordering tournaments in queue. Start will always be present.
-  def date
-    finish || start
-  end
 
   # Return a summary of the orinial data.
   def original_data
@@ -400,13 +395,20 @@ class Tournament < ActiveRecord::Base
   private
 
   def finish_on_or_after_start
-    errors.add(:finish, "finish can't be before start") if finish && finish < start
+    errors.add(:finish, "- end date can't be before start date") if finish && finish < start
   end
 
   def normalise_attributes
     %w[start finish fed city site arbiter deputy time_control tie_breaks].each do |attr|
       self.send("#{attr}=", nil) if self.send(attr).to_s.match(/^\s*$/)
     end
+  end
+
+  # Guess a finish if there isn't one already.
+  def guess_finish
+    return if finish
+    return unless start && rounds
+    self.finish = start + (rounds <= 6 ? (rounds / 2.0).ceil : rounds).days
   end
 
   # Translate from CGI params to export options.
@@ -537,7 +539,8 @@ class Tournament < ActiveRecord::Base
 
   # Compare this tournament to another and return true if it should be higher in the queue and false otherwise.
   def queue_position_higher(t)
-    return date   > t.date   if date   != t.date
+    return finish > t.finish if finish != t.finish
+    return start  > t.start  if start  != t.start
     return rounds > t.rounds if rounds != rounds
     return name   > t.name   if name   != t.name
     id > t.id  # tie breaker

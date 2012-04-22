@@ -4,12 +4,13 @@ function toggle_file_format() {
   toggle_help_sections(selected);
 }
 function toggle_upload_options(selected) {
-  $.each(["name", "start", "feds", "ratings", "round_dates"], function(i, key) { toggle_upload_option(key, "off") });
+  $.each(["name", "start", "finish", "feds", "ratings", "round_dates"], function(i, key) { toggle_upload_option(key, "off") });
   var on = [];
   switch(selected) {
     case "Krause":       on.push("feds", "ratings", "round_dates"); break;
-    case "SwissPerfect": on.push("feds", "start"); break;
-    case "SPExport":     on.push("feds", "start", "name"); break;
+    case "SwissPerfect": on.push("feds", "start", "finish"); break;
+    case "SPExport":     on.push("feds", "start", "finish", "name"); break;
+    case "ForeignCSV":   on.push("finish"); break;
   }
   $.each(on, function(i, key) { toggle_upload_option(key, "on") })
 }
@@ -23,5 +24,6 @@ function toggle_help_sections(selected) {
 }
 $(function() {
   $("#start").datepicker({ dateFormat: 'yy-mm-dd' });
+  $("#finish").datepicker({ dateFormat: 'yy-mm-dd' });
   $("#upload_format").bind("change", toggle_file_format).trigger("change")
 });

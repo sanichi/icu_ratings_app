@@ -6,7 +6,7 @@
     %th
     %th #
     %th Name
-    %th Start
+    %th End
     %th Reporter
   - if @tournaments.count == 0
     %tr
@@ -24,7 +24,7 @@
       %td= icon_tag t.locked ? "lock" : "unlock", t.locked ? "Locked" : "Unlocked"
       %td= t.rorder
       %td= link_to t.name, [:admin, t]
-      %td= t.start
+      %td= t.finish
       %td= t.user.name
   - if @tournaments.multi_page
     %tr

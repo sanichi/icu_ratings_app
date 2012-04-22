@@ -20,6 +20,9 @@
     = label_tag :start, "Tournament start date"
     = text_field_tag :start, nil, size: 10
   .input
+    = label_tag :finish, "Tournament end date"
+    = text_field_tag :finish, nil, size: 10
+  .input
     = label_tag :feds, "Federations"
     = select_tag :feds, options_for_select([["Error if invalid", ''], ["Skip if invalid", "skip"], ["Ignore all", "ignore"]])
   .input
@@ -46,9 +49,8 @@
         an otherwise empty ZIP archive and upload that file.
         See the illustrative example on the right.
       %p
-        Since Swiss Perfect has no way to specify the start date of the tournament, please specify it in the
-        %em Tournament start date
-        input.
+        Since Swiss Perfect has no way to specify the start and end dates of the tournament,
+        please specify them in the inputs provided.
     %dt{class: "SPExport"} Swiss Perfect Export
     %dd{class: "SPExport"}
       = image_tag "help/spexport.png", align: "right", alt: "Part of file exported from Swiss Perfect", class: "left-padded"
@@ -61,7 +63,7 @@
         and
         %em include column headers
         are all selected when the file is saved.
-      %p Since these files are missing the tournament name and the start date, please specify both in the upload form.
+      %p Since these files are missing the tournament name, start date and end date, please specify them in the upload form.
     %dt{class: "Krause"} FIDE (Krause)
     %dd{class: "Krause"}
       = image_tag "help/krause.png", align: "right", alt: "Part of a FIDE (Krause) formatted report", class: "left-padded"
@@ -85,4 +87,5 @@
       %p
         Only plain text files are supported so, if you're using a spreadsheet application (e.g. Excel),
         export the spreadsheet to CSV (comma separated values) and then upload the exported file.
+        Supplying an end date is optional - the system will make an educated guess if unspecified.
         

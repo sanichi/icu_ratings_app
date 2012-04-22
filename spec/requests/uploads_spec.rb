@@ -113,6 +113,7 @@ describe "Upload" do
         tournament = Tournament.last
         tournament.name.should == "U-19 All Ireland"
         tournament.start.to_s.should == "2010-04-11"
+        tournament.finish.to_s.should == "2010-04-13"
         tournament.players.map(&:name).join('|').should == "Dunne, Thomas|Flynn, Jamie|Griffiths, Ryan-Rhys|Hulleman, Leon"
         thomas, jamie, ryan, leon = tournament.players
         ryan.results.size.should == 3
@@ -148,6 +149,7 @@ describe "Upload" do
         tournament = Tournament.last
         tournament.name.should == "U-19 All Ireland"
         tournament.start.to_s.should == "2010-04-11"
+        tournament.finish.to_s.should == "2010-04-13"
         tournament.players.map(&:name).join('|').should == "Dunne, Thomas|Flynn, Jamie|Griffiths, Ryan-Rhys|Hulleman, Leon"
         thomas, jamie, ryan, leon = tournament.players
         ryan.results.map(&:result).join("|").should == "W|W|W"
@@ -184,6 +186,7 @@ describe "Upload" do
         tournament = Tournament.last
         tournament.name.should == "U-19 All Ireland"
         tournament.start.to_s.should == "2010-04-11"
+        tournament.finish.to_s.should == "2010-04-13"
         tournament.players.map(&:name).join('|').should == "Dunne, Thomas|Flynn, Jamie|Griffiths, Ryan-Rhys|Hulleman, Leon"
         thomas, jamie, ryan, leon = tournament.players
         ryan.results.map(&:colour).join("|").should == "W|W|B"
@@ -221,6 +224,7 @@ describe "Upload" do
         tournament = Tournament.last
         tournament.name.should == "Isle of Man Masters, 2007"
         tournament.start.to_s.should == "2007-09-22"
+        tournament.finish.to_s.should == "2007-10-01"
         peter, tony = tournament.players.where(category: "icu_player").order(:last_name)
         doreen = peter.results.find_by_round(5).opponent
         tony.name.should == "Fox, Anthony"
@@ -296,11 +300,66 @@ describe "Upload" do
         tournament.original_name.should == "Rathmines Senior 2011"
         tournament.start.to_s.should == "2011-04-04"
         tournament.original_start.to_s.should == "2011-04-04"
-        tournament.finish.should be_nil
+        tournament.finish.to_s.should == "2011-04-07"
         tournament.original_finish.should be_nil
         tournament.tie_breaks.should == "progressive,buchholz,harkness"
         tournament.original_tie_breaks.should == "progressive,buchholz,harkness"
         tournament.original_data.should == "Rathmines Senior 2011, 2011-04-04, progressive|buchholz|harkness"
+      end
+    end
+
+    describe "finish date" do
+      describe "Swiss Perfect" do
+        before(:each) do
+          @user = login("reporter")
+          visit "/admin/uploads/new"
+          page.select "Swiss Perfect", from: "upload_format"
+          page.attach_file "file", test_file_path("rathmines_senior_2011.zip")
+          page.fill_in "start", with: "2011-01-01"
+        end
+
+        it "should guess finish date" do
+          page.click_button "Upload"
+          tournament = Tournament.last
+          tournament.start.to_s.should == "2011-01-01"
+          tournament.finish.to_s.should == "2011-01-04"
+          tournament.original_finish.should be_nil
+        end
+
+        it "should set finish date" do
+          page.fill_in "finish", with: "2011-01-30"
+          page.click_button "Upload"
+          tournament = Tournament.last
+          tournament.start.to_s.should == "2011-01-01"
+          tournament.finish.to_s.should == "2011-01-30"
+          tournament.original_finish.to_s.should == "2011-01-30"
+        end
+      end
+
+      describe "Foreign CSV" do
+        before(:each) do
+          @user = login("reporter")
+          visit "/admin/uploads/new"
+          page.select "ICU-CSV", from: "upload_format"
+          page.attach_file "file", test_file_path("isle_of_man_2007.csv")
+        end
+
+        it "should guess finish date" do
+          page.click_button "Upload"
+          tournament = Tournament.last
+          tournament.start.to_s.should == "2007-09-22"
+          tournament.finish.to_s.should == "2007-10-01"
+          tournament.original_finish.should be_nil
+        end
+
+        it "should set finish date" do
+          page.fill_in "finish", with: "2007-10-10"
+          page.click_button "Upload"
+          tournament = Tournament.last
+          tournament.start.to_s.should == "2007-09-22"
+          tournament.finish.to_s.should == "2007-10-10"
+          tournament.original_finish.to_s.should == "2007-10-10"
+        end
       end
     end
   end

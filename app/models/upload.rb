@@ -40,6 +40,7 @@ class Upload < ActiveRecord::Base
 
     begin
       icut = ICU::Tournament.parse_file!(file.tempfile.path, format, opts)
+      icut.finish = params[:finish] if format.match(/^(SwissPerfect|SPExport|ForeignCSV)$/) && params[:finish].match(/^\d\d\d\d-\d\d-\d\d$/)
       icut.renumber(:name)
       tournament  = Tournament.build_from_icut(icut, self)
       tournament.user_id = user_id
