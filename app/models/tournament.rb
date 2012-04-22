@@ -11,7 +11,7 @@ class Tournament < ActiveRecord::Base
   belongs_to :last_tournament, class_name: "Tournament"
   belongs_to :next_tournament, class_name: "Tournament"
 
-  scope :ordered, order("start DESC, rorder DESC, tournaments.name")
+  scope :ordered, order("finish DESC, start DESC, rorder DESC, tournaments.name")
 
   attr_accessible :name, :start, :finish, :fed, :city, :site, :arbiter, :deputy, :time_control, :tie_breaks, :user_id, :stage
 
