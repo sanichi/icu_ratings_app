@@ -288,6 +288,11 @@ class Tournament < ActiveRecord::Base
     s << "-" + f[-2] if f && f != s
     "#{name} #{s}"
   end
+  
+  # Date used for ordering tournaments in queue. Start will always be present.
+  def date
+    finish || start
+  end
 
   # Return a summary of the orinial data.
   def original_data
@@ -502,7 +507,7 @@ class Tournament < ActiveRecord::Base
   def requeue
     return unless self.rorder
     return if rorder_changed?
-    return unless start_changed? || name_changed? || rounds_changed?
+    return unless finish_changed? || start_changed? || name_changed? || rounds_changed?
     a, b = last_tournament, next_tournament
     return unless (a && !queue_position_higher(a)) || (b && queue_position_higher(b))
     dequeue
@@ -532,7 +537,7 @@ class Tournament < ActiveRecord::Base
 
   # Compare this tournament to another and return true if it should be higher in the queue and false otherwise.
   def queue_position_higher(t)
-    return start  > t.start  if start  != t.start
+    return date   > t.date   if date   != t.date
     return rounds > t.rounds if rounds != rounds
     return name   > t.name   if name   != t.name
     id > t.id  # tie breaker

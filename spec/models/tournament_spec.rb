@@ -489,12 +489,22 @@ describe Tournament do
         t.move_stage("queued", u)
         t
       end
+      [@t1, @t2, @t3].each { |t| t.reload }
     end
 
-    it "should requeue a tournament that has changed significantly", focus: true do
+    it "should have correct initial ordering" do
       @t1.rorder.should == 1
       @t2.rorder.should == 2
       @t3.rorder.should == 3
+      @t1.last_tournament.should be_nil
+      @t2.last_tournament.should == @t1
+      @t3.last_tournament.should == @t2
+      @t1.next_tournament.should == @t2
+      @t2.next_tournament.should == @t3
+      @t3.next_tournament.should be_nil
+    end
+
+    it "should requeue a tournament that has changed significantly" do
       @t2.start = "2010-06-16"
       @t2.finish = "2010-06-18"
       @t2.save
@@ -509,6 +519,21 @@ describe Tournament do
       @t1.rorder.should == 1
       @t2.rorder.should == 3
       @t3.rorder.should == 2
+    end
+
+    it "finish is more significant than start" do
+      @t1.finish = "2012-04-17"
+      @t1.save
+      [@t1, @t2, @t3].each { |t| t.reload }
+      @t1.rorder.should == 3
+      @t2.rorder.should == 1
+      @t3.rorder.should == 2
+      @t1.last_tournament.should == @t3
+      @t2.last_tournament.should be_nil
+      @t3.last_tournament.should == @t2
+      @t1.next_tournament.should be_nil
+      @t2.next_tournament.should == @t3
+      @t3.next_tournament.should == @t1
     end
   end
 
