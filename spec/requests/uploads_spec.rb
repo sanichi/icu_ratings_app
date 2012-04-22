@@ -113,7 +113,7 @@ describe "Upload" do
         tournament = Tournament.last
         tournament.name.should == "U-19 All Ireland"
         tournament.start.to_s.should == "2010-04-11"
-        tournament.finish.to_s.should == "2010-04-13"
+        tournament.finish.to_s.should == "2010-04-11"
         tournament.players.map(&:name).join('|').should == "Dunne, Thomas|Flynn, Jamie|Griffiths, Ryan-Rhys|Hulleman, Leon"
         thomas, jamie, ryan, leon = tournament.players
         ryan.results.size.should == 3
@@ -149,7 +149,7 @@ describe "Upload" do
         tournament = Tournament.last
         tournament.name.should == "U-19 All Ireland"
         tournament.start.to_s.should == "2010-04-11"
-        tournament.finish.to_s.should == "2010-04-13"
+        tournament.finish.to_s.should == "2010-04-11"
         tournament.players.map(&:name).join('|').should == "Dunne, Thomas|Flynn, Jamie|Griffiths, Ryan-Rhys|Hulleman, Leon"
         thomas, jamie, ryan, leon = tournament.players
         ryan.results.map(&:result).join("|").should == "W|W|W"
@@ -224,7 +224,7 @@ describe "Upload" do
         tournament = Tournament.last
         tournament.name.should == "Isle of Man Masters, 2007"
         tournament.start.to_s.should == "2007-09-22"
-        tournament.finish.to_s.should == "2007-10-01"
+        tournament.finish.to_s.should == "2007-09-30"
         peter, tony = tournament.players.where(category: "icu_player").order(:last_name)
         doreen = peter.results.find_by_round(5).opponent
         tony.name.should == "Fox, Anthony"
@@ -300,7 +300,7 @@ describe "Upload" do
         tournament.original_name.should == "Rathmines Senior 2011"
         tournament.start.to_s.should == "2011-04-04"
         tournament.original_start.to_s.should == "2011-04-04"
-        tournament.finish.to_s.should == "2011-04-07"
+        tournament.finish.to_s.should == "2011-04-06"
         tournament.original_finish.should be_nil
         tournament.tie_breaks.should == "progressive,buchholz,harkness"
         tournament.original_tie_breaks.should == "progressive,buchholz,harkness"
@@ -322,7 +322,7 @@ describe "Upload" do
           page.click_button "Upload"
           tournament = Tournament.last
           tournament.start.to_s.should == "2011-01-01"
-          tournament.finish.to_s.should == "2011-01-04"
+          tournament.finish.to_s.should == "2011-01-03"
           tournament.original_finish.should be_nil
         end
 
@@ -348,7 +348,7 @@ describe "Upload" do
           page.click_button "Upload"
           tournament = Tournament.last
           tournament.start.to_s.should == "2007-09-22"
-          tournament.finish.to_s.should == "2007-10-01"
+          tournament.finish.to_s.should == "2007-09-30"
           tournament.original_finish.should be_nil
         end
 

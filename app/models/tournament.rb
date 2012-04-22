@@ -408,7 +408,12 @@ class Tournament < ActiveRecord::Base
   def guess_finish
     return if finish
     return unless start && rounds
-    self.finish = start + (rounds <= 6 ? (rounds / 2.0).ceil : rounds).days
+    length = case rounds
+    when 1,2,3 then 1
+    when 4,5,6 then 3
+    else rounds
+    end
+    self.finish = start + (length - 1).days
   end
 
   # Translate from CGI params to export options.
