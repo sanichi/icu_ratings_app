@@ -130,12 +130,12 @@
   %tr
     %td{class: "centered"}
       = link_to "Member View", @tournament
-      &bullet;
+      &bull;
       = link_to "Export", admin_tournament_path(@tournament, format: "js"), remote: true
       - if can?(:modify, @tournament)
         - if @tournament.deletable?
-          &bullet;
+          &bull;
           = link_to "Delete", [:admin, @tournament], confirm: "Are you sure you want to delete this tournament?", method: :delete
         - if @tournament == @next_for_rating
-          &bullet;
+          &bull;
           = link_to "Rate", admin_tournament_path(@tournament, rate: "", format: "js"), method: :put, remote: true
