@@ -5,12 +5,12 @@ module IcuRatings
     def initialize(params)
       @maximum = 50
       @gender  = params[:gender]
-      if params[:method] == "simple"
-        @rating_weight = [1.0]
-        @type_weight = { icu: 0.5, fide: 0.5 }
-      else
+      if params[:method] == "war"
         @rating_weight = [0.2, 0.3, 0.5]
         @type_weight = { icu: 0.6, fide: 0.4 }
+      else
+        @rating_weight = [1.0]
+        @type_weight = { icu: 0.5, fide: 0.5 }
       end
     end
 
@@ -58,7 +58,7 @@ module IcuRatings
     end
 
     def methods_menu
-      [["Three year weighted average", "war"], ["Simple average of latest ratings", "simple"]]
+      [["Simple average of latest ratings", "simple"], ["Three year weighted average", "war"]]
     end
 
     def gender_menu
