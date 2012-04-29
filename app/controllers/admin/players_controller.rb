@@ -26,25 +26,19 @@ module Admin
     private
 
     def update_from_id(params)
-      player = ActiveSupport::HashWithIndifferentAccess.new
+      hash = ActiveSupport::HashWithIndifferentAccess.new
+      keys = [:first_name, :last_name, :fed, :title, :gender]
       if params[:icu_id] && ip = IcuPlayer.find_by_id(params[:icu_id])
-        player[:icu_id]     = params[:icu_id]
-        player[:first_name] = ip.first_name
-        player[:last_name]  = ip.last_name
-        player[:fed]        = ip.fed
-        player[:title]      = ip.title
-        player[:gender]     = ip.gender
-        player[:dob]        = ip.dob
+        hash[:icu_id] = params[:icu_id]
+        keys.each { |k| v = ip.send(k); hash[k] = v if v.present? }
+        hash[:dob] = ip.dob if ip.dob.present?
+        hash[:fide_id] = ip.fide_player.id if ip.fide_player
       elsif params[:fide_id] && fp = FidePlayer.find_by_id(params[:fide_id])
-        player[:fide_id]     = params[:fide_id]
-        player[:first_name]  = fp.first_name
-        player[:last_name]   = fp.last_name
-        player[:fed]         = fp.fed
-        player[:title]       = fp.title
-        player[:gender]      = fp.gender
-        player[:fide_rating] = fp.rating unless @player.fide_rating
+        hash[:fide_id] = params[:fide_id]
+        keys.each { |k| v = fp.send(k); hash[k] = v if v.present? }
+        hash[:fide_rating] = fp.rating unless @player.fide_rating
       end
-      params[:player] = player
+      params[:player] = hash
     end
   end
 end
