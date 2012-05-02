@@ -86,6 +86,17 @@ describe "Tournament" do
       tournament.stage.should == "initial"
     end
 
+    it "Krause with BOM" do
+      test = "armstrong_2012_with_bom.tab"
+      load_icu_players_for(test)
+      load_tournament(test, ratings: "ICU")
+      Tournament.count.should == 1
+      tournament = Tournament.first
+      tournament.name.should == "LCU Div 1 Armstrong Cup"
+      tournament.status.should == "ok"
+      tournament.stage.should == "initial"
+    end
+
     it "CSV" do
       load_tournament("isle_of_man_2007.csv")
       Tournament.count.should == 1
