@@ -198,6 +198,93 @@ describe "Tournament" do
     end
   end
 
+  describe "removing players" do
+    before(:each) do
+      file = "junior_championships_plus.tab"
+      load_icu_players_for(file)
+      @user = login("reporter")
+      @file = test_file_path(file)
+    end
+
+    def signature(t)
+      t.reload.players.sort { |a,b| a.num <=> b.num }.map { |p| "#{p.num}|#{p.last_name}|#{p.rank}" }.join("||")
+    end
+
+    it "players without any results or with only byes can be removed", js: true do
+      visit "/admin/uploads/new"
+      page.select "FIDE-Krause", from: "File format"
+      page.select "FIDE", from: "Ratings"
+      page.attach_file "file", @file
+      page.click_button "Upload"
+      Tournament.count.should == 1
+      t = Tournament.find(:first)
+      tpath = "/admin/tournaments/#{t.id}"
+      visit tpath
+      page.should have_selector("div span", text: "U-19 All Ireland 2010")
+      page.should have_selector(:xpath, "//th[.='Status']/following-sibling::td[.='OK']")
+      t.players.count.should == 8
+      signature(t).should == "1|Cafolla|7||2|Dunne|4||3|Flynn|2||4|Fox|8||5|Griffiths|1||6|Hulleman|3||7|Orr|5||8|Sulskis|6"
+      Player.count.should == 8
+      Result.count.should == 22
+
+      p = t.players.where(last_name: "Cafolla").first
+      visit "/admin/players/#{p.id}"
+      page.should have_selector("div/span", text: "Cafolla")
+      page.click_link "Delete Player"
+      page.driver.browser.switch_to.alert.accept
+      page.should have_selector("div span", text: "U-19 All Ireland 2010")
+      page.should have_selector("div.flash span.notice", text: "Deleted player Cafolla, Peter")
+      page.should have_no_link("Cafolla, Peter")
+      signature(t).should == "1|Dunne|4||2|Flynn|2||3|Fox|7||4|Griffiths|1||5|Hulleman|3||6|Orr|5||7|Sulskis|6"
+      Player.count.should == 7
+      Result.count.should == 18
+
+      p = t.players.where(last_name: "Flynn").first
+      visit "/admin/players/#{p.id}"
+      page.should have_selector("div/span", text: "Flynn")
+      page.should have_no_link "Delete Player"
+
+      p = t.players.where(last_name: "Fox").first
+      visit "/admin/players/#{p.id}"
+      page.should have_selector("div/span", text: "Fox")
+      page.click_link "Delete Player"
+      page.driver.browser.switch_to.alert.accept
+      page.should have_selector("div span", text: "U-19 All Ireland 2010")
+      page.should have_selector("div.flash span.notice", text: "Deleted player Fox, Anthony")
+      page.should have_no_link("Fox, Anthony")
+      signature(t).should == "1|Dunne|4||2|Flynn|2||3|Griffiths|1||4|Hulleman|3||5|Orr|5||6|Sulskis|6"
+      Player.count.should == 6
+      Result.count.should == 17
+
+      p = t.players.where(last_name: "Griffiths").first
+      visit "/admin/players/#{p.id}"
+      page.should have_selector("div/span", text: "Griffiths")
+      page.should have_no_link "Delete Player"
+
+      p = t.players.where(last_name: "Hulleman").first
+      visit "/admin/players/#{p.id}"
+      page.should have_selector("div/span", text: "Hulleman")
+      page.should have_no_link "Delete Player"
+
+      p = t.players.where(last_name: "Orr").first
+      visit "/admin/players/#{p.id}"
+      page.should have_selector("div/span", text: "Orr")
+      page.should have_no_link "Delete Player"
+
+      p = t.players.where(last_name: "Sulskis").first
+      visit "/admin/players/#{p.id}"
+      page.should have_selector("div/span", text: "Sulskis")
+      page.click_link "Delete Player"
+      page.driver.browser.switch_to.alert.accept
+      page.should have_selector("div span", text: "U-19 All Ireland 2010")
+      page.should have_selector("div.flash span.notice", text: "Deleted player Sulskis, Sarunas")
+      page.should have_no_link("Sulskis, Sarunas")
+      signature(t).should == "1|Dunne|4||2|Flynn|2||3|Griffiths|1||4|Hulleman|3||5|Orr|5"
+      Player.count.should == 5
+      Result.count.should == 17
+    end
+  end
+
   describe "queueing" do
     before(:each) do
       @bpath = "//button/span[.='Update']"

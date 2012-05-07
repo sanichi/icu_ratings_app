@@ -241,6 +241,16 @@ class Player < ActiveRecord::Base
     @ave_opp_rating = num == 0 ? ave : ave / num
   end
 
+  # Total number of games with opponents (including unrateable).
+  def opponents
+    @opponents ||= results.to_a.count{ |r| r.opponent }
+  end
+
+  # Is a player deletable?
+  def deletable?
+    opponents == 0
+  end
+
   # Total number of rateable games.
   def rateable_games
     @rateable_games ||= results.to_a.count{ |r| r.rateable }

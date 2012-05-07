@@ -1,16 +1,12 @@
 module Admin
   class PlayersController < ApplicationController
-    load_resource except: ["index", "show"]
+    load_resource except: ["index", "show", "destroy"]
     authorize_resource
 
     def show
       @player = Player.includes(results: [:opponent]).find(params[:id])
       @tournament = @player.tournament
-      if @tournament.players.size > 2
-        # Note that player.find_by_num started going into an infinte loop here after the upgrate to rails 3.1.
-        @prev = @tournament.players.where("num = ?", @player.num - 1).first || @tournament.players.order("num").last
-        @next = @tournament.players.where("num = ?", @player.num + 1).first || @tournament.players.order("num").first
-      end
+      extra
     end
 
     def edit
@@ -20,6 +16,20 @@ module Admin
       update_from_id(params) unless params[:player]
       if @player.update_attributes(params[:player])
         @tournament = @player.tournament
+      end
+    end
+
+    def destroy
+      @player = Player.includes(results: [:opponent]).find(params[:id])
+      @tournament = @player.tournament
+      if @player.deletable?
+        @tournament.remove(@player)
+        redirect_to [:admin, @tournament], notice: "Deleted player #{@player.name}"
+      else
+        # Shouldn't happen because a delete button will not be provided.
+        extra
+        flash.now[:alert] = "Players that have at least one opponent can't be deleted"
+        render "show"
       end
     end
 
@@ -39,6 +49,14 @@ module Admin
         hash[:fide_rating] = fp.rating unless @player.fide_rating
       end
       params[:player] = hash
+    end
+    
+    def extra
+      if @tournament.players.size > 2
+        # Note that player.find_by_num started going into an infinte loop here after the upgrate to rails 3.1.
+        @prev = @tournament.players.where("num = ?", @player.num - 1).first || @tournament.players.order("num").last
+        @next = @tournament.players.where("num = ?", @player.num + 1).first || @tournament.players.order("num").first
+      end
     end
   end
 end

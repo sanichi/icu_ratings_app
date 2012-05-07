@@ -32,3 +32,9 @@
     %td{class: "centered"}= score_html(@player.score)
     - if can? :edit, @tournament
       %td{class: "floater"}
+
+- if @player.deletable?
+  %table{class: "turbaned"}
+    %tr
+      %td{class: "centered"}
+        = link_to "Delete Player", [:admin, @player], confirm: "Are you sure you want to delete this player?", method: :delete

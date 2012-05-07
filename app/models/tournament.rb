@@ -155,6 +155,17 @@ class Tournament < ActiveRecord::Base
       end
     end
   end
+  
+  # Remove one player from the tournament.
+  def remove(player)
+    num = player.num
+    rank = player.rank
+    players.each do |p|
+      p.update_column(:num, p.num - 1)   if p.num > num
+      p.update_column(:rank, p.rank - 1) if rank && p.rank && p.rank > rank
+    end
+    player.destroy
+  end
 
   # The players in rank order or, if the ranking is invalid, in name order.
   def ordered_players(opt={})
