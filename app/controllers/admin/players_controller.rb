@@ -1,6 +1,5 @@
 module Admin
   class PlayersController < ApplicationController
-    load_resource except: ["index", "show", "destroy"]
     authorize_resource
 
     def show
@@ -10,13 +9,15 @@ module Admin
     end
 
     def edit
+      @player = Player.find(params[:id])
+      @tournament = @player.tournament
     end
 
     def update
+      @player = Player.find(params[:id])
+      @tournament = @player.tournament
       update_from_id(params) unless params[:player]
-      if @player.update_attributes(params[:player])
-        @tournament = @player.tournament
-      end
+      @player.update_attributes(params[:player])
     end
 
     def destroy
