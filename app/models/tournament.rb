@@ -296,7 +296,7 @@ class Tournament < ActiveRecord::Base
     s = start.year.to_s
     return name if name.include?(s)
     f = finish.year.to_s if finish
-    s << "-" + f[-2] if f && f != s
+    s << "-" + f[-2..-1] if f && f != s
     "#{name} #{s}"
   end
 

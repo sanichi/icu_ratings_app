@@ -1,6 +1,19 @@
 require 'spec_helper'
 
 describe Tournament do
+  context "#name_with_year" do
+    it "should add years to end of name" do
+      t = Tournament.new
+      t.name = "Masters"
+      t.start = "2012-05-12"
+      t.name_with_year.should == "Masters 2012"
+      t.finish = "2012-05-13"
+      t.name_with_year.should == "Masters 2012"
+      t.finish = "2013-05-13"
+      t.name_with_year.should == "Masters 2012-13"
+    end
+  end
+
   context "#icu_tournament" do
     def player_signature(t, n)
       p = t.player(n)
