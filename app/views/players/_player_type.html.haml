@@ -1,0 +1,9 @@
+%tr
+  %th Player type
+  %td{colspan: 2}
+    - if @player.category == "icu_player"
+      = "#{t(@player.category)} (#{@player.icu_id}) with #{t(@player.icu_player_type, scope: "with")}"
+    - elsif @player.category == "foreign_player"
+      = "#{t(@player.category)} (rating is not tracked)"
+    - else
+      = t @player.category

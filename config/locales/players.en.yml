@@ -2,3 +2,7 @@ en:
   icu_player: "ICU player"
   foreign_player: "Foreign player"
   new_player: "New player"
+  with:
+    full_rating: "full rating"
+    provisional_rating: "provisional rating"
+    first_tournament: "no previous rating"

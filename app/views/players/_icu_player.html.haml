@@ -1,8 +1,4 @@
 %table{class: table_class}
-  %tr
-    %th ICU Player
-    %td{colspan: 2}= "#{@player.name} (#{@player.icu_id})"
   = render "rating_calculation"
+  = render "player_type"
   = render @player.icu_player_type
-
-= render "results"

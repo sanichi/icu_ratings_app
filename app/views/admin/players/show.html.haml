@@ -1,17 +1,14 @@
 - content_for :javascript do
   = render partial: "admin/results/update_rateable", formats: :js
 
-%div.small-header
-  %span
-    = @player.name(false)
-    = "-"
-    = link_to @tournament.name, admin_tournament_path(@tournament)
+%div.header
+  %span= @player.name(false)
 
-- if @prev && @next
-  %table{class: "cushioned"}
-    %tr
-      %td= link_to raw("&larr; #{@prev.last_name}"), [:admin, @prev]
-      %td= link_to raw("#{@next.last_name} &rarr;"), [:admin, @next]
+%table{class: "cushioned"}
+  %tr
+    %td= link_to raw("&larr; #{@prev.last_name}"), [:admin, @prev] if @prev
+    %td= link_to @tournament.name_with_year, admin_tournament_path(@tournament)
+    %td= link_to raw("#{@next.last_name} &rarr;"), [:admin, @next] if @next
 
 %table
   %tr.splitter

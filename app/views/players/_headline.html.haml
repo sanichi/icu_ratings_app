@@ -1,0 +1,9 @@
+%table{class: "cushioned"}
+  %tr
+    %td= link_to @tournament.name_with_year, @tournament
+    - unless @player.category == "foreign_player"
+      - if @player.new_rating
+        %td
+          = raw("#{@player.old_rating} &rarr;") if @player.old_rating
+          = @player.new_rating
+        %td= @player.old_rating ? sign(@player.rating_change) : "new rating"

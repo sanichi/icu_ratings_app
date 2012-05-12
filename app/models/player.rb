@@ -273,6 +273,12 @@ class Player < ActiveRecord::Base
     @performance_rating ||= rateable_games == 0 ? 0.0 : (ave_opp_rating + 400.0 * (2.0 * rateable_score - rateable_games) / rateable_games)
   end
 
+  # The same ICU player in their next rated tournament (always calculated as opposed to last_player_id which is set during rating).
+  # We make use of the fact that there should be at most one other player which points back to this player.
+  def next_player
+    @next_player ||= Player.where(last_player_id: id).joins(:tournament).where("tournaments.stage = 'rated'").first
+  end
+
   private
 
   # Correlated with the Help text in admin/players/show.

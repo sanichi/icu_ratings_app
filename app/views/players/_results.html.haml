@@ -1,7 +1,8 @@
 - show_extra    = @player.category == "icu_player" && @player.icu_player_type == "full_rating" && @player.rateable_games > 0
 - show_last_row = @player.rateable_games > 0
 - show_rating   = @player.rateable_games > 0
-%table
+
+%table{class: "cushioned"}
   %tr
     %th= t "ratings.results.round"
     %th= t "ratings.results.opponent"

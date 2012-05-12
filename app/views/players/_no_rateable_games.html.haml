@@ -1,6 +1,6 @@
+= render "results"
+
 %table{class: table_class}
-  %tr
-    %td{colspan: 3, class: "centered"}= @player.name
   %tr
     %th{class: "centered", colspan: 3}= t "ratings.no_games"
   - if @player.old_rating || @player.old_games
@@ -13,5 +13,3 @@
       %th= t "ratings.new_rating_games"
       %td= @player.new_rating
       %td= @player.new_games
-
-= render "results"

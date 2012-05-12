@@ -1,9 +1,19 @@
-%div.small-header
-  %span= link_to @tournament.name_with_year, @tournament
+%div.header
+  %span= @player.name(false)
 
-= render @player.rateable_games == 0 ? "no_rateable_games" : @player.category, table_class: "right-headers cushioned"
+= render "headline"
 
-- if can? :modify, @tournament
+- if @player.rateable_games == 0
+  = render "no_rateable_games"
+- else
+  %table
+    %tr{class: "splitter"}
+      %td= render "results"
+      %td= render @player.category, table_class: "right-headers cushioned"
+
+= render "prev_next_links"
+
+- if can? :modify, Tournament
   %table{class: "turbaned"}
     %tr
       %td= link_to "Admin View", [:admin, @player]
@@ -35,25 +45,25 @@
       %td Bonus (only applicable to ICU players with full ratings)
     %tr
       %th= t "ratings.results.round"
-      %td Round number
+      %td Round numbers
     %tr
       %th= t "ratings.results.opponent"
-      %td Opponent's name
+      %td Opponents' names
     %tr
       %th= t "ratings.results.rating"
-      %td Opponent's effective rating (see below) per game and averaged
+      %td Opponents' ratings (see below) and average
     %tr
       %th= t "ratings.results.result"
-      %td Result against opponent
+      %td Results against opponents and total (for rated games)
     %tr
       %th= t "ratings.results.expected"
-      %td Expected score per game and summed
+      %td Expected scores and sum
     %tr
       %th= t "ratings.results.change"
-      %td Change in rating per game and summed (all rounded)
+      %td Change in rating per game and overall (all rounded)
   %table{class: "turbaned"}
     %tr
-      %th{colspan: 2} Opponent's effective rating
+      %th{colspan: 2} Opponent's rating
     %tr
       %td ICU player with full rating and no bonus
       %td Old rating
