@@ -49,7 +49,7 @@ module PlayersHelper
   end
 
   def explain_provisional_games(player)
-    type = player.new_games < 20 ? "still provisional" : "now full"
+    type = player.new_full ? "now full" : "still provisional"
     "#{player.old_games} &plus; #{player.rateable_games} (rating is #{type})".html_safe
   end
 
@@ -58,7 +58,7 @@ module PlayersHelper
   end
 
   def explain_new_games(player)
-    type = player.new_games < 20 ? "provisional" : "full"
+    type = player.new_full ? "full" : "provisional"
     "rating is #{type}"
   end
 end

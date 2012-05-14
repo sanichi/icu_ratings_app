@@ -109,19 +109,24 @@ class Player < ActiveRecord::Base
       if latest = Player.get_last_rating(icu_id, rorder)
         update_column_if_changed(:old_rating, latest.new_rating)
         update_column_if_changed(:old_games, latest.new_games)
+        update_column_if_changed(:old_full, latest.new_full)
       elsif old = OldRating.find_by_icu_id(icu_id)
         update_column_if_changed(:old_rating, old.rating)
         update_column_if_changed(:old_games, old.games)
+        update_column_if_changed(:old_full, old.full)
       else
         update_column_if_changed(:old_rating, nil)
         update_column_if_changed(:old_games, 0)
+        update_column_if_changed(:old_full, false)
       end
     when "new_player"
       update_column_if_changed(:old_rating, nil)
       update_column_if_changed(:old_games, 0)
+      update_column_if_changed(:old_full, false)
     when "foreign_player"
       update_column_if_changed(:old_rating, fide_rating)
       update_column_if_changed(:old_games, 0)
+      update_column_if_changed(:old_full, false)
     else
       raise "player #{id} (#{name}) has " + (category ? "invalid category (#{category})" : "no category")
     end
@@ -133,9 +138,9 @@ class Player < ActiveRecord::Base
     joins(:tournament).where("tournaments.stage = 'rated' AND tournaments.rorder < #{rorder}").where(icu_id: icu_id).order("tournaments.rorder").last
   end
 
-  # Set the k-factor for an ICU player with a full rating.
+  # Set the k-factor for an ICU player with a full rating (is called after get_old_ratings)
   def get_k_factor(start)
-    return unless category == "icu_player" && old_rating && old_games && old_games >= 20
+    return unless category == "icu_player" && old_full
     args = { start: start, rating: old_rating }
     args[:dob]    = icu_player.dob    || "1950-01-01"
     args[:joined] = icu_player.joined || "1975-01-01"
@@ -171,14 +176,17 @@ class Player < ActiveRecord::Base
     if count > 0
       case category
       when "icu_player", "new_player"
+        new_games = old_games + count
         update_column_if_changed(:new_rating, p.new_rating.round)
-        update_column_if_changed(:new_games, old_games + count)
+        update_column_if_changed(:new_games, new_games)
+        update_column_if_changed(:new_full, old_full || new_games >= 20)
         update_column_if_changed(:trn_rating, p.performance.round)
         update_column_if_changed(:actual_score, p.score)
         update_column_if_changed(:expected_score, p.expected_score)
       when "foreign_player"
         update_column_if_changed(:new_rating, old_rating)
         update_column_if_changed(:new_games, old_games)
+        update_column_if_changed(:new_full, false)
         update_column_if_changed(:trn_rating, p.performance.round)
         update_column_if_changed(:actual_score, p.score)
         update_column_if_changed(:expected_score, p.expected_score)
@@ -186,6 +194,7 @@ class Player < ActiveRecord::Base
     else
       update_column_if_changed(:new_rating, old_rating)
       update_column_if_changed(:new_games, old_games)
+      update_column_if_changed(:new_full, old_full)
       [:trn_rating, :bonus, :actual_score, :expected_score].each { |a| update_column_if_changed(a, nil) }
     end
     update_column_if_changed(:bonus, count > 0 && category == "icu_player" && icu_player_type == "full_rating" ? p.bonus : nil)
@@ -213,7 +222,7 @@ class Player < ActiveRecord::Base
   # Given it's an ICU player, what sub-category is it?
   def icu_player_type
     @icu_player_type ||= case
-    when old_rating && k_factor  then "full_rating"
+    when old_rating && old_full  then "full_rating"
     when old_rating && old_games then "provisional_rating"
     when !old_rating             then "first_tournament"
     else "undefined"
