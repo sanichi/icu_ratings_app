@@ -60,7 +60,6 @@ module Admin
         @tournament.update_attributes(params[:tournament])
         render view(:update)
       end
-      extras
     end
 
     def destroy
@@ -75,7 +74,7 @@ module Admin
     private
 
     def view(file, group=nil)
-      extras if !group && file == :update
+      extras if (!group && file == :update) || group == :locked
       group ? "admin/tournaments/#{group}/#{file}" : file
     end
 
