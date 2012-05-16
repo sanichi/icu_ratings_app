@@ -472,9 +472,12 @@ class Tournament < ActiveRecord::Base
   end
 
   def check_player_status(errors, recalculate)
-    bad = players.inject(0) { |m, p| m += 1 unless p.status_ok?(recalculate); m }
-    return if bad == 0
-    errors.push("#{bad} player#{bad == 1 ? ' has' : 's have'} a bad status")
+    bad = players.reject { |p| p.status_ok?(recalculate) }
+    return if bad.size == 0
+    clue = bad[0].name(false)
+    clue << ", #{bad[1].name(false)}" if bad.size > 1
+    clue << ", ..." if bad.size > 2
+    errors.push("#{bad.size} player#{bad.size == 1 ? '' : 's'} (#{clue}) #{bad.size == 1 ? 'has' : 'have'} a bad status")
   end
 
   def check_player_category(errors)
