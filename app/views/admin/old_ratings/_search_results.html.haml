@@ -4,6 +4,7 @@
     %th ICU ID
     %th Rating
     %th Games
+    %th Type
   - if @old_ratings.count == 0
     %tr
       %td{colspan: 5, class: "centered"} No matches
@@ -11,9 +12,10 @@
     - @old_ratings.matches.each do |o|
       %tr
         %td= o.icu_player ? o.icu_player.name : ""
-        %td= o.icu_id
-        %td{class: "#{o.type}"}= o.rating
-        %td= o.games
+        %td{class: "righted"}= o.icu_id
+        %td{class: "righted #{o.type}"}= o.rating
+        %td{class: "centered"}= o.games
+        %td{class: "centered"}= o.full ? "full" : "prov"
   - if @old_ratings.multi_page
     %tr
       %td{colspan: 5, class: "centered"}= pagination_links(@old_ratings)
