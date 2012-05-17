@@ -1,3 +1,5 @@
+require "icu/error"
+
 class Tournament < ActiveRecord::Base
   extend ICU::Util::Pagination
 
@@ -380,7 +382,10 @@ class Tournament < ActiveRecord::Base
   # Rate this tournament. Returning an error message or nil.
   def rate
     rate!
+  rescue ICU::Error => e
+    e.message
   rescue => e
+    logger.error("#{e.message}:\n#{e.backtrace[0..15].join("\n")}")
     e.message
   end
 
@@ -540,19 +545,19 @@ class Tournament < ActiveRecord::Base
     count = Tournament.where("rorder IS NOT NULL").count
     return 1 if count == 0
     t = Tournament.first(conditions: { rorder: count })
-    raise "queue_position: expected tournament with order #{count}" unless t
+    raise ICU::Error, "queue_position: expected tournament with order #{count}" unless t
     return count + 1 if queue_position_higher(t)
     queue_position_finder(1, count)
   end
 
   # Binary search to recursively find queue position. Invariants: p2 >= p1 and solution is not higher than p2.
   def queue_position_finder(p1, p2)
-    raise "queue_position_finder: bad invariant (#{p1}, #{p2})" unless p2 >= p1
+    raise ICU::Error, "queue_position_finder: bad invariant (#{p1}, #{p2})" unless p2 >= p1
     return p2 if p1 == p2  # because solution is never higher than p2
     m = ((p1 + p2) / 2.0).floor
-    raise "queue_position_finder: expected mid-point (#{m}) to be less than last point (#{p2})" unless p2 > m
+    raise ICU::Error, "queue_position_finder: expected mid-point (#{m}) to be less than last point (#{p2})" unless p2 > m
     t = Tournament.first(conditions: { rorder: m })
-    raise "queue_position_finder: expected tournament with rorder #{m}" unless t
+    raise ICU::Error, "queue_position_finder: expected tournament with rorder #{m}" unless t
     queue_position_higher(t) ? queue_position_finder(m + 1, p2) : queue_position_finder(p1, m)
   end
 
@@ -579,8 +584,8 @@ class Tournament < ActiveRecord::Base
 
   # Check a tournament is ready to be rated.
   def check_rateable
-    raise "tournament stage (#{stage}) is not suitable for rating" unless rateable?
-    raise "tournament status (#{status}) is not suitable for rating" unless status_ok?(true)
+    raise ICU::Error, "tournament stage (#{stage}) is not suitable for rating" unless rateable?
+    raise ICU::Error, "tournament status (#{status}) is not suitable for rating" unless status_ok?(true)
   end
 
   # Get the start ratings of all players.

@@ -1,3 +1,5 @@
+require "icu/error"
+
 class Player < ActiveRecord::Base
   FEDS = ICU::Federation.codes
   TITLES = %w[GM IM FM CM NM WGM WIM WFM WCM WNM]
@@ -128,7 +130,7 @@ class Player < ActiveRecord::Base
       update_column_if_changed(:old_games, 0)
       update_column_if_changed(:old_full, false)
     else
-      raise "player #{id} (#{name}) has " + (category ? "invalid category (#{category})" : "no category")
+      raise ICU::Error, "player #{id} (#{name}) has " + (category ? "invalid category (#{category})" : "no category")
     end
     update_column_if_changed(:last_player_id, latest ? latest.id : nil)
   end
@@ -155,11 +157,11 @@ class Player < ActiveRecord::Base
       when "full_rating"        then t.add_player(id, rating: old_rating, kfactor: k_factor)
       when "provisional_rating" then t.add_player(id, rating: old_rating, games: old_games)
       when "first_tournament"   then t.add_player(id)
-      else raise "can't add ICU player #{id} (#{name}) for rating calculation"
+      else raise ICU::Error, "can't add ICU player #{id} (#{name}) for rating calculation"
       end
     when "new_player"           then t.add_player(id)
     when "foreign_player"       then t.add_player(id, rating: old_rating)
-    else raise "player #{id} (#{p.name}) has " + (category ? "invalid category (#{category})" : "no category")
+    else raise ICU::Error, "player #{id} (#{p.name}) has " + (category ? "invalid category (#{category})" : "no category")
     end
   end
 
