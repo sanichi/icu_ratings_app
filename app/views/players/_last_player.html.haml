@@ -1,5 +1,5 @@
 - if @player.last_player
   = "from"
-  = link_to @player.last_player.tournament.name_with_year, @player.last_player
+  = link_to @player.last_player.tournament.name, @player.last_player
 - else
   = "inherited from previous rating system"
