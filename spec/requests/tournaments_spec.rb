@@ -173,7 +173,7 @@ describe "Tournament" do
       page.should have_selector(:xpath, "//a[@href='#{tpath}/edit?tie_breaks=' and @data-remote='true']")
       page.should have_selector(:xpath, "//a[@href='#{tpath}/edit?ranks=' and @data-remote='true']")
       page.should have_no_selector(:xpath, "//a[@href='#{tpath}/edit?reporter=']")
-      Player.count.should == 37
+      Player.count.should == 40
       p = Player.find_by_last_name_and_first_name("Baburin", "Alexander")
       ppath = "/admin/players/#{p.id}"
       visit ppath

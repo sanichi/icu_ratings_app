@@ -175,7 +175,8 @@ class Player < ActiveRecord::Base
   # Extract this player's rating calculations from an ICU::RatedPlayer.
   def get_ratings(p)
     count = p.results.size
-    if count > 0
+    if count > 0 && p.new_rating
+      update_column_if_changed(:unrateable, false)
       case category
       when "icu_player", "new_player"
         new_games = old_games + count
@@ -194,6 +195,7 @@ class Player < ActiveRecord::Base
         update_column_if_changed(:expected_score, p.expected_score)
       end
     else
+      update_column_if_changed(:unrateable, count > 0)
       update_column_if_changed(:new_rating, old_rating)
       update_column_if_changed(:new_games, old_games)
       update_column_if_changed(:new_full, old_full)

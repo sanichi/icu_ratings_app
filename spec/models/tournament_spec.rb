@@ -46,7 +46,7 @@ describe Tournament do
         @icut.send(attr).should == @t.send(attr)
       end
       @icut.players.size.should == @t.players.size
-      player_signature(@icut, 34).should == '34|34|David|Murray|||M|||4941|||1LBrMP|2DWrLP|6Lu'
+      player_signature(@icut, 35).should == '35|35|David|Murray|||M|||4941|||1LBrMP|2DWrLP|6Lu'
       player_signature(@icut,  6).should == '6|6|Nigel|Short|ENG|GM|M||2658|||1965-06-01|1WWrKM|2DBrAH|3WWrSC|4LBrGJ|5DWrDF|6WBrPS'
       player_signature(@icut, 30).should == '30|30|Alexandra|Wilson||WCM|F|||7938|||1LBrMH|2LWrRW|3DBrSD|4LWrJC|5DBrRM|6WWrKO'
     end
@@ -115,6 +115,7 @@ describe Tournament do
       p.last_player_id.should be_nil
       p.k_factor.should == 24
       p.actual_score.should == 2.5
+      p.unrateable.should be_false
       p.new_rating.should be_within(1).of(2000)
       p.trn_rating.should be_within(1).of(2156)
       p.new_games.should == 1116
@@ -134,6 +135,7 @@ describe Tournament do
       p.last_player_id.should be_nil
       p.k_factor.should == 40
       p.actual_score.should == 1.5
+      p.unrateable.should be_false
       p.new_rating.should be_within(1).of(1871)
       p.trn_rating.should be_within(1).of(1842)
       p.new_games.should == 18
@@ -153,6 +155,7 @@ describe Tournament do
       p.last_player_id.should be_nil
       p.k_factor.should be_nil
       p.actual_score.should == 3.5
+      p.unrateable.should be_false
       p.new_rating.should be_within(1).of(2039)
       p.trn_rating.should be_within(1).of(2039)
       p.new_games.should == p.old_games + 6
@@ -172,6 +175,7 @@ describe Tournament do
       p.last_player_id.should be_nil
       p.k_factor.should be_nil
       p.actual_score.should == 3.0
+      p.unrateable.should be_false
       p.new_rating.should be_within(1).of(2203)
       p.trn_rating.should be_within(1).of(2203)
       p.new_games.should == 6
@@ -191,6 +195,7 @@ describe Tournament do
       p.last_player_id.should be_nil
       p.k_factor.should be_nil
       p.actual_score.should == 1.5
+      p.unrateable.should be_false
       p.new_rating.should be_within(1).of(1776)
       p.trn_rating.should be_within(1).of(1776)
       p.new_games.should == 6
@@ -210,6 +215,7 @@ describe Tournament do
       p.last_player_id.should be_nil
       p.k_factor.should be_nil
       p.actual_score.should == 4.0
+      p.unrateable.should be_false
       p.new_rating.should == p.fide_rating
       p.trn_rating.should be_within(1).of(2464)
       p.new_games.should == 0
@@ -229,6 +235,7 @@ describe Tournament do
       p.last_player_id.should be_nil
       p.k_factor.should == 16
       p.actual_score.should be_nil
+      p.unrateable.should be_false
       p.new_rating.should == 2192
       p.trn_rating.should be_nil
       p.new_games.should == 329
@@ -248,6 +255,7 @@ describe Tournament do
       p.last_player_id.should be_nil
       p.k_factor.should be_nil
       p.actual_score.should be_nil
+      p.unrateable.should be_false
       p.new_rating.should be_nil
       p.trn_rating.should be_nil
       p.new_games.should == 0
@@ -267,6 +275,7 @@ describe Tournament do
       p.last_player_id.should be_nil
       p.k_factor.should be_nil
       p.actual_score.should == nil
+      p.unrateable.should be_false
       p.new_rating.should == p.fide_rating
       p.trn_rating.should be_nil
       p.new_games.should == 0
@@ -276,15 +285,75 @@ describe Tournament do
       p.last_signature.should == "2550"
       p.curr_signature.should == p.last_signature
 
+      # Unrateable ICU player with provisional rating.
+      p = @t1.players.find_by_last_name("Graham")
+      p.category.should == "icu_player"
+      p.icu_id.should == 12664
+      p.old_rating.should == 497
+      p.old_games.should == 5
+      p.old_full.should be_false
+      p.last_player_id.should be_nil
+      p.k_factor.should be_nil
+      p.actual_score.should == nil
+      p.unrateable.should be_true
+      p.new_rating.should == p.old_rating
+      p.trn_rating.should be_nil
+      p.new_games.should == p.old_games
+      p.new_full.should be_false
+      p.bonus.should be_nil
+      p.expected_score.should be_nil
+      p.last_signature.should == "12664 1D36 2D37"
+      p.curr_signature.should == p.last_signature
+
+      # Unrateable ICU player with no previous rating.
+      p = @t1.players.find_by_last_name("Mitchell")
+      p.category.should == "icu_player"
+      p.icu_id.should == 12833
+      p.old_rating.should be_nil
+      p.old_games.should == 0
+      p.old_full.should be_false
+      p.last_player_id.should be_nil
+      p.k_factor.should be_nil
+      p.actual_score.should == nil
+      p.unrateable.should be_true
+      p.new_rating.should == p.old_rating
+      p.trn_rating.should be_nil
+      p.new_games.should == p.old_games
+      p.new_full.should be_false
+      p.bonus.should be_nil
+      p.expected_score.should be_nil
+      p.last_signature.should == "12833 1D34"
+      p.curr_signature.should == p.last_signature
+
+      # Unrateable new player.
+      p = @t1.players.find_by_last_name("Baczkowski")
+      p.category.should == "new_player"
+      p.icu_id.should be_nil
+      p.old_rating.should be_nil
+      p.old_games.should == 0
+      p.old_full.should be_false
+      p.last_player_id.should be_nil
+      p.k_factor.should be_nil
+      p.actual_score.should == nil
+      p.unrateable.should be_true
+      p.new_rating.should == p.old_rating
+      p.trn_rating.should be_nil
+      p.new_games.should == p.old_games
+      p.new_full.should be_false
+      p.bonus.should be_nil
+      p.expected_score.should be_nil
+      p.last_signature.should == "2D34"
+      p.curr_signature.should == p.last_signature
+
       # The number of players who start without any rating.
-      @t1.players.find_all{ |p| p.old_rating.nil? }.count.should == 3
+      @t1.players.find_all{ |p| p.old_rating.nil? }.count.should == 5
 
       # K-factors.
       @t1.players.find_all{ |p| p.k_factor == 16 }.size.should == 18
       @t1.players.find_all{ |p| p.k_factor == 24 }.size.should == 8
       @t1.players.find_all{ |p| p.k_factor == 32 }.size.should == 1
       @t1.players.find_all{ |p| p.k_factor == 40 }.size.should == 4
-      @t1.players.find_all{ |p| p.k_factor.nil?  }.size.should == 6
+      @t1.players.find_all{ |p| p.k_factor.nil?  }.size.should == 9
 
       # New tournament data.
       @t1.reratings.should == 1
@@ -318,6 +387,7 @@ describe Tournament do
       p3.last_player_id.should == p1.id
       p3.k_factor.should == p1.k_factor
       p3.bonus.should == 0
+      p3.unrateable.should be_false
       p3.new_rating.should be < p3.old_rating
       p3.new_games.should == p3.old_games + 6
       p3.new_full.should be_true
@@ -332,6 +402,7 @@ describe Tournament do
       p3.last_player_id.should == p1.id
       p3.k_factor.should == p1.k_factor
       p3.bonus.should == 0
+      p3.unrateable.should be_false
       p3.new_rating.should be < p3.old_rating
       p3.new_games.should == p3.old_games + 6
       p3.new_full.should be_true
@@ -345,6 +416,7 @@ describe Tournament do
       p3.last_player_id.should be_nil
       p3.bonus.should == 0
       p3.k_factor.should == 16
+      p3.unrateable.should be_false
       p3.new_rating.should be > p3.old_rating
       p3.new_games.should == p3.old_games + 6
       p3.new_full.should be_true
@@ -354,6 +426,7 @@ describe Tournament do
       p1 = @t1.players.find_by_last_name("Hebden")
       p3 = @t3.players.find_by_last_name("Hebden")
       p3.category.should == "foreign_player"
+      p3.unrateable.should be_false
       p3.old_rating.should_not == p1.new_rating
       p3.last_player_id.should be_nil
 
@@ -369,10 +442,47 @@ describe Tournament do
       p3.old_full.should be_true
       p3.last_player_id.should == p1.id
       p3.k_factor.should_not be_nil
+      p3.unrateable.should be_false
       p3.new_games.should == p3.old_games + 6
       p3.new_full.should be_true
       p3.bonus.should == 0
       ((p3.actual_score - p3.expected_score) * p3.k_factor).should be_within(0.5).of(p3.new_rating - p3.old_rating)
+
+      # ICU player with provisional rating who was unrateable in his last tournament.
+      p1 = @t1.players.find_by_last_name("Graham")
+      p3 = @t3.players.find_by_last_name("Graham")
+      p3.category.should == "icu_player"
+      p3.old_rating.should == p1.new_rating
+      p3.old_games.should == p1.new_games
+      p3.old_full.should == p1.new_full
+      p3.last_player_id.should == p1.id
+      p3.k_factor.should be_nil
+      p3.actual_score.should == 1.0
+      p3.unrateable.should be_false
+      p3.new_rating.should_not == p1.new_rating
+      p3.trn_rating.should_not be_nil
+      p3.new_games.should == p1.new_games + 2
+      p3.new_full.should be_false
+      p3.bonus.should be_nil
+      p3.expected_score.should_not be_nil
+
+      # ICU player with no previous rating who was unrateable in his last tournament.
+      p1 = @t1.players.find_by_last_name("Mitchell")
+      p3 = @t3.players.find_by_last_name("Mitchell")
+      p3.category.should == "icu_player"
+      p3.old_rating.should be_nil
+      p3.old_games.should == 0
+      p3.old_full.should be_false
+      p3.last_player_id.should == p1.id
+      p3.k_factor.should be_nil
+      p3.actual_score.should == 0.5
+      p3.unrateable.should be_false
+      p3.new_rating.should_not be_nil
+      p3.trn_rating.should_not be_nil
+      p3.new_games.should == 1
+      p3.new_full.should be_false
+      p3.bonus.should be_nil
+      p3.expected_score.should_not be_nil
 
       # Check new tournament data.
       @t3.reratings.should == 1
@@ -534,7 +644,7 @@ describe Tournament do
 
       # The player's final rating should now be back to what it was.
       @t3.players.find_by_last_name("Cafolla").new_rating.should == r123
-      
+
       # Test the effect of merely rerating the first tournament without changing anything else.
       @t1.rate!
       Tournament.next_for_rating.should == @t2

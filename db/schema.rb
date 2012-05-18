@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120514182022) do
+ActiveRecord::Schema.define(:version => 20120518065559) do
 
   create_table "downloads", :force => true do |t|
     t.string   "comment"
@@ -190,6 +190,7 @@ ActiveRecord::Schema.define(:version => 20120514182022) do
     t.string   "curr_signature"
     t.boolean  "old_full",                                                        :default => false
     t.boolean  "new_full",                                                        :default => false
+    t.boolean  "unrateable",                                                      :default => false
   end
 
   add_index "players", ["fide_id"], :name => "index_players_on_fide_id"
