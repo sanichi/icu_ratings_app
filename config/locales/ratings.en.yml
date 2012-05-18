@@ -10,6 +10,7 @@ en:
     change: Rating change
     performance: Performance
     no_games: No rateable games
+    unrateable_games: Games are unrateable
     calculation: Rating Calculation
     more_info: Additional Information
     results:

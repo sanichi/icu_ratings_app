@@ -17,7 +17,7 @@
       - if show_title
         %td{class: "centered narrow"}= short_title(player.title)
       - if show_rating
-        %td= player.old_rating
+        %td{class: "righted"}= player.old_rating
       - 1.upto(@tournament.rounds) do |r|
         - result = player.result_in_round(r)
         - if result

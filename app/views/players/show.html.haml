@@ -3,13 +3,15 @@
 
 = render "headline"
 
-- if @player.rateable_games == 0
-  = render "no_rateable_games"
-- else
-  %table
-    %tr{class: "splitter"}
-      %td= render "results"
-      %td= render @player.category, table_class: "right-headers cushioned"
+%table{class: "cushioned"}
+  %tr{class: "splitter"}
+    %td= render "results"
+    %td
+      %table{class: "right-headers"}
+        = render case
+          - when @player.rateable_games == 0 then "no_rateable_games"
+          - when @player.unrateable          then "unrateable_games"
+          - else @player.category
 
 = render "prev_next_links"
 
@@ -19,7 +21,7 @@
       %td= link_to "Admin View", [:admin, @player]
 
 #help
-  %table{class: "right-headers"}
+  %table{class: "right-headers note"}
     %tr
       %th{class: "centered", colspan: 2} Definitions
     %tr
@@ -61,7 +63,7 @@
     %tr
       %th= t "ratings.results.change"
       %td Change in rating per game and overall (all rounded)
-  %table{class: "turbaned"}
+  %table{class: "turbaned note"}
     %tr
       %th{colspan: 2} Opponent's rating
     %tr
@@ -79,3 +81,12 @@
     %tr
       %td Foreign player
       %td FIDE or Elo equivalent rating
+  %table{class: "turbaned note"}
+    %tr
+      %th{colspan: 2} Other
+    %tr
+      %td= t "ratings.no_rateable_games"
+      %td A player who has no rateable games (e.g. only byes or walkovers) cannot be rated
+    %tr
+      %td= t "ratings.unrateable_games"
+      %td Group of players without full ratings who only play each other cannot be rated

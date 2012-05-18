@@ -1,0 +1,8 @@
+%tr
+  %th= t "ratings.old_rating_games"
+  %td{class: "centered"}= @player.old_rating || "None"
+  %td{class: "centered"}= @player.old_games || "None"
+%tr
+  %th= t "ratings.new_rating_games"
+  %td{class: "centered"}= @player.new_rating || "None"
+  %td{class: "centered"}= @player.new_games || "None"
