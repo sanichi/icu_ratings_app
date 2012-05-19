@@ -8,6 +8,8 @@
     %th{colspan: span}
     - 1.upto(@tournament.rounds) do |r|
       %th{class: "round"}= r
+    - if show_rating
+      %th
     %th
   - @players.each do |player|
     %tr
@@ -25,3 +27,5 @@
         - else
           %td
       %td{class: "centered"}= score_html(player.score)
+      - if show_rating
+        %td{class: "righted"}= sign(player.rating_change) if player.old_rating && player.category == "icu_player"
