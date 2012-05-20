@@ -35,5 +35,8 @@ Ratings::Application.routes.draw do
     resources :users,                only: [:index, :show, :edit, :update]
   end
 
+  match "/news_items"     => redirect("/articles")
+  match "/news_items/:id" => redirect("/articles/%{id}")
+
   match "*url" => "pages#not_found"
 end
