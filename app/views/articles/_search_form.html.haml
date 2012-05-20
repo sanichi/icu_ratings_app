@@ -12,7 +12,7 @@
     %tr
       %td= text_field_tag :headline, params[:headline], class: "centered", size: 15
       %td= text_field_tag :story, params[:story], class: "centered", size: 15
-      %td= select_tag :order, options_for_select([["created date", "created"], ["last updated date", "updated"]], params[:order] || "created")
+      %td= select_tag :order, options_for_select([["title", "headline"], ["created date", "created_at"], ["last updated date", "updated_at"]], params[:order] || "headline")
       - if extra
         %td= select_tag :user_id, options_for_select(user_menu(:articles, "Any"), params[:user_id])
         %td= select_tag :published, options_for_select(published_menu("Any"), params[:published])

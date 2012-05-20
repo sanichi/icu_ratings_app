@@ -16,8 +16,9 @@ class Article < ActiveRecord::Base
 
   def self.search(params, path)
     matches = includes(user: :icu_player)
-    order = params[:order].to_s.match(/^(created|updated)$/) ? params[:order] : "created"
-    matches = matches.order("articles.#{order}_at DESC")
+    order = params[:order].to_s.match(/^(headline|created_at|updated_at)$/) ? params[:order] : "headline"
+    order = "#{order} DESC" if order.match(/_at$/)
+    matches = matches.order("articles.#{order}")
     matches = matches.where("articles.headline LIKE ?", "%#{params[:headline]}%") if params[:headline].present?
     matches = matches.where("articles.story LIKE ?", "%#{params[:story]}%")       if params[:story].present?
     if params[:create]
@@ -31,7 +32,7 @@ class Article < ActiveRecord::Base
 
   # Latest articles for home page.
   def self.latest(limit=10)
-    where(published: true).order("created_at DESC").limit(limit)
+    where(published: true).order("updated_at DESC").limit(limit)
   end
 
   private
