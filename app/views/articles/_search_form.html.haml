@@ -1,6 +1,6 @@
-= form_tag news_items_path, method: "get", remote: true do
+= form_tag articles_path, method: "get", remote: true do
   = hidden_field_tag :per_page, 20
-  - extra = can?(:create, NewsItem)
+  - extra = can?(:create, Article)
   %table{class: "invisible"}
     %tr
       %th= label_tag :headline
@@ -14,7 +14,7 @@
       %td= text_field_tag :story, params[:story], class: "centered", size: 15
       %td= select_tag :order, options_for_select([["created date", "created"], ["last updated date", "updated"]], params[:order] || "created")
       - if extra
-        %td= select_tag :user_id, options_for_select(user_menu(:news_items, "Any"), params[:user_id])
+        %td= select_tag :user_id, options_for_select(user_menu(:articles, "Any"), params[:user_id])
         %td= select_tag :published, options_for_select(published_menu("Any"), params[:published])
     %tr
       %td{colspan: 3 + (extra ? 2 : 0), class: "centered"}= submit_tag "Search"

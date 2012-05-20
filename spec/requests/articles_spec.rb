@@ -1,148 +1,148 @@
 require 'spec_helper'
 
-describe "NewsItem" do
+describe "Article" do
   describe "officers" do
     before(:each) do
       @user = login("officer")
-      @news = FactoryGirl.create(:news_item)
+      @article = FactoryGirl.create(:article)
     end
 
-    it "can create, edit and delete a news items" do
-      visit "/news_items/new"
-      page.should have_selector("head title", text: "Create News Item")
+    it "can create, edit and delete an article" do
+      visit "/articles/new"
+      page.should have_selector("head title", text: "Create Article")
       headline, story = "Latest News", "Latest Story"
-      NewsItem.where(headline: headline, story: story).should have(0).items
+      Article.where(headline: headline, story: story).should have(0).items
       page.fill_in "Headline", with: headline
       page.fill_in "Story", with: story
       page.click_button "Create"
-      page.should have_selector("head title", text: "News")
+      page.should have_selector("head title", text: "Article")
       page.should have_selector("span.notice", text: /created/i)
       page.should have_selector("span", text: headline)
       page.should have_selector("p", text: story)
       page.should have_link("Markdown")
-      NewsItem.where(headline: headline, story: story).should have(1).item
+      Article.where(headline: headline, story: story).should have(1).item
       page.click_link "Edit"
-      page.should have_selector("head title", text: "Update News Item")
+      page.should have_selector("head title", text: "Update Article")
       headline = "Old News"
       page.fill_in "Headline", with: headline
       page.click_button "Update"
       page.should have_selector("span.notice", text: /updated/i)
       page.should have_selector("span", text: headline)
-      NewsItem.where(headline: headline, story: story).should have(1).item
+      Article.where(headline: headline, story: story).should have(1).item
       page.click_link "Delete"
-      page.should have_selector("head title", text: "News")
-      NewsItem.where(headline: headline, story: story).should have(0).items
+      page.should have_selector("head title", text: "Article")
+      Article.where(headline: headline, story: story).should have(0).items
     end
 
-    it "can edit and delete other's news items" do
-      visit "/news_items/#{@news.id}/edit"
+    it "can edit and delete other's articles" do
+      visit "/articles/#{@article.id}/edit"
       page.should have_link("Markdown")
       headline, story = "Latest News", "Latest Story"
       page.fill_in "Headline", with: headline
       page.fill_in "Story", with: story
       page.click_button "Update"
-      NewsItem.where(headline: headline, story: story).should have(1).item
+      Article.where(headline: headline, story: story).should have(1).item
       page.click_link "Delete"
-      NewsItem.where(headline: headline, story: story).should have(0).items
+      Article.where(headline: headline, story: story).should have(0).items
     end
   end
 
   describe "reporters" do
     before(:each) do
       @user = login("reporter")
-      @news = FactoryGirl.create(:news_item)
+      @article = FactoryGirl.create(:article)
     end
 
-    it "cannot edit other's news items" do
-      visit "/news_items/#{@news.id}"
+    it "cannot edit other's articles" do
+      visit "/articles/#{@article.id}"
       page.should have_no_link "Edit"
       page.should have_link("Markdown")
-      visit "/news_items/#{@news.id}/edit"
+      visit "/articles/#{@article.id}/edit"
       page.should have_selector("span.alert", text: /authoriz/i)
     end
 
-    it "can create, edit and delete their own news items" do
-      visit "/news_items/new"
+    it "can create, edit and delete their own articles" do
+      visit "/articles/new"
       headline, story = "Reporter's Headline", "Reporter's Story"
       page.fill_in "Headline", with: headline
       page.fill_in "Story", with: story
       page.click_button "Create"
       page.should have_link("Markdown")
-      NewsItem.where(headline: headline, story: story, published: false).should have(1).item
+      Article.where(headline: headline, story: story, published: false).should have(1).item
       page.click_link "Edit"
       headline = "Changed Headline"
       page.fill_in "Headline", with: headline
       page.check "Published"
       page.click_button "Update"
-      NewsItem.where(headline: headline, story: story, published: true).should have(1).item
+      Article.where(headline: headline, story: story, published: true).should have(1).item
       page.click_link "Edit"      
       page.fill_in "Headline", with: "Rubbish"
       page.click_button "Cancel"
-      NewsItem.where(headline: headline).should have(1).item
+      Article.where(headline: headline).should have(1).item
       page.click_link "Delete"
-      NewsItem.where(headline: headline).should have(0).item
+      Article.where(headline: headline).should have(0).item
     end
   end
   
   describe "members" do
     before(:each) do
       @user = login("member")
-      @news = [ FactoryGirl.create(:news_item), FactoryGirl.create(:news_item, user: @user) ]
+      @article = [ FactoryGirl.create(:article), FactoryGirl.create(:article, user: @user) ]
     end
 
-    it "cannot manage news, even their own" do
-      visit "/news_items/new"
+    it "cannot manage articles, even their own" do
+      visit "/articles/new"
       page.should have_selector("span.alert", text: /authoriz/i)
-      visit "/news_items/#{@news.first.id}/edit"
+      visit "/articles/#{@article.first.id}/edit"
       page.should have_selector("span.alert", text: /authoriz/i)
-      visit "/news_items/#{@news.last.id}/edit"
+      visit "/articles/#{@article.last.id}/edit"
       page.should have_selector("span.alert", text: /authoriz/i)
     end
 
     it "do not have a link to see Markdown" do
-      visit "/news_items/#{@news.first.id}"
+      visit "/articles/#{@article.first.id}"
       page.should have_no_link("Markdown")
-      visit "/news_items/#{@news.last.id}"
+      visit "/articles/#{@article.last.id}"
       page.should have_no_link("Markdown")
     end
   end
 
   describe "anyone" do
     before(:each) do
-      @news = (1..3).map { |i| FactoryGirl.create(:news_item) }
+      @article = (1..3).map { |i| FactoryGirl.create(:article) }
     end
 
-    it "can list and read news" do
-      visit "/news_items"
-      page.should have_selector("head title", text: "News")
-      @news.each { |news| page.should have_link(news.headline) }
-      visit "/news_items/#{@news.first.id}"
-      page.should have_selector("head title", text: "News")
-      page.should have_selector("span", text: @news.first.headline)
+    it "can list and read articles" do
+      visit "/articles"
+      page.should have_selector("head title", text: "Article")
+      @article.each { |article| page.should have_link(article.headline) }
+      visit "/articles/#{@article.first.id}"
+      page.should have_selector("head title", text: "Article")
+      page.should have_selector("span", text: @article.first.headline)
       page.should have_no_link "Edit"
       page.should have_no_link "Delete"
       page.should have_no_link "Markdown"
     end
 
-    it "cannot manage news" do
-      visit "/news_items/#{@news.first.id}/edit"
+    it "cannot manage articles" do
+      visit "/articles/#{@article.first.id}/edit"
       page.should have_selector("span.alert", text: /authoriz/i)
-      visit "/news_items/new"
+      visit "/articles/new"
       page.should have_selector("span.alert", text: /authoriz/i)
     end
   end
 
   describe "home_page" do
     before(:each) do
-      @news = (1..3).map { |i| FactoryGirl.create(:news_item, published: false) }
+      @article = (1..3).map { |i| FactoryGirl.create(:article, published: false) }
     end
 
     it "has only published items" do
       visit "/home"
-      page.should have_no_selector(:xpath, "//a[starts-with(@href,'/news_items/')]")
-      @news.each { |n| n.update_attribute(:published, true) }
+      page.should have_no_selector(:xpath, "//a[starts-with(@href,'/articles/')]")
+      @article.each { |n| n.update_attribute(:published, true) }
       visit "/home"
-      page.should have_selector(:xpath, "//a[starts-with(@href,'/news_items/')]", count: @news.size)
+      page.should have_selector(:xpath, "//a[starts-with(@href,'/articles/')]", count: @article.size)
     end
   end
 end

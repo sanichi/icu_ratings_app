@@ -1,4 +1,4 @@
-class NewsItem < ActiveRecord::Base
+class Article < ActiveRecord::Base
   extend ICU::Util::Pagination
   
   EXTENSIONS = { autolink: true, strikethrough: true, superscript: true, no_intra_emphasis: true }
@@ -17,9 +17,9 @@ class NewsItem < ActiveRecord::Base
   def self.search(params, path)
     matches = includes(user: :icu_player)
     order = params[:order].to_s.match(/^(created|updated)$/) ? params[:order] : "created"
-    matches = matches.order("news_items.#{order}_at DESC")
-    matches = matches.where("news_items.headline LIKE ?", "%#{params[:headline]}%") if params[:headline].present?
-    matches = matches.where("news_items.story LIKE ?", "%#{params[:story]}%")       if params[:story].present?
+    matches = matches.order("articles.#{order}_at DESC")
+    matches = matches.where("articles.headline LIKE ?", "%#{params[:headline]}%") if params[:headline].present?
+    matches = matches.where("articles.story LIKE ?", "%#{params[:story]}%")       if params[:story].present?
     if params[:create]
       matches = matches.where(published: true)  if params[:published] == "true"
       matches = matches.where(published: false) if params[:published] == "false"
@@ -29,7 +29,7 @@ class NewsItem < ActiveRecord::Base
     paginate(matches, path, params)
   end
 
-  # Latest news items for home page.
+  # Latest articles for home page.
   def self.latest(limit=10)
     where(published: true).order("created_at DESC").limit(limit)
   end
@@ -42,7 +42,7 @@ class NewsItem < ActiveRecord::Base
     
     # After the upgrade to 3.2.3, spurious newlines started to appear pre-pended to the story.
     # In the release notes for 3.2.3, there's mention of adding a new line after textareas.
-    # And for some reason, story is sometimes an Array in spec/requests/news_items_spec.rb
+    # And for some reason, story is sometimes an Array in spec/requests/articles_spec.rb
     # which I don't understand at all but which explains the condition below.
     self.story = story.sub(/^\n/, '') if story.is_a?(String)
   end

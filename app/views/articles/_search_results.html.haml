@@ -1,0 +1,26 @@
+- extra = can?(:manage, Article) ? 1 : 0
+
+%table
+  %tr
+    - if extra == 1
+      %th
+    %th Headline
+    %th Created Ago
+    %th Updated Ago
+    %th Author
+  - if @articles.count == 0
+    %tr
+      %td{colspan: 4 + extra, class: "centered"} No matches
+  - else
+    - @articles.matches.each do |article|
+      %tr
+        - if extra == 1
+          - state = article.published ? "published" : "unpublished"
+          %td= icon_tag state, state
+        %td= link_to article.headline, article
+        %td= time_ago_in_words(article.created_at, true)
+        %td= time_ago_in_words(article.updated_at, true)
+        %td= article.user.name
+  - if @articles.multi_page
+    %tr
+      %td{colspan: 4 + extra, class: "centered"}= pagination_links(@article)

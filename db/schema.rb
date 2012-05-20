@@ -11,7 +11,19 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120518065559) do
+ActiveRecord::Schema.define(:version => 20120520103822) do
+
+  create_table "articles", :force => true do |t|
+    t.string   "headline"
+    t.text     "story"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "published",  :default => false
+  end
+
+  add_index "articles", ["published"], :name => "index_articles_on_published"
+  add_index "articles", ["user_id"], :name => "index_articles_on_user_id"
 
   create_table "downloads", :force => true do |t|
     t.string   "comment"
@@ -103,18 +115,6 @@ ActiveRecord::Schema.define(:version => 20120518065559) do
     t.string   "role",       :limit => 20
     t.datetime "created_at"
   end
-
-  create_table "news_items", :force => true do |t|
-    t.string   "headline"
-    t.text     "story"
-    t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "published",  :default => false
-  end
-
-  add_index "news_items", ["published"], :name => "index_news_items_on_published"
-  add_index "news_items", ["user_id"], :name => "index_news_items_on_user_id"
 
   create_table "old_rating_histories", :force => true do |t|
     t.integer "old_tournament_id"

@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
   has_many :logins
   has_many :uploads
   has_many :tournaments
-  has_many :news_items
+  has_many :articles
 
   ROLES = %w[member reporter officer admin]  # MUST be in order lowest to highest (see role?)
   EMAIL = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i

@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :news_item do
+  factory :article do
     headline    { Faker::Lorem.sentence }
     story       { Faker::Lorem.paragraphs }
     published   true

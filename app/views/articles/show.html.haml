@@ -1,0 +1,22 @@
+- @page_title = "ICU Ratings Articles"
+.header
+  %span= @article.headline
+
+.article
+  .headline
+    = "by"
+    %span= @article.user.name(false)
+    .times= timestamps_summary(@article)
+  %hr
+  .story= @article.html_story
+
+- if can? :create, Article
+  %table{class: "turbaned"}
+    %tr
+      - if can? :modify, @article
+        %td
+          = link_to "Edit", edit_article_path(@article)
+        %td
+          = link_to "Delete", @article, confirm: 'Are you sure you want to delete this article?', method: :delete
+      %td
+        = link_to "Markdown", article_path(@article, format: "txt")

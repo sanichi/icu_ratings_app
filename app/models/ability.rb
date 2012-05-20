@@ -5,7 +5,7 @@ class Ability
     alias_action :update, :destroy, to: :modify
     user ||= User.new
 
-    can :read, NewsItem
+    can :read, Article
     can :graph, IcuPlayer
 
     return unless user.role? :member
@@ -23,8 +23,8 @@ class Ability
     can :modify, Player, tournament: { user_id: user.id, tournament: { locked: false } }
     can :modify, Result, player: { tournament: { user_id: user.id, locked: false } }
 
-    can :create, NewsItem
-    can :modify, NewsItem, user_id: user.id
+    can :create, Article
+    can :modify, Article, user_id: user.id
 
     can :read, [FidePlayer, IcuPlayer, OldRatingHistory, OldTournament, OldRating]
     
@@ -33,7 +33,7 @@ class Ability
     return unless user.role? :officer
 
     can :read, Event
-    can :manage, [Download, FidePlayer, NewsItem, Tournament, Player, Result, Upload]
+    can :manage, [Download, FidePlayer, Article, Tournament, Player, Result, Upload]
     cannot :modify, Tournament, locked: true
     cannot :modify, Player, tournament: { locked: true }
     cannot :modify, Result, player: { tournament: { locked: true } }
