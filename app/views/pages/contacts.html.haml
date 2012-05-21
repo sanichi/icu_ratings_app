@@ -8,4 +8,4 @@
       %h3{class: "left"}= t(role, count: contacts.size)
       %ul
         - contacts.each do |contact|
-          %li= mail_to contact.best_email, contact.name(false), encode: "javascript"
+          %li= mail_to contact.best_email, contact.name, encode: "javascript"
