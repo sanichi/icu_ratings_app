@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: old_ratings
+#
+#  id     :integer(4)      not null, primary key
+#  icu_id :integer(4)
+#  rating :integer(2)
+#  games  :integer(2)
+#  full   :boolean(1)      default(FALSE)
+#
+
 class OldRating < ActiveRecord::Base
   extend ICU::Util::Pagination
   

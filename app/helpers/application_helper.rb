@@ -258,7 +258,8 @@ module ApplicationHelper
 
   # Shortcut for creating image tags involving icons.
   def icon_tag(image, alt, opts={})
-    image_tag "icons/#{image}.png", { alt: alt, title: alt, size: "16x16" }.merge(opts)
+    image+= ".png" unless image.match(/\.[a-z]+$/)
+    image_tag "icons/#{image}", { alt: alt, title: alt, size: "16x16" }.merge(opts)
   end
   
   # Is an administrator logged in?

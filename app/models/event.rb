@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: events
+#
+#  id         :integer(4)      not null, primary key
+#  name       :string(255)
+#  time       :integer(2)
+#  report     :text
+#  success    :boolean(1)
+#  created_at :datetime
+#
+
 class Event < ActiveRecord::Base
   extend ICU::Util::Pagination
 

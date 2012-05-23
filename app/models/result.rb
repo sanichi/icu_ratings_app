@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: results
+#
+#  id             :integer(4)      not null, primary key
+#  round          :integer(1)
+#  player_id      :integer(4)
+#  opponent_id    :integer(4)
+#  result         :string(1)
+#  colour         :string(1)
+#  rateable       :boolean(1)
+#  created_at     :datetime
+#  updated_at     :datetime
+#  expected_score :decimal(8, 6)
+#  rating_change  :decimal(8, 6)
+#
+
 class Result < ActiveRecord::Base
   belongs_to :player
   belongs_to :opponent, class_name: "Player"

@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: downloads
+#
+#  id           :integer(4)      not null, primary key
+#  comment      :string(255)
+#  file_name    :string(255)
+#  content_type :string(255)
+#  data         :binary(16777215
+#  created_at   :datetime
+#  updated_at   :datetime
+#
+
 class Download < ActiveRecord::Base
   extend ICU::Util::Pagination
   include ICU::Util::Model

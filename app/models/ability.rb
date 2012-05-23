@@ -33,6 +33,7 @@ class Ability
     return unless user.role? :officer
 
     can :read, Event
+    can [:read, :create, :destroy], RatingRun
     can :manage, [Download, FidePlayer, Article, Tournament, Player, Result, Upload]
     cannot :modify, Tournament, locked: true
     cannot :modify, Player, tournament: { locked: true }

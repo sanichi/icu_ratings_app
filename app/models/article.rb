@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: articles
+#
+#  id         :integer(4)      not null, primary key
+#  headline   :string(255)
+#  story      :text
+#  user_id    :integer(4)
+#  created_at :datetime
+#  updated_at :datetime
+#  published  :boolean(1)      default(FALSE)
+#
+
 class Article < ActiveRecord::Base
   extend ICU::Util::Pagination
   

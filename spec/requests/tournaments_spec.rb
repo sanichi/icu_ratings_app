@@ -584,4 +584,74 @@ describe "Tournament" do
       page.should have_link("Unlock Tournament")
     end
   end
+  
+  describe "rating run" do
+    before(:each) do
+      tests = %w[isle_of_man_2007.csv junior_championships_u19_2010.txt kilbunny_masters_2011.tab]
+      load_icu_players_for(tests)
+      load_old_ratings
+      @u = login("officer")
+      @t1, @t2, @t3 = tests.map do |f|
+        t = test_tournament(f, @u.id)
+        t.move_stage("ready", @u)
+        t.move_stage("queued", @u)
+        t
+      end
+      @lnk = "Rate All"
+      File.unlink(RatingRun.flag) if File.exists?(RatingRun.flag)
+    end
+
+    it "should be available for the next for rating (unless it's the last)" do
+      Tournament.next_for_rating.should == @t1
+      visit "/admin/tournaments/#{@t1.id}"
+      page.should have_link(@lnk)
+      visit "/admin/tournaments/#{@t2.id}"
+      page.should have_no_link(@lnk)
+      visit "/admin/tournaments/#{@t3.id}"
+      page.should have_no_link(@lnk)
+      visit "/admin/tournaments/#{@t1.id}"
+      page.click_link "Rate"
+      Tournament.next_for_rating.should == @t2
+      visit "/admin/tournaments/#{@t1.id}"
+      page.should have_no_link(@lnk)
+      visit "/admin/tournaments/#{@t2.id}"
+      page.should have_link(@lnk)
+      visit "/admin/tournaments/#{@t3.id}"
+      page.should have_no_link(@lnk)
+      visit "/admin/tournaments/#{@t2.id}"
+      page.click_link "Rate"
+      Tournament.next_for_rating.should == @t3
+      visit "/admin/tournaments/#{@t1.id}"
+      page.should have_no_link(@lnk)
+      visit "/admin/tournaments/#{@t2.id}"
+      page.should have_no_link(@lnk)
+      visit "/admin/tournaments/#{@t3.id}"
+      page.should have_no_link(@lnk)          # not when it's the last tournament for rating
+      page.click_link "Rate"                  # but it still has the Rate button (for rating one tournament)
+      visit "/admin/tournaments/#{@t1.id}"
+      page.should have_no_link(@lnk)
+      visit "/admin/tournaments/#{@t2.id}"
+      page.should have_no_link(@lnk)
+      visit "/admin/tournaments/#{@t3.id}"
+      page.should have_no_link(@lnk)
+    end
+
+    it "should rate all tournaments" do
+      visit "/admin/tournaments/#{@t1.id}"
+      page.click_link @lnk
+      RatingRun.count.should == 1
+      rr = RatingRun.first
+      rr.start_tournament.should == @t1
+      rr.last_tournament.should == @t3
+      rr.start_tournament_name.should == @t1.name_with_year
+      rr.last_tournament_name.should == @t3.name_with_year
+      rr.start_tournament_rorder.should == @t1.rorder
+      rr.last_tournament_rorder.should == @t3.rorder
+      rr.user.should == @u
+      rr.status.should == "waiting"
+      data = ""
+      lambda { File.open(RatingRun.flag) { |f| data = f.read } }.should_not raise_error
+      data.should == rr.id.to_s
+    end
+  end
 end

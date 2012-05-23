@@ -1,3 +1,19 @@
+# == Schema Information
+#
+# Table name: uploads
+#
+#  id            :integer(4)      not null, primary key
+#  name          :string(255)
+#  format        :string(255)
+#  content_type  :string(255)
+#  file_type     :string(255)
+#  size          :integer(4)
+#  tournament_id :integer(4)
+#  user_id       :integer(4)
+#  error         :text
+#  created_at    :datetime
+#
+
 class Upload < ActiveRecord::Base
   extend ICU::Util::Pagination
   include ICU::Util::Model

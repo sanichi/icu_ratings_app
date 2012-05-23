@@ -15,3 +15,7 @@ end
 every :sunday, at: "6am" do
   rake "sync:other_fide_players"
 end
+
+every 1.minute do
+  command "cd #{path}; F=tmp/#{@environment}_rating_run; if [ -f $F ]; then mv $F ${F}_; RAILS_ENV=#{@environment}; bin/rake rating:run --silent; fi"
+end

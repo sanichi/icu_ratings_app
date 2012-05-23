@@ -1,0 +1,15 @@
+%table
+  %tr
+    %th Time Ago
+    %th Start Tournament
+  - if @rating_runs.count == 0
+    %tr
+      %td{colspan: 2, class: "centered"} No matches
+  - else
+    - @rating_runs.matches.each do |rating_run|
+      %tr
+        %td= link_to time_ago_in_words(rating_run.created_at, true), [:admin, rating_run]
+        %td= rating_run.start_tournament_name
+  - if @rating_runs.multi_page
+    %tr
+      %th{class: "centered", colspan: 2}= pagination_links(@rating_runs)

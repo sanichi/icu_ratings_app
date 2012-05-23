@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: old_tournaments
+#
+#  id           :integer(4)      not null, primary key
+#  name         :string(255)
+#  date         :date
+#  player_count :integer(2)
+#
+
 class OldTournament < ActiveRecord::Base
   extend ICU::Util::Pagination
 

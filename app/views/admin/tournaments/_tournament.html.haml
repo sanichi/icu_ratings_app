@@ -139,3 +139,6 @@
         - if @tournament == @next_for_rating
           &bull;
           = link_to "Rate", admin_tournament_path(@tournament, rate: "", format: "js"), method: :put, remote: true
+          - if @tournament.next_tournament
+            &bull;
+            = link_to "Rate All", admin_rating_runs_path(rating_run: { start_tournament_id: @tournament.id }), method: :post

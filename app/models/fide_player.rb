@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: fide_players
+#
+#  id         :integer(4)      not null, primary key
+#  last_name  :string(255)
+#  first_name :string(255)
+#  fed        :string(3)
+#  title      :string(3)
+#  gender     :string(1)
+#  born       :integer(2)
+#  rating     :integer(2)
+#  icu_id     :integer(4)
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 class FidePlayer < ActiveRecord::Base
   extend ICU::Util::Pagination
   extend ICU::Util::AlternativeNames

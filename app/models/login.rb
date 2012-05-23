@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: logins
+#
+#  id         :integer(4)      not null, primary key
+#  user_id    :integer(4)
+#  ip         :string(39)
+#  problem    :string(8)       default("none")
+#  role       :string(20)
+#  created_at :datetime
+#
+
 class Login < ActiveRecord::Base
   extend ICU::Util::Pagination
 

@@ -1,3 +1,51 @@
+# == Schema Information
+#
+# Table name: players
+#
+#  id                   :integer(4)      not null, primary key
+#  first_name           :string(255)
+#  last_name            :string(255)
+#  fed                  :string(3)
+#  title                :string(3)
+#  gender               :string(1)
+#  icu_id               :integer(4)
+#  fide_id              :integer(4)
+#  icu_rating           :integer(2)
+#  fide_rating          :integer(2)
+#  dob                  :date
+#  status               :string(255)
+#  category             :string(255)
+#  rank                 :integer(2)
+#  num                  :integer(4)
+#  tournament_id        :integer(4)
+#  original_name        :string(255)
+#  original_fed         :string(3)
+#  original_title       :string(3)
+#  original_gender      :string(1)
+#  original_icu_id      :integer(4)
+#  original_fide_id     :integer(4)
+#  original_icu_rating  :integer(2)
+#  original_fide_rating :integer(2)
+#  original_dob         :date
+#  created_at           :datetime
+#  updated_at           :datetime
+#  old_rating           :integer(2)
+#  new_rating           :integer(2)
+#  trn_rating           :integer(2)
+#  old_games            :integer(2)
+#  new_games            :integer(2)
+#  bonus                :integer(2)
+#  k_factor             :integer(1)
+#  last_player_id       :integer(4)
+#  actual_score         :decimal(3, 1)
+#  expected_score       :decimal(8, 6)
+#  last_signature       :string(255)
+#  curr_signature       :string(255)
+#  old_full             :boolean(1)      default(FALSE)
+#  new_full             :boolean(1)      default(FALSE)
+#  unrateable           :boolean(1)      default(FALSE)
+#
+
 require "icu/error"
 
 class Player < ActiveRecord::Base

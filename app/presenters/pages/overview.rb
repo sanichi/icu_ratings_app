@@ -29,22 +29,24 @@ module Pages
 
     def queued
       return @q if @q
+      t1 = Tournament.first_for_rating
+      t2 = Tournament.next_for_rating
+      t3 = Tournament.last_for_rating
       @q = {}
       @q["Queued"] = { icon: "ok", count: Tournament.where("rorder IS NOT NULL").count }
-      @q["Rated"] = { icon: "ok", count: Tournament.where(stage: "rated").count }
+      @q["Rated"]  = { icon: "ok", count: Tournament.where(stage: "rated").count }
       @q["Locked"] = { icon: "ok", count: Tournament.where(locked: true).count }
-      @q["First"] = { icon: "ok", rorder: Tournament.minimum(:rorder)}
-      @q["Next"] = { icon: "ok"}
-      @q["Last"] = { icon: "ok", rorder: Tournament.maximum(:rorder)}
-      @q["Rated"][:icon] = "problems" unless @q["Rated"][:count] == @q["Queued"][:count]
-      @q["Locked"][:icon] = "problems" unless @q["Rated"][:count] == @q["Locked"][:count]
-      @q["First"][:icon] = "problems" unless !@q["First"][:rorder] || @q["First"][:rorder] == 1
-      @q["Last"][:icon] = "problems" unless !@q["Last"][:rorder] || @q["Last"][:rorder] == @q["Queued"][:count]
-      @q["First"][:tournament] = Tournament.where(rorder: @q["First"][:rorder]).first if @q["First"][:rorder]
-      @q["Last"][:tournament] = Tournament.where(rorder: @q["Last"][:rorder]).first if @q["Last"][:rorder]
-      @q["Next"][:tournament] = Tournament.next_for_rating
-      @q["Next"][:rorder] = @q["Next"][:tournament].rorder if @q["Next"][:tournament]
-      @q["Next"][:icon] = "problems" if @q["Next"][:tournament]
+      @q["First"]  = { icon: "ok", rorder: t1.try(:rorder) }
+      @q["Next"]   = { icon: "ok", rorder: t2.try(:rorder) }
+      @q["Last"]   = { icon: "ok", rorder: t3.try(:rorder) }
+      @q["Rated"][:icon]  = "problems" unless  @q["Rated"][:count]  == @q["Queued"][:count]
+      @q["Locked"][:icon] = "problems" unless  @q["Rated"][:count]  == @q["Locked"][:count]
+      @q["First"][:icon]  = "problems" unless !@q["First"][:rorder] || @q["First"][:rorder] == 1
+      @q["Next"][:icon]   = "problems" if t2
+      @q["Last"][:icon]   = "problems" unless !@q["Last"][:rorder]  || @q["Last"][:rorder] == @q["Queued"][:count]
+      @q["First"][:tournament] = t1
+      @q["Next"][:tournament]  = t2
+      @q["Last"][:tournament]  = t3
       @q
     end
 

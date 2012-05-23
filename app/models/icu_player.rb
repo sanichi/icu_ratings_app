@@ -1,3 +1,26 @@
+# == Schema Information
+#
+# Table name: icu_players
+#
+#  id            :integer(4)      not null, primary key
+#  first_name    :string(255)
+#  last_name     :string(255)
+#  email         :string(255)
+#  club          :string(255)
+#  address       :string(255)
+#  phone_numbers :string(255)
+#  fed           :string(3)
+#  title         :string(3)
+#  gender        :string(1)
+#  note          :text
+#  dob           :date
+#  joined        :date
+#  deceased      :boolean(1)
+#  master_id     :integer(4)
+#  created_at    :datetime
+#  updated_at    :datetime
+#
+
 class IcuPlayer < ActiveRecord::Base
   extend ICU::Util::Pagination
   extend ICU::Util::AlternativeNames

@@ -1,3 +1,41 @@
+# == Schema Information
+#
+# Table name: tournaments
+#
+#  id                     :integer(4)      not null, primary key
+#  name                   :string(255)
+#  city                   :string(255)
+#  site                   :string(255)
+#  arbiter                :string(255)
+#  deputy                 :string(255)
+#  tie_breaks             :string(255)
+#  time_control           :string(255)
+#  start                  :date
+#  finish                 :date
+#  fed                    :string(3)
+#  rounds                 :integer(1)
+#  user_id                :integer(4)
+#  original_name          :string(255)
+#  original_tie_breaks    :string(255)
+#  original_start         :date
+#  original_finish        :date
+#  created_at             :datetime
+#  updated_at             :datetime
+#  status                 :string(255)     default("ok")
+#  stage                  :string(20)      default("initial")
+#  rorder                 :integer(4)
+#  reratings              :integer(2)      default(0)
+#  next_tournament_id     :integer(4)
+#  last_tournament_id     :integer(4)
+#  old_last_tournament_id :integer(4)
+#  first_rated            :datetime
+#  last_rated             :datetime
+#  last_rated_msec        :integer(2)
+#  last_signature         :string(32)
+#  curr_signature         :string(32)
+#  locked                 :boolean(1)      default(FALSE)
+#
+
 require "icu/error"
 
 class Tournament < ActiveRecord::Base
@@ -369,6 +407,18 @@ class Tournament < ActiveRecord::Base
     firsts.sort{ |a,b| a.rorder <=> b.rorder }.first
   end
 
+  # What is the first tournament due for rating or re-rating?
+  def self.first_for_rating
+    min_rorder = Tournament.minimum(:rorder)
+    Tournament.where(rorder: min_rorder).first if min_rorder
+  end
+
+  # What is the last tournament due for rating or re-rating?
+  def self.last_for_rating
+    max_rorder = Tournament.maximum(:rorder)
+    Tournament.where(rorder: max_rorder).first if max_rorder
+  end
+
   def self.first_outofdate_sql
     <<-'HERE'
     SELECT t2.*
@@ -382,10 +432,8 @@ class Tournament < ActiveRecord::Base
   # Rate this tournament. Returning an error message or nil.
   def rate
     rate!
-  rescue ICU::Error => e
-    e.message
   rescue => e
-    logger.error("#{e.message}:\n#{e.backtrace[0..15].join("\n")}")
+    Failure.record(e, 16) unless e.instance_of?(ICU::Error)
     e.message
   end
 

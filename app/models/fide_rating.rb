@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: fide_ratings
+#
+#  id         :integer(4)      not null, primary key
+#  fide_id    :integer(4)
+#  rating     :integer(2)
+#  games      :integer(2)
+#  list       :date
+#  created_at :datetime
+#  updated_at :datetime
+#
+
 class FideRating < ActiveRecord::Base
   extend ICU::Util::Pagination
 

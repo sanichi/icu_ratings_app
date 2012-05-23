@@ -1,3 +1,19 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id              :integer(4)      not null, primary key
+#  email           :string(50)
+#  preferred_email :string(50)
+#  password        :string(32)
+#  role            :string(20)      default("member")
+#  icu_id          :integer(4)
+#  expiry          :date
+#  created_at      :datetime
+#  updated_at      :datetime
+#  salt            :string(32)
+#
+
 class User < ActiveRecord::Base
   extend ICU::Util::Pagination
 
