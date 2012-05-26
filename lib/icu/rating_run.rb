@@ -23,10 +23,10 @@ module ICU
       rescue
         raise Error.new("no flag (#{@flag}) found")
       end
-      raise Error.new("no ID in flag (#{@id})") unless @id.match(/^[1-9]\d*$/)
-      @id = @id.to_i
       File.unlink(@flag)
       raise Error.new("unable to delete flag") if File.exists?(@flag)
+      raise Error.new("no ID in flag (#{@id})") unless @id.match(/^[1-9]\d*$/)
+      @id = @id.to_i
     end
 
     # Get the RatingRun object corresponding to the ID found in the flag file.

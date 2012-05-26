@@ -16,9 +16,7 @@ poll = ->
 more = ->
   args =
     url: url()
-    async: false
     dataType: 'json'
-    timeout: 1000 * (delay - 0.5)
     error: -> abort()
     success: (data) ->
       $.each data, (key, val) ->

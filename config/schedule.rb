@@ -17,5 +17,5 @@ every :sunday, at: "6am" do
 end
 
 every 1.minute do
-  command "cd #{path}; F=tmp/#{@environment}_rating_run; if [ -f $F ]; then mv $F ${F}_; RAILS_ENV=#{@environment}; bin/rake rating:run --silent; fi"
+  command "cd #{path}; F=tmp/#{@environment}_rating_run; if [ -f $F ]; then mv $F ${F}_; RAILS_ENV=#{@environment} bin/rake rating:run --silent; fi"
 end
