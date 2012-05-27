@@ -19,14 +19,14 @@ module PlayersHelper
     ave = round(player.ave_opp_rating, 1)
     gms = player.rateable_games
     scr = round(player.rateable_score, 1)
-    ans = "#{ave} &plus; 400 &times; (2 &times; #{scr} &minus; #{gms})"
+    ans = "#{ave} + 400 &times; (2 &times; #{scr} &minus; #{gms})"
     ans << " &divide; #{gms}" unless gms == 1
     ans.html_safe
   end
 
   def explain_full_change(player)
     ans = "(#{player.actual_score} &minus; #{round(player.expected_score)}) &times; #{player.k_factor}"
-    ans << " &plus; #{player.bonus}" unless player.bonus.to_i == 0
+    ans << " + #{player.bonus}" unless player.bonus.to_i == 0
     ans.html_safe
   end
 
@@ -35,13 +35,13 @@ module PlayersHelper
   end
 
   def explain_full_games(player)
-    "#{player.old_games} &plus; #{player.rateable_games}".html_safe
+    "#{player.old_games} + #{player.rateable_games}".html_safe
   end
 
   def explain_provisional_rating(player)
     r1, g1 = player.old_rating, player.old_games
     r2, g2 = player.performance_rating, player.rateable_games
-    "(#{r1} &times; #{g1} &plus; #{round(r2, 1)} &times; #{g2}) &divide; (#{g1} &plus; #{g2})".html_safe
+    "(#{r1} &times; #{g1} + #{round(r2, 1)} &times; #{g2}) &divide; (#{g1} + #{g2})".html_safe
   end
 
   def explain_provisional_change(player)
@@ -50,7 +50,7 @@ module PlayersHelper
 
   def explain_provisional_games(player)
     type = player.new_full ? "now full" : "still provisional"
-    "#{player.old_games} &plus; #{player.rateable_games} (rating is #{type})".html_safe
+    "#{player.old_games} + #{player.rateable_games} (rating is #{type})".html_safe
   end
 
   def explain_new_rating(player)
