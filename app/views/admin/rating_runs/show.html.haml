@@ -12,7 +12,7 @@
       %span{id: "tictoc"}= icon_tag "wait.gif", "Working please wait", class: "inline"
   %tr
     %th Start time
-    %td= "#{@rating_run.created_at.to_s(:db)} (#{time_ago_in_words(@rating_run.created_at, true)} ago)"
+    %td= @rating_run.created_at.to_s(:db)
   %tr
     %th Duration
     %td{id: "duration"}= @rating_run.duration
