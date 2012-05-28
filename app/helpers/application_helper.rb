@@ -96,6 +96,12 @@ module ApplicationHelper
     menu
   end
 
+  def rating_run_status_menu(any=nil)
+    menu = RatingRun::STATUS.map{ |s| [s, s] }
+    menu.unshift([any, ""]) if any
+    menu
+  end
+
   def result_menu
     %w[Draw Win Loss].map{ |r| [r, r[0]] }
   end

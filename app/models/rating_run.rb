@@ -32,6 +32,7 @@ class RatingRun < ActiveRecord::Base
 
   def self.search(params, path)
     matches = scoped.includes(:user)
+    matches = matches.where(status: params[:status]) if STATUS.include?(params[:status])
     paginate(matches, path, params)
   end
 
