@@ -2,9 +2,9 @@
 = render "player_type"
 %tr
   %th Rating
-  %td= @player.old_rating
+  %td{class: "centered"}= @player.old_rating
   %td= "FIDE or other Elo"
 %tr
   %th Performance
-  %td= @player.trn_rating
+  %td{class: "centered"}= @player.trn_rating
   %td= explain_trn_rating(@player)

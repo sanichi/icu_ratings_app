@@ -37,7 +37,7 @@ module Pages
       @q["Rated"]  = { icon: "ok", count: Tournament.where(stage: "rated").count }
       @q["Locked"] = { icon: "ok", count: Tournament.where(locked: true).count }
       @q["First"]  = { icon: "ok", rorder: t1.try(:rorder) }
-      @q["Next"]   = { icon: "ok", rorder: t2.try(:rorder) }
+      @q["Next"]   = { icon: "ok", rorder: t2.try(:rorder) || "0" }
       @q["Last"]   = { icon: "ok", rorder: t3.try(:rorder) }
       @q["Rated"][:icon]  = "problems" unless  @q["Rated"][:count]  == @q["Queued"][:count]
       @q["Locked"][:icon] = "problems" unless  @q["Rated"][:count]  == @q["Locked"][:count]
