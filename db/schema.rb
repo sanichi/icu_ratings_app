@@ -228,6 +228,7 @@ ActiveRecord::Schema.define(:version => 20120529193357) do
 
   add_index "results", ["opponent_id"], :name => "index_results_on_opponent_id"
   add_index "results", ["player_id"], :name => "index_results_on_player_id"
+  add_index "results", ["rating_change"], :name => "index_results_on_rating_change"
 
   create_table "tournaments", :force => true do |t|
     t.string   "name"
