@@ -44,6 +44,7 @@
 #  old_full             :boolean(1)      default(FALSE)
 #  new_full             :boolean(1)      default(FALSE)
 #  unrateable           :boolean(1)      default(FALSE)
+#  rating_change        :integer(2)      default(0)
 #
 
 require "icu/error"
@@ -228,10 +229,13 @@ class Player < ActiveRecord::Base
       case category
       when "icu_player", "new_player"
         new_games = old_games + count
-        update_column_if_changed(:new_rating, p.new_rating.round)
+        new_rating = p.new_rating.round
+        rating_change = old_rating ? new_rating - old_rating : 0
+        update_column_if_changed(:new_rating, new_rating)
         update_column_if_changed(:new_games, new_games)
         update_column_if_changed(:new_full, old_full || new_games >= 20)
         update_column_if_changed(:trn_rating, p.performance.round)
+        update_column_if_changed(:rating_change, rating_change)
         update_column_if_changed(:actual_score, p.score)
         update_column_if_changed(:expected_score, p.expected_score)
       when "foreign_player"
@@ -239,6 +243,7 @@ class Player < ActiveRecord::Base
         update_column_if_changed(:new_games, old_games)
         update_column_if_changed(:new_full, false)
         update_column_if_changed(:trn_rating, p.performance.round)
+        update_column_if_changed(:rating_change, 0)
         update_column_if_changed(:actual_score, p.score)
         update_column_if_changed(:expected_score, p.expected_score)
       end
@@ -247,7 +252,10 @@ class Player < ActiveRecord::Base
       update_column_if_changed(:new_rating, old_rating)
       update_column_if_changed(:new_games, old_games)
       update_column_if_changed(:new_full, old_full)
-      [:trn_rating, :bonus, :actual_score, :expected_score].each { |a| update_column_if_changed(a, nil) }
+      update_column_if_changed(:rating_change, 0)
+      [:trn_rating, :bonus, :actual_score, :expected_score].each do |a|
+        update_column_if_changed(a, nil)
+      end
     end
     update_column_if_changed(:bonus, count > 0 && category == "icu_player" && icu_player_type == "full_rating" ? p.bonus : nil)
     results.each do |r|
@@ -320,11 +328,6 @@ class Player < ActiveRecord::Base
   # The total score in rateable games.
   def rateable_score
     @rateable_score ||= results.inject(0.0) { |t, r| t + (r.rateable ? r.score : 0.0) }
-  end
-
-  # A player's change in rating. The tournament must be rated first to give a meaningful answer.
-  def rating_change
-    @rating_change ||= new_rating.to_i - old_rating.to_i
   end
 
   # A player's performance rating. For provisional players, ICU::RatedPlayer.trn_rating

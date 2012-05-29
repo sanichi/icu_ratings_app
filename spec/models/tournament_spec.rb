@@ -120,6 +120,7 @@ describe Tournament do
       p.trn_rating.should be_within(1).of(2156)
       p.new_games.should == 1116
       p.new_full.should be_true
+      p.rating_change.should be_within(1).of(18)
       p.bonus.should == 0
       p.expected_score.should be_within(0.0001).of(1.7660)
       p.last_signature.should == "159 1L11 2D19 3W27 4W25 5L7"
@@ -140,6 +141,7 @@ describe Tournament do
       p.trn_rating.should be_within(1).of(1842)
       p.new_games.should == 18
       p.new_full.should be_true
+      p.rating_change.should be_within(1).of(-10)
       p.bonus.should == 0
       p.expected_score.should be_within(0.0001).of(1.7566)
       p.last_signature.should == "10235 1D24 2D20 3L19 4L21 5D29 6L30"
@@ -160,6 +162,7 @@ describe Tournament do
       p.trn_rating.should be_within(1).of(2039)
       p.new_games.should == p.old_games + 6
       p.new_full.should be_true
+      p.rating_change.should be_within(1).of(8)
       p.bonus.should be_nil
       p.expected_score.should be_within(0.0001).of(3.3911)
       p.last_signature.should == "8453 1L5 2L23 3W33 4D17 5W26 6W24"
@@ -180,6 +183,7 @@ describe Tournament do
       p.trn_rating.should be_within(1).of(2203)
       p.new_games.should == 6
       p.new_full.should be_false
+      p.rating_change.should == 0
       p.bonus.should be_nil
       p.expected_score.should be_within(0.0001).of(2.9319)
       p.last_signature.should == "12376 1W31 2D1 3L11 4D10 5W22 6L5"
@@ -200,6 +204,7 @@ describe Tournament do
       p.trn_rating.should be_within(1).of(1776)
       p.new_games.should == 6
       p.new_full.should be_false
+      p.rating_change.should == 0
       p.bonus.should be_nil
       p.expected_score.should be_within(0.0001).of(1.6341)
       p.last_signature.should == "1L16 2D10 3L26 4D29 5L17 6D33"
@@ -220,6 +225,7 @@ describe Tournament do
       p.trn_rating.should be_within(1).of(2464)
       p.new_games.should == 0
       p.new_full.should be_false
+      p.rating_change.should == 0
       p.bonus.should be_nil
       p.expected_score.should be_within(0.0001).of(5.0379)
       p.last_signature.should == "2658 1W19 2D11 3W8 4L1 5D9 6W14"
@@ -240,6 +246,7 @@ describe Tournament do
       p.trn_rating.should be_nil
       p.new_games.should == 329
       p.new_full.should be_true
+      p.rating_change.should == 0
       p.bonus.should be_nil
       p.expected_score.should be_nil
       p.last_signature.should == "1350"
@@ -260,6 +267,7 @@ describe Tournament do
       p.trn_rating.should be_nil
       p.new_games.should == 0
       p.new_full.should be_false
+      p.rating_change.should == 0
       p.bonus.should be_nil
       p.expected_score.should be_nil
       p.last_signature.should == ""
@@ -280,6 +288,7 @@ describe Tournament do
       p.trn_rating.should be_nil
       p.new_games.should == 0
       p.new_full.should be_false
+      p.rating_change.should == 0
       p.bonus.should be_nil
       p.expected_score.should be_nil
       p.last_signature.should == "2550"
@@ -300,6 +309,7 @@ describe Tournament do
       p.trn_rating.should be_nil
       p.new_games.should == p.old_games
       p.new_full.should be_false
+      p.rating_change.should == 0
       p.bonus.should be_nil
       p.expected_score.should be_nil
       p.last_signature.should == "12664 1D36 2D37"
@@ -320,6 +330,7 @@ describe Tournament do
       p.trn_rating.should be_nil
       p.new_games.should == p.old_games
       p.new_full.should be_false
+      p.rating_change.should == 0
       p.bonus.should be_nil
       p.expected_score.should be_nil
       p.last_signature.should == "12833 1D34"
@@ -340,6 +351,7 @@ describe Tournament do
       p.trn_rating.should be_nil
       p.new_games.should == p.old_games
       p.new_full.should be_false
+      p.rating_change.should == 0
       p.bonus.should be_nil
       p.expected_score.should be_nil
       p.last_signature.should == "2D34"
@@ -391,6 +403,7 @@ describe Tournament do
       p3.new_rating.should be < p3.old_rating
       p3.new_games.should == p3.old_games + 6
       p3.new_full.should be_true
+      p3.rating_change.should == p3.new_rating - p3.old_rating
       ((p3.actual_score - p3.expected_score) * p3.k_factor).should be_within(0.5).of(p3.new_rating - p3.old_rating)
 
       # ICU player with full rating but started with less than 20 games.
@@ -406,6 +419,7 @@ describe Tournament do
       p3.new_rating.should be < p3.old_rating
       p3.new_games.should == p3.old_games + 6
       p3.new_full.should be_true
+      p3.rating_change.should == p3.new_rating - p3.old_rating
       ((p3.actual_score - p3.expected_score) * p3.k_factor).should be_within(0.5).of(p3.new_rating - p3.old_rating)
 
       # ICU player with full rating who only played in this tournament.
@@ -420,6 +434,7 @@ describe Tournament do
       p3.new_rating.should be > p3.old_rating
       p3.new_games.should == p3.old_games + 6
       p3.new_full.should be_true
+      p3.rating_change.should == p3.new_rating - p3.old_rating
       ((p3.actual_score - p3.expected_score) * p3.k_factor).should be_within(0.5).of(p3.new_rating - p3.old_rating)
 
       # Foreign guest, played in both tournaments.
@@ -428,6 +443,7 @@ describe Tournament do
       p3.category.should == "foreign_player"
       p3.unrateable.should be_false
       p3.old_rating.should_not == p1.new_rating
+      p3.rating_change.should == 0
       p3.last_player_id.should be_nil
 
       # Played in both tournaments and transitioned from provisional to full rating.
@@ -445,6 +461,7 @@ describe Tournament do
       p3.unrateable.should be_false
       p3.new_games.should == p3.old_games + 6
       p3.new_full.should be_true
+      p3.rating_change.should == p3.new_rating - p3.old_rating
       p3.bonus.should == 0
       ((p3.actual_score - p3.expected_score) * p3.k_factor).should be_within(0.5).of(p3.new_rating - p3.old_rating)
 
@@ -463,6 +480,7 @@ describe Tournament do
       p3.trn_rating.should_not be_nil
       p3.new_games.should == p1.new_games + 2
       p3.new_full.should be_false
+      p3.rating_change.should == p3.new_rating - p3.old_rating
       p3.bonus.should be_nil
       p3.expected_score.should_not be_nil
 
@@ -481,6 +499,7 @@ describe Tournament do
       p3.trn_rating.should_not be_nil
       p3.new_games.should == 1
       p3.new_full.should be_false
+      p3.rating_change.should == 0
       p3.bonus.should be_nil
       p3.expected_score.should_not be_nil
 

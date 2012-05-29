@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120521133008) do
+ActiveRecord::Schema.define(:version => 20120529193357) do
 
   create_table "articles", :force => true do |t|
     t.string   "headline"
@@ -191,10 +191,12 @@ ActiveRecord::Schema.define(:version => 20120521133008) do
     t.boolean  "old_full",                                                        :default => false
     t.boolean  "new_full",                                                        :default => false
     t.boolean  "unrateable",                                                      :default => false
+    t.integer  "rating_change",        :limit => 2,                               :default => 0
   end
 
   add_index "players", ["fide_id"], :name => "index_players_on_fide_id"
   add_index "players", ["icu_id"], :name => "index_players_on_icu_id"
+  add_index "players", ["rating_change"], :name => "index_players_on_rating_change"
   add_index "players", ["tournament_id"], :name => "index_players_on_tournament_id"
 
   create_table "rating_runs", :force => true do |t|
