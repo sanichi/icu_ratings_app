@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
     begin
       user = User.authenticate!(params, request.ip, can?(:manage, User))
       session[:user_id] = user.id
-      redirect_to root_url, notice: "Logged in as #{user.name(false)}"
+      redirect_to my_home_path
     rescue => e
       flash.now.alert = e.message
       render "new"

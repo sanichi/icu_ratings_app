@@ -14,7 +14,7 @@
         %td= link_to login.user.email, [:admin, login.user]
         - icu_player = login.user.icu_player
         - if icu_player
-          %td= link_to icu_player.name, icu_player, remote: true
+          %td= link_to icu_player.name, their_home_path(id: icu_player.id)
         - else
           %td{class: :error} None
         %td= login.problem

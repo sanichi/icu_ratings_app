@@ -2,7 +2,8 @@ Ratings::Application.routes.draw do
 
   root to: "pages#home"
 
-  %w[home contacts overview system_info].each { |p| get p => "pages##{p}"}
+  %w[home my_home contacts overview system_info].each { |p| get p => "pages##{p}"}
+  match "/my_home/:id" => "pages#my_home", as: "their_home"
   get "log_in"  => "sessions#new"
   get "log_out" => "sessions#destroy"
 

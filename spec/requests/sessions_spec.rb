@@ -45,7 +45,7 @@ describe "Sessions" do
       page.fill_in "Email", with: @user.email
       page.fill_in "Password", with: @user.password
       click_button "Log in"
-      page.should have_selector("span.notice", text: /logged in as #{@user.icu_player.name(false)}/i)
+      page.should have_selector("div.header span", text: @user.icu_player.name(false))
       @user.logins.where(problem: "none", role: "member").count.should == 1
     end
 

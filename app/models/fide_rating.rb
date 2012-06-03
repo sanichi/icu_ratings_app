@@ -35,6 +35,17 @@ class FideRating < ActiveRecord::Base
     paginate(matches, path, params)
   end
 
+  def self.get_rating(fide_id, type)
+    match = unscoped
+    match = match.where(fide_id: fide_id)
+    case type
+    when :latest  then match = match.order("list DESC")
+    when :highest then match = match.order("rating DESC, list ASC")
+    when :lowest  then match = match.order("rating ASC, list ASC")
+    end
+    match.first
+  end
+
   def self.lists
     unscoped.select("DISTINCT(list)").order("list DESC").map(&:list)
   end

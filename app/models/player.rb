@@ -186,7 +186,29 @@ class Player < ActiveRecord::Base
 
   # Get a player's rating from his last rated tournament.
   def self.get_last_rating(icu_id, rorder)
-    joins(:tournament).where("tournaments.stage = 'rated' AND tournaments.rorder < #{rorder}").where(icu_id: icu_id).order("tournaments.rorder").last
+    match = joins(:tournament)
+    match = match.where("tournaments.stage = 'rated'")
+    match = match.where("tournaments.rorder < #{rorder}")
+    match = match.where(icu_id: icu_id)
+    match = match.order("tournaments.rorder")
+    match.last
+  end
+
+  # Get a player's most recent tournaments or their biggest gains or losses.
+  def self.get_players(icu_id, type, limit)
+    match = joins(:tournament).includes(:tournament)
+    match = match.where(icu_id: icu_id)
+    match = match.where(tournaments: { stage: "rated" })
+    case type
+    when :gain
+      match = match.where("rating_change >= 0")
+      match = match.order("rating_change DESC")
+    when :loss
+      match = match.where("rating_change < 0")
+      match = match.order("rating_change ASC")
+    end
+    match = match.order("tournaments.rorder DESC")
+    match.limit(limit)
   end
 
   # Set the k-factor for an ICU player with a full rating (is called after get_old_ratings)

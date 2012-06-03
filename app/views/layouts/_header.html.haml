@@ -6,8 +6,13 @@
 
 %ul.sf-menu
   %li
-    = link_to "Home", home_path
+    - if can? :my_home, ::Pages::MyHome
+      = link_to "My Home", my_home_path
+    - else
+      = link_to "Home", home_path
     %ul
+      - if can? :my_home, ::Pages::MyHome
+        %li= link_to "Home", home_path
       %li
         = link_to "Articles", articles_path
         - if can? :create, Article

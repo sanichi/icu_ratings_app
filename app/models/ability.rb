@@ -12,6 +12,7 @@ class Ability
 
     can :show, IcuPlayer, id: user.icu_id
     can :show, Player
+    can :my_home, Pages::MyHome
 
     return unless user.role? :reporter
 

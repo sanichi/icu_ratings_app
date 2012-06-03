@@ -47,6 +47,24 @@ class Result < ActiveRecord::Base
     player.results.build(attrs)
   end
 
+  # Get a player's biggest gains or losses in a single game.
+  def self.get_results(icu_id, type, limit)
+    match = joins(player: :tournament).includes(player: :tournament).includes(:opponent)
+    match = match.where(players: { icu_id: icu_id })
+    match = match.where(players: { tournaments: { stage: "rated" } })
+    case type
+    when :gain
+      match = match.where("results.rating_change >= 0")
+      match = match.order("round(results.rating_change) DESC")
+    when :loss
+      match = match.where("results.rating_change < 0")
+      match = match.order("round(results.rating_change) ASC")
+    end
+    match = match.order("tournaments.rorder DESC")
+    match = match.order("results.round ASC")
+    match.limit(limit)
+  end
+
   # Update both the current result and that of the opponent (if there is one).
   def update_results(attrs, opponents_result)
     attrs[:opponent_id] = attrs[:opponent_id].to_i

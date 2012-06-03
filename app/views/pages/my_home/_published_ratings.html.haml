@@ -1,0 +1,38 @@
+- latest_icu, highest_icu, lowest_icu = @my_home.icu_ratings
+- latest_fide, highest_fide, lowest_fide = @my_home.fide_ratings
+- w = latest_icu && latest_fide ? 4 : 2
+
+%table{class: "cushioned right-headers"}
+  %tr
+    %th{rowspan: 2, class: "centered"}
+    %th{colspan: w, class: "centered"} Published Ratings
+  %tr
+    - if latest_icu && latest_fide
+      %th{colspan: 2, class: "centered"} ICU
+      %th{colspan: 2, class: "centered"} FIDE
+    - else
+      %th{colspan: 2, class: "centered"}= latest_icu ? "ICU" : "FIDE"
+  %tr
+    %th Latest
+    - if latest_icu
+      %td= latest_icu.list.strftime("%B %Y")
+      %td{class: "centered"}= link_to latest_icu.rating, icu_rating_path(latest_icu, format: "js"), remote: true
+    - if latest_fide
+      %td= latest_fide.list.strftime("%B %Y")
+      %td{class: "centered"}= link_to latest_fide.rating, fide_rating_path(latest_fide, format: "js"), remote: true
+  %tr
+    %th Highest
+    - if latest_icu
+      %td= highest_icu.list.strftime("%B %Y")
+      %td{class: "centered"}= link_to highest_icu.rating, icu_rating_path(highest_icu, format: "js"), remote: true
+    - if latest_fide
+      %td= highest_fide.list.strftime("%B %Y")
+      %td{class: "centered"}= link_to highest_fide.rating, fide_rating_path(highest_fide, format: "js"), remote: true
+  %tr
+    %th Lowest
+    - if latest_icu
+      %td= lowest_icu.list.strftime("%B %Y")
+      %td{class: "centered"}= link_to lowest_icu.rating, icu_rating_path(lowest_icu, format: "js"), remote: true
+    - if latest_fide
+      %td= lowest_fide.list.strftime("%B %Y")
+      %td{class: "centered"}= link_to lowest_fide.rating, fide_rating_path(lowest_fide, format: "js"), remote: true

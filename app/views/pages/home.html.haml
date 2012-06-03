@@ -1,8 +1,20 @@
 - content_for :head do
   %meta{name: "google-site-verification", content: APP_CONFIG["google_site_verification"]}
 
-- if @ratings_graph.available?
-  = render "ratings_graph", graph: @ratings_graph
+- unless can?(:my_home, Pages::MyHome)
+  %table{class: "cushioned"}
+    %tr
+      %td{class: "section"}
+        ICU Members -
+        = link_to "log in", log_in_path
+        to see:
+        %ul
+          %li how your rating fared in recent tournaments,
+          %li your biggest tournament gains and losses,
+          %li your biggest gains and losses in individual games,
+          %li a full breakdown of how your rating is calculated.
+        = link_to_icu("Help", "articles/display.php?id=283")
+        on becoming a member and registering a login account.
 
 %table{class: "sections"}
   %tr
@@ -25,32 +37,30 @@
 
 #help
   %dl
-    %dt How can I see my published ratings?
+    %dt How can I see my published ICU and FIDE rating?
     %dd
-      - if !current_user
-        Log in to see a graph of your published ICU and FIDE ratings.
-      - elsif @ratings_graph.available?
-        They are graphed on this page.
-      - else
-        You don't have any published ratings yet.
       You can search for your own and other players' published ratings here:
       = succeed(',') do
         = link_to "ICU", icu_ratings_path
       = succeed('.') do
         = link_to "FIDE", fide_ratings_path
+    %dt How can I see full details of my latest ICU rating?
     %dd
-    - if @ratings_graph.available?
-      %dt Is there a way to read off my exact rating from any point in the graph?
-      %dd Hover your mouse over the point.
-    %dt How can I see full details of my latest rating?
-    %dd
-      This functionality is still in development and should be ready before September 2012.
+      - if !current_user
+        = succeed('.') do
+          = link_to "Log in", log_in_path
+      - else
+        Go to your
+        = succeed('.') do
+          = link_to "home page", my_home_path
     %dt How can I submit a tournament for rating?
     %dd
       - if !current_user
         First log in, then click Help again.
       - elsif can? :create, Upload
-        Click Tournament &rarr; New.
+        Click Tournament &rarr;
+        = succeed('.') do
+          = link_to "New", new_admin_upload_path
       - else
         Please ask the
         = mail_to_icu

@@ -1,0 +1,59 @@
+%div.header
+  %span= @icu_player.name(false)
+
+- views = "pages/my_home/"
+
+- recent_trns = @my_home.recent_trns
+- latest_icu = @my_home.icu_ratings.first
+- latest_fide = @my_home.fide_ratings.first
+
+- if recent_trns.size > 0 && (latest_icu || latest_fide)
+  %table
+    %tr.splitter
+      %td= render partial: "#{views}recent_trns", locals: {recent_trns: recent_trns, max: @my_home.max_rec }
+      %td= render partial: "#{views}published_ratings"
+- else
+  = render partial: "#{views}recent_trns", locals: {recent_trns: recent_trns, max: 0 } if recent_trns.size > 0
+  = render partial: "#{views}published_ratings" if latest_icu || latest_fide
+
+- tgl = @my_home.trn_gains_and_losses
+- ggl = @my_home.game_gains_and_losses
+= render partial: "#{views}trn_gains_and_losses",  locals: { tgl: tgl } if tgl.any
+= render partial: "#{views}game_gains_and_losses", locals: { ggl: ggl } if ggl.any
+
+= render "shared/ratings_graph/dialog"
+
+#help
+  %dl
+    %dt Why is an Irish tournament in which I recently played not yet rated?
+    %dd
+      It's possible that the tournament...
+      %ul
+        %li has not finished yet (e.g. the Leinster and Munster leagues don't finish until April or May)
+        %li report has not yet been received
+        %li report has issues so the tournament cannot be rating yet
+        %li
+          is ready but not yet rated (in this case it will be listed
+          = succeed(")") do
+            = link_to "here", tournaments_path
+        %li is not rateable, e.g. if it has too few rated players
+        %li is not elligible, e.g. if it is a rapid or blitz
+    %dt What is my latest rating if I haven't played any rated games since 2011?
+    %dd= "The one inherited from the old rating system in #{t 'system.new.start'}."
+    %dt How can I see the entire history of my published ratings?
+    %dd
+      Click a published rating on this page (if you have one) to see a graph or
+      you can search for your published ratings (and those of other players') here:
+      = succeed(",") do
+        = link_to "ICU", icu_ratings_path
+      = succeed(".") do
+        = link_to "FIDE", fide_ratings_path
+    %dt Some or all of my FIDE ratings are missing. Can this be fixed?
+    %dd
+      Please email the
+      = succeed(".") do
+        = mail_to_icu
+    %dt Over what time span are my highest and lowest ICU and FIDE ratings calculated?
+    %dd= "From #{t 'system.old.start'} for ICU and from #{t 'system.fide.start'} for FIDE."
+    %dt Over what time span are my biggest ICU gains and losses calculated?
+    %dd= "From the start of the new rating system, #{t 'system.new.start'}."

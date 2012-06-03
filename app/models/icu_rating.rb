@@ -35,6 +35,17 @@ class IcuRating < ActiveRecord::Base
     paginate(matches, path, params)
   end
 
+  def self.get_rating(icu_id, type)
+    match = unscoped
+    match = match.where(icu_id: icu_id)
+    case type
+    when :latest  then match = match.order("list DESC")
+    when :highest then match = match.order("rating DESC, list ASC")
+    when :lowest  then match = match.order("rating ASC, list ASC")
+    end
+    match.first
+  end
+
   def type
     full ? "full" : "provisional"
   end

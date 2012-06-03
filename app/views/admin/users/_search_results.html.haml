@@ -13,10 +13,11 @@
       %tr
         %td= link_to u.email, [:admin, u]
         - if u.icu_player
-          %td= link_to u.icu_player.name, u.icu_player, remote: true
+          %td= link_to u.icu_player.name, their_home_path(id: u.icu_id)
+          %td{class: "righted"}= link_to u.icu_id, u.icu_player, remote: true
         - else
           %td{class: :error} None
-        %td{class: "centered"}= u.icu_id
+          %td{class: "righted"}= u.icu_id
         %td{class: "centered"}= u.role
         %td{class: "centered"}= u.expiry
   - if @users.multi_page

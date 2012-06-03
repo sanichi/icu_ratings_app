@@ -1,0 +1,24 @@
+%table{class: "cushioned"}
+  %tr
+    %th{colspan: 4} Biggest Tournament Gains and Losses
+  %tr
+    %th{colspan: 2} Gains
+    %th{colspan: 2} Losses
+  - (0..tgl.max-1).each do |i|
+    %tr
+      - if i < tgl.gain.size
+        %td= link_to tgl.gain[i].tournament.name_with_year, tgl.gain[i]
+        %td= sign tgl.gain[i].rating_change
+      - elsif i >= tgl.gain.size
+        - if i == 0
+          %td{colspan: 2, width: "50%"}
+        - else
+          %td{colspan: 2}
+      - if i < tgl.loss.size
+        %td= link_to tgl.loss[i].tournament.name_with_year, tgl.loss[i]
+        %td= sign tgl.loss[i].rating_change
+      - elsif i >= tgl.loss.size
+        - if i == 0
+          %td{colspan: 2, width: "50%"}
+        - else
+          %td{colspan: 2}
