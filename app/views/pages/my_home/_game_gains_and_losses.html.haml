@@ -10,7 +10,7 @@
         %td= link_to ggl.gain[i].opponent.name(false), ggl.gain[i].player
         %td{class: "centered"}= ggl.gain[i].result
         %td= ggl.gain[i].player.tournament.name_with_year
-        %td{class: "righted"}= sign ggl.gain[i].rating_change.round
+        %td{class: "righted"}= sign ggl.gain[i].rating_change
       - elsif i >= ggl.gain.size
         - if i == 0
           %td{colspan: 4, width: "50%"}
@@ -20,7 +20,7 @@
         %td= link_to ggl.loss[i].opponent.name(false), ggl.loss[i].player
         %td{class: "centered"}= ggl.loss[i].result
         %td= ggl.loss[i].player.tournament.name_with_year
-        %td{class: "righted"}= sign ggl.loss[i].rating_change.round
+        %td{class: "righted"}= sign ggl.loss[i].rating_change
       - elsif i >= ggl.loss.size
         - if i == 0
           %td{colspan: 4, width: "50%"}

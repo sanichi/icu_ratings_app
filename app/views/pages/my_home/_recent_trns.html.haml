@@ -4,8 +4,13 @@
   - recent_trns.each do |player|
     %tr
       %td= link_to player.tournament.name_with_year, player
-      %td{class: "centered"}= player.new_rating
-      %td{class: "righted"}= sign player.rating_change
+      - if player.old_rating
+        %td{class: "centered"}
+          = raw("#{player.old_rating} &rarr;")
+          = player.new_rating
+        %td{class: "righted"}= sign player.rating_change
+      - else
+        %td{class: "centered", colspan: 2}= "#{player.new_rating} (1st rating)"
   - if recent_trns.size < max
     - (recent_trns.size..max-1).each do |t|
       %tr

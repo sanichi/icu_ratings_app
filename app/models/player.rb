@@ -202,9 +202,11 @@ class Player < ActiveRecord::Base
     case type
     when :gain
       match = match.where("rating_change >= 0")
+      match = match.where("old_rating IS NOT NULL")
       match = match.order("rating_change DESC")
     when :loss
       match = match.where("rating_change < 0")
+      match = match.where("old_rating IS NOT NULL")
       match = match.order("rating_change ASC")
     end
     match = match.order("tournaments.rorder DESC")

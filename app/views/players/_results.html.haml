@@ -25,7 +25,7 @@
       %td{class: "centered #{col}"}= score_html(result.score, rateable: result.rateable) if result
       - if show_extra
         %td{class: "centered"}= round(result.expected_score) if rat
-        %td{class: "righted"}= sign(result.rating_change.round) if rat
+        %td{class: "righted"}= sign(result.rating_change) if rat
   - if show_last_row
     %tr
       %td{colspan: 2}
