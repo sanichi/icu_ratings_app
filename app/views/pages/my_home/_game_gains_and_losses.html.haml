@@ -1,26 +1,28 @@
 %table{class: "cushioned"}
   %tr
-    %th{colspan: 6} Biggest Gains and Losses in Individual Games
+    %th{colspan: 8} Biggest Gains and Losses in Individual Games
   %tr
-    %th{colspan: 3} Gains
-    %th{colspan: 3} Losses
+    %th{colspan: 4} Gains
+    %th{colspan: 4} Losses
   - (0..ggl.max-1).each do |i|
     %tr
       - if i < ggl.gain.size
         %td= link_to ggl.gain[i].opponent.name(false), ggl.gain[i].player
+        %td{class: "centered"}= ggl.gain[i].result
         %td= ggl.gain[i].player.tournament.name_with_year
-        %td= sign ggl.gain[i].rating_change.round
+        %td{class: "righted"}= sign ggl.gain[i].rating_change.round
       - elsif i >= ggl.gain.size
         - if i == 0
-          %td{colspan: 3, width: "50%"}
+          %td{colspan: 4, width: "50%"}
         - else
-          %td{colspan: 3}
+          %td{colspan: 4}
       - if i < ggl.loss.size
         %td= link_to ggl.loss[i].opponent.name(false), ggl.loss[i].player
+        %td{class: "centered"}= ggl.loss[i].result
         %td= ggl.loss[i].player.tournament.name_with_year
-        %td= sign ggl.loss[i].rating_change.round
+        %td{class: "righted"}= sign ggl.loss[i].rating_change.round
       - elsif i >= ggl.loss.size
         - if i == 0
-          %td{colspan: 3, width: "50%"}
+          %td{colspan: 4, width: "50%"}
         - else
-          %td{colspan: 3}
+          %td{colspan: 4}
