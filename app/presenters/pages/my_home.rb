@@ -6,7 +6,7 @@ module Pages
       @id = id
       @max_rec = 4  # max number of recent tournaments
       @max_tgl = 10  # max tournament gains and losses
-      @max_ggl = 20  # max game gains and losses
+      @max_ggl = 10  # max game gains and losses
     end
     
     def max_rec
