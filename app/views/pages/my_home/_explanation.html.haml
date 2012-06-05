@@ -1,0 +1,37 @@
+- old_rating = @my_home.inherited_rating
+
+%table
+  %tr
+    %td{class: "section", width: "500px"}
+      - case
+        - when !@my_home.published_icu_ratings? && !@my_home.recent_ratings? && !old_rating
+          %p
+            We appear not to have any records of rated games played by you so you currently have no ICU rating.
+            If you would like to obtain a chess rating you should play in some rated tournaments.
+          = render partial: "#{views}explain_rated_tournaments"
+        - when !@my_home.published_icu_ratings? && !@my_home.recent_ratings? && old_rating
+          %p
+            We have no record of any published ratings for you or any recent rateable games.
+            However we do have an old rating,
+            = succeed(".") do
+              = render partial: "#{views}explain_old_rating", locals: { old_rating: old_rating }
+            If you would like to try to improve this old rating you should play in some rated tournaments.
+          = render partial: "#{views}explain_rated_tournaments"
+        - when !@my_home.published_icu_ratings? && @my_home.recent_ratings?
+          %p
+            We do not appear to have any records of published ratings for you but assuming you are now a
+            member of the ICU then your rating will be published at the next available publication date.
+            Ratings are published three times a year: September, January and May.
+        - when @my_home.published_icu_ratings? && !@my_home.recent_ratings?
+          %p
+            Your rating has been published prior to the start of the new rating system
+            (this web site) but it appears you have not played any rated games since
+            = succeed(".") do
+              = t "system.new.start"
+            If you would like to improve your old rating you should play in some rated tournaments.
+          = render partial: "#{views}explain_rated_tournaments"
+      %p
+        If you have any questions about the rating data we have for you, please contact the
+        = succeed(".") do
+          = mail_to_icu
+          

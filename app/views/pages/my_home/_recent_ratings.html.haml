@@ -1,7 +1,9 @@
+- players = @my_home.recent_trns
+
 %table{class: "cushioned"}
   %tr
     %th{colspan: 3} Recent Tournaments
-  - recent_trns.each do |player|
+  - players.each do |player|
     %tr
       %td= link_to player.tournament.name_with_year, player
       - if player.old_rating
@@ -11,8 +13,8 @@
         %td{class: "righted"}= sign player.rating_change
       - else
         %td{class: "centered", colspan: 2}= "#{player.new_rating} (1st rating)"
-  - if recent_trns.size < max
-    - (recent_trns.size..max-1).each do |t|
+  - if players.size < max
+    - (players.size..max-1).each do |t|
       %tr
         %td{colspan: 3} &nbsp;
       

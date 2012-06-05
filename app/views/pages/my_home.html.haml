@@ -3,23 +3,20 @@
 
 - views = "pages/my_home/"
 
-- recent_trns = @my_home.recent_trns
-- latest_icu = @my_home.icu_ratings.first
-- latest_fide = @my_home.fide_ratings.first
-
-- if recent_trns.size > 0 && (latest_icu || latest_fide)
+- if @my_home.recent_ratings? && @my_home.published_ratings?
   %table
     %tr.splitter
-      %td= render partial: "#{views}recent_trns", locals: {recent_trns: recent_trns, max: @my_home.max_rec }
+      %td= render partial: "#{views}recent_ratings", locals: { max: @my_home.max_rec }
       %td= render partial: "#{views}published_ratings"
 - else
-  = render partial: "#{views}recent_trns", locals: {recent_trns: recent_trns, max: 0 } if recent_trns.size > 0
-  = render partial: "#{views}published_ratings" if latest_icu || latest_fide
+  = render partial: "#{views}recent_ratings", locals: { max: 0 } if @my_home.recent_ratings?
+  = render partial: "#{views}published_ratings" if @my_home.published_ratings?
 
-- tgl = @my_home.trn_gains_and_losses
-- ggl = @my_home.game_gains_and_losses
-= render partial: "#{views}trn_gains_and_losses",  locals: { tgl: tgl } if tgl.any
-= render partial: "#{views}game_gains_and_losses", locals: { ggl: ggl } if ggl.any
+= render partial: "#{views}trn_gains_and_losses" if @my_home.trn_gains_and_losses?
+= render partial: "#{views}game_gains_and_losses" if @my_home.game_gains_and_losses?
+
+- if @my_home.anything_missing?
+  = render partial: "#{views}explanation", locals: { views: views }
 
 = render "shared/ratings_graph/dialog"
 
