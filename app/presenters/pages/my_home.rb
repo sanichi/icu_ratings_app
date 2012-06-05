@@ -10,7 +10,7 @@ module Pages
     end
 
     def published_ratings?
-      icu_ratings.size > 0 && fide_ratings.size > 0
+      icu_ratings.size > 0 || fide_ratings.size > 0
     end
 
     def published_icu_ratings?
