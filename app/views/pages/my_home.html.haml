@@ -53,4 +53,8 @@
     %dt Over what time span are my highest and lowest ICU and FIDE ratings calculated?
     %dd= "From #{t 'system.old.start'} for ICU and from #{t 'system.fide.start'} for FIDE."
     %dt Over what time span are my biggest ICU gains and losses calculated?
-    %dd= "From the start of the new rating system, #{t 'system.new.start'}."
+    %dd
+      From the start of the new rating system,
+      = succeed(".") do
+        = t "system.new.start"
+      Note that the display of gains and losses in individual games is only available for players with full ratings.

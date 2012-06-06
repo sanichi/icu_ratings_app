@@ -1,3 +1,10 @@
+90:
+  first_name: Steven
+  last_name: Brady
+  fed: IRL
+  gender: M
+  dob: 1969-03-12
+  joined: 1982-09-01
 159:
   first_name: Peter
   last_name: Cafolla
@@ -57,8 +64,10 @@
   first_name: Mark
   last_name: Orr
   fed: IRL
+  gender: M
   dob: 1955-11-09
   joined: 1976-09-01
+  title: IM
 1383:
   first_name: Liam
   last_name: Porter
@@ -383,6 +392,13 @@
   gender: M
   dob: 2001-08-14
   joined: 2011-04-22
+13001:
+  first_name: Andrew
+  last_name: O'Brien
+  fed: IRL
+  gender: M
+  dob: 1973-04-19
+  joined: 2011-09-15
 16404:
   first_name: Raymond
   last_name: Wynarczyk

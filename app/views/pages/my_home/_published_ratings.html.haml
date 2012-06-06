@@ -2,7 +2,7 @@
 - latest_fide, highest_fide, lowest_fide = @my_home.fide_ratings
 - w = latest_icu && latest_fide ? 4 : 2
 
-%table{class: "cushioned right-headers"}
+%table#published_ratings{class: "cushioned right-headers"}
   %tr
     %th{rowspan: 2, class: "centered"}
     %th{colspan: w, class: "centered"} Published Ratings
