@@ -10,7 +10,7 @@
     %tr
       - if i < tgl.gain.size
         %td= link_to tgl.gain[i].tournament.name_with_year, tgl.gain[i]
-        %td{class: "righted"}= tgl.gain[i].rating_change
+        %td{class: "righted"}= sign tgl.gain[i].rating_change
       - elsif i >= tgl.gain.size
         - if i == 0
           %td{colspan: 2, width: "50%"}
