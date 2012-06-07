@@ -31,7 +31,7 @@ module PlayersHelper
   end
 
   def explain_full_rating(player)
-    "#{player.old_rating} #{sign(player.rating_change, space: true)}"
+    "#{player.old_rating} #{sign(player.rating_change, space: true)}".html_safe
   end
 
   def explain_full_games(player)

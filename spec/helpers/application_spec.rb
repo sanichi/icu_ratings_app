@@ -20,7 +20,7 @@ describe "sign" do
     helper.sign(1, space: true).should == "+ 1"
     helper.sign(0.1, space: true).should == "+ 0"
     helper.sign(0, space: true).should == "+ 0"
-    helper.sign(-0.1, space: true).should == "- 0"
-    helper.sign(-1, space: true).should == "- 1"
+    helper.sign(-0.1, space: true).should == "&minus; 0"
+    helper.sign(-1, space: true).should == "&minus; 1"
   end
 end

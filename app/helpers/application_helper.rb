@@ -33,7 +33,7 @@ module ApplicationHelper
   # A signed integer (e.g "-10", "+125", "0"). Nil allowed.
   def sign(num, opt={space: false})
     return "" unless num
-    sgn = num < 0 ? "-" : "+"
+    sgn = num >= 0 ? "+" : (opt[:space] ? "&minus;" : "-")
     spc = opt[:space] ? ' ' : ''
     num = num.abs.round
     "#{sgn}#{spc}#{num}"
