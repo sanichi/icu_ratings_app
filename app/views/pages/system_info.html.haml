@@ -12,4 +12,4 @@
       %td
         - value.split(/\n/).each_with_index do |p,i|
           = raw("<br/>") unless i == 0
-          = truncate(p, length: 200)
+          = truncate(p, length: 150)
