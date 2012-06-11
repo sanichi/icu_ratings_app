@@ -28,13 +28,13 @@
       %ul
         %li has not finished yet (e.g. the Leinster and Munster leagues don't finish until April or May)
         %li report has not yet been received
-        %li report has issues so the tournament cannot be rating yet
+        %li report has issues so the tournament cannot be rated yet
         %li
           is ready but not yet rated (in this case it will be listed
           = succeed(")") do
             = link_to "here", tournaments_path
         %li is not rateable, e.g. if it has too few rated players
-        %li is not elligible, e.g. if it is a rapid or blitz
+        %li is not eligible, e.g. if it is a rapid or blitz
     %dt What is my latest rating if I haven't played any rated games since 2011?
     %dd= "The one inherited from the old rating system in #{t 'system.new.start'}."
     %dt How can I see the entire history of my published ratings?
