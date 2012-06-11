@@ -4,7 +4,7 @@ module Pages
       return @e if @e
       @e = ENV.keys.sort.inject({}) do |h, k|
         v = ENV[k].dup
-        v = v.split(/:/).map{ |p| p == "" ? "(blank)" : p }.join("<br/>").html_safe if k.match(/PATH/)
+        v = v.split(/:/).map{ |p| p == "" ? "(blank)" : p }.join("\n") if k.match(/PATH/)
         h[k] = v
         h
       end

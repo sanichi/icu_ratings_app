@@ -7,6 +7,9 @@
     %th Name
     %th Value
   - @system_info.environment.each_pair do |name, value|
-    %tr{class: "note"}
+    %tr{class: "note code"}
       %td= name
-      %td= value
+      %td
+        - value.split(/\n/).each_with_index do |p,i|
+          = raw("<br/>") unless i == 0
+          = truncate(p, length: 200)
