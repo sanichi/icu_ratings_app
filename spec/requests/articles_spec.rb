@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "Article" do
-  describe "officers" do
+  describe "officer" do
     before(:each) do
       @user = login("officer")
       @article = FactoryGirl.create(:article)
@@ -47,63 +47,28 @@ describe "Article" do
     end
   end
 
-  describe "reporters" do
-    before(:each) do
-      @user = login("reporter")
-      @article = FactoryGirl.create(:article)
-    end
+  %w[reporter member].each do |type|
+    describe type do
+      before(:each) do
+        @user = login(type)
+        @article = [ FactoryGirl.create(:article), FactoryGirl.create(:article, user: @user) ]
+      end
 
-    it "cannot edit other's articles" do
-      visit "/articles/#{@article.id}"
-      page.should have_no_link "Edit"
-      page.should have_link("Markdown")
-      visit "/articles/#{@article.id}/edit"
-      page.should have_selector("span.alert", text: /authoriz/i)
-    end
+      it "cannot manage articles, even their own" do
+        visit "/articles/new"
+        page.should have_selector("span.alert", text: /authoriz/i)
+        visit "/articles/#{@article.first.id}/edit"
+        page.should have_selector("span.alert", text: /authoriz/i)
+        visit "/articles/#{@article.last.id}/edit"
+        page.should have_selector("span.alert", text: /authoriz/i)
+      end
 
-    it "can create, edit and delete their own articles" do
-      visit "/articles/new"
-      headline, story = "Reporter's Headline", "Reporter's Story"
-      page.fill_in "Headline", with: headline
-      page.fill_in "Story", with: story
-      page.click_button "Create"
-      page.should have_link("Markdown")
-      Article.where(headline: headline, story: story, published: false).should have(1).item
-      page.click_link "Edit"
-      headline = "Changed Headline"
-      page.fill_in "Headline", with: headline
-      page.check "Published"
-      page.click_button "Update"
-      Article.where(headline: headline, story: story, published: true).should have(1).item
-      page.click_link "Edit"      
-      page.fill_in "Headline", with: "Rubbish"
-      page.click_button "Cancel"
-      Article.where(headline: headline).should have(1).item
-      page.click_link "Delete"
-      Article.where(headline: headline).should have(0).item
-    end
-  end
-  
-  describe "members" do
-    before(:each) do
-      @user = login("member")
-      @article = [ FactoryGirl.create(:article), FactoryGirl.create(:article, user: @user) ]
-    end
-
-    it "cannot manage articles, even their own" do
-      visit "/articles/new"
-      page.should have_selector("span.alert", text: /authoriz/i)
-      visit "/articles/#{@article.first.id}/edit"
-      page.should have_selector("span.alert", text: /authoriz/i)
-      visit "/articles/#{@article.last.id}/edit"
-      page.should have_selector("span.alert", text: /authoriz/i)
-    end
-
-    it "do not have a link to see Markdown" do
-      visit "/articles/#{@article.first.id}"
-      page.should have_no_link("Markdown")
-      visit "/articles/#{@article.last.id}"
-      page.should have_no_link("Markdown")
+      it "does not have a link to see Markdown" do
+        visit "/articles/#{@article.first.id}"
+        page.should have_no_link("Markdown")
+        visit "/articles/#{@article.last.id}"
+        page.should have_no_link("Markdown")
+      end
     end
   end
 

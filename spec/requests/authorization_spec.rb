@@ -23,7 +23,7 @@ describe "authorized links for" do
         "/admin/uploads/new"     => %w[admin officer reporter],
         "/admin/users"           => %w[admin],
         "/articles"              => %w[admin officer reporter member guest],
-        "/articles/new"          => %w[admin officer reporter],
+        "/articles/new"          => %w[admin officer],
         "/contacts"              => %w[admin officer reporter member guest],
         "/downloads"             => %w[admin officer reporter],
         "/downloads/new"         => %w[admin officer],
