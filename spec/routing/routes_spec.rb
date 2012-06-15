@@ -12,6 +12,8 @@ describe "routes" do
   it "404s" do
     get("/foo").should route_to("pages#not_found", url: "foo")
     get("/foo/bar").should route_to("pages#not_found", url: "foo/bar")
+    get("/apple-touch-icon.png").should route_to("pages#not_found", url: "apple-touch-icon", format: "png")
+    get("/crossdomain.xml").should route_to("pages#not_found", url: "crossdomain", format: "xml")
   end
 
   it "non-existant actions" do
