@@ -1,7 +1,11 @@
 %tr
   %th= t "ratings.old_rating"
-  %td= @player.old_rating
+  %td{class: "centered"}= @player.old_rating
   %td= render "last_player"
+%tr
+  %th= t "ratings.kfactor"
+  %td{class: "centered"}= @player.k_factor
+  %td= t "ratings.k#{@player.k_factor}_html"
 - if @player.bonus.to_i > 0
   %tr
     %th= t "ratings.bonus"

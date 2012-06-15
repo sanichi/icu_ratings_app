@@ -6,6 +6,11 @@ en:
     old_games: Old games
     old_rating_games: Old rating/games
     new_rating_games: New rating/games
+    kfactor: K-factor
+    k16_html: "rating &ge; 2100"
+    k40_html: "rating &lt; 2100, age &lt; 21"
+    k32_html: "rating &lt; 2100, age &ge; 21, exp &lt; 8"
+    k24_html: "rating &lt; 2100, age &ge; 21, exp &ge; 8"
     bonus: Bonus
     change: Rating change
     performance: Performance
