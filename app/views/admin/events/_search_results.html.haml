@@ -20,7 +20,7 @@
         %td{class: "floater"}
           = link_to admin_event_path(event), remote: true do
             = icon_tag "show", "Show event details"
-          = link_to admin_event_path(event), confirm: "Are you sure you want to delete this event?", method: :delete do
+          = link_to admin_event_path(event), data: { confirm: "Are you sure you want to delete this event?" }, method: :delete do
             = icon_tag "bin", "Delete event"
   - if @events.multi_page
     %tr

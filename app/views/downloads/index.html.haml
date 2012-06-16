@@ -29,7 +29,7 @@
           %td{class: "floater"}
             = link_to edit_download_path(download) do
               = icon_tag "edit", "Edit Download"
-            = link_to download, method: "delete", confirm: "Are you sure you want to delete this download?" do
+            = link_to download, method: "delete", data: { confirm: "Are you sure you want to delete this download?" } do
               = icon_tag "bin", "Delete Download"
   - if @downloads.multi_page
     %tr

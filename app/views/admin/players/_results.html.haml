@@ -37,4 +37,4 @@
   %table{class: "turbaned"}
     %tr
       %td{class: "centered"}
-        = link_to "Delete Player", [:admin, @player], confirm: "Are you sure you want to delete this player?", method: :delete
+        = link_to "Delete Player", [:admin, @player], data: { confirm: "Are you sure you want to delete this player?" }, method: :delete

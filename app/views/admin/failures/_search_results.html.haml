@@ -15,7 +15,7 @@
         %td{class: "floater"}
           = link_to admin_failure_path(failure), remote: true do
             = icon_tag "show", "Show failure details"
-          = link_to admin_failure_path(failure), confirm: "Are you sure you want to delete this event?", method: :delete do
+          = link_to admin_failure_path(failure), data: { confirm: "Are you sure you want to delete this event?" }, method: :delete do
             = icon_tag "bin", "Delete failure"
   - if @failures.multi_page
     %tr

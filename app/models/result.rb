@@ -51,7 +51,7 @@ class Result < ActiveRecord::Base
   def self.get_results(icu_id, type, limit)
     match = joins(player: :tournament).includes(player: :tournament).includes(:opponent)
     match = match.where(players: { icu_id: icu_id })
-    match = match.where(players: { tournaments: { stage: "rated" } })
+    match = match.where(tournaments: { stage: "rated" })
     case type
     when :gain
       match = match.where("results.rating_change >= 0")
