@@ -5,18 +5,19 @@
 #  id         :integer(4)      not null, primary key
 #  headline   :string(255)
 #  story      :text
+#  published  :boolean(1)      default(FALSE)
 #  user_id    :integer(4)
 #  created_at :datetime
 #  updated_at :datetime
-#  published  :boolean(1)      default(FALSE)
 #
 
 class Article < ActiveRecord::Base
   extend ICU::Util::Pagination
-  
   EXTENSIONS = { autolink: true, strikethrough: true, superscript: true, no_intra_emphasis: true }
 
   belongs_to :user
+
+  attr_accessible :headline, :story, :published
   before_validation :normalise_attributes
 
   validates_presence_of  :user_id, :headline, :story

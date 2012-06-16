@@ -40,7 +40,7 @@ module Ratings
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
-    
+
     # Express preference for double quoted attributes (single quoted is HAML's default).
     Haml::Template.options[:attr_wrapper] = '"'
 
@@ -49,5 +49,8 @@ module Ratings
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+
+    # Enforce whitelist mode for mass-assignment
+    config.active_record.whitelist_attributes = true
   end
 end

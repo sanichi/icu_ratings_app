@@ -13,8 +13,8 @@ module Admin
     end
 
     def create
-      params[:rating_run][:user_id] = current_user.id
       @rating_run = RatingRun.new(params[:rating_run])
+      @rating_run.user = current_user
       if @rating_run.save
         redirect_to [:admin, @rating_run], notice: "Run was successfully created."
       else

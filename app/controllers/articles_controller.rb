@@ -22,6 +22,7 @@ class ArticlesController < ApplicationController
   end
 
   def create
+    @article.user = current_user
     if params[:commit] == "Cancel"
       redirect_to articles_path
     elsif @article.save

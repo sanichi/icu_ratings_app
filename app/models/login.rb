@@ -12,11 +12,11 @@
 
 class Login < ActiveRecord::Base
   extend ICU::Util::Pagination
+  PROBLEMS = %w[none password expiry]
 
   belongs_to :user
 
-  PROBLEMS = %w[none password expiry]
-
+  attr_accessible :ip, :problem, :role
   validates_presence_of  :user_id, :ip
   validates_inclusion_of :problem, in: PROBLEMS, message: "(%{value}) is invalid"
   validates_inclusion_of :role, in: User::ROLES, message: "(%{value}) is invalid"

@@ -28,7 +28,7 @@ namespace :sync do
     args.with_defaults(force: "No")
     FIDE::Download::Other.new.sync_fide_players(args[:force].match(/^(Y(es)?|F(orce)?)$/i))
   end
-  
+
   desc "Synchronize everything in the correct order"
   task all: [:icu_players, :icu_users, :irish_fide_players, :other_fide_players]
 end

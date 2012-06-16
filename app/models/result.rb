@@ -9,10 +9,10 @@
 #  result         :string(1)
 #  colour         :string(1)
 #  rateable       :boolean(1)
-#  created_at     :datetime
-#  updated_at     :datetime
 #  expected_score :decimal(8, 6)
 #  rating_change  :decimal(8, 6)
+#  created_at     :datetime
+#  updated_at     :datetime
 #
 
 class Result < ActiveRecord::Base
@@ -21,6 +21,7 @@ class Result < ActiveRecord::Base
 
   before_validation :normalise_attributes
 
+  attr_accessible :round, :player_id, :opponent_id, :result, :colour, :rateable
   validates_numericality_of :round, only_integer: true, greater_than: 0
   validates_inclusion_of    :result, in: %w[W L D], message: "should be W, L or D (and not %{value})"
   validates_inclusion_of    :rateable, in: [true, false], message: "should be true or false (and not %{value})"

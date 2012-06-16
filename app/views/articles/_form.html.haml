@@ -1,8 +1,6 @@
 = form_for @article, html: { class: "simple-form wide short-labels" } do |f|
   - if @article.errors.any?
     = render "shared/errors", thing: @article, name: "article"
-  - if @article.user_id || current_user
-    = f.hidden_field :user_id, value: @article.user_id || current_user.id
   .input
     = f.label :headline
     = f.text_field :headline, size: 80, maxlength: 256

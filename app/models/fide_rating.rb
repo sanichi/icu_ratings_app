@@ -16,6 +16,7 @@ class FideRating < ActiveRecord::Base
 
   belongs_to :fide_player, foreign_key: "fide_id"
 
+  attr_accessible :fide_id, :rating, :games, :list
   validates_numericality_of :fide_id, only_integer: true, greater_than: 0
   validates_numericality_of :rating, only_integer: true, greater_than: 0, less_than: 3000
   validates_numericality_of :games, only_integer: true, greater_than_or_equal_to: 0, less_than: 100

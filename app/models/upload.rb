@@ -23,6 +23,8 @@ class Upload < ActiveRecord::Base
 
   belongs_to :tournament
   belongs_to :user
+  
+  attr_accessible :format
 
   validates_inclusion_of    :format, in: FORMATS.map(&:last)
   validates_presence_of     :file_type, :content_type

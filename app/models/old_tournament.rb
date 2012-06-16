@@ -14,6 +14,8 @@ class OldTournament < ActiveRecord::Base
   has_many :old_rating_histories
   has_many :icu_players, through: :old_rating_histories
 
+  attr_accessible # none
+
   default_scope order("date DESC, name")
 
   def self.search(params, path)

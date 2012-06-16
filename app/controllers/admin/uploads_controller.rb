@@ -17,7 +17,8 @@ module Admin
     end
 
     def create
-      @upload = Upload.new(params[:upload].merge!(user_id: session[:user_id]))
+      @upload = Upload.new(params[:upload])
+      @upload.user = current_user
       authorize!(:create, @upload)
       @tournament = @upload.extract(params, session[:user_id])
       if @upload.save

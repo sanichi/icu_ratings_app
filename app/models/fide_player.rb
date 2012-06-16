@@ -24,10 +24,11 @@ class FidePlayer < ActiveRecord::Base
 
   default_scope order("last_name, first_name")
 
+  attr_accessible :first_name, :last_name, :fed, :title, :gender, :born, :rating, :icu_id
   validates_presence_of     :last_name
-  validates_format_of       :fed, with: /^[A-Z]{3}$/
-  validates_format_of       :gender, with: /^(M|F)$/
-  validates_format_of       :title, with: /^W?[GIFC]M$/, allow_nil: true
+  validates_format_of       :fed, with: /\A[A-Z]{3}\z/
+  validates_format_of       :gender, with: /\A(M|F)\z/
+  validates_format_of       :title, with: /\AW?[GIFC]M\z/, allow_nil: true
   validates_numericality_of :born, only_integer: true, greater_than: 1899, less_than: 2010, allow_nil: true
   validates_numericality_of :icu_id, only_integer: true, greater_than: 0, allow_nil: true
   validates_uniqueness_of   :icu_id, allow_nil: true

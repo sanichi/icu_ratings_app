@@ -22,6 +22,8 @@ class OldRatingHistory < ActiveRecord::Base
   belongs_to :old_tournament
   belongs_to :icu_player
 
+  attr_accessible # none
+
   def self.search(params, path)
     matches = scoped
     if params[:icu_player_id].to_i > 0
@@ -37,7 +39,7 @@ class OldRatingHistory < ActiveRecord::Base
     end
     params[:per_page] ? paginate(matches, path, params) : matches
   end
-  
+
   def rating_change
     new_rating - old_rating
   end

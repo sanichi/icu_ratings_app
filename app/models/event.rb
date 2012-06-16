@@ -13,6 +13,8 @@
 class Event < ActiveRecord::Base
   extend ICU::Util::Pagination
 
+  attr_accessible # none
+
   default_scope order("created_at DESC")
 
   def self.search(params, path)

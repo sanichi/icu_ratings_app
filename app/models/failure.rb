@@ -10,6 +10,8 @@
 
 class Failure < ActiveRecord::Base
   extend ICU::Util::Pagination
+  
+  attr_accessible :name, :details
 
   default_scope order("created_at DESC")
 

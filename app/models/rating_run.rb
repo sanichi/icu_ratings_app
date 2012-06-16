@@ -20,6 +20,8 @@ class RatingRun < ActiveRecord::Base
   extend ICU::Util::Pagination
 
   STATUS = %w[waiting processing error finished]
+  
+  attr_accessible :start_tournament_id, :user_id
 
   belongs_to :user
   belongs_to :start_tournament, class_name: "Tournament"

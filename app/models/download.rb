@@ -15,6 +15,7 @@ class Download < ActiveRecord::Base
   extend ICU::Util::Pagination
   include ICU::Util::Model
 
+  attr_accessible :comment, :uploaded_file
   validates_presence_of :data, :content_type, :file_name
   validates_length_of   :data, maximum: 1.megabyte
   validates_length_of   :comment, maximum: 80

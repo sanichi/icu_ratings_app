@@ -14,6 +14,7 @@ class OldRating < ActiveRecord::Base
   
   belongs_to :icu_player, foreign_key: "icu_id"
 
+  attr_accessible # none
   validates_uniqueness_of :icu_id
   validates_numericality_of :rating, only_integer: true
   validates_numericality_of :games, only_integer: true, greater_than_or_equal_to: 0
