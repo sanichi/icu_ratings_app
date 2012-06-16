@@ -13,7 +13,7 @@
 class Event < ActiveRecord::Base
   extend ICU::Util::Pagination
 
-  attr_accessible # none
+  attr_accessible :name, :time, :report, :success
 
   default_scope order("created_at DESC")
 
