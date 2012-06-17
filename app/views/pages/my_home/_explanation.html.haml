@@ -8,6 +8,7 @@
           %p
             We appear not to have any records of rated games played by you so you currently have no ICU rating.
             If you would like to obtain a chess rating you should play in some rated tournaments.
+            = render partial: "#{views}explain_site"
           = render partial: "#{views}explain_rated_tournaments"
         - when !@my_home.published_icu_ratings? && !@my_home.recent_ratings? && old_rating
           %p
@@ -16,6 +17,7 @@
             = succeed(".") do
               = render partial: "#{views}explain_old_rating", locals: { old_rating: old_rating }
             If you would like to try to improve this old rating you should play in some rated tournaments.
+            = render partial: "#{views}explain_site"
           = render partial: "#{views}explain_rated_tournaments"
         - when !@my_home.published_icu_ratings? && @my_home.recent_ratings?
           %p
@@ -28,7 +30,8 @@
             (this web site) but it appears you have not played any rated games since
             = succeed(".") do
               = t "system.new.start"
-            If you would like to improve your old rating you should play in some rated tournaments.
+            If you would like to improve your old rating you should recommence playing in chess tournaments.
+            = render partial: "#{views}explain_site"
           = render partial: "#{views}explain_rated_tournaments"
       %p
         If you have any questions about the rating data we have for you, please contact the
