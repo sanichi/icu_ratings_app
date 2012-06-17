@@ -10,7 +10,6 @@ function toggle_upload_options(selected) {
     case "Krause":       on.push("feds", "ratings", "round_dates"); break;
     case "SwissPerfect": on.push("feds", "start", "finish"); break;
     case "SPExport":     on.push("feds", "start", "finish", "name"); break;
-    case "ForeignCSV":   on.push("finish"); break;
   }
   $.each(on, function(i, key) { toggle_upload_option(key, "on") })
 }

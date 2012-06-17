@@ -344,21 +344,11 @@ describe "Upload" do
           page.attach_file "file", test_file_path("isle_of_man_2007.csv")
         end
 
-        it "should guess finish date" do
+        it "should get finish date straight from file (since icu_tournament v1.6.0)" do
           page.click_button "Upload"
           tournament = Tournament.last
           tournament.start.to_s.should == "2007-09-22"
           tournament.finish.to_s.should == "2007-09-30"
-          tournament.original_finish.should be_nil
-        end
-
-        it "should set finish date" do
-          page.fill_in "finish", with: "2007-10-10"
-          page.click_button "Upload"
-          tournament = Tournament.last
-          tournament.start.to_s.should == "2007-09-22"
-          tournament.finish.to_s.should == "2007-10-10"
-          tournament.original_finish.to_s.should == "2007-10-10"
         end
       end
     end
