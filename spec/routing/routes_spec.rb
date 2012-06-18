@@ -6,7 +6,7 @@ describe "routes" do
     get("/home").should route_to("pages#home")
     get("/contacts").should route_to("pages#contacts")
     get("/my_home").should route_to("pages#my_home")
-    get("/my_home/1530").should route_to("pages#my_home", :id => "1530")
+    get("/their_home/1530").should route_to("pages#their_home", :id => "1530")
   end
 
   it "404s" do

@@ -7,3 +7,7 @@
           = raw("#{@player.old_rating} &rarr;") if @player.old_rating
           = @player.new_rating
         %td= @player.old_rating ? sign(@player.rating_change) : "new rating"
+        - if @player.icu_id && can?(:their_home, ::Pages::MyHome)
+          %td{class: "floater"}
+            = link_to their_home_path(id: @player.icu_id) do
+              = icon_tag "home", "Home"

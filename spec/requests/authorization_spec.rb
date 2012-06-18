@@ -57,3 +57,34 @@ describe "authorized links for" do
     end
   end
 end
+
+describe "authorized to follow" do
+  %w[guest member reporter officer admin].each do |role|
+    describe "#{role}s" do
+      before(:each) do
+        FactoryGirl.create(:icu_player, id: 1)
+        role == "guest" ? visit("/home") : login(role)
+      end
+
+      after(:each) do
+        visit "/log_out" unless role == "guest"
+      end
+
+      {
+        "/their_home/1" => %w[admin officer reporter],
+      }.each do |target, authorized|
+        if authorized.include?(role)
+          it "can follow #{target}" do
+            visit target
+            page.should_not have_selector("span.alert", :text => /authoriz/i)
+          end
+        else
+          it "can't follow #{target}" do
+            visit target
+            page.should have_selector("span.alert", :text => /authoriz/i)
+          end
+        end
+      end
+    end
+  end
+end

@@ -7,10 +7,15 @@ class PagesController < ApplicationController
 
   def my_home
     authorize! :my_home, ::Pages::MyHome
-    @icu_player = IcuPlayer.find_by_id(params[:id]) if params[:id]
-    @icu_player ||= current_user.icu_player
-    authorize! :show, @icu_player
+    @icu_player = current_user.icu_player
     @my_home = ::Pages::MyHome.new(@icu_player.id)
+  end
+
+  def their_home
+    authorize! :their_home, ::Pages::MyHome
+    @icu_player = IcuPlayer.find(params[:id])
+    @my_home = ::Pages::MyHome.new(@icu_player.id)
+    render "my_home"
   end
 
   def contacts
