@@ -76,6 +76,7 @@ class Upload < ActiveRecord::Base
     matches = matches.where("uploads.format = ?", params[:format]) if params[:format].present?
     matches = matches.where("uploads.created_at LIKE ?", "%#{params[:created_at]}%") if params[:created_at].present?
     matches = matches.where(user_id: params[:user_id].to_i) if params[:user_id].to_i > 0
+    matches = matches.order("uploads.created_at DESC")
     paginate(matches, path, params)
   end
 end
