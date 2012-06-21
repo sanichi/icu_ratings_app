@@ -37,7 +37,8 @@
     %td{colspan: 2}
       %pre{id: "report"}= @rating_run.report
 
-%table{class: "turbaned"}
-  %tr
-    %td{class: "centered"}
-      = link_to "Delete", [:admin, @rating_run], data: { confirm: "Are you sure you want to delete this run?" }, method: :delete
+- if @rating_run.deletable?
+  %table{class: "turbaned"}
+    %tr
+      %td{class: "centered"}
+        = link_to "Delete", [:admin, @rating_run], data: { confirm: "Are you sure you want to delete this run?" }, method: :delete

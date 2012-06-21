@@ -20,7 +20,7 @@ class RatingRun < ActiveRecord::Base
   extend ICU::Util::Pagination
 
   STATUS = %w[waiting processing error finished]
-  
+
   attr_accessible :start_tournament_id, :user_id
 
   belongs_to :user
@@ -87,6 +87,10 @@ class RatingRun < ActiveRecord::Base
 
   def rivals
     RatingRun.where("id != #{id}").where("status IN ('waiting', 'processing')")
+  end
+
+  def deletable?
+    status == "error" || status == "finished"
   end
 
   private
