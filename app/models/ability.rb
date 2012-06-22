@@ -19,10 +19,10 @@ class Ability
     can [:read, :create], Upload
     can :modify, Upload, user_id: user.id
     can :read, [Download, Player, Result, Tournament]
-    can_if_unlocked(user.id)
     can :read, [FidePlayer, IcuPlayer, OldRatingHistory, OldTournament, OldRating]
     can :overview, Pages::Overview
     can :their_home, Pages::MyHome
+    can_if_unlocked(user.id)
 
     return unless user.role? :officer
 
