@@ -208,10 +208,11 @@ module ApplicationHelper
   # Returns an ICU email link.
   def mail_to_icu(officer=:ratings)
     name = case officer.to_sym
+      when :admin       then "Webmaster"
       when :chairperson then "Chairperson"
       when :membership  then "Membership Officer"
-      when :treasurer   then "Treasurer"
       when :ratings     then "Rating Officer"
+      when :treasurer   then "Treasurer"
       else "ICU"
     end
     mail_to "#{officer}@icu.ie", name, encode: "hex"

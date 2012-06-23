@@ -9,6 +9,7 @@
     = password_field_tag :password
   .input
     = submit_tag "Log in"
+    = link_to "Forgot password?", "#", class: "help-link note"
 
 #help
   %dl
@@ -17,6 +18,14 @@
       = succeed "." do
         The same ones you use to log into the main
         = link_to_icu "ICU site"
+    %dt I've forgotten my password, can you help me?
+    %dd
+      Please email the ICU
+      = mail_to_icu(:admin)
+      giving your name, ICU number and login email and request that your password be reset.
+      Please note that while you will be able to login to the
+      = link_to_icu "main site"
+      immediately after the reset, you will have to wait until after the nightly database sync in order to login to this site.
     %dt If I don't yet have an account, how can I get one?
     %dd
       %p

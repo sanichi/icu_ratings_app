@@ -20,7 +20,7 @@ $(function() {
   if ($("#help").dialog({autoOpen: false,  modal: false, title: "Help", width: 700}).size() == 0)
     $("#help-link").parent().hide();
   else
-    $("#help-link").click(function(event) {
+    $("#help-link,.help-link").on("click", function(event) {
       event.preventDefault();
       $("#help").dialog("open");
     });
