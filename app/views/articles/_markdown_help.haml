@@ -1,13 +1,73 @@
 #help
-  %dt How do I format my article?
-  %dd
-    Use
-    = link_to "Markdown", "http://daringfireball.net/projects/markdown/syntax", target: "_markdown", class: "external"
-    for the
-    %em Story
-    section.
-  %dt Can I see some Markdown examples on this site?
-  %dd
-    Yes, click the
-    %em Markdown
-    button at the bottom of any article.
+  %table{class: "sections invisible left"}
+    %tr
+      %td{class: "section"}
+        %h5 Headers
+        %pre
+          = preserve do
+            :escaped
+              # This is an <h1> tag
+              ## This is an <h2> tag
+              ###### This is an <h6> tag
+        %h5 Text styles
+        %pre
+          = preserve do
+            :escaped
+              *This text will be italic*
+              _This will also be italic_
+              **This text will be bold**
+              __This will also be bold__
+              *You **can** combine them*
+              ~~This will be strikethrough~~
+        %h5 Links
+        %pre
+          = preserve do
+            :escaped
+              http://ratings.icu.com
+              [ICU](http://www.icu.com)
+        %h5 Images
+        %pre
+          = preserve do
+            :escaped
+              ![Logo](/assets/misc/logo.png)
+              Format: ![Alt Text](url)
+        %h5 More Info
+        %p
+          = link_to "Daring Fireball", "http://daringfireball.net/projects/markdown/syntax", target: "_markdown", class: "external"
+          = link_to "Wikipedia", "http://en.wikipedia.org/wiki/Markdown", target: "_markdown", class: "external"
+      %td{class: "section"}
+        %h5 Unordered Lists
+        %pre
+          = preserve do
+            :escaped
+              * Item 1
+              * Item 2
+                * Item 2a
+                * Item 2b
+        %h5 Ordered Lists
+        %pre
+          = preserve do
+            :escaped
+              1. Item 1
+              1. Item 2
+                 * Item 2a
+                 * Item 2b
+        %h5 Inline code
+        %pre
+          = preserve do
+            :escaped
+              I think you should have
+              played the move `Nf3`.
+        %h5 Blockquotes
+        %pre
+          = preserve do
+            :escaped
+              As Emanuel Lasker said:
+              
+              > When you see a good move wait:
+              > look for a better one
+        %h5 Superscripts
+        %pre
+          = preserve do
+            :escaped
+              10^(D/400)
