@@ -23,7 +23,7 @@ module ApplicationHelper
     end
     str.html_safe
   end
-  
+
   # Round a floating point number for display. Input of nil allowed.
   def round(num, decimals=3)
     return "" unless num
@@ -48,7 +48,7 @@ module ApplicationHelper
   end
 
   def club_menu(none="None", any="Any")
-    menu = IcuPlayer.unscoped.select("DISTINCT(club)").where("club IS NOT NULL").order("club").map { |c| [c.club, c.club] }
+    menu = IcuPlayer.unscoped.select("DISTINCT(club)").where("club IS NOT NULL").order("club").map{ |c| [c.club, c.club] }
     menu.unshift([none, "None"]) if none
     menu.unshift([any, ""]) if any
     menu
@@ -60,8 +60,20 @@ module ApplicationHelper
     menu
   end
 
+  def fee_used_menu(any=nil)
+    menu = [["Yes", "true"], ["No", "false"]]
+    menu.unshift([any, ""]) if any
+    menu
+  end
+
+  def fee_status_menu(any=nil)
+    menu = %w[Completed Refunded PartRefund].map{ |s| [t("fees.#{s}"), s] }
+    menu.unshift([any, ""]) if any
+    menu
+  end
+
   def fide_rating_list_menu(any=nil)
-    menu = FideRating.lists.map { |list| [year_month(list), list]}
+    menu = FideRating.lists.map{ |list| [year_month(list), list]}
     menu.unshift([any, ""]) if any
     menu
   end
@@ -73,7 +85,7 @@ module ApplicationHelper
   end
 
   def icu_rating_list_menu(any=nil)
-    menu = IcuRating.lists.map { |list| [year_month(list), list]}
+    menu = IcuRating.lists.map{ |list| [year_month(list), list]}
     menu.unshift([any, ""]) if any
     menu
   end
@@ -85,7 +97,7 @@ module ApplicationHelper
   end
 
   def problem_menu(any=nil)
-    menu = Login::PROBLEMS.map { |r| [r.capitalize, r] }
+    menu = Login::PROBLEMS.map{ |r| [r.capitalize, r] }
     menu.unshift([any, ""]) if any
     menu
   end
@@ -111,7 +123,7 @@ module ApplicationHelper
   end
 
   def role_menu(none=nil)
-    menu = User::ROLES.map { |r| [r.capitalize, r] }
+    menu = User::ROLES.map{ |r| [r.capitalize, r] }
     menu.unshift([none, ""]) if none
     menu
   end
@@ -268,7 +280,7 @@ module ApplicationHelper
     image+= ".png" unless image.match(/\.[a-z]+$/)
     image_tag "icons/#{image}", { alt: alt, title: alt, size: "16x16" }.merge(opts)
   end
-  
+
   # Is an administrator logged in?
   def admin?
     current_user && current_user.role?("admin")

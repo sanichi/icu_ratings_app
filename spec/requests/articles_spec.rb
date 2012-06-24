@@ -36,7 +36,6 @@ describe "Article" do
 
     it "can edit and delete other's articles" do
       visit "/articles/#{@article.id}/edit"
-      page.should have_link("Markdown")
       headline, story = "Latest News", "Latest Story"
       page.fill_in "Headline", with: headline
       page.fill_in "Story", with: story

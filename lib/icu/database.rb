@@ -4,11 +4,11 @@ module ICU
   class Database
     SyncError = Class.new(StandardError)
 
-    # Sync should be run periodically, about once per day, to keep player tables in sync.
+    # Should be run periodically, about once per day, to keep player tables in sync.
     class Player < Database
       def sync
         success = sync_players_steps
-        Event.create(name: 'ICU Player Synchronisation', report: report, time: Time.now - @start, success: success)
+        Event.create(name: "ICU Player Synchronisation", report: report, time: Time.now - @start, success: success)
       end
 
       private
@@ -57,7 +57,6 @@ module ICU
       def update_ours_from_theirs
         @updates = []
         @creates = []
-        @invalid = []
         @changes = Hash.new(0)
         @their_players.keys.each do |id|
           their_player = @their_players[id]
@@ -119,7 +118,7 @@ module ICU
     class Member < Database
       def sync
         success = sync_user_steps
-        Event.create(name: 'ICU User Synchronisation', report: report, time: Time.now - @start, success: success)
+        Event.create(name: "ICU User Synchronisation", report: report, time: Time.now - @start, success: success)
       end
 
       private
@@ -182,7 +181,6 @@ module ICU
       def update_ours_from_theirs
         @updates = []
         @creates = []
-        @invalid = []
         @changes = Hash.new(0)
         @their_members.keys.each do |id|
           their_member = @their_members[id]
@@ -215,11 +213,101 @@ module ICU
       end
     end
 
+    # Sync should be run about once a week, to get new ICU foreign rating fees.
+    class Item < Database
+      def sync
+        success = sync_item_steps
+        Event.create(name: "ICU-Item Synchronisation", report: report, time: Time.now - @start, success: success)
+      end
+
+      private
+
+      def sync_item_steps
+        begin
+          get_our_fees
+          get_their_items
+          update_ours_from_theirs
+        rescue SyncError => e
+          @error = e.message
+          return false
+        rescue => e
+          @error = e.message
+          e.backtrace.each { |b| @error += "\n#{b}" }
+          return false
+        end
+
+        true
+      end
+
+      MAP =
+      {
+        item_id:          :id,
+        item_description: :description,
+        pay_status:       :status,
+        item_type:        :category,
+        item_date:        :date,
+        item_icu_id:      :icu_id,
+      }
+
+      def get_our_fees
+        @our_fees = Fee.all.inject({}) { |h,f| h[f.id] = f; h }
+      end
+
+      def get_their_items
+        @their_items = @client.query(sql).inject({}) do |items, item|
+          id = item.delete(:item_id)
+          items[id] = item.keys.inject({}) do |hash, their_key|
+            our_key = MAP[their_key]
+            hash[our_key] = item[their_key].presence if our_key
+            hash
+          end
+          items
+        end
+      end
+
+      def update_ours_from_theirs
+        @updates = []
+        @creates = []
+        @changes = Hash.new(0)
+        @their_items.keys.each do |id|
+          their_item = @their_items[id]
+          our_fee = @our_fees[id] || Fee.new
+          their_item.keys.each { |key| our_fee.send("#{key}=", their_item[key]) }
+          raise SyncError.new("invalid fee: #{our_fee.inspect})") unless our_fee.valid?
+          if our_fee.id
+            if our_fee.changed?
+              @updates.push(id)
+              our_fee.changed.each { |attr| @changes[attr] += 1 }
+            end
+          else
+            our_fee.id = id
+            @creates.push(id)
+          end
+          our_fee.save! if our_fee.changed?
+        end
+      end
+
+      def sql
+        "SELECT #{MAP.keys.join(', ')} from items, payments where item_pay_id = pay_id and pay_status != 'Created' and item_type = 'FTR'"
+      end
+
+      def report
+        str = Array.new
+        str.push "our fees: #{@our_fees.size}" if @our_fees
+        str.push "their items: #{@their_items.size}" if @their_items
+        str.push "creates: #{summarize_list(@creates)}"
+        str.push "updates: #{summarize_list(@updates)}"
+        str.push "changes: #{summarize_changes}"
+        str.push "error: #{@error}" if @error
+        str.join("\n")
+      end
+    end
+
     # Sync should be run just once, to get historical FIDE rating data for Irish players.
     class FIDE < Database
       def sync
         success = sync_fide_steps
-        Event.create(name: 'ICU-FIDE Synchronisation', report: report, time: Time.now - @start, success: success)
+        Event.create(name: "ICU-FIDE Synchronisation", report: report, time: Time.now - @start, success: success)
       end
 
       private

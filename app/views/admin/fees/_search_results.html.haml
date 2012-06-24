@@ -1,0 +1,21 @@
+%table
+  %tr
+    %th Player
+    %th Description
+    %th Date
+    %th Status
+    %th Used
+  - if @fees.count == 0
+    %tr
+      %td{colspan: 5, class: "centered"} No matches
+  - else
+    - @fees.matches.each do |fee|
+      %tr
+        %td= link_to fee.icu_player.name, their_home_path(id: fee.icu_id)
+        %td= fee.description
+        %td= fee.date
+        %td{class: "centered"}= t "fees.#{fee.status}"
+        %td{id: "used_#{fee.id}", class: "centered"}= render "admin/fees/toggle_used_link", fee: fee
+  - if @fees.multi_page
+    %tr
+      %th{class: "centered", colspan: 5}= pagination_links(@fees)

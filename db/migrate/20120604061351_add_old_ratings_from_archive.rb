@@ -1,8 +1,8 @@
 class AddOldRatingsFromArchive < ActiveRecord::Migration
   def up
-    OldRating.create!(icu_id: 1305, rating: 1190, games: 30, full: true)
-    OldRating.create!(icu_id: 2404, rating: 1210, games:  6, full: true)
-    OldRating.create!(icu_id: 3758, rating: 1507, games: 12, full: true)    
+    OldRating.create!({icu_id: 1305, rating: 1190, games: 30, full: true}, without_protection: true)
+    OldRating.create!({icu_id: 2404, rating: 1210, games:  6, full: true}, without_protection: true)
+    OldRating.create!({icu_id: 3758, rating: 1507, games: 12, full: true}, without_protection: true)
   end
 
   def down

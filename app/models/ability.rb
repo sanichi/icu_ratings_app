@@ -28,7 +28,7 @@ class Ability
 
     can :read, Event
     can [:read, :create, :destroy], RatingRun
-    can :manage, [Download, FidePlayer, Article, Tournament, Player, Result, Upload]
+    can :manage, [Article, Download, Fee, FidePlayer, Tournament, Player, Result, Upload]
     cannot_if_locked
 
     return unless user.role? :admin

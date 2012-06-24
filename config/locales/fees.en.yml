@@ -1,0 +1,5 @@
+en:
+  fees:
+    Completed: Paid
+    Refunded: Refunded
+    PartRefund: Part refunded

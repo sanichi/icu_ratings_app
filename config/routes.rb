@@ -25,6 +25,7 @@ Ratings::Application.routes.draw do
   namespace "admin" do
     resources :events,               only: [:index, :show, :destroy]
     resources :failures,             only: [:index, :show, :destroy, :new]
+    resources :fees,                 only: [:index, :update]
     resources :logins,               only: [:index]
     resources :old_ratings,          only: [:index]
     resources :old_rating_histories, only: [:index]
