@@ -5,3 +5,23 @@
 
 #fee_results.turbaned
   = render "search_results"
+
+#help
+  %dl
+    %dt What's this page for?
+    %dd It lists the players who have paid a fee to have a foreign tournament rated.
+    %dt What can the rating officer tell from the information shown?
+    %dd
+      %ul
+        %li What foreign reports are expected in the future.
+        %li What foreign reports are overdue (the player should be chased).
+        %li What foreign reports received have not been paid for (the games should not be rated).
+    %dt Is the information here updated automatically?
+    %dd
+      Yes, everything except the "Used" column which the rating officer must update manually.
+      The fee data is synchronised once a week from the database for the main ICU site which
+      is where players pay their fees. When the records are first copied across they are marked
+      as unused and "No" will show in the "Used" column. After a foreign tournament is rated
+      the rating officer should manually update any fees for that tournament by clicking "No"
+      (which will make it turn to "Yes").
+    
