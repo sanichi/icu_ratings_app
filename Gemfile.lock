@@ -90,7 +90,7 @@ GEM
       activesupport
       i18n
     icu_ratings (1.2.0)
-    icu_tournament (1.6.0)
+    icu_tournament (1.6.1)
       dbf
       icu_name
       rubyzip
@@ -169,7 +169,7 @@ GEM
       sexp_processor (~> 3.0)
     ruby_parser (2.3.1)
       sexp_processor (~> 3.0)
-    rubyzip (0.9.8)
+    rubyzip (0.9.9)
     sass (3.1.18)
     sass-rails (3.2.5)
       railties (~> 3.2.0)

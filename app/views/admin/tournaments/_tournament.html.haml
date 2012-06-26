@@ -51,7 +51,7 @@
     %td= @tournament.upload ? link_to(@tournament.upload.created_at.strftime('%Y-%m-%d'), [:admin, @tournament.upload]) : ''
   %tr
     %th Reporter
-    %td= @tournament.user.name
+    %td= @tournament.user.name(false)
     %td{class: "floater top", rowspan: 2}
       - if manageable && editable
         = link_to edit_admin_tournament_path(@tournament, reporter: ""), remote: true do
