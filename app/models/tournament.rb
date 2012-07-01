@@ -195,7 +195,7 @@ class Tournament < ActiveRecord::Base
       end
     end
   end
-  
+
   # Remove one player from the tournament.
   def remove(player)
     num = player.num
@@ -454,6 +454,101 @@ class Tournament < ActiveRecord::Base
   def check_for_changes
     reset_status
     reset_signatures(false)
+  end
+
+  # As far as possible, prepare the tournament for FIDE submission. In other words,
+  # use ICU IDs to map to FIDE IDs, or at least to fedeartions and DOBs. Return an
+  # array of comments to give feedback to the user.
+  def update_fide_data
+    comments = {}
+
+    # We need players with ICU IDs.
+    with_icu_id = players.select{ |p| p.icu_id }.count
+    comments.store(:with_icu_id, with_icu_id == 0 ? "None" : with_icu_id)
+    return comments unless with_icu_id > 0
+
+    # Initialise the lists we'll return (note translations for each of these in tournaments.yml).
+    %w{
+      fid_new fid_changed fid_unchanged
+      fed_new fed_changed fed_unchanged fed_mismatch
+      dob_new dob_changed dob_unchanged dob_mismatch dob_removed
+    }.each { |c| comments[c.to_sym] = [] }
+
+    # Loop over the players.
+    players.select{ |p| p.icu_id }.each do |player|
+      icu_player = player.icu_player
+      next unless icu_player
+
+      # FIDE ID. Always set this if we can find it.
+      fide_player = icu_player.fide_player
+      id = fide_player.id if fide_player
+      if id
+        if player.fide_id
+          if player.fide_id == id
+            comments[:fid_unchanged].push player
+          else
+            player.update_column(:fide_id, id)
+            comments[:fid_changed].push player
+          end
+        else
+          player.update_column(:fide_id, id)
+          comments[:fid_new].push player
+        end
+      elsif player.fide_id
+        comments[:fid_unrecognized].push player
+      end
+
+      # Federation. Always set this if we can find it.
+      fed = icu_player.fed
+      if fed
+        if fide_player && fide_player.fed && fide_player.fed != fed
+          comments[:fed_mismatch].push player
+        else
+          if player.fed
+            if player.fed == fed
+              comments[:fed_unchanged].push player
+            else
+              player.update_column(:fed, fed)
+              comments[:fed_changed].push player
+            end
+          else
+            player.update_column(:fed, fed)
+            comments[:fed_new].push player
+          end
+        end
+      elsif player.fed
+        comments[:fed_unrecognized].push player
+      end
+
+      # DOB. Set this if we don't have an ID, otherwise prefer to omitt it.
+      dob = icu_player.dob
+      if fide_player
+        if fide_player.born && fide_player.born != dob.year
+          comments[:dob_mismatch].push player
+        end
+        if player.dob
+          player.update_column(:dob, nil)
+          comments[:dob_removed].push player
+        end
+      elsif dob
+        if player.dob
+          if player.dob == dob
+            comments[:dob_unchanged].push player
+          else
+            player.update_column(:dob, dob)
+            comments[:dob_changed].push player
+          end
+        else
+          player.update_column(:dob, dob)
+          comments[:dob_new].push player
+        end
+      elsif player.dob
+        comments[:dob_unrecognized].push player
+      end
+    end
+
+    # Return the final comments hash.
+    comments
   end
 
   private

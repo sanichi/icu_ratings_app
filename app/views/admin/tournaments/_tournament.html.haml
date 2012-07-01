@@ -130,6 +130,9 @@
   %tr
     %td{class: "centered"}
       = link_to "Member View", @tournament
+      - if can?(:modify, @tournament)
+        &bull;
+        = link_to "FIDE", edit_admin_tournament_path(@tournament, fide: "", format: "js"), remote: true
       &bull;
       = link_to "Export", admin_tournament_path(@tournament, format: "js"), remote: true
       - if can?(:modify, @tournament)

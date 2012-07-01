@@ -105,6 +105,15 @@ def load_icu_player(id)
   @icu_players_cache[id] ? FactoryGirl.create(:icu_player, @icu_players_cache[id].merge(id: id)) : nil
 end
 
+# Load all FIDE players and return hash from FIDE ID to record.
+def load_fide_players
+  @fide_players_cache ||= YAML.load(File.read(File.expand_path('../factories/fide_players.yml', __FILE__)))
+  @fide_players_cache.inject({}) do |h, (id, data)|
+    h[id] = FactoryGirl.create(:fide_player_with_icu_id, data.merge(id: id))
+    h
+  end
+end
+
 # Load all old ratings and return hash from ICU ID to record.
 def load_old_ratings
   return @old_ratings_cache if @old_ratings_cache

@@ -1,6 +1,5 @@
 module Admin
   class TournamentsController < ApplicationController
-    load_resource except: ["index", "show", "update"]
     authorize_resource
 
     def index
@@ -24,7 +23,10 @@ module Admin
     end
 
     def edit
-      render view(:edit, %w{ranks reporter stage tie_breaks}.find { |g| params[g] })
+      @tournament = Tournament.find(params[:id])
+      group = %w{ranks reporter stage tie_breaks fide}.find { |g| params[g] }
+      @data = Tournaments::FideData.new(@tournament) if group == "fide"
+      render view(:edit, group)
     end
 
     def update
@@ -50,6 +52,9 @@ module Admin
       when params[:locked]
         @tournament.update_column(:locked, params[:locked] == "false" ? false : true)
         render view(:update, :locked)
+      when params[:tournament][:fide]
+        @data = Tournaments::FideData.new(@tournament, true)
+        render view(:update, :fide)
       when params[:tournament][:tie_breaks]
         @tournament.update_attributes(params[:tournament])
         render view(:update, :tie_breaks)
@@ -63,6 +68,7 @@ module Admin
     end
 
     def destroy
+      @tournament = Tournament.find(params[:id])
       unless @tournament.deletable?
         redirect_to [:admin, @tournament], alert: "You can't delete a tournament with status #{@tournament.status}"
       else

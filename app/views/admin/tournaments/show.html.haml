@@ -11,6 +11,8 @@
 = render "shared/dialog", id: "update_tournament"
 = render "shared/dialog", id: "export_tournament", width: 400, button: "Export", autoclose: true
 = render "shared/dialog", id: "rank_tournament", width: 300, button: "OK"
+= render "shared/dialog", id: "update_fide_data", width: 600, autoclose: true
+= render "shared/dialog", id: "updated_fide_data", width: 600, button: nil, cancel: "Dismiss"
 - unless @tournament.status_ok?
   - html = render "shared/pipe_list", error: @tournament.status
   = render "shared/dialog", id: "status", button: false, cancel: "Dismiss", html: html

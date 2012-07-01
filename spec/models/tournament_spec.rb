@@ -801,4 +801,109 @@ describe Tournament do
       p.old_rating.should be_nil
     end
   end
+
+  context "update FIDE data", focus: true do
+    before(:each) do
+      f = "bunratty_masters_2011.tab"
+      load_icu_players_for(f)
+      load_fide_players
+      u = FactoryGirl.create(:user, role: "officer")
+      @t = test_tournament(f, u.id)
+    end
+
+    it "initial and updated status" do
+      @t.players.select{ |p| p.fide_id }.count.should == 0
+      @t.players.select{ |p| p.fed }.count.should == 3
+      @t.players.select{ |p| p.dob }.count.should == 2
+      data = Tournaments::FideData.new(@t)
+      data.should have(3).status
+
+      [
+        ["FTT", 2, "Fehr|Short"],
+        ["FTF", 1, "Hebden"],
+        ["FFF", 37, "Baburin|Baczkowski|Cafolla|-|Wynarczyk"],
+      ].each_with_index do |e, i|
+        data.status[i].sig.should == e[0]
+        data.status[i].count.should == e[1]
+        data.status[i].samples.map{ |p| p ? p.last_name : "-" }.join("|").should == e[2]
+      end
+
+      data = Tournaments::FideData.new(@t, true)
+      data.should have(4).status
+      [
+        ["TTF", 21, "Baburin|Cafolla|Collins|-|Short"],
+        ["FTT", 15, "Cooper|Daianu|Eliens|-|Wynarczyk"],
+        ["FTF",  2, "Hebden|Maroroa"],
+        ["FFF",  2, "Baczkowski|Grennel"],
+      ].each_with_index do |e, i|
+        data.status[i].sig.should == e[0]
+        data.status[i].count.should == e[1]
+        data.status[i].samples.map{ |p| p ? p.last_name : "-" }.join("|").should == e[2]
+      end
+
+      updates = data.updates
+      updates.should be_instance_of(Hash)
+      updates.count.should == 13
+      updates[:with_icu_id].should == 35
+      updates[:fid_new].count.should == 21
+      updates[:fid_unchanged].count.should == 0
+      updates[:fid_changed].count.should == 0
+      updates[:fed_new].count.should == 35
+      updates[:fed_unchanged].count.should == 0
+      updates[:fed_changed].count.should == 0
+      updates[:fed_mismatch].count.should == 0
+      updates[:dob_new].count.should == 13
+      updates[:dob_unchanged].count.should == 0
+      updates[:dob_changed].count.should == 0
+      updates[:dob_mismatch].count.should == 0
+      updates[:dob_removed].count.should == 0
+    end
+
+    it "updated status corner cases" do
+      [
+        ["Baburin",  :fide_id,  2500914],  # correct ID
+        ["Orr",      :fide_id,  2500000],  # incorrect ID
+        ["Cafolla",  :fed,        "IRL"],  # correct fed
+        ["Duffy",    :fed,        "ENG"],  # incorrect fed
+        ["McMorrow", :dob, "1988-02-07"],  # correct DOB for player with FIDE ID
+        ["Kosten",   :dob, "1958-07-24"],  # correct DOB for player without FIDE ID
+        ["Williams", :dob, "1979-11-03"],  # incorrect DOB for player without FIDE ID
+      ].each { |x| @t.players.find{ |p| p.last_name == x[0] }.update_column(x[1], x[2]) }
+
+      IcuPlayer.find_by_last_name("Osborne").update_column(:fed, "ENG")   # artificially create a federation mismatch
+      @t.players.find{ |p| p.last_name == "Osborne" }.icu_player.reload   # the icu_player needs reloaded
+      FidePlayer.find_by_last_name("Freeman").update_column(:born, 1981)  # artificially create a DOB mismatch
+
+      data = Tournaments::FideData.new(@t, true)
+      data.should have(5).status
+      [
+        ["TTF", 20, "Baburin|Cafolla|Collins|-|Short"],
+        ["TFF",  1, "Osborne"],
+        ["FTT", 15, "Cooper|Daianu|Eliens|-|Wynarczyk"],
+        ["FTF",  2, "Hebden|Maroroa"],
+        ["FFF",  2, "Baczkowski|Grennel"],
+      ].each_with_index do |e, i|
+        data.status[i].sig.should == e[0]
+        data.status[i].count.should == e[1]
+        data.status[i].samples.map{ |p| p ? p.last_name : "-" }.join("|").should == e[2]
+      end
+
+      updates = data.updates
+      updates.should be_instance_of(Hash)
+      updates.count.should == 13
+      updates[:with_icu_id].should == 35
+      updates[:fid_new].count.should == 19
+      updates[:fid_unchanged].map(&:last_name).join("|").should == "Baburin"
+      updates[:fid_changed].map(&:last_name).join("|").should == "Orr"
+      updates[:fed_new].count.should == 32
+      updates[:fed_unchanged].map(&:last_name).join("|").should == "Cafolla"
+      updates[:fed_changed].map(&:last_name).join("|").should == "Duffy"
+      updates[:fed_mismatch].map(&:last_name).join("|").should == "Osborne"
+      updates[:dob_new].count.should == 11
+      updates[:dob_unchanged].map(&:last_name).join("|").should == "Kosten"
+      updates[:dob_changed].map(&:last_name).join("|").should == "Williams"
+      updates[:dob_mismatch].map(&:last_name).join("|").should == "Freeman"
+      updates[:dob_removed].count.should == 1
+    end
+  end
 end

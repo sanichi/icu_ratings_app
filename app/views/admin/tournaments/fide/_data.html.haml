@@ -1,0 +1,18 @@
+%table{class: "right-headers turbaned cushioned"}
+  %tr
+    %th ID
+    %th Fed
+    %th DOB
+    %th #
+    %th
+  - @data.status.each do |match|
+    %tr
+      %td{class: "centered"}= icon_tag "tick", "Present" if match.fid
+      %td{class: "centered"}= icon_tag "tick", "Present" if match.fed
+      %td{class: "centered"}= icon_tag "tick", "Present" if match.dob
+      %td{class: "centered"}= match.count
+      %td
+        - match.samples.each_with_index do |p, i|
+          = succeed(i + 1 < match.samples.count ? ", " : "") do
+            = p ? link_to(p.last_name, [:admin, p]) : raw("&hellip;")
+  

@@ -1,0 +1,5 @@
+%h3 Current Status
+= render "admin/tournaments/fide/data"
+
+= form_for [:admin, @tournament], remote: true do |f|
+  = f.hidden_field :fide, value: ""

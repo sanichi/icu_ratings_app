@@ -1,0 +1,280 @@
+2500035:
+  last_name: Orr
+  first_name: Mark J L
+  fed: IRL
+  title: IM
+  gender: M
+  born: 1955
+  rating: 2260
+  icu_id: 1350
+2500086:
+  last_name: Short
+  first_name: Philip M
+  fed: IRL
+  title: FM
+  gender: M
+  born: 1960
+  rating: 2260
+  icu_id: 1557
+2500124:
+  last_name: Brady
+  first_name: Stephen
+  fed: IRL
+  title: FM
+  gender: M
+  born: 1969
+  rating: 2368
+  icu_id: 90
+2500264:
+  last_name: Keogh
+  first_name: Eamon
+  fed: IRL
+  gender: M
+  born: 1944
+  rating: 1995
+  icu_id: 731
+2500434:
+  last_name: Daly
+  first_name: Colm
+  fed: IRL
+  title: FM
+  gender: M
+  born: 1967
+  rating: 2327
+  icu_id: 295
+2500450:
+  last_name: Quinn
+  first_name: Mark
+  fed: IRL
+  title: IM
+  gender: M
+  born: 1976
+  rating: 2388
+  icu_id: 1402
+2500663:
+  last_name: Moynihan
+  first_name: Kieran
+  fed: IRL
+  gender: M
+  born: 1970
+  rating: 2180
+  icu_id: 929
+2500736:
+  last_name: Fox
+  first_name: Anthony
+  fed: IRL
+  gender: M
+  born: 1960
+  rating: 2117
+  icu_id: 456
+2500760:
+  last_name: McCabe
+  first_name: Darren
+  fed: IRL
+  gender: M
+  born: 1986
+  rating: 2100
+  icu_id: 5722
+2500876:
+  last_name: Doyle
+  first_name: Hugh
+  fed: IRL
+  gender: M
+  born: 1995
+  rating: 1915
+  icu_id: 10145
+2500884:
+  last_name: Cafolla
+  first_name: Peter
+  fed: IRL
+  gender: M
+  born: 1957
+  rating: 1995
+  icu_id: 159
+2500914:
+  last_name: Baburin
+  first_name: Alexander
+  fed: IRL
+  title: GM
+  gender: M
+  born: 1967
+  rating: 2534
+  icu_id: 7085
+2500990:
+  last_name: Heidenfeld
+  first_name: Mark
+  fed: IRL
+  title: IM
+  gender: M
+  born: 1968
+  rating: 2357
+  icu_id: 4017
+2501112:
+  last_name: O'Connor
+  first_name: Jonathan
+  fed: IRL
+  gender: M
+  born: 1963
+  rating: 2124
+  icu_id: 1243
+2501198:
+  last_name: Collins
+  first_name: Sam E.
+  fed: IRL
+  title: IM
+  gender: M
+  born: 1982
+  rating: 2459
+  icu_id: 4564
+2501309:
+  last_name: Freeman
+  first_name: Gordon
+  fed: IRL
+  gender: M
+  born: 1982
+  rating: 2140
+  icu_id: 4153
+2501430:
+  last_name: Astaneh Lopez
+  first_name: Alex
+  fed: IRL
+  title: IM
+  gender: M
+  born: 1987
+  rating: 2398
+  icu_id: 5157
+2501481:
+  last_name: Mc Morrow
+  first_name: John
+  fed: IRL
+  gender: M
+  born: 1988
+  rating: 1976
+  icu_id: 5320
+2501503:
+  last_name: McPhillips
+  first_name: Karl
+  fed: IRL
+  gender: M
+  born: 1988
+  rating: 2232
+  icu_id: 5243
+2501511:
+  last_name: Murray
+  first_name: David
+  fed: IRL
+  gender: M
+  born: 1984
+  rating: 2146
+  icu_id: 4941
+2501570:
+  last_name: Delaney
+  first_name: Killian
+  fed: IRL
+  gender: M
+  born: 1985
+  rating: 2087
+  icu_id: 5104
+2501708:
+  last_name: Duffy
+  first_name: Seamus
+  fed: IRL
+  gender: M
+  born: 1963
+  rating: 2019
+  icu_id: 378
+2501791:
+  last_name: Osborne
+  first_name: Sam
+  fed: IRL
+  gender: M
+  born: 1992
+  rating: 2091
+  icu_id: 6252
+2501821:
+  last_name: Benson
+  first_name: Oisin P.
+  fed: IRL
+  gender: M
+  born: 1992
+  rating: 2038
+  icu_id: 5884
+2501961:
+  last_name: Fitzsimons
+  first_name: David
+  fed: IRL
+  gender: M
+  born: 1991
+  rating: 2293
+  icu_id: 6236
+2502003:
+  last_name: Flynn
+  first_name: Jamie
+  fed: IRL
+  gender: M
+  born: 1992
+  icu_id: 5226
+2502054:
+  last_name: Griffiths
+  first_name: Ryan Rhys
+  fed: IRL
+  title: FM
+  gender: M
+  born: 1993
+  rating: 2326
+  icu_id: 6897
+2502364:
+  last_name: Collins
+  first_name: Mark A.
+  fed: IRL
+  gender: M
+  born: 1983
+  rating: 2005
+  icu_id: 4977
+2502380:
+  last_name: Courtney
+  first_name: John
+  fed: IRL
+  gender: M
+  born: 1995
+  rating: 1962
+  icu_id: 6882
+2502992:
+  last_name: Porter
+  first_name: Liam
+  fed: IRL
+  gender: M
+  born: 1958
+  rating: 1972
+  icu_id: 1383
+2503000:
+  last_name: Magee
+  first_name: Ronan
+  fed: IRL
+  gender: M
+  born: 1998
+  rating: 1965
+  icu_id: 10470
+2503433:
+  last_name: O`Brien
+  first_name: Cormac P.
+  fed: IRL
+  gender: M
+  born: 1993
+  rating: 2013
+  icu_id: 12044
+2503980:
+  last_name: O`Riordan
+  first_name: Kieran
+  fed: IRL
+  gender: M
+  born: 1995
+  icu_id: 10235
+2504243:
+  last_name: O`Donnell
+  first_name: Conor
+  fed: IRL
+  gender: M
+  born: 1999
+  rating: 1939
+  icu_id: 10792

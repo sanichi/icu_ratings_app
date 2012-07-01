@@ -1,0 +1,22 @@
+%h3 New Status
+= render "admin/tournaments/fide/data"
+
+%h3 Updates Applied
+- if @data.updates
+  %table{class: "right-headers"}
+    - @data.updates.each do |key, value|
+      - next if value.is_a?(Array) && value.count == 0
+      %tr
+        %th= t "fide_updates.#{key}"
+        %td{class: "centered"}= value.is_a?(Array) ? value.count : value
+        %td
+          - if value.is_a?(Array)
+            - value.each_with_index do |p, i|
+              - if i < 3
+                = succeed(i < value.count ? ", " : "") do
+                  = link_to p.last_name, [:admin, p]
+              - elsif i == 3
+                = "..."
+              - else
+                - break
+              
