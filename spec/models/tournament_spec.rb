@@ -802,7 +802,7 @@ describe Tournament do
     end
   end
 
-  context "update FIDE data", focus: true do
+  context "update FIDE data" do
     before(:each) do
       f = "bunratty_masters_2011.tab"
       load_icu_players_for(f)
@@ -843,20 +843,23 @@ describe Tournament do
 
       updates = data.updates
       updates.should be_instance_of(Hash)
-      updates.count.should == 13
+      updates.count.should == 16
       updates[:with_icu_id].should == 35
       updates[:fid_new].count.should == 21
       updates[:fid_unchanged].count.should == 0
       updates[:fid_changed].count.should == 0
+      updates[:fid_unrecognized].count.should == 0
       updates[:fed_new].count.should == 35
       updates[:fed_unchanged].count.should == 0
       updates[:fed_changed].count.should == 0
       updates[:fed_mismatch].count.should == 0
+      updates[:fed_unrecognized].count.should == 0
       updates[:dob_new].count.should == 13
       updates[:dob_unchanged].count.should == 0
       updates[:dob_changed].count.should == 0
       updates[:dob_mismatch].count.should == 0
       updates[:dob_removed].count.should == 0
+      updates[:dob_unrecognized].count.should == 0
     end
 
     it "updated status corner cases" do
@@ -890,20 +893,23 @@ describe Tournament do
 
       updates = data.updates
       updates.should be_instance_of(Hash)
-      updates.count.should == 13
+      updates.count.should == 16
       updates[:with_icu_id].should == 35
       updates[:fid_new].count.should == 19
       updates[:fid_unchanged].map(&:last_name).join("|").should == "Baburin"
       updates[:fid_changed].map(&:last_name).join("|").should == "Orr"
+      updates[:fid_unrecognized].count.should == 0
       updates[:fed_new].count.should == 32
       updates[:fed_unchanged].map(&:last_name).join("|").should == "Cafolla"
       updates[:fed_changed].map(&:last_name).join("|").should == "Duffy"
       updates[:fed_mismatch].map(&:last_name).join("|").should == "Osborne"
+      updates[:fed_unrecognized].count.should == 0
       updates[:dob_new].count.should == 11
       updates[:dob_unchanged].map(&:last_name).join("|").should == "Kosten"
       updates[:dob_changed].map(&:last_name).join("|").should == "Williams"
       updates[:dob_mismatch].map(&:last_name).join("|").should == "Freeman"
       updates[:dob_removed].count.should == 1
+      updates[:dob_unrecognized].count.should == 0
     end
   end
 end

@@ -469,9 +469,9 @@ class Tournament < ActiveRecord::Base
 
     # Initialise the lists we'll return (note translations for each of these in tournaments.yml).
     %w{
-      fid_new fid_changed fid_unchanged
-      fed_new fed_changed fed_unchanged fed_mismatch
-      dob_new dob_changed dob_unchanged dob_mismatch dob_removed
+      fid_new fid_changed fid_unchanged fid_unrecognized
+      fed_new fed_changed fed_unchanged fed_unrecognized fed_mismatch
+      dob_new dob_changed dob_unchanged dob_unrecognized dob_mismatch dob_removed
     }.each { |c| comments[c.to_sym] = [] }
 
     # Loop over the players.
