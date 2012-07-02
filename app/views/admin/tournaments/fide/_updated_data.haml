@@ -12,8 +12,8 @@
         %td
           - if value.is_a?(Array)
             - value.each_with_index do |p, i|
-              - if i < 3
-                = succeed(i < value.count ? ", " : "") do
+              - if i < 3 || i == 3 && value.count == 4
+                = succeed(i + 1 == value.count ? "" : ", ") do
                   = link_to p.last_name, [:admin, p]
               - elsif i == 3
                 = "..."
