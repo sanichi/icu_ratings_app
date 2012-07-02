@@ -9,17 +9,24 @@
 
 #help
   %dl
-    %dt What are the different stages a tournament can be at?
+    %dt All tournaments will be in one of the following stages:
     %dd
       - Tournament::STAGE.each do |stage|
         %p
           = icon_tag stage, t(stage), class: "inline"
           %b= t(stage)
           = "- #{t(stage, scope: :desc)}"
-    %dt What are the different statuses a tournament can have?
+    %dt All tournaments will have one of the following statuses:
     %dd
       - %w[ok problems].each do |status|
         %p
           = icon_tag status, t(status), class: "inline"
           %b= t(status)
           = "- #{t(status, scope: :desc)}"
+    %dt All tournaments will be either:
+    %dd
+      - %w[lock unlock].each do |lock|
+        %p
+          = icon_tag lock, t(lock), class: "inline"
+          %b= t(lock)
+          = "- #{t(lock, scope: :desc)}"

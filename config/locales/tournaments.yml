@@ -5,13 +5,17 @@ en:
   rated:    Rated
   ok:       OK
   problems: Problems
+  lock:     Locked
+  unlock:   Unlocked
   desc:
       initial:  not yet ready or intended for rating and not visible to members
       ready:    "ready, but not yet queued, for rating"
       queued:   queued for rating
       rated:    successfully rated
       ok:       "has no problems, can be rated and is visible to members"
-      problems: "has issues, can't be rated and is not visible to members"
+      problems: "has issues, can't be rated (or re-rated) and is not visible to members"
+      lock:     cannot be changed until unlocked by the rating officer
+      unlock:   can be changed
   fide_updates:
     with_icu_id:      Players with ICU IDs
     fid_new:          New FIDE IDs
