@@ -9,21 +9,21 @@
 
 #help
   %dl
-    %dt All tournaments will be in one of the following stages:
+    %dt All tournaments are in one of the following stages:
     %dd
       - Tournament::STAGE.each do |stage|
         %p
           = icon_tag stage, t(stage), class: "inline"
           %b= t(stage)
           = "- #{t(stage, scope: :desc)}"
-    %dt All tournaments will have one of the following statuses:
+    %dt All tournaments have one of the following statuses:
     %dd
       - %w[ok problems].each do |status|
         %p
           = icon_tag status, t(status), class: "inline"
           %b= t(status)
           = "- #{t(status, scope: :desc)}"
-    %dt All tournaments will be either:
+    %dt All tournaments are in one of the following two states:
     %dd
       - %w[lock unlock].each do |lock|
         %p
