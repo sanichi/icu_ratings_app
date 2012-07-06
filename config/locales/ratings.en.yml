@@ -21,7 +21,7 @@ en:
     results:
       round: Rnd
       opponent: Opp
-      rating: Rng
+      rating: Rtg
       result: Res
       expected: Exp
       change: Chg
