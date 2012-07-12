@@ -90,7 +90,7 @@ GEM
       activesupport
       i18n
     icu_ratings (1.2.0)
-    icu_tournament (1.6.1)
+    icu_tournament (1.6.2)
       dbf
       icu_name
       rubyzip
