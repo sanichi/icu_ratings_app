@@ -17,7 +17,7 @@
         %td{class: "centered"}= player.rank
       %td{id: player_id(player), class: player_class(player)}= link_to_if link_player, player.name, player
       - if show_title
-        %td{class: "centered narrow"}= short_title(player.title)
+        %td{class: "centered min-width"}= short_title(player.title)
       - if show_rating
         %td{class: "righted"}= player.old_rating
       - 1.upto(@tournament.rounds) do |r|
