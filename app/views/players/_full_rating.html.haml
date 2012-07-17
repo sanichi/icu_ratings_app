@@ -10,7 +10,7 @@
   %tr
     %th= t "ratings.bonus"
     %td{class: "centered"}= @player.bonus
-    %td
+    %td= "see #{link_to "article", @bonus_article}".html_safe if @bonus_article
 %tr
   %th= t "ratings.change"
   %td{class: "centered"}= sign(@player.rating_change)
