@@ -1,0 +1,24 @@
+%table
+  %tr
+    %th Player
+    %th ID
+    %th Season
+    %th Type
+    %th Pay Date
+  - if @subs.count == 0
+    %tr
+      %td{colspan: 5, class: "centered"} No matches
+  - else
+    - @subs.matches.each do |sub|
+      %tr
+        %td= link_to sub.icu_player.name, their_home_path(id: sub.icu_id)
+        %td= sub.icu_id
+        - if sub.category == "lifetime"
+          %td{class: "centered"} n/a
+        -else
+          %td= sub.season
+        %td= t("subs.#{sub.category}")
+        %td{class: "centered"}= sub.category == "lifetime" ? "n/a" : sub.pay_date
+  - if @subs.multi_page
+    %tr
+      %th{class: "centered", colspan: 5}= pagination_links(@subs)

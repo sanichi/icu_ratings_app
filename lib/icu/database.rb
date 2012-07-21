@@ -303,6 +303,158 @@ module ICU
       end
     end
 
+
+    # Sync should be run about once a week, but more often, perhaps manually, just before a new rating list is published.
+    # Treat lifetime (index 0) and paid subs (index 1) as separate, able to coexist for the same player.
+    class Subs < Database
+      def sync(season=nil)
+        success = sync_subs_steps(season)
+        Event.create(name: "ICU-Subs Synchronisation", report: report, time: Time.now - @start, success: success)
+      end
+
+      private
+
+      def sync_subs_steps(season)
+        begin
+          get_season(season)
+          get_our_subs
+          check_our_dups
+          get_their_subs
+          check_their_dups
+          do_creates_and_updates
+          do_deletes
+        rescue SyncError => e
+          @error = e.message
+          return false
+        rescue => e
+          @error = e.message
+          e.backtrace.each { |b| @error += "\n#{b}" }
+          return false
+        end
+
+        true
+      end
+
+      def get_season(season)
+        if season
+          match = season.match(/\A20(\d\d)-(\d\d)\Z/)
+          raise SyncError.new("invalid season: #{season}") unless match && match[1].to_i + 1 == match[2].to_i
+          @season = "20#{match[1]}-#{match[2]}"
+        else
+          @season = Subscription.season
+        end
+      end
+
+      def get_our_subs
+        @our_subs = Array.new(2)
+        [0, 1].each do |i|
+          @our_subs[i] = (i == 0 ? Subscription.where(category: "lifetime") : Subscription.where("season = ? AND category != ?", @season, "lifetime")).inject({}) do |hash, sub|
+            hash[sub.icu_id] = Array.new unless hash[sub.icu_id]
+            hash[sub.icu_id].push sub
+            hash
+          end
+        end
+      end
+
+      def check_our_dups
+        @our_dups = Array.new(2)
+        [0, 1].each { |i| @our_dups[i] = @our_subs[i].reject{ |k,v| v.size == 1 }.keys.sort }
+      end
+
+      def get_their_subs
+        @their_subs = Array.new(2)
+        [0, 1].each do |i|
+          cats = i == 0 ? %w(lifetime) : %w(online offline)
+          @their_subs[i] = cats.inject({}) do |hash, category|
+            @client.query(sql(category)).each do |sub|
+              icu_id = sub[:icu_id]
+              sub[:category] = category
+              sub[:pay_date] = nil if i == 0
+              sub[:season] = @season if i == 1
+              hash[icu_id] = Array.new unless hash[icu_id]
+              hash[icu_id].push(sub)
+            end
+            hash
+          end
+        end
+      end
+
+      def check_their_dups
+        @their_dups = Array.new(2)
+        [0, 1].each { |i| @their_dups[i] = @their_subs[i].reject{ |k,v| v.size == 1 }.keys.sort }
+      end
+
+      def do_creates_and_updates
+        pref = Hash.new(3)
+        pref["online"] = 1
+        pref["offline"] = 2
+        @creates = Array.new(2){[]}
+        @updates = Array.new(2){[]}
+        @thesame = Array.new(2){[]}
+        [0, 1].each do |i|
+          @their_subs[i].each do |icu_id, subs|
+            subs.sort! { |a, b| pref[a[:category]] <=> pref[b[:category]] } if subs.size > 1
+            tsub = subs.first
+            if @our_subs[i][icu_id]
+              raise SyncError.new("our #{i == 0 ? 'lifetime' : 'paid'} subs contain a duplicate for #{icu_id}") unless @our_subs[i][icu_id].size == 1
+              osub = @our_subs[i][icu_id].first
+              if osub.category == tsub[:category]
+                @thesame[i].push(icu_id)
+              else
+                osub.destroy
+                Subscription.create!(tsub, without_protection: true)
+                @updates[i].push(icu_id)
+              end
+            else
+              Subscription.create!(tsub, without_protection: true)
+              @creates[i].push(icu_id)
+            end
+          end
+        end
+      end
+
+      def do_deletes
+        @deletes = Array.new(2, [])
+        [0, 1].each do |i|
+          @our_subs[i].each do |icu_id, subs|
+            unless @their_subs[i][icu_id]
+              @our_subs[i][icu_id].each { |sub| sub.destroy }
+              @deletes[i].push(icu_id)
+            end
+          end
+        end
+      end
+
+      def report
+        str = Array.new
+        str.push "season: #{@season}" if @season
+        [0, 1].each do |i|
+          type = i == 0 ? "lifetime" : "paid"
+          str.push "our #{type} subs: #{@our_subs[i].size}" if @our_subs
+          str.push "our #{type} dups: #{summarize_list(@our_dups[i])}" if @our_dups
+          str.push "their #{type} subs: #{@their_subs[i].size}" if @their_subs
+          str.push "their #{type} dups: #{summarize_list(@their_dups[i])}" if @their_dups
+          str.push "#{type} creates: #{summarize_list(@creates[i])}" if @creates
+          str.push "#{type} updates: #{summarize_list(@updates[i])}" if @updates
+          str.push "#{type} unchanged: #{summarize_list(@thesame[i])}" if @thesame
+          str.push "#{type} deletes: #{summarize_list(@deletes[i])}" if @deletes
+        end
+        str.push "error: #{@error}" if @error
+        str.join("\n")
+      end
+
+      def sql(category)
+        case category
+        when "online"
+          "SELECT sub_icu_id AS icu_id, date(pay_date) AS pay_date from subscriptions, payments where sub_pay_id = pay_id and sub_season = '#{@season}' and pay_status != 'Created' and pay_status != 'Refunded'"
+        when "offline"
+          "SELECT sof_icu_id AS icu_id, sof_pay_date AS pay_date from subs_offline where sof_season = '#{@season}'"
+        else
+          "SELECT sfl_icu_id AS icu_id from subs_forlife"
+        end
+      end
+    end
+
     # Sync should be run just once, to get historical FIDE rating data for Irish players.
     class FIDE < Database
       def sync

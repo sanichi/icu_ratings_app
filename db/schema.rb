@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120623184216) do
+ActiveRecord::Schema.define(:version => 20120720125325) do
 
   create_table "articles", :force => true do |t|
     t.string   "headline"
@@ -240,6 +240,19 @@ ActiveRecord::Schema.define(:version => 20120623184216) do
   add_index "results", ["opponent_id"], :name => "index_results_on_opponent_id"
   add_index "results", ["player_id"], :name => "index_results_on_player_id"
   add_index "results", ["rating_change"], :name => "index_results_on_rating_change"
+
+  create_table "subscriptions", :force => true do |t|
+    t.integer  "icu_id"
+    t.string   "season",     :limit => 7
+    t.string   "category",   :limit => 8
+    t.date     "pay_date"
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
+  end
+
+  add_index "subscriptions", ["category"], :name => "index_subscriptions_on_category"
+  add_index "subscriptions", ["icu_id"], :name => "index_subscriptions_on_icu_id"
+  add_index "subscriptions", ["season"], :name => "index_subscriptions_on_season"
 
   create_table "tournaments", :force => true do |t|
     t.string   "name"

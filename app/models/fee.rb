@@ -25,7 +25,6 @@ class Fee < ActiveRecord::Base
 
   def self.search(params, path)
     matches = joins(:icu_player).includes(:icu_player)
-    logger.info("last name: [#{params[:last_name]}]")
     matches = matches.where("icu_players.last_name LIKE ?", "%#{params[:last_name]}%") if params[:last_name].present?
     matches = matches.where("icu_players.first_name LIKE ?", "%#{params[:first_name]}%") if params[:first_name].present?
     matches = matches.where("fees.description LIKE ?", "%#{params[:description]}%") if params[:description].present?

@@ -33,6 +33,7 @@ Ratings::Application.routes.draw do
     resources :players,              only: [:show, :edit, :update, :destroy]
     resources :rating_runs,          only: [:index, :show, :create, :destroy]
     resources :results,              only: [:new, :create, :edit, :update]
+    resources :subscriptions,        only: [:index]
     resources :tournaments,          only: [:index, :show, :edit, :update, :destroy]
     resources :uploads,              only: [:index, :show, :new, :create, :destroy]
     resources :users,                only: [:index, :show, :edit, :update]

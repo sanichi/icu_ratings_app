@@ -128,6 +128,20 @@ module ApplicationHelper
     menu
   end
 
+  def sub_category_menu(any=nil)
+    menu = Subscription::CATEGORY.map{ |c| [t("subs.#{c}"), c] }
+    menu.unshift([any, ""]) if any
+    menu
+  end
+
+  def sub_season_menu(any=nil)
+    menu = Subscription.group(:season).map{ |s| s.season }.reject{ |s| s.blank? }.sort.reverse
+    menu.push(Subscription.season) if menu.size == 0
+    menu.map! { |s| [s, s] }
+    menu.unshift([any, ""]) if any
+    menu
+  end
+
   def title_menu(none=nil)
     menu = %w[GM IM FM CM NM WGM WIM WFM WCM WNM].map{ |t| Array.new(2, t) }
     menu.unshift([none, ""]) if none

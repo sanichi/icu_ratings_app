@@ -1,0 +1,19 @@
+.header
+  %span Subscriptions
+
+= render "search_form"
+
+#sub_results.turbaned
+  = render "search_results"
+
+#help
+  %dl
+    %dt What does this page show?
+    %dd It lists players who have paid ICU subscriptions (or been awarded lifetime subscriptions).
+    %dt What is the information used for?
+    %dd In order to publish public rating lists (only subscribed members have their ratings published).
+    %dt How does the information get into the ratings database?
+    %dd Via periodic synchronization with the main database (the one that backs www.icu.ie).
+    %dt Why do some offline subscriptions not have a pay date?
+    %dd A pay date wasn't recorded for off-line subscriptions until late 2007.
+    

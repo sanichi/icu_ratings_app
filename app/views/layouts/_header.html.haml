@@ -58,6 +58,8 @@
           %li= link_to "Logins", admin_logins_path
         - if can? :read, User
           %li= link_to "Users", admin_users_path
+        - if can? :read, Subscription
+          %li= link_to "Subs", admin_subscriptions_path
         - if can? :read, Fee
           %li= link_to "Fees", admin_fees_path
         - if can? :read, Event

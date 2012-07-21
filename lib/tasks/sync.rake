@@ -17,6 +17,11 @@ namespace :sync do
     ICU::Database::Item.new.sync
   end
 
+  desc "Synchronize Subscriptions with the www.icu.ie database (schedule at least weekly, but run manually before producing a rating list)"
+  task :icu_subs, [:season] => :environment do |t, args|
+    ICU::Database::Subs.new.sync(args[:season])
+  end
+
   desc "Synchronize FidePlayers and FideRatings with fide_players and fide_ratings in the www.icu.ie database (perform once)"
   task icu_fide_data: :environment do
     ICU::Database::FIDE.new.sync
