@@ -217,7 +217,7 @@ module ICU
     class Item < Database
       def sync
         success = sync_item_steps
-        Event.create(name: "ICU-Item Synchronisation", report: report, time: Time.now - @start, success: success)
+        Event.create(name: "ICU Item Synchronisation", report: report, time: Time.now - @start, success: success)
       end
 
       private
@@ -309,7 +309,7 @@ module ICU
     class Subs < Database
       def sync(season=nil)
         success = sync_subs_steps(season)
-        Event.create(name: "ICU-Subs Synchronisation", report: report, time: Time.now - @start, success: success)
+        Event.create(name: "ICU Subs Synchronisation", report: report, time: Time.now - @start, success: success)
       end
 
       private
