@@ -68,7 +68,7 @@ module FIDE
         lines = data.split(/\n\r?/)
         @nlines = lines.size
         raise SyncError.new("unexpected number of lines (#{lines.size})") unless @nlines > 250000
-        if lines.first.match(/^ID\s*number\s*Name\s*Title?\s*Fed\s*((Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Nov|Dec)[a-z]*[12]\d)/i)
+        if lines.first.match(/^ID\s*number\s*Name\s*Title?\s*Fed\s*((Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*[12]\d)/i)
           lines.shift
           @list = check_list("1st #{$1}")
         else
@@ -239,7 +239,7 @@ module FIDE
         raise SyncError.new("unexpected response for download page (#{res.code})") unless res.code == "200"
         # <a href=http://ratings.fide.com/download/may11frl.zip class=tur>Download May 2011 FRL</a>(TXT)
         # <small>(Updated: 30 May 2011, Size: 2 656 668 bytes)</small><br>
-        raise SyncError.new("no links detected") unless res.body.match(/href=["']?(http:\/\/ratings.fide.com\/download\/(jan|feb|mar|apr|may|jun|jul|aug|sep|nov|dec)(\d\d)frl\.zip)['"]?[^>]*>[^<]+<\/a>[^<]*<small>([^<]+)<\/small>/)
+        raise SyncError.new("no links detected") unless res.body.match(/href=["']?(http:\/\/ratings.fide.com\/download\/(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)(\d\d)frl\.zip)['"]?[^>]*>[^<]+<\/a>[^<]*<small>([^<]+)<\/small>/)
         @link, month, year, note = $1, $2, $3, $4
         @file = "#{month}#{year}frl.txt"
         @list = check_list("1st #{month} #{year}")
@@ -286,7 +286,7 @@ module FIDE
 
           # Check the header line.
           if (@count == 1)
-            unless line.match(/^ID\s*number\s*Name\s*Title?\s*Fed\s*(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Nov|Dec)[a-z]*[12]\d/i)
+            unless line.match(/^ID\s*number\s*Name\s*Title?\s*Fed\s*(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*[12]\d/i)
               raise SyncError.new("unexpected first line of file: #{line}")
             end
             next

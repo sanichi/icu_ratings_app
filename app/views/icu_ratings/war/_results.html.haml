@@ -1,4 +1,12 @@
 - if @war.available?
+  - if @war.lists[:icu] && @war.lists[:fide]
+    %p{class: "centered note"}
+      - [:icu, :fide].each do |type|
+        - lists = @war.lists[type]
+        = type.to_s.upcase
+        = precede "(" do
+          = succeed ")" do
+            = lists.map{ |l| year_month(l) }.join(", ")
   %table
     %tr
       %th{rowspan: 2}
