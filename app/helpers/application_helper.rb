@@ -188,9 +188,14 @@ module ApplicationHelper
     end
   end
 
-  # Turn a date into a year-month (e.g. 2011-11-01 => 2011 Nov)
-  def year_month(date)
-    "%d %s" % [date.year, %w(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec)[date.month-1]]
+  # Turn a date into a year-month (e.g. 2011-11-01 => 2011 Nov).
+  def year_month(date, fmt="yyyy mmm")
+    yyyy = date.year.to_s
+    mmm = %w(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec)[date.month-1]
+    case fmt
+    when "mmm-yy" then "%s-%s" % [mmm, yyyy[2, 2]]
+    else "%s %s" % [yyyy, mmm]
+    end
   end
 
   # Returns links to objects on some specific external sites.
