@@ -9,10 +9,24 @@
 
 #help
   %dl
-    %dt What are the different stages a tournament can be at?
+    %dt What tournaments are displayed here?
+    %dd Tournaments whose reports have no issues and that have already been rated or are ready for rating.
+    %dt A tournament I played in recently is not listed. Why not?
     %dd
-      - Tournament::STAGE.reject{ |s| s == "initial" }.each do |stage|
-        %p
-          = icon_tag stage, t(stage), class: "inline"
-          %b= t(stage)
-          = "- #{t(stage, scope: :desc)}"
+      The rating report for the tournament might not have be received yet,
+      or it might have been received but have issues preventing the
+      tournament being rated. Reporters are encouraged to submit as soon
+      as possible after the tournament has finished but if a couple of weeks
+      have gone by without the tournament appearing here, you may wish to
+      contact the organisers or the
+      = mail_to_icu :ratings
+      to find out what's happening.
+    %dt How is a tournament's stage (rated, queued, ready, etc.) shown?
+    %dd
+      With a flag to the left of the table. If the tournament is rated
+      (the most common stage) the flag is omitted, otherwise it will be one of
+      = icon_tag "ready", t("ready"), class: "inline"
+      = "(#{t("ready", scope: :desc)}),"
+      = icon_tag "queued", t("queued"), class: "inline"
+      = "(#{t("queued", scope: :desc)})."
+          

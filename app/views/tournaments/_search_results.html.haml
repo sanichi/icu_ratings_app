@@ -1,16 +1,18 @@
 %table
   %tr
-    %th
+    %th{class: "floater"}
     %th Name
     %th Date
   - if @tournaments.count == 0
     %tr
-      %td{colspan: 3, class: "centered"} No matches
+      %td{class: "floater"}
+      %td{colspan: 2, class: "centered"} No matches
   - @tournaments.matches.each do |t|
     %tr
-      %td= icon_tag t.stage, t(t.stage)
+      %td{class: "floater"}= icon_tag(t.stage, t(t.stage)) unless t.stage == "rated"
       %td= link_to t.name, t
       %td= t.finish
   - if @tournaments.multi_page
     %tr
-      %td{colspan: 3, class: "centered"}= pagination_links(@tournaments)
+      %td{class: "floater"}
+      %td{colspan: 2, class: "centered"}= pagination_links(@tournaments)
