@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120720125325) do
+ActiveRecord::Schema.define(:version => 20120727192842) do
 
   create_table "articles", :force => true do |t|
     t.string   "headline"
@@ -111,8 +111,10 @@ ActiveRecord::Schema.define(:version => 20120720125325) do
   create_table "icu_ratings", :force => true do |t|
     t.date    "list"
     t.integer "icu_id"
-    t.integer "rating", :limit => 2
-    t.boolean "full",                :default => false
+    t.integer "rating",          :limit => 2
+    t.boolean "full",                         :default => false
+    t.integer "original_rating", :limit => 2
+    t.boolean "original_full",                :default => false
   end
 
   add_index "icu_ratings", ["icu_id"], :name => "index_icu_ratings_on_icu_id"
@@ -209,6 +211,14 @@ ActiveRecord::Schema.define(:version => 20120720125325) do
   add_index "players", ["icu_id"], :name => "index_players_on_icu_id"
   add_index "players", ["rating_change"], :name => "index_players_on_rating_change"
   add_index "players", ["tournament_id"], :name => "index_players_on_tournament_id"
+
+  create_table "rating_lists", :force => true do |t|
+    t.date     "date"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "rating_lists", ["date"], :name => "index_rating_lists_on_date"
 
   create_table "rating_runs", :force => true do |t|
     t.integer  "user_id"

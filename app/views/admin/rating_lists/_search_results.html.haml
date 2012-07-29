@@ -1,0 +1,13 @@
+%table
+  %tr
+    %th List
+  - if @rating_lists.count == 0
+    %tr
+      %td{class: "centered"} No matches
+  - else
+    - @rating_lists.matches.each do |rating_list|
+      %tr
+        %td= link_to year_month(rating_list.date), [:admin, rating_list]
+  - if @rating_lists.multi_page
+    %tr
+      %th{class: "centered"}= pagination_links(@rating_lists)
