@@ -11,10 +11,12 @@
 class RatingList < ActiveRecord::Base
   extend ICU::Util::Pagination
 
+  has_many :publications, dependent: :destroy
+
   attr_accessible :date
 
   validates_date :date, on_or_after: "2012-01-01", on_or_before: :today
-  validates      :date, list_date: { on_or_after: "2012-01-01" }
+  validates      :date, list_date: true
 
   default_scope order("date DESC")
 

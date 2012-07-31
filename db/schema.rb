@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120727192842) do
+ActiveRecord::Schema.define(:version => 20120729134814) do
 
   create_table "articles", :force => true do |t|
     t.string   "headline"
@@ -212,10 +212,22 @@ ActiveRecord::Schema.define(:version => 20120727192842) do
   add_index "players", ["rating_change"], :name => "index_players_on_rating_change"
   add_index "players", ["tournament_id"], :name => "index_players_on_tournament_id"
 
+  create_table "publications", :force => true do |t|
+    t.integer  "rating_list_id"
+    t.text     "report"
+    t.datetime "created_at"
+    t.integer  "total",          :limit => 3
+    t.integer  "creates",        :limit => 3
+    t.integer  "remains",        :limit => 3
+    t.integer  "updates",        :limit => 3
+    t.integer  "deletes",        :limit => 3
+  end
+
+  add_index "publications", ["rating_list_id"], :name => "index_publications_on_rating_list_id"
+
   create_table "rating_lists", :force => true do |t|
     t.date     "date"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at"
   end
 
   add_index "rating_lists", ["date"], :name => "index_rating_lists_on_date"
