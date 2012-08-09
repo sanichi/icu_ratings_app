@@ -102,6 +102,8 @@ class RatingList < ActiveRecord::Base
         legacy += 1
       end
 
+      rating = 700 if rating && rating < 700
+
       current = @current[icu_id]
       case
       when current && rating

@@ -247,7 +247,6 @@ describe RatingList do
       @l2.publications.size.should == 2
       p = @l2.publications[1]
       p.total.should == subs2
-      puts p.report
       p.creates.should == 0
       p.remains.should == subs2 - 2
       p.updates.should == 2
