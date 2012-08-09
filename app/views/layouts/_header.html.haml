@@ -43,10 +43,10 @@
           %li= link_to "Federations", federations_path
       - if can?(:read, OldRating)
         %li= link_to "Legacy", admin_old_ratings_path
-      - if can?(:read, RatingRun)
-        %li= link_to "Runs", admin_rating_runs_path
       - if can?(:read, RatingList)
         %li= link_to "Lists", admin_rating_lists_path
+      - if can?(:read, RatingRun)
+        %li= link_to "Runs", admin_rating_runs_path
   - if can? :read, IcuPlayer
     %li
       = link_to "Players", icu_players_path

@@ -1,6 +1,29 @@
 .header
   %span= year_month(@rating_list.date, "mmm yyyy")
 
-%table{class: "right-headers"}
+- next_list = @rating_list.next_list
+- prev_list = @rating_list.prev_list
+%table.cushioned
   %tr
-    %th Publications
+    - if prev_list
+      %td{class: "centered"}= link_to "← #{year_month(prev_list.date, 'mmm yyyy')}", [:admin, prev_list]
+    %td= link_to "All Lists", admin_rating_lists_path
+    - if next_list
+      %td{class: "centered"}= link_to "#{year_month(next_list.date, 'mmm yyyy')} →", [:admin, next_list]
+
+%table{class: "right-headers cushioned"}
+  %tr
+    %th Cut-Off Date
+    %td#cut_off= @rating_list.cut_off
+    %td{class: "floater"}
+      = link_to edit_admin_rating_list_path(@rating_list), remote: true do
+        = icon_tag "edit", "Edit Cut-Off Date"
+  %tr
+    %td{class: "centered", colspan: 2}= link_to @publications.any? ? "Republish" : "Publish", admin_rating_list_publications_path(@rating_list), method: "post", remote: true
+    %td{class: "floater"}
+
+#publications
+  = render "publications"
+
+= render "shared/dialog", id: "update_rating_list", width: 300
+= render "shared/dialog", id: "publication_report", width: 1000, button: false, cancel: "Dismiss"

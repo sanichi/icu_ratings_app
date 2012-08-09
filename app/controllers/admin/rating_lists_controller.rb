@@ -9,7 +9,17 @@ module Admin
     end
 
     def show
+      @rating_list = RatingList.includes(:publications).find(params[:id])
+      @publications = @rating_list.publications
+    end
+
+    def edit
       @rating_list = RatingList.find(params[:id])
+    end
+
+    def update
+      @rating_list = RatingList.find(params[:id])
+      @rating_list.update_attributes(params[:rating_list])
     end
   end
 end

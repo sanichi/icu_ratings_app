@@ -15,9 +15,13 @@ class IcuRating < ActiveRecord::Base
   belongs_to :icu_player, foreign_key: "icu_id"
 
   attr_accessible # none
-  validates_numericality_of :rating, :original_rating, only_integer: true
-  validates_date            :list, on_or_after: "2001-09-01", on_or_before: :today
-  validates                 :list, list_date: true
+
+  validates :rating, numericality: { only_integer: true }
+  validates :full, inclusion: { in: [true, false] }
+  validates :original_rating, numericality: { only_integer: true }, allow_nil: true
+  validates :original_full, inclusion: { in: [true, false] }, allow_nil: true
+  validates :list, timeliness: { on_or_after: "2001-09-01", on_or_before: :today, type: :date }
+  validates :list, list_date: true
 
   default_scope includes(:icu_player).joins(:icu_player).order("list DESC, rating DESC")
 
@@ -49,6 +53,10 @@ class IcuRating < ActiveRecord::Base
 
   def type
     full ? "full" : "provisional"
+  end
+
+  def original_type
+    original_full ? "full" : "provisional"
   end
 
   def self.lists

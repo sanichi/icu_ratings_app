@@ -1,0 +1,5 @@
+= form_for [:admin, @rating_list], remote: true do |f|
+  %table{class: "right-headers noborder"}
+    %tr
+      %th= f.label :cut_off, "Cut-Off"
+      %td= f.text_field :cut_off, autoselect: "off"

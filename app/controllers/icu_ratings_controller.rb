@@ -1,6 +1,7 @@
 class IcuRatingsController < ApplicationController
   def index
     @icu_ratings = IcuRating.search(params, icu_ratings_path)
+    @show_original = params[:show_original] == "true"
     render :results if request.xhr?
   end
 

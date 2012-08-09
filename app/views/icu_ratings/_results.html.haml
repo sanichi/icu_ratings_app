@@ -2,12 +2,15 @@
   %tr
     %th Player
     %th List
-    %th Rating
+    %th Rtng
+    - if @show_original
+      %th Orig
     %th Fed
     %th Club
+  - width = 5 + (@show_original ? 1 : 0)
   - if @icu_ratings.count == 0
     %tr
-      %td{colspan: 5, class: "centered"} No matches
+      %td{colspan: width, class: "centered"} No matches
   - else
     - icu_id = Proc.new { |r| r.icu_id }
     - name   = Proc.new { |r| r.icu_player ? r.icu_player.name : r.icu_id.to_s }
@@ -19,8 +22,10 @@
         = render "shared/rowspan", rowspan: @icu_ratings.rowspan(i, icu_id, name), attrs: { title: r.icu_id }
         = render "shared/rowspan", rowspan: @icu_ratings.rowspan(i, list)
         %td{class: "#{r.type}"}= link_to r.rating, icu_rating_path(r, format: "js"), remote: true
+        - if @show_original
+          %td{class: "#{r.original_type}"}= r.original_rating
         = render "shared/rowspan", rowspan: @icu_ratings.rowspan(i, fed)
         = render "shared/rowspan", rowspan: @icu_ratings.rowspan(i, club)
   - if @icu_ratings.multi_page
     %tr
-      %td{colspan: 5, class: "centered"}= pagination_links(@icu_ratings)
+      %td{colspan: width, class: "centered"}= pagination_links(@icu_ratings)

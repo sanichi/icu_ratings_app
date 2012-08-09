@@ -1,7 +1,7 @@
 <% if @tournament.errors.size == 0 %>
-  $("#tournament_name").text("<%= @tournament.name_with_year %>")
+  $("#tournament_name").text("<%= @tournament.name_with_year %>");
   $("#tournament").html("<%= j render('tournament') %>");
   $("#dialog_update_tournament").dialog("close");
 <% else %>
-  alert("<%= j render('shared/error', object: @tournament, title: 'Error updating tournament:') %>")
+  alert("<%= j render('shared/error', object: @tournament, title: 'Error updating tournament:') %>");
 <% end %>

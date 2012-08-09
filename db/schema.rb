@@ -114,7 +114,7 @@ ActiveRecord::Schema.define(:version => 20120729134814) do
     t.integer "rating",          :limit => 2
     t.boolean "full",                         :default => false
     t.integer "original_rating", :limit => 2
-    t.boolean "original_full",                :default => false
+    t.boolean "original_full"
   end
 
   add_index "icu_ratings", ["icu_id"], :name => "index_icu_ratings_on_icu_id"
@@ -214,19 +214,21 @@ ActiveRecord::Schema.define(:version => 20120729134814) do
 
   create_table "publications", :force => true do |t|
     t.integer  "rating_list_id"
+    t.integer  "last_tournament_id"
     t.text     "report"
     t.datetime "created_at"
-    t.integer  "total",          :limit => 3
-    t.integer  "creates",        :limit => 3
-    t.integer  "remains",        :limit => 3
-    t.integer  "updates",        :limit => 3
-    t.integer  "deletes",        :limit => 3
+    t.integer  "total",              :limit => 3
+    t.integer  "creates",            :limit => 3
+    t.integer  "remains",            :limit => 3
+    t.integer  "updates",            :limit => 3
+    t.integer  "deletes",            :limit => 3
   end
 
   add_index "publications", ["rating_list_id"], :name => "index_publications_on_rating_list_id"
 
   create_table "rating_lists", :force => true do |t|
     t.date     "date"
+    t.date     "cut_off"
     t.datetime "created_at"
   end
 

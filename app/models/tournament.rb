@@ -733,7 +733,10 @@ class Tournament < ActiveRecord::Base
 
   # Get the start ratings of all players.
   def get_old_ratings
-    players.each { |p| p.get_old_rating(rorder) }
+    icu_ids = players.select{ |p| p.category == "icu_player" }.map(&:icu_id)
+    latest = Player.get_last_ratings(icu_ids, rorder)
+    legacy = OldRating.get_ratings(icu_ids)
+    players.each { |p| p.get_old_rating(latest, legacy) }
   end
 
   # Set k-factors for ICU players.

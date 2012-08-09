@@ -1,0 +1,31 @@
+%table
+  %tr
+    %th{colspan: 7} Publications
+    %th.floater
+  - if @publications.empty?
+    %tr
+      %td.centered{colspan: 7} None yet
+      %td.floater
+  - else
+    %tr
+      %th Created
+      %th Last Tournament
+      %th T
+      %th C
+      %th R
+      %th U
+      %th D
+      %th.floater
+    - @publications.each do |p|
+      %tr
+        %td= p.created_at.to_s(:db)
+        %td= link_to p.last_tournament.name_with_year, [:admin, p.last_tournament] if p.last_tournament
+        %td.centered= p.total
+        %td.centered= p.creates
+        %td.centered= p.remains
+        %td.centered= p.updates
+        %td.centered= p.deletes
+        %td.floater
+          = link_to [:admin, @rating_list, p], remote: true do
+            = icon_tag "show", "Show publication report"
+ 
