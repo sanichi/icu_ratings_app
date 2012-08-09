@@ -1,0 +1,9 @@
+$("#dialog_update_rating_list")
+  .html("<%= j render('form') %>")
+  .dialog("option", "title", "Update Rating List")
+  .dialog("open");
+$("#rating_list_cut_off").datepicker({
+  dateFormat: 'yy-mm-dd',
+  autoSize: true
+});
+$("#rating_list_cut_off").blur(); // otherwise in Chrome, datepicker has problems

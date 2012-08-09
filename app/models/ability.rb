@@ -27,8 +27,9 @@ class Ability
     return unless user.role? :officer
 
     can :read, [Event, Subscription]
+    can [:read, :create], Publication
     can [:read, :create, :destroy], RatingRun
-    can :manage, [Article, Download, Fee, FidePlayer, Tournament, Player, Result, Upload]
+    can :manage, [Article, Download, Fee, FidePlayer, Tournament, Player, RatingList, Result, Upload]
     cannot_if_locked
 
     return unless user.role? :admin

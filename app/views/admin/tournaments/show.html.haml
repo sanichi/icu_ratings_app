@@ -16,4 +16,3 @@
 - unless @tournament.status_ok?
   - html = render "shared/pipe_list", error: @tournament.status
   = render "shared/dialog", id: "status", button: false, cancel: "Dismiss", html: html
-

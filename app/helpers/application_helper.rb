@@ -108,6 +108,12 @@ module ApplicationHelper
     menu
   end
 
+  def rating_list_year_menu(any=nil)
+    menu = (2012..Date.today.year).map { |y| [y, y] }
+    menu.unshift([any, ""]) if any
+    menu
+  end
+
   def rating_run_status_menu(any=nil)
     menu = RatingRun::STATUS.map{ |s| [s, s] }
     menu.unshift([any, ""]) if any
@@ -193,7 +199,8 @@ module ApplicationHelper
     yyyy = date.year.to_s
     mmm = %w(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec)[date.month-1]
     case fmt
-    when "mmm-yy" then "%s-%s" % [mmm, yyyy[2, 2]]
+    when "mmm-yy"   then "%s-%s" % [mmm, yyyy[2, 2]]
+    when "mmm yyyy" then "%s %s" % [mmm, yyyy]
     else "%s %s" % [yyyy, mmm]
     end
   end

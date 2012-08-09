@@ -153,18 +153,18 @@ class Player < ActiveRecord::Base
     false
   end
 
-  # Get the old rating and games for one player in a tournament.
-  def get_old_rating(rorder)
+  # Get the old rating, games and full/prov for one player in a tournament.
+  def get_old_rating(latest_ratings, legacy_ratings)
     case category
     when "icu_player"
-      if latest = Player.get_last_rating(icu_id, rorder)
+      if latest = latest_ratings[icu_id]
         update_column_if_changed(:old_rating, latest.new_rating)
         update_column_if_changed(:old_games, latest.new_games)
         update_column_if_changed(:old_full, latest.new_full)
-      elsif old = OldRating.find_by_icu_id(icu_id)
-        update_column_if_changed(:old_rating, old.rating)
-        update_column_if_changed(:old_games, old.games)
-        update_column_if_changed(:old_full, old.full)
+      elsif legacy = legacy_ratings[icu_id]
+        update_column_if_changed(:old_rating, legacy.rating)
+        update_column_if_changed(:old_games, legacy.games)
+        update_column_if_changed(:old_full, legacy.full)
       else
         update_column_if_changed(:old_rating, nil)
         update_column_if_changed(:old_games, 0)
@@ -184,7 +184,7 @@ class Player < ActiveRecord::Base
     update_column_if_changed(:last_player_id, latest ? latest.id : nil)
   end
 
-  # Get a player's rating from his last rated tournament.
+  # Get a player's rating from his last rated tournament. No longer used, as get_player_ratings is faster.
   def self.get_last_rating(icu_id, rorder)
     match = joins(:tournament)
     match = match.where("tournaments.stage = 'rated'")
@@ -192,6 +192,39 @@ class Player < ActiveRecord::Base
     match = match.where(icu_id: icu_id)
     match = match.order("tournaments.rorder")
     match.last
+  end
+
+  # Get multiple players from their last rated tournaments prior to a given rating order number.
+  # Return as a hash from icu_id number to Player instance. For more ideas on how to do this, see
+  # http://stackoverflow.com/questions/121387/fetch-the-row-which-has-the-max-value-for-a-column.
+  def self.get_last_ratings(icu_ids, rorder)
+    sql = <<SQL
+SELECT
+  p.*
+FROM
+  tournaments t,
+  players p,
+  (
+    SELECT
+      max(t.rorder) rorder,
+      p.icu_id icu_id
+    FROM
+      players p,
+      tournaments t
+    WHERE
+      p.icu_id IN (#{icu_ids.join(',')}) AND
+      p.tournament_id = t.id AND
+      t.stage = "rated" AND
+      t.rorder < #{rorder}
+    GROUP BY
+      p.icu_id
+  ) x
+WHERE
+  t.id = p.tournament_id AND
+  t.rorder = x.rorder AND
+  p.icu_id = x.icu_id
+SQL
+    find_by_sql(sql).inject({}){ |h, p| h[p.icu_id] = p; h }
   end
 
   # Get a player's most recent tournaments or their biggest gains or losses.
@@ -213,7 +246,7 @@ class Player < ActiveRecord::Base
     match.limit(limit)
   end
 
-  # Set the k-factor for an ICU player with a full rating (is called after get_old_ratings)
+  # Set the k-factor for an ICU player with a full rating (is called after get_old_ratings).
   def get_k_factor(start)
     return unless category == "icu_player" && old_full
     args = { start: start, rating: old_rating }

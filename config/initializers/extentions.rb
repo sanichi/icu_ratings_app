@@ -6,3 +6,13 @@ module ActiveRecord
     end
   end
 end
+
+class Array
+  def examples(n=4)
+    if size <= n
+      join(", ")
+    else
+      "#{self[0..n-1].join(', ')} ... #{last}"
+    end
+  end
+end

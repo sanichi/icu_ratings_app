@@ -11,14 +11,14 @@
 
 class OldRating < ActiveRecord::Base
   extend ICU::Util::Pagination
-  
+
   belongs_to :icu_player, foreign_key: "icu_id"
 
   attr_accessible # none
   validates_uniqueness_of :icu_id
   validates_numericality_of :rating, only_integer: true
   validates_numericality_of :games, only_integer: true, greater_than_or_equal_to: 0
-  
+
   default_scope includes(:icu_player)
 
   def self.search(params, path)
@@ -30,7 +30,12 @@ class OldRating < ActiveRecord::Base
     matches = matches.where(full: params[:type] == "full") if params[:type].present?
     paginate(matches, path, params)
   end
-  
+
+  # Given an array of IDs, return a hash from icu_id to OldRating.
+  def self.get_ratings(icu_ids)
+    unscoped.where(icu_id: icu_ids).inject({}){ |h, o| h[o.icu_id] = o; h }
+  end
+
   def type
     full ? "full" : "provisional"
   end

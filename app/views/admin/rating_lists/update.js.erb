@@ -1,0 +1,6 @@
+<% if @rating_list.errors.size == 0 %>
+  $("#cut_off").text("<%= @rating_list.cut_off %>");
+  $("#dialog_update_rating_list").dialog("close");
+<% else %>
+  alert("<%= j render('shared/error', object: @rating_list, title: 'Error updating rating list:') %>");
+<% end %>

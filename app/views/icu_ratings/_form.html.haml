@@ -25,3 +25,8 @@
       %td= select_tag :club, options_for_select(club_menu, params[:club])
       %td= select_tag :fed, options_for_select(federation_menu(top: "IRL", none: "Any", unknown: "Unknown", foreign: "Foreign", irl_unk: "Ireland or Unknown"), params[:fed])
       %td= select_tag :type, options_for_select(rating_type_menu("Any"), params[:type])
+  %table{class: "invisible"}
+    %tr
+      %th
+        = label_tag :show_original, "show original rating"
+        = check_box_tag :show_original, "true", params[:show_original]      

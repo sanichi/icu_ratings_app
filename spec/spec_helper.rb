@@ -125,6 +125,17 @@ def load_old_ratings
   end
 end
 
+# Load all subscriptions and return a hash from ICU ID to record.
+def load_subscriptions
+  return @subscriptions_cache if @subscriptions_cache
+  hash = YAML.load(File.read(File.expand_path('../factories/subscriptions.yml', __FILE__)))
+  @subscriptions_cache = hash.keys.inject({}) do |memo, icu_id|
+    data = hash[icu_id]
+    memo[icu_id] = FactoryGirl.create(:subscription, icu_id: icu_id, category: data[0], season: data[1], pay_date: data[2])
+    memo
+  end
+end
+
 private
 
 def get_parser(file)
