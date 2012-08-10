@@ -1,13 +1,14 @@
 %table
   %tr
-    %th{colspan: 7} Publications
+    %th{colspan: 8} Publications
     %th.floater
   - if @publications.empty?
     %tr
-      %td.centered{colspan: 7} None yet
+      %td.centered{colspan: 8} None yet
       %td.floater
   - else
     %tr
+      %th #
       %th Created
       %th Last Tournament
       %th T
@@ -16,8 +17,9 @@
       %th U
       %th D
       %th.floater
-    - @publications.each do |p|
+    - @publications.each_with_index do |p, i|
       %tr
+        %td.centered= @publications.size - i
         %td= p.created_at.to_s(:db)
         %td= link_to p.last_tournament.name_with_year, [:admin, p.last_tournament] if p.last_tournament
         %td.centered= p.total

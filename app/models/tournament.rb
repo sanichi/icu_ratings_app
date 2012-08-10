@@ -146,6 +146,11 @@ class Tournament < ActiveRecord::Base
     ordered.where(status: "ok").where("stage != 'initial'").limit(limit)
   end
 
+  # The last tournament rated on or before a given date.
+  def self.get_last_rated(date)
+    where(stage: "rated").where("finish <= ?", date).order("rorder DESC").first
+  end
+
   # Return an ICU::Tournament instance built from a database Tournament.
   def icu_tournament(opts={})
     icut = ICU::Tournament.new(name, start)

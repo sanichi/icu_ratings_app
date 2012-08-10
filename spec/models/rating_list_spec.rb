@@ -1,47 +1,45 @@
 require 'spec_helper'
 
 describe RatingList do
-  context "date and cut-off" do
-    before(:each) do
-      @rl = RatingList.new
+  context "dates" do
+    it "should have it's dates set" do
+      l = RatingList.new
+      expect { l.save! }.to raise_error
     end
 
-    it "should have a list date" do
-      expect { @rl.save! }.to raise_error
+    it "should have a date on the 1st of the month" do
+      l = FactoryGirl.build(:rating_list, date: Date.new(2012, 1, 2))
+      expect { l.save! }.to raise_error(/1st day of month/)
+      l.date = l.date.beginning_of_month
+      expect { l.save! }.not_to raise_error
     end
 
-    it "should be on the 1st of the month" do
-      @rl.date = Date.new(2012, 1, 2)
-      @rl.cut_off = Date.new(2012, 1, 15)
-      expect { @rl.save! }.to raise_error(/1st day of month/)
-      @rl.date = Date.new(2012, 1, 1)
-      expect { @rl.save! }.not_to raise_error
-    end
-
-    it "should not have a date in the future" do
-      @rl.date = Date.today.end_of_year.tomorrow
-      @rl.cut_off = @rl.date.advance(days: 14)
-      expect { @rl.save! }.to raise_error(/on or before/)
-      @rl.date = Date.new(2012, 5, 1)
-      @rl.cut_off = @rl.date.advance(days: 14)
-      expect { @rl.save! }.not_to raise_error
+    it "should not have a date in the future" do    
+      expect { FactoryGirl.create(:rating_list, date: Date.today.end_of_year.tomorrow) }.to raise_error(/on or before/)
     end
 
     it "should not be before Jan 2012 (the first list of the new system)" do
-      @rl.date = Date.new(2011, 9, 1)
-      @rl.cut_off = Date.new(2011, 9, 15)
-      expect { @rl.save! }.to raise_error(/on or after/)
-      @rl.date = Date.new(2012, 1, 1)
-      @rl.cut_off = Date.new(2012, 1, 15)
-      expect { @rl.save! }.not_to raise_error
+      expect { FactoryGirl.create(:rating_list, date: Date.new(2011, 9, 1)) }.to raise_error(/on or after/)
     end
 
-    it "should have same months for date and cut-off" do
-      @rl.date = Date.new(2012, 5, 1)
-      @rl.cut_off = Date.new(2012, 6, 1)
-      expect { @rl.save! }.to raise_error(/same month/)
-      @rl.cut_off = Date.new(2012, 5, 15)
-      expect { @rl.save! }.not_to raise_error
+    it "should have same month for date and tournament cut-off" do
+      d = Date.new(2012, 5, 1)
+      l = FactoryGirl.build(:rating_list, date: d, tournament_cut_off: d.advance(months: 1))
+      expect { l.save! }.to raise_error(/same month/)
+      l = FactoryGirl.build(:rating_list, date: d, tournament_cut_off: d.yesterday)
+      expect { l.save! }.to raise_error(/same month/)
+      l.tournament_cut_off = d.change(day: 16)
+      expect { l.save! }.not_to raise_error
+    end
+
+    it "should have same month or next month for and payment cut-off" do
+      d = Date.new(2012, 5, 1)
+      l = FactoryGirl.build(:rating_list, date: d, payment_cut_off: d.advance(months: 2))
+      expect { l.save! }.to raise_error(/same month or next/)
+      l.payment_cut_off = d.yesterday
+      expect { l.save! }.to raise_error(/same month or next/)
+      l.payment_cut_off = d.advance(days: 40)
+      expect { l.save! }.not_to raise_error
     end
   end
 

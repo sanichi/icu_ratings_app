@@ -13,14 +13,18 @@
 
 %table{class: "right-headers cushioned"}
   %tr
-    %th Cut-Off Date
-    %td#cut_off= @rating_list.cut_off
-    %td{class: "floater"}
+    %th Tournament Cut-Off Date
+    %td#tournament_cut_off= @rating_list.tournament_cut_off
+    %td{class: "floater", rowspan: 2}
       = link_to edit_admin_rating_list_path(@rating_list), remote: true do
-        = icon_tag "edit", "Edit Cut-Off Date"
+        = icon_tag "edit", "Edit Cut-Off Dates"
   %tr
-    %td{class: "centered", colspan: 2}= link_to @publications.any? ? "Republish" : "Publish", admin_rating_list_publications_path(@rating_list), method: "post", remote: true
-    %td{class: "floater"}
+    %th Payment Cut-Off Date
+    %td#payment_cut_off= @rating_list.payment_cut_off
+
+%table{class: "cushioned"}
+  %tr
+    %td{class: "centered", colspan: 2}= link_to "Publish", admin_rating_list_publications_path(@rating_list), method: "post", remote: true
 
 #publications
   = render "publications"

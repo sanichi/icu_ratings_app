@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120729134814) do
+ActiveRecord::Schema.define(:version => 20120810141431) do
 
   create_table "articles", :force => true do |t|
     t.string   "headline"
@@ -228,8 +228,9 @@ ActiveRecord::Schema.define(:version => 20120729134814) do
 
   create_table "rating_lists", :force => true do |t|
     t.date     "date"
-    t.date     "cut_off"
+    t.date     "tournament_cut_off"
     t.datetime "created_at"
+    t.date     "payment_cut_off"
   end
 
   add_index "rating_lists", ["date"], :name => "index_rating_lists_on_date"

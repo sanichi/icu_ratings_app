@@ -2,11 +2,12 @@
 #
 # Table name: rating_lists
 #
-#  id         :integer(4)      not null, primary key
-#  date       :date
-#  cut_off    :date
-#  created_at :datetime
-#  updated_at :datetime
+#  id                    :integer(4)      not null, primary key
+#  date                  :date
+#  tournament_cut_off    :date
+#  payment_cut_off       :date
+#  created_at            :datetime
+#  updated_at            :datetime
 #
 
 class RatingList < ActiveRecord::Base
@@ -14,12 +15,12 @@ class RatingList < ActiveRecord::Base
 
   has_many :publications, dependent: :destroy
 
-  attr_accessible :cut_off
+  attr_accessible :tournament_cut_off, :payment_cut_off
 
   validates :date, timeliness: { on_or_after: "2012-01-01", on_or_before: :today, type: :date }
   validates :date, list_date: true
-  validates :cut_off, timeliness: { type: :date }
-  validate  :cut_off_must_be_same_month_as_date
+  validates :tournament_cut_off, :payment_cut_off, timeliness: { type: :date }
+  validate  :cut_off_rules
 
   default_scope order("date DESC")
 
@@ -59,7 +60,7 @@ class RatingList < ActiveRecord::Base
       todo.push(date) unless have[date]
       date = date >> 4
     end
-    todo.each { |date| create({date: date, cut_off: date.change(day: 15)}, without_protection: true) }
+    todo.each { |date| create({date: date, tournament_cut_off: date.change(day: 15), payment_cut_off: date.end_of_month}, without_protection: true) }
   end
 
   def self.search(params, path)
@@ -85,7 +86,7 @@ class RatingList < ActiveRecord::Base
     tournament_ratings = get_tournament_ratings(rorder, icu_ids)
     legacy_ratings = get_legacy_ratings(icu_ids)
     t1 = Time.now
-    @stats[:report] << "Starting rating updates at #{t1.to_s(:tbm)}\n"
+    report_header "Starting rating updates at #{t1.to_s(:tbm)}"
 
     legacy, tournaments = 0, 0
     changes = Hash.new { |h, k| h[k] = [] }
@@ -136,9 +137,9 @@ class RatingList < ActiveRecord::Base
 
       @current.delete(icu_id) if current
     end
-    @stats[:report] << "  tournament ratings used: #{tournaments}\n"
-    @stats[:report] << "  legacy ratings used: #{legacy}\n"
-    report_with_examples(no_rating, "subscribed members with no rating")
+    report_item "tournament ratings used: #{tournaments}"
+    report_item "legacy ratings used: #{legacy}"
+    report_examples(no_rating, "subscribed members with no rating")
 
     no_sub = []
     @current.each_pair do |icu_id, rating|
@@ -146,26 +147,27 @@ class RatingList < ActiveRecord::Base
       rating.destroy
       @stats[:deletes] += 1
     end
-    report_with_examples(no_sub, "existing ratings with no subscription")
+    report_examples(no_sub, "existing ratings with no subscription")
 
     t2 = Time.now
-    @stats[:report] << "  finished rating updates at #{t2.to_s(:tbm)} (#{((t2 - t1) * 1000.0).round} ms)\n"
-
-    @stats[:report] << "Statistics\n"
-    report_with_examples(creates, "new")
-    report_with_examples(remains, "unchanged")
-    report_with_examples(updates, "changed")
-    report_with_examples(deletes, "deleted")
-    unless changes.empty?
-      @stats[:report] << "Change statistics\n"
-      changes.keys.sort.each { |bucket| report_with_examples(changes[bucket], bucket) }
-    end
+    report_item "finished rating updates at #{t2.to_s(:tbm)} (#{((t2 - t1) * 1000.0).round} ms)"
 
     @stats[:creates] = creates.size
     @stats[:remains] = remains.size
     @stats[:updates] = updates.size
     @stats[:deletes] = deletes.size
     @stats[:total] = @stats[:creates] + @stats[:remains] + @stats[:updates]
+
+    report_header "Statistics"
+    report_item "total: #{@stats[:total]}"
+    report_examples(creates, "new")
+    report_examples(remains, "unchanged")
+    report_examples(updates, "changed")
+    report_examples(deletes, "deleted")
+    unless changes.empty?
+      report_header "Change statistics"
+      changes.keys.sort.each { |bucket| report_examples(changes[bucket], bucket) }
+    end
   end
 
   def add_to_changes(hash, old_rating, new_rating, icu_id)
@@ -183,82 +185,94 @@ class RatingList < ActiveRecord::Base
   end
 
   def pass_preloaded_list
-    @stats[:report] << "Detected pre-loaded ratings\n"
+    report_header "Detected pre-loaded ratings"
     @stats[:total] = @current.size;
     @stats[:remains] = @current.size;
-    @stats[:report] << "  these will be used (unchanged) as the first publication\n"
+    report_item "these will be used (unchanged) as the first publication"
   end
 
   def first_publication?
     previous = publications.count
-    @stats[:report] << "  previous publications of this list: #{previous}\n"
+    report_item "previous publications of this list: #{previous}"
     previous == 0
   end
 
   def set_original_ratings?(today)
     set = today <= date || (today.year == date.year && today.month == date.month)
-    @stats[:report] << "  original ratings will be #{set ? 'set' : 'kept'}\n"
+    report_item "original ratings will be #{set ? 'reset' : 'preserved'}"
     set
   end
 
   def get_current_ratings
     ratings = IcuRating.unscoped.where(list: date).all
-    @stats[:report] << "  existing ratings: #{ratings.size}\n"
+    report_item "existing ratings: #{ratings.size}"
     ratings.inject({}){ |h, r| h[r.icu_id] = r; h }
   end
 
   def get_tournament_ratings(rorder, icu_ids)
-    @stats[:report] << "Getting latest player ratings from tournaments\n"
+    report_header "Getting latest player ratings from tournaments"
     t1 = Time.now
-    @stats[:report] << "  started at:  #{t1.to_s(:tbm)}\n"
+    report_item "started at:  #{t1.to_s(:tbm)}"
     ratings = Player.get_last_ratings(icu_ids, rorder)
     t2 = Time.now
-    @stats[:report] << "  finished at: #{t2.to_s(:tbm)} (#{((t2 - t1) * 1000.0).round} ms)\n"
-    @stats[:report] << "  matching subscriptions: #{ratings.size}\n"
+    report_item "finished at: #{t2.to_s(:tbm)} (#{((t2 - t1) * 1000.0).round} ms)"
+    report_item "matching subscriptions: #{ratings.size}"
     ratings
   end
 
   def get_legacy_ratings(icu_ids)
-    @stats[:report] << "Getting legacy ratings\n"
+    report_header "Getting legacy ratings"
     total = OldRating.count
     ratings = OldRating.get_ratings(icu_ids)
-    @stats[:report] << "  total available: #{total}\n"
-    @stats[:report] << "  matching subscriptions: #{ratings.size}\n"
+    report_item "total available: #{total}"
+    report_item "matching subscriptions: #{ratings.size}"
     ratings
   end
 
   def get_subscriptions
     season = Subscription.season(date)
-    pay_date = date.next_month
-    @stats[:report] << "Subscriptions in season #{season} paid before #{pay_date}\n"
-    subs = Subscription.where("category = 'lifetime' OR (season = ? AND (pay_date IS NULL OR pay_date < ?))", season, pay_date).all
-    @stats[:report] << "  total: #{subs.size}\n"
+    report_header "Subscriptions in season #{season} paid on or before #{payment_cut_off}"
+    subs = Subscription.get_subs(season, payment_cut_off)
+    report_item "total: #{subs.size}"
     raise "no subscriptions found" if subs.size == 0
     usubs = subs.inject(Hash.new(0)) { |h, s| h[s.icu_id] += 1; h }
-    @stats[:report] << "  unique: #{usubs.size}\n"
+    report_item "unique: #{usubs.size}"
     dups = usubs.reject{ |k, v| v == 1 }.keys
-    report_with_examples(dups, "duplicates")
+    report_examples(dups, "duplicates")
     usubs
   end
 
   def get_last_tournament
-    @stats[:report] << "Last tournament to finish on or before #{cut_off}\n"
-    tournament = Tournament.where(stage: "rated").where("finish <= ?", cut_off).order("rorder DESC").first
+    report_header "Last tournament to finish on or before #{tournament_cut_off}"
+    tournament = Tournament.get_last_rated(tournament_cut_off)
     raise "no last tournament found" unless tournament
-    @stats[:report] << "  name: #{tournament.name}\n"
-    @stats[:report] << "  finish date: #{tournament.finish}\n"
-    @stats[:report] << "  rating order number: #{tournament.rorder}\n"
+    report_item "name: #{tournament.name}"
+    report_item "finish date: #{tournament.finish}"
+    report_item "rating order number: #{tournament.rorder}"
     @stats[:last_tournament_id] = tournament.id
     tournament.rorder
   end
 
-  def report_with_examples(array, text)
+  def report_header(text)
+    @stats[:report] << "#{text}\n"
+  end
+
+  def report_item(text)
+    @stats[:report] << "  #{text}\n"
+  end
+
+  def report_examples(array, text)
     @stats[:report] << "  #{text}: #{array.size}"
     @stats[:report] << " (#{array.sort.examples})" unless array.empty?
     @stats[:report] << "\n"
   end
 
-  def cut_off_must_be_same_month_as_date
-    errors.add(:cut_off, "must be same month as list date") unless date.month == cut_off.month
+  def cut_off_rules
+    unless tournament_cut_off >= date.beginning_of_month && tournament_cut_off <= date.end_of_month
+      errors.add(:tournament_cut_off, "must be same month as list date")
+    end
+    unless payment_cut_off >= date.beginning_of_month && payment_cut_off < date.beginning_of_month.advance(months: 2)
+      errors.add(:payment_cut_off, "must be same month or next as list date")
+    end
   end
 end

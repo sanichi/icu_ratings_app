@@ -40,4 +40,8 @@ class Subscription < ActiveRecord::Base
     year-= 1 if time.month < 9
     "#{year}-#{year - 1999}"
   end
+
+  def self.get_subs(season, cut_off)
+    where("category = 'lifetime' OR (season = ? AND (pay_date IS NULL OR pay_date <= ?))", season, cut_off).all
+  end
 end
