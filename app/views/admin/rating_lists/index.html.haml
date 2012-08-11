@@ -5,3 +5,20 @@
 
 #rating_list_results.turbaned
   = render "search_results"
+
+#help
+  %dl
+    %dt How are new rating lists created?
+    %dd
+      The system will create one automatically when it's time. The first
+      time in January, May and September when this page is viewed, the
+      rating list for that month will be created. Initially it will have
+      default values for the tournament and payment cut-off dates which
+      the rating officer may choose to adjust (within limits) before
+      actually publishing the list.
+    %dt When a new list is automatically created, is it also published?
+    %dd
+      No, initially no new published ratings will be created. The rating
+      officer must hit the "Publish" button to actually publish the list
+      and create new published ratings. This preserves the option to
+      adjust the cut-off dates prior to publication.

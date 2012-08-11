@@ -31,3 +31,23 @@
 
 = render "shared/dialog", id: "update_rating_list", width: 300
 = render "shared/dialog", id: "publication_report", width: 1000, button: false, cancel: "Dismiss"
+
+#help
+  %dl
+    %dt What is the tournament cut-off date?
+    %dd
+      The last tournament to be included in the rating list is the last rated tournament
+      that ends on or before this date. Tournaments which finish later will be included
+      in the next list. This date can be adjusted but only within certain limits: it must
+      fall within the same month as the rating list. The default value is the 15th of the month.
+    %dt What is the payment cut-off date?
+    %dd
+      Only players who have paid their subscription for the season and done so on or before
+      this date will appear in the rating list. It defaults to the end of the month but
+      can be adjusted within limits: it must fall within the same month as the rating list
+      or the month after.
+    %dt Can a rating list be republished?
+    %dd
+      Yes, as many times as necessary. Common reasons for republishing lists are
+      the rerating of tournaments in which errors have been corrected or the
+      adjustment of cut-off dates to include more tournaments or more members.
