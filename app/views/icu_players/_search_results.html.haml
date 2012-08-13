@@ -2,8 +2,7 @@
   %tr
     %td{class: "floater"}
     %th ICU ID
-    %th Last Name
-    %th First Name
+    %th Name
     %th Club
     %th DOB
     %th G
@@ -12,7 +11,7 @@
   - if @icu_players.count == 0
     %tr
       %td{class: "floater"}
-      %td{class: "centered", colspan: 8} No matches
+      %td{class: "centered", colspan: 7} No matches
   - else
     - @icu_players.matches.each do |p|
       %tr{class: p.master_id || p.deceased ? "disabled" : ""}
@@ -24,8 +23,7 @@
             = link_to fide_player_path(@fide_player, icu_id: p.master_id || p.id, authenticity_token: form_authenticity_token), method: :put, remote: true do
               = icon_tag "link", "Link FIDE player to this ICU player"
         %td= link_to p.id, icu_player_path(p, format: "js"), remote: true
-        %td= p.last_name
-        %td= p.first_name
+        %td= link_to p.name, their_home_path(id: p.id)
         %td= p.club
         %td= p.dob
         - if p.master_id || p.deceased
@@ -37,4 +35,4 @@
     - if @icu_players.multi_page
       %tr
         %td{class: "floater"}
-        %td{class: "centered", colspan: 8}= pagination_links(@icu_players)
+        %td{class: "centered", colspan: 7}= pagination_links(@icu_players)
