@@ -90,7 +90,7 @@ class RatingList < ActiveRecord::Base
 
     legacy, tournaments = 0, 0
     changes = Hash.new { |h, k| h[k] = [] }
-    no_rating, creates, remains, updates, deletes = [], [], [], [], []
+    no_rating, creates, remains, updates, deletes_no_rat, deletes_no_sub = [], [], [], [], [], []
     subs.keys.each do |icu_id|
       rating, full = nil, nil
       if latest = tournament_ratings[icu_id]
@@ -123,7 +123,7 @@ class RatingList < ActiveRecord::Base
         end
       when current && !rating
         current.destroy
-        deletes.push icu_id
+        deletes_no_rat.push icu_id
       when !current && rating
         hash = { list: date, icu_id: icu_id, rating: rating, full: full }
         hash[:original_rating] = @originals ? rating : nil
@@ -141,13 +141,10 @@ class RatingList < ActiveRecord::Base
     report_item "legacy ratings used: #{legacy}"
     report_examples(no_rating, "subscribed members with no rating")
 
-    no_sub = []
     @current.each_pair do |icu_id, rating|
-      no_sub.push(icu_id)
       rating.destroy
-      @stats[:deletes] += 1
+      deletes_no_sub.push icu_id
     end
-    report_examples(no_sub, "existing ratings with no subscription")
 
     t2 = Time.now
     report_item "finished rating updates at #{t2.to_s(:tbm)} (#{((t2 - t1) * 1000.0).round} ms)"
@@ -155,15 +152,16 @@ class RatingList < ActiveRecord::Base
     @stats[:creates] = creates.size
     @stats[:remains] = remains.size
     @stats[:updates] = updates.size
-    @stats[:deletes] = deletes.size
+    @stats[:deletes] = deletes_no_rat.size + deletes_no_sub.size
     @stats[:total] = @stats[:creates] + @stats[:remains] + @stats[:updates]
 
     report_header "Statistics"
     report_item "total: #{@stats[:total]}"
-    report_examples(creates, "new")
+    report_examples(creates, "created")
     report_examples(remains, "unchanged")
     report_examples(updates, "changed")
-    report_examples(deletes, "deleted")
+    report_examples(deletes_no_rat, "deleted (no rating)")
+    report_examples(deletes_no_sub, "deleted (no subscription)")
     unless changes.empty?
       report_header "Change statistics"
       changes.keys.sort.each { |bucket| report_examples(changes[bucket], bucket) }
