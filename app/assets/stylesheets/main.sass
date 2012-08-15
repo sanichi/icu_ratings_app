@@ -60,6 +60,11 @@ $btn-col: $sp-col
 $btn-bg-col: $sp-bg-col
 $btn-bdr: 1px solid white
 
+// Articles code blocks
+$code-bg: #EEE
+$code-bdr: 1px solid #AAA
+$code-pad: 0.3em 0.6em
+
 // Spacing.
 $hpad: 20px
 $vpad: 20px
@@ -418,6 +423,11 @@ div.blurb
   hr
     :margin $vpad/2.0 auto
     :border-color $col
+  pre
+    :margin-left 2em
+    :background-color $code-bg
+    :border $code-bdr
+    :padding $code-pad
 
 //
 // Help
