@@ -9,7 +9,7 @@ class PagesController < ApplicationController
     authorize! :my_home, ::Pages::MyHome
     @icu_player = current_user.icu_player
     @my_home = ::Pages::MyHome.new(@icu_player.id)
-    @foreign_article = Article.get_by_identity("foreign tournament procedure")
+    @procedure_article = Article.get_by_identity("foreign tournament procedure")
   end
 
   def their_home
