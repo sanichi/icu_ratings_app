@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120810141431) do
+ActiveRecord::Schema.define(:version => 20120820190205) do
 
   create_table "articles", :force => true do |t|
     t.string   "headline"
@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(:version => 20120810141431) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "published",  :default => false
+    t.string   "identity"
   end
 
   add_index "articles", ["published"], :name => "index_articles_on_published"

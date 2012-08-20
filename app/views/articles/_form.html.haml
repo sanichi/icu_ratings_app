@@ -5,6 +5,9 @@
     = f.label :headline
     = f.text_field :headline, size: 80, maxlength: 256
   .input
+    = f.label :identity
+    = f.text_field :identity, size: 32, maxlength: 32
+  .input
     = f.label :published
     = f.check_box :published, {}, "true", "false"
   .input

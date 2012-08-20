@@ -17,11 +17,12 @@ class Article < ActiveRecord::Base
 
   belongs_to :user
 
-  attr_accessible :headline, :story, :published
+  attr_accessible :headline, :story, :published, :identity
   before_validation :normalise_attributes
 
-  validates_presence_of  :user_id, :headline, :story
-  validates_inclusion_of :published, in: [true, false]
+  validates :user_id, :headline, :story, presence: true
+  validates :published, inclusion: { in: [true, false] }
+  validates :identity, length: { maximum: 32 }, uniqueness: true, allow_nil: true
 
   def html_story
     markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, EXTENSIONS)
@@ -34,6 +35,7 @@ class Article < ActiveRecord::Base
     order = "#{order} DESC" if order.match(/_at$/)
     matches = matches.order("articles.#{order}")
     matches = matches.where("articles.headline LIKE ?", "%#{params[:headline]}%") if params[:headline].present?
+    matches = matches.where("articles.identity LIKE ?", "%#{params[:identity]}%") if params[:identity].present?
     matches = matches.where("articles.story LIKE ?", "%#{params[:story]}%")       if params[:story].present?
     if params[:create]
       matches = matches.where(published: true)  if params[:published] == "true"
@@ -42,6 +44,10 @@ class Article < ActiveRecord::Base
       matches = matches.where(published: true)
     end
     paginate(matches, path, params)
+  end
+  
+  def self.get_by_identity(identity)
+    find_by_identity_and_published(identity, true)
   end
 
   # Latest articles for home page.

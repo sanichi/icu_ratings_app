@@ -9,6 +9,8 @@
       - if extra
         %th= label_tag :user_id, "Author"
         %th= label_tag :published
+        %th= label_tag :identity
+      %th
     %tr
       %td= text_field_tag :headline, params[:headline], class: "centered", size: 15
       %td= text_field_tag :story, params[:story], class: "centered", size: 15
@@ -16,5 +18,5 @@
       - if extra
         %td= select_tag :user_id, options_for_select(user_menu(:articles, "Any"), params[:user_id])
         %td= select_tag :published, options_for_select(published_menu("Any"), params[:published])
-    %tr
-      %td{colspan: 3 + (extra ? 2 : 0), class: "centered"}= submit_tag "Search"
+        %td= text_field_tag :identity, params[:identity], class: "centered", size: 15
+      %td= submit_tag "Search"

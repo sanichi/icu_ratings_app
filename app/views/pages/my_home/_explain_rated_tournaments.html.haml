@@ -12,4 +12,4 @@
   If you play in tournaments outside Ireland you can submit the
   results for ICU rating, though you must follow the correct
   = succeed(".") do
-    = link_to_icu "procedure", "articles/display.php?id=172"
+    = link_to_if @procedure_article, "procedure", @procedure_article
