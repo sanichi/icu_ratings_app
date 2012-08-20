@@ -16,6 +16,7 @@ class PagesController < ApplicationController
     authorize! :their_home, ::Pages::MyHome
     @icu_player = IcuPlayer.find(params[:id])
     @my_home = ::Pages::MyHome.new(@icu_player.id)
+    @procedure_article = Article.get_by_identity("foreign tournament procedure")
     render "my_home"
   end
 
