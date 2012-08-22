@@ -1,4 +1,4 @@
-= form_tag icu_ratings_path, method: "get", remote: true do
+= form_tag icu_ratings_path, method: "get", remote: true, id: "rating_form" do
   = hidden_field_tag :per_page, params[:per_page]
   %table{class: "invisible"}
     %tr
@@ -29,4 +29,4 @@
     %tr
       %th
         = label_tag :show_original, "show original ratings"
-        = check_box_tag :show_original, "true", params[:show_original]      
+        = check_box_tag :show_original, "true", params[:show_original], onchange: "$.rails.handleRemote($('#rating_form'))"
