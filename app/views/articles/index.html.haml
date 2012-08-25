@@ -31,3 +31,11 @@
         %p
           = icon_tag "unpublished", "unpublished"
           The article is still in draft form and is not accessible by members.
+      %dt What is an article's "identity"?
+      %dd
+        It's used to find the article programmatically, for example in order to place a link to the article in some help text.
+        This gives more freedom for authors to update the article's title (which could have been used instead of identity)
+        without worrying about breaking links elsewhere. Naturally, you shouldn't change an article's identity without good
+        reason as otherwise helpful links somewhere on the site would suddenly disappear. An article only needs an identity if
+        there are any programmatically generated links to it elsewhere on the site. The primary article key (<em>id</em>) does
+        not function well for this purpose because it differs between the development, test and production versions of the site.
