@@ -6,9 +6,9 @@
       - case
         - when !@my_home.published_icu_ratings? && !@my_home.recent_ratings? && !old_rating
           %p
-            We appear not to have any records of rated games played by you so you currently have no ICU rating.
-            If you would like to obtain a chess rating you should play in some rated tournaments.
-            = render partial: "#{views}explain_site"
+            We appear not to have any records of rated games that you have played, so you currently have
+            no ICU rating. If you play in some rated tournaments in the future, you will obtain a rating
+            and be able to track its progress on this site.
           = render partial: "#{views}explain_rated_tournaments"
         - when !@my_home.published_icu_ratings? && !@my_home.recent_ratings? && old_rating
           %p
@@ -16,25 +16,29 @@
             However we do have an old rating,
             = succeed(".") do
               = render partial: "#{views}explain_old_rating", locals: { old_rating: old_rating }
-            If you would like to try to improve this old rating you should play in some rated tournaments.
-            = render partial: "#{views}explain_site"
+            If you play in rated tournaments in the future this will be your start rating
+            and details of your tournament rating performances will appear here.
           = render partial: "#{views}explain_rated_tournaments"
         - when !@my_home.published_icu_ratings? && @my_home.recent_ratings?
           %p
-            We do not appear to have any records of published ratings for you but assuming you are now a
-            member of the ICU then your rating will be published at the next available publication date.
-            Ratings are published three times a year: September, January and May.
+            We do not appear to have any records of previous published ratings for you but your
+            rating will be published in the next rating list. Ratings are published in September,
+            January and May.
         - when @my_home.published_icu_ratings? && !@my_home.recent_ratings?
           %p
-            Your rating has been published prior to the start of the new rating system
-            (this web site) but it appears you have not played any rated games since
+            Normally we would display details of your latest, best and worst tournaments here and also
+            your top gains and losses in individual games. Unfortunately, we can only do this for
+            tournaments played after
             = succeed(".") do
               = t "system.new.start"
-            If you would like to improve your old rating you should recommence playing in chess tournaments.
-            = render partial: "#{views}explain_site"
+            If you start playing again, then your rating progress can be tracked in detail on this site.
           = render partial: "#{views}explain_rated_tournaments"
       %p
         If you have any questions about the rating data we have for you, please contact the
         = succeed(".") do
           = mail_to_icu
+      %p
+        If you would like to see the details of other players' ratings, start by clicking
+        = succeed(".") do
+          = link_to "Tournaments", tournaments_path
           

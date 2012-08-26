@@ -1,15 +1,18 @@
 %p#explain_rated_tournaments
   A list of fothcoming events can be found in the
   = link_to_icu "Calendar", "events/list.php?type=irish"
-  section of ICU web site. To give a few examples:
+  section of ICU web site. Examples are:
 %ul
-  %li The annual Irish Chess Championships (usually in July).
-  %li Annual tournaments in Dublin, Cork, Bunratty and Galway.
-  %li Team leagues in Leinster and Munster.
-  %li Various events for juniors.
-  %li The club championships of some local chess clubs.
+  %li The annual Irish Chess Championships (usually in July)
+  %li Annual tournaments in Dublin, Cork, Bunratty and Galway
+  %li Team leagues in Leinster and Munster
+  %li Various events for juniors
+  %li Chess club championships
 %p
-  If you play in tournaments outside Ireland you can submit the
-  results for ICU rating, though you must follow the correct
-  = succeed(".") do
-    = link_to_if @procedure_article, "procedure", @procedure_article
+  If you play in tournaments outside Ireland you may submit the results for ICU
+  - if @procedure_article
+    rating (see
+    = link_to "article", @procedure_article
+    for details).
+  - else
+    rating.
