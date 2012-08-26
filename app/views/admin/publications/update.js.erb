@@ -1,0 +1,5 @@
+<% if @publication.errors.size == 0 %>
+  $("#dialog_update_publication").dialog("close");
+<% else %>
+  alert("<%= j render('shared/error', object: @publication, title: 'Error updating publication notes:') %>");
+<% end %>

@@ -30,4 +30,6 @@
         %td.floater
           = link_to [:admin, @rating_list, p], remote: true do
             = icon_tag "show", "Show publication report"
+          = link_to edit_admin_rating_list_publication_path(@rating_list, p), remote: true do
+            = icon_tag "edit", "Edit publication notes"
  

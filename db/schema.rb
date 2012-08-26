@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120820190205) do
+ActiveRecord::Schema.define(:version => 20120826100324) do
 
   create_table "articles", :force => true do |t|
     t.string   "headline"
@@ -223,6 +223,7 @@ ActiveRecord::Schema.define(:version => 20120820190205) do
     t.integer  "remains",            :limit => 3
     t.integer  "updates",            :limit => 3
     t.integer  "deletes",            :limit => 3
+    t.text     "notes"
   end
 
   add_index "publications", ["rating_list_id"], :name => "index_publications_on_rating_list_id"

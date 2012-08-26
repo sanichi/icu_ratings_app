@@ -16,5 +16,15 @@ module Admin
     def show
       @publication = Publication.find(params[:id])
     end
+
+    def edit
+      @publication = Publication.find(params[:id])
+      @rating_list = @publication.rating_list
+    end
+
+    def update
+      @publication = Publication.find(params[:id])
+      @publication.update_attributes(params[:publication])
+    end
   end
 end

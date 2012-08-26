@@ -13,7 +13,6 @@
 
 class Article < ActiveRecord::Base
   extend ICU::Util::Pagination
-  EXTENSIONS = { autolink: true, strikethrough: true, superscript: true, no_intra_emphasis: true }
 
   belongs_to :user
 
@@ -23,11 +22,6 @@ class Article < ActiveRecord::Base
   validates :user_id, :headline, :story, presence: true
   validates :published, inclusion: { in: [true, false] }
   validates :identity, length: { maximum: 32 }, uniqueness: true, allow_nil: true
-
-  def html_story
-    markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML, EXTENSIONS)
-    markdown.render(story).html_safe
-  end
 
   def self.search(params, path)
     matches = includes(user: :icu_player)

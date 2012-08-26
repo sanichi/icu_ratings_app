@@ -5,6 +5,7 @@
 #  id              :integer(4)      not null, primary key
 #  rating_list_id  :integer(4)
 #  report          :text
+#  notes           :text
 #  total           :integer(3)
 #  creates         :integer(3)
 #  remains         :integer(3)
@@ -20,7 +21,7 @@ class Publication < ActiveRecord::Base
   STATS = [:total, :creates, :remains, :updates, :deletes]
 
   attr_accessible *STATS
-  attr_accessible :report, :last_tournament_id
+  attr_accessible :report, :last_tournament_id, :notes
 
   validates :rating_list_id, numericality: { only_integer: true, greater_than: 0 }
   validates :last_tournament_id, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true

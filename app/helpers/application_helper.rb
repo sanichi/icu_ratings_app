@@ -184,6 +184,11 @@ module ApplicationHelper
     menu
   end
 
+  def markdown(text)
+    renderer = Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true, strikethrough: true, superscript: true, no_intra_emphasis: true)
+    renderer.render(text).html_safe
+  end
+
   # Return a abbreviated form of a title (e.g. WFM => wf).
   def short_title(title)
     return "" unless title.present?

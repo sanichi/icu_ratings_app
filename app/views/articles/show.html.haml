@@ -8,7 +8,7 @@
     %span= @article.user.name(false)
     .times= timestamps_summary(@article)
   %hr
-  .story= @article.html_story
+  .story= markdown(@article.story)
 
 - if can? :create, Article
   %table{class: "turbaned"}

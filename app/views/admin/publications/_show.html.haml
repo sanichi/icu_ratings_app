@@ -1,1 +1,5 @@
 %pre= @publication.report
+- if @publication.notes.present?
+  %div.notes
+    %h3 Notes
+    = markdown(@publication.notes)
