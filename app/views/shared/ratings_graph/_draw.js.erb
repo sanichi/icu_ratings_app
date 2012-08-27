@@ -46,7 +46,7 @@ function drawChart()
     height:    <%= graph.height %>,
     lineWidth: 1,
     pointSize: 5,
-    title:     "<%= graph.title %>",
+    title:     "<%= graph.title.html_safe %>",
     vAxis:
     {
       format:         "###0",
