@@ -9,7 +9,7 @@ describe FidePlayer do
       @i = FactoryGirl.create(:icu_player, id: 1350, last_name: "Orr", first_name: "Mark", fed: "IRL", dob: "1955-09-11", title: "IM", gender: "M")
       @f = FactoryGirl.create(:fide_player, id: 250035, last_name: "Orr", first_name: "Mark", fed: "IRL", born: 1955, title: "IM", gender: "M", icu_player: nil)
       @link = "Link FIDE player to this ICU player"
-      @unlink = "Unink FIDE player from this ICU player"
+      @unlink = "Unlink FIDE player from this ICU player"
       login("admin")
       visit fide_players_path
       page.click_link "?"

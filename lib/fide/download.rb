@@ -62,7 +62,7 @@ module FIDE
         zip = Zip::ZipFile.open(@zip.path)
         raise SyncError.new("zip file has no entry for #{@file}") unless zip.find_entry(@file)
         data = zip.read(@file)
-        raise SyncError.new("unexpected zip data encoding (#{data.encoding.name})") unless data.encoding.name == "ASCII-8BIT"
+        raise SyncError.new("unexpected zip data encoding (#{data.encoding.name})") unless data.encoding.name.match(/^ASCII-8BIT|US-ASCII$/)
         data.force_encoding("ISO-8859-1")
         data.encode!("UTF-8")
         lines = data.split(/\n\r?/)
@@ -414,7 +414,7 @@ module FIDE
       res = Net::HTTP.get_response(uri)
       raise SyncError.new("unexpected response for download file (#{res.code})") unless res.code == "200"
       raise SyncError.new("unexpected content-type (#{res.content_type})") unless res.content_type.match(/^application\/(zip|x-zip-compressed)$/)
-      raise SyncError.new("unexpected zip archive encoding (#{res.body.encoding.name})") unless res.body.encoding.name == "ASCII-8BIT"
+      raise SyncError.new("unexpected zip archive encoding (#{res.body.encoding.name})") unless res.body.encoding.name.match(/^ASCII-8BIT|US-ASCII$/)
       @zip = Tempfile.new("fide_ratings.zip")
       @zip.syswrite(res.body)
       @zip.close
