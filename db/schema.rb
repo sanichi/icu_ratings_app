@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120826100324) do
+ActiveRecord::Schema.define(:version => 20120902090333) do
 
   create_table "articles", :force => true do |t|
     t.string   "headline"
@@ -247,8 +247,9 @@ ActiveRecord::Schema.define(:version => 20120826100324) do
     t.integer  "last_tournament_rorder"
     t.string   "start_tournament_name"
     t.string   "last_tournament_name"
-    t.datetime "created_at",              :null => false
-    t.datetime "updated_at",              :null => false
+    t.datetime "created_at",                                             :null => false
+    t.datetime "updated_at",                                             :null => false
+    t.string   "reason",                  :limit => 100, :default => "", :null => false
   end
 
   create_table "results", :force => true do |t|

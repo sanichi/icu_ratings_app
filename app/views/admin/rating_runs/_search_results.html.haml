@@ -1,17 +1,19 @@
 %table
   %tr
+    %th #
     %th Time Ago
     %th Start Tournament
-    %th #
+    %th Reason
   - if @rating_runs.count == 0
     %tr
-      %td{colspan: 3, class: "centered"} No matches
+      %td{colspan: 4, class: "centered"} No matches
   - else
     - @rating_runs.matches.each do |rating_run|
       %tr
-        %td= link_to time_ago_in_words(rating_run.created_at, true), [:admin, rating_run]
+        %td= link_to "#{rating_run.start_tournament_rorder}-#{rating_run.last_tournament_rorder}", [:admin, rating_run]
+        %td= time_ago_in_words(rating_run.created_at, true)
         %td= rating_run.start_tournament_name
-        %td= "#{rating_run.start_tournament_rorder}-#{rating_run.last_tournament_rorder}"
+        %td= truncate(rating_run.reason, :length => 50, :separator => ' ')
   - if @rating_runs.multi_page
     %tr
-      %th{class: "centered", colspan: 3}= pagination_links(@rating_runs)
+      %th{class: "centered", colspan: 4}= pagination_links(@rating_runs)

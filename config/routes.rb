@@ -32,7 +32,7 @@ Ratings::Application.routes.draw do
     resources :old_tournaments,      only: [:index]
     resources :players,              only: [:show, :edit, :update, :destroy]
     resources :rating_lists,         only: [:index, :show, :edit, :update] { resources :publications, only: [:show, :create, :edit, :update] }
-    resources :rating_runs,          only: [:index, :show, :create, :destroy]
+    resources :rating_runs,          only: [:index, :show, :create, :edit, :update, :destroy]
     resources :results,              only: [:new, :create, :edit, :update]
     resources :subscriptions,        only: [:index]
     resources :tournaments,          only: [:index, :show, :edit, :update, :destroy]

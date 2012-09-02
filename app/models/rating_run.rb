@@ -5,6 +5,7 @@
 #  id                      :integer(4)      not null, primary key
 #  user_id                 :integer(4)
 #  status                  :string(255)
+#  reason                  :string(100)     not null, default ""
 #  report                  :text
 #  start_tournament_id     :integer(4)
 #  last_tournament_id      :integer(4)
@@ -21,7 +22,7 @@ class RatingRun < ActiveRecord::Base
 
   STATUS = %w[waiting processing error finished]
 
-  attr_accessible :start_tournament_id, :user_id
+  attr_accessible :start_tournament_id, :user_id, :reason
 
   belongs_to :user
   belongs_to :start_tournament, class_name: "Tournament"
@@ -29,6 +30,7 @@ class RatingRun < ActiveRecord::Base
 
   before_create :complete
   after_create :throw_flag
+  before_update :truncate_reason
 
   default_scope order("created_at DESC")
 
@@ -134,5 +136,10 @@ class RatingRun < ActiveRecord::Base
   # Assuming all is well, we throw a flag so a background process can rate the tournaments.
   def throw_flag
     File.open(RatingRun.flag, "w") { |f| f.write id }
+  end
+
+  # Make sure the reason is within limit.
+  def truncate_reason
+    self.reason = reason[0, 100] if reason && reason.length > 100
   end
 end

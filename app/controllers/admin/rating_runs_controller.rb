@@ -23,6 +23,15 @@ module Admin
       end
     end
 
+    def edit
+      @rating_run = RatingRun.find(params[:id])
+    end
+
+    def update
+      @rating_run = RatingRun.find(params[:id])
+      @rating_run.update_attributes(params[:rating_run])
+    end
+
     def destroy
       @rating_run = RatingRun.find(params[:id])
       @rating_run.destroy

@@ -31,6 +31,12 @@
         = link_to_if t, @rating_run.last_tournament_name, [:admin, t]
         = "(#{@rating_run.last_tournament_rorder})"
   %tr
+    %th Reason
+    %td#reason.small= @rating_run.reason
+    %td.floater
+      = link_to edit_admin_rating_run_path(@rating_run), remote: true do
+        = icon_tag "edit", "Edit Reason"
+  %tr
     %th User
     %td= @rating_run.user.name
   %tr
@@ -42,3 +48,5 @@
     %tr
       %td{class: "centered"}
         = link_to "Delete", [:admin, @rating_run], data: { confirm: "Are you sure you want to delete this run?" }, method: :delete
+
+= render "shared/dialog", id: "update_rating_run", title: "Update Reason for Rating Run"

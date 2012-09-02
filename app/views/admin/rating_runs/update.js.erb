@@ -1,0 +1,6 @@
+<% if @rating_run.errors.size == 0 %>
+  $("#dialog_update_rating_run").dialog("close");
+  $("#reason").text("<%= @rating_run.reason %>");
+<% else %>
+  alert("<%= j render('shared/error', object: @rating_run, title: 'Error updating rating run:') %>")
+<% end %>
