@@ -1,2 +1,3 @@
 = form_for [:admin, @rating_run], remote: true do |f|
-  = f.text_field :reason, size: 50, maxlength: 100
+  %div.centered
+    = f.text_field :reason, size: 80, maxlength: 100

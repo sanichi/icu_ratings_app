@@ -13,7 +13,7 @@
         %td= link_to "#{rating_run.start_tournament_rorder}-#{rating_run.last_tournament_rorder}", [:admin, rating_run]
         %td= time_ago_in_words(rating_run.created_at, true)
         %td= rating_run.start_tournament_name
-        %td= truncate(rating_run.reason, :length => 50, :separator => ' ')
+        %td= truncate(rating_run.reason, :length => 40, :separator => ' ')
   - if @rating_runs.multi_page
     %tr
       %th{class: "centered", colspan: 4}= pagination_links(@rating_runs)
