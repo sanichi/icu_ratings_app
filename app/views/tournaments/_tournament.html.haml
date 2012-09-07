@@ -42,7 +42,7 @@
       %td= link_to_if can?(:read, @tournament.upload), @tournament.upload.created_at.strftime('%Y-%m-%d'), [:admin, @tournament.upload]
   %tr
     %th Reporter
-    %td= @tournament.user.name(false)
+    %td= mail_to @tournament.user.best_email, @tournament.user.name(false), encode: "javascript"
   %tr
     %th Status
     %td= t(@tournament.status == "ok" ? "ok" : "problems")
