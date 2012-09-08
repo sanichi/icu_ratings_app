@@ -18,13 +18,18 @@ module Admin
           extras
         end
         format.text { render text: @tournament.export(params) }
-        format.js   { render view(:options, :export) }
+        format.js do
+          case
+          when params[:notes] then render view(:show, :notes)
+          else render view(:options, :export)
+          end
+        end
       end
     end
 
     def edit
       @tournament = Tournament.find(params[:id])
-      group = %w{ranks reporter stage tie_breaks fide}.find { |g| params[g] }
+      group = %w{ranks reporter stage tie_breaks fide notes}.find { |g| params[g] }
       @data = Tournaments::FideData.new(@tournament) if group == "fide"
       render view(:edit, group)
     end
@@ -58,6 +63,9 @@ module Admin
       when params[:tournament][:tie_breaks]
         @tournament.update_attributes(params[:tournament])
         render view(:update, :tie_breaks)
+      when params[:tournament][:notes]
+        @tournament.update_attributes(params[:tournament])
+        render view(:update, :notes)
       when params[:tournament][:stage]
         @tournament.move_stage(params[:tournament][:stage], current_user)
         render view(:update)

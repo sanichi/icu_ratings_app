@@ -125,6 +125,13 @@
           %th Number of Reratings
           %td= @tournament.reratings - 1
           %th{class: "floater"}
+  %tr
+    %th Notes
+    %td{id: "show_notes"}= render "admin/tournaments/notes/link"
+    %td{class: "floater"}
+      - if editable
+        = link_to edit_admin_tournament_path(@tournament, notes: ""), remote: true do
+          = icon_tag "edit", "Edit Notes"
 
 %table
   %tr

@@ -6,8 +6,13 @@ class TournamentsController < ApplicationController
   end
 
   def show
-    @tournament = Tournament.includes(players: [:results]).find(params[:id])
-    @rankable = @tournament.rankable
-    @players = @tournament.ordered_players
+    if params[:notes]
+      @tournament = Tournament.find(params[:id])
+      render "admin/tournaments/notes/show"
+    else
+      @tournament = Tournament.includes(players: [:results]).find(params[:id])
+      @rankable = @tournament.rankable
+      @players = @tournament.ordered_players
+    end
   end
 end

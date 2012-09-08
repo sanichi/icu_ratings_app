@@ -58,6 +58,10 @@
       %tr
         %th Next
         %td= link_to next_tournament.name_with_year, next_tournament
+  - if @tournament.notes.present?
+    %tr
+      %th Notes
+      %td= render "admin/tournaments/notes/link"
 
 - if can? :modify, Tournament
   %table{class: "turbaned"}

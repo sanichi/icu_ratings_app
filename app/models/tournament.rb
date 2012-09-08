@@ -53,7 +53,7 @@ class Tournament < ActiveRecord::Base
 
   scope :ordered, order("finish DESC, start DESC, rorder DESC, tournaments.name")
 
-  attr_accessible :name, :start, :finish, :fed, :city, :site, :arbiter, :deputy, :time_control, :tie_breaks, :user_id, :stage
+  attr_accessible :name, :start, :finish, :fed, :city, :site, :arbiter, :deputy, :time_control, :tie_breaks, :user_id, :stage, :notes
 
   before_validation :normalise_attributes, :guess_finish, :requeue
 
@@ -554,6 +554,15 @@ class Tournament < ActiveRecord::Base
 
     # Return the final comments hash.
     comments
+  end
+
+  def notes_snippet
+    return unless notes.present?
+    snippet = notes
+    snippet.gsub!(/[^\w\s]/i, '')
+    snippet.gsub!(/\s+/, " ")
+    snippet = snippet[0,29] + "..." if snippet.length > 32
+    snippet
   end
 
   private

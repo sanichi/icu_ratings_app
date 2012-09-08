@@ -1,0 +1,6 @@
+<% if @tournament.errors.size == 0 %>
+  $("#show_notes").html("<%= j render('admin/tournaments/notes/link') %>");
+  $("#dialog_update_notes").dialog("close");
+<% else %>
+  alert("<%= j render('shared/error', object: @tournament, title: 'Error updating notes:') %>")
+<% end %>
