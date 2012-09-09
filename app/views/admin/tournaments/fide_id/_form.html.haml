@@ -1,0 +1,5 @@
+= form_for [:admin, @tournament], remote: true do |f|
+  %table{class: "right-headers noborder"}
+    %tr
+      %th= f.label :fide_id, "FIDE ID"
+      %td= f.text_field :fide_id, size: 10, maxlength: 10

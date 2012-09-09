@@ -1,0 +1,6 @@
+<% if @tournament.errors.size == 0 %>
+  $("#show_fide_id").html("<%= j render('admin/tournaments/fide_id/link') %>");
+  $("#dialog_update_tournament").dialog("close");
+<% else %>
+  alert("<%= j render('shared/error', object: @tournament, title: 'Error updating FIDE ID:') %>")
+<% end %>

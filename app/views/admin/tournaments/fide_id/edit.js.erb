@@ -1,0 +1,4 @@
+$("#dialog_update_tournament")
+  .html("<%= j render('admin/tournaments/fide_id/form') %>")
+  .dialog("option", "title", "Update FIDE ID")
+  .dialog("open");

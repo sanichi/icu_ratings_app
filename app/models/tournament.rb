@@ -53,7 +53,7 @@ class Tournament < ActiveRecord::Base
 
   scope :ordered, order("finish DESC, start DESC, rorder DESC, tournaments.name")
 
-  attr_accessible :name, :start, :finish, :fed, :city, :site, :arbiter, :deputy, :time_control, :tie_breaks, :user_id, :stage, :notes
+  attr_accessible :name, :start, :finish, :fed, :city, :site, :arbiter, :deputy, :time_control, :tie_breaks, :user_id, :stage, :notes, :fide_id
 
   before_validation :normalise_attributes, :guess_finish, :requeue
 
@@ -65,7 +65,7 @@ class Tournament < ActiveRecord::Base
   validates_inclusion_of    :stage, in: STAGE, message: '(%{value}) is invalid'
   validates_format_of       :tie_breaks, with: /^#{TIEBREAK}(?:,#{TIEBREAK})*$/, allow_nil: true
   validates_numericality_of :user_id, :rounds, only_integer: true, greater_than: 0, message: "(%{value}) is invalid"
-  validates_numericality_of :rorder, only_integer: true, greater_than: 0, allow_nil: true, message: "(%{value}) is invalid"
+  validates_numericality_of :rorder, :fide_id, only_integer: true, greater_than: 0, allow_nil: true, message: "(%{value}) is invalid"
 
   # Build a Tournament from an icu_tournament object parsed from an uploaded file.
   def self.build_from_icut(icut, upload=nil)
@@ -111,6 +111,10 @@ class Tournament < ActiveRecord::Base
       matches = matches.where("players.first_name LIKE ?", "%#{first_name}%") if first_name
       matches = matches.where("players.last_name  LIKE ?", "%#{last_name}%")  if last_name
     end
+    
+    # FIDE rated.
+    matches = matches.where("tournaments.fide_id IS NOT NULL") if params[:fide_rated] == "true"
+    matches = matches.where("tournaments.fide_id IS NULL")     if params[:fide_rated] == "false"
 
     if params[:admin]
       # Reporter.
@@ -563,6 +567,11 @@ class Tournament < ActiveRecord::Base
     snippet.gsub!(/\s+/, " ")
     snippet = snippet[0,29] + "..." if snippet.length > 32
     snippet
+  end
+  
+  def fide_url
+    return nil unless fide_id
+    "http://ratings.fide.com/tournament_report.phtml?event16=#{fide_id}"
   end
 
   private

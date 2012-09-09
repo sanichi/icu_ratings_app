@@ -29,7 +29,7 @@ module Admin
 
     def edit
       @tournament = Tournament.find(params[:id])
-      group = %w{ranks reporter stage tie_breaks fide notes}.find { |g| params[g] }
+      group = %w{ranks reporter stage tie_breaks fide fide_id notes}.find { |g| params[g] }
       @data = Tournaments::FideData.new(@tournament) if group == "fide"
       render view(:edit, group)
     end

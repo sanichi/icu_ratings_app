@@ -72,6 +72,12 @@ module ApplicationHelper
     menu
   end
 
+  def fide_rated_menu(any=nil)
+    menu = [["Rated", "true"], ["Not Rated", "false"]]
+    menu.unshift([any, ""]) if any
+    menu
+  end
+
   def fide_rating_list_menu(any=nil)
     menu = FideRating.lists.map{ |list| [year_month(list), list]}
     menu.unshift([any, ""]) if any

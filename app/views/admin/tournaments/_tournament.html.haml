@@ -42,10 +42,17 @@
   %tr
     %th Ranking
     %td{id: "show_ranking"}= @tournament.ranking_summary.fetch(:description)
-    %td{class: "floater top", rowspan: 2}
+    %td{class: "floater"}
       - if editable
         = link_to edit_admin_tournament_path(@tournament, ranks: ""), remote: true do
           = icon_tag "rank", "Rank Tournament"
+  %tr
+    %th FIDE ID
+    %td{id: "show_fide_id"}= render "admin/tournaments/fide_id/link"
+    %td{class: "floater top", rowspan: 2}
+      - if editable
+        = link_to edit_admin_tournament_path(@tournament, fide_id: ""), remote: true do
+          = icon_tag "edit", "Edit FIDE ID"
   %tr
     %th Upload
     %td= @tournament.upload ? link_to(@tournament.upload.created_at.strftime('%Y-%m-%d'), [:admin, @tournament.upload]) : ''
