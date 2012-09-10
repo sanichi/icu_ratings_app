@@ -8,7 +8,7 @@
       %td= link_to player.tournament.name_with_year, player
       - if player.old_rating
         %td{class: "centered"}
-          = raw("#{player.old_rating} &rarr;")
+          = "#{player.old_rating} →"
           = player.new_rating
         %td{class: "righted"}= sign player.rating_change
       - else

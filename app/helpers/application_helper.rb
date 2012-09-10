@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 module ApplicationHelper
   def flash_messages
     render "shared/flash", flash: flash
@@ -5,23 +7,23 @@ module ApplicationHelper
 
   def score_html(score, args={})
     str = case score
-    when 0.0, 0 then '0'
-    when 0.5    then '&frac12;'
-    when 1.0, 1 then '1'
-    else score.floor.to_s + (score.*(2).to_i.odd? ? '&frac12;' : '')
+    when 0.0, 0 then "0"
+    when 0.5    then "½"
+    when 1.0, 1 then "1"
+    else score.floor.to_s + (score.*(2).to_i.odd? ? "½" : "")
     end
     if !args[:rateable].nil? && !args[:rateable] && score <= 1.0
       str = case str
-          when '0' then '-'
-          when '1' then '+'
-          else '='
+      when "0" then "−"
+      when "1" then "+"
+      else "="
       end
     end
     if args[:rounds]
       str+= '/'
       str+= args[:rounds].to_s
     end
-    str.html_safe
+    str
   end
 
   # Round a floating point number for display. Input of nil allowed.
@@ -33,7 +35,7 @@ module ApplicationHelper
   # A signed integer (e.g "-10", "+125", "0"). Nil allowed.
   def sign(num, opt={space: false})
     return "" unless num
-    sgn = num >= 0 ? "+" : (opt[:space] ? "&minus;" : "-")
+    sgn = num >= 0 ? "+" : "−"
     spc = opt[:space] ? ' ' : ''
     num = num.abs.round
     "#{sgn}#{spc}#{num}"
@@ -299,11 +301,11 @@ module ApplicationHelper
     raw summary
   end
 
-  # Returns copyright text (e.g. "&copy; ICU 2011-2013").
+  # Returns copyright text (e.g. "© ICU 2011-2013").
   def copyright
     start = 2011
     finish = Date.today.year
-    raw "&copy; ICU %s" % (finish > start ? "#{start}-#{finish}" : start.to_s)
+    "© ICU %s" % (finish > start ? "#{start}-#{finish}" : start.to_s)
   end
 
   # A HAML specific way of adding attributes to rowspan cells (see shared/_rowspan.html.haml).

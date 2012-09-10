@@ -2,6 +2,6 @@
   %table{class: "cushioned"}
     %tr
       - if @player.last_player
-        %td{class: "centered"}= link_to raw("&larr; #{@player.last_player.tournament.name_with_year}"), @player.last_player
+        %td{class: "centered"}= link_to "← #{@player.last_player.tournament.name_with_year}", @player.last_player
       - if @player.next_player
-        %td{class: "centered"}= link_to raw("#{@player.next_player.tournament.name_with_year} &rarr;"), @player.next_player
+        %td{class: "centered"}= link_to "#{@player.next_player.tournament.name_with_year} →", @player.next_player

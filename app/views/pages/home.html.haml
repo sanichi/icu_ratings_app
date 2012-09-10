@@ -59,7 +59,7 @@
       - if !current_user
         First log in, then click Help again.
       - elsif can? :create, Upload
-        Click Tournaments &rarr;
+        Click Tournaments →
         = succeed('.') do
           = link_to "New", new_admin_upload_path
       - else

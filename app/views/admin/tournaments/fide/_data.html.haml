@@ -14,5 +14,5 @@
       %td
         - match.samples.each_with_index do |p, i|
           = succeed(i + 1 < match.samples.count ? ", " : "") do
-            = p ? link_to(p.last_name, [:admin, p]) : raw("&hellip;")
+            = p ? link_to(p.last_name, [:admin, p]) : "…"
   
