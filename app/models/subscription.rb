@@ -41,7 +41,22 @@ class Subscription < ActiveRecord::Base
     "#{year}-#{year - 1999}"
   end
 
-  def self.get_subs(season, cut_off)
-    where("category = 'lifetime' OR (season = ? AND (pay_date IS NULL OR pay_date <= ?))", season, cut_off).all
+  def self.last_season(time=nil)
+    time ||= Time.now
+    season(time.prev_year)
+  end
+
+  def self.get_subs(season, cut_off, last_season=nil)
+    current = where("category = 'lifetime' OR (season = ? AND (pay_date IS NULL OR pay_date <= ?))", season, cut_off).all
+    previous = []
+    if last_season
+      icu_ids = current.map(&:icu_id)
+      if icu_ids.empty?
+        previous = where("season = ?", last_season).all
+      else
+        previous = where("season = ? AND icu_id NOT IN (?)", last_season, icu_ids).all
+      end
+    end
+    current + previous
   end
 end

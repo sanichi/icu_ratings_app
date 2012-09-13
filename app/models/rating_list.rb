@@ -229,8 +229,15 @@ class RatingList < ActiveRecord::Base
 
   def get_subscriptions
     season = Subscription.season(date)
-    report_header "Subscriptions in season #{season} paid on or before #{payment_cut_off}"
-    subs = Subscription.get_subs(season, payment_cut_off)
+    last_season = Subscription.last_season(date) if date.month == 9
+    header = "Subscriptions in season #{season} (paid on or before #{payment_cut_off})"
+    header << " and in season #{last_season}" if last_season
+    report_header header
+    subs = Subscription.get_subs(season, payment_cut_off, last_season)
+    if last_season
+      report_item "#{season}: #{subs.find_all{ |s| s.category == 'lifetime' || s.season == season}.count }"
+      report_item "#{last_season}: #{subs.find_all{ |s| s.season == last_season}.count }"
+    end
     report_item "total: #{subs.size}"
     raise "no subscriptions found" if subs.size == 0
     usubs = subs.inject(Hash.new(0)) { |h, s| h[s.icu_id] += 1; h }
