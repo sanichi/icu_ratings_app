@@ -60,8 +60,8 @@ describe ICU::RatingRun do
       @rating_run.reload
       @rating_run.status.should == "finished"
       @rating_run.report.should match /Rating 2 tournaments/
-      @rating_run.report.should match /1 #{@t1.name}/
-      @rating_run.report.should match /2 #{@t2.name}/
+      @rating_run.report.should match /1\s+\d+\/\d+\s+#{@t1.name}/
+      @rating_run.report.should match /2\s+\d+\/\d+\s+#{@t2.name}/
       @rating_run.report.should match /Finished/
 
       [@t1, @t2].each { |o| o.reload }

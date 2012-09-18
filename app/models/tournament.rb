@@ -34,6 +34,8 @@
 #  last_signature         :string(32)
 #  curr_signature         :string(32)
 #  locked                 :boolean(1)      default(FALSE)
+#  iterations1            :integer(2)      default(0)
+#  iterations2            :integer(2)      default(0)
 #
 
 require "icu/error"
@@ -66,6 +68,7 @@ class Tournament < ActiveRecord::Base
   validates_format_of       :tie_breaks, with: /^#{TIEBREAK}(?:,#{TIEBREAK})*$/, allow_nil: true
   validates_numericality_of :user_id, :rounds, only_integer: true, greater_than: 0, message: "(%{value}) is invalid"
   validates_numericality_of :rorder, :fide_id, only_integer: true, greater_than: 0, allow_nil: true, message: "(%{value}) is invalid"
+  validates :iterations1, :iterations2, numericality: { only_integer: true, greater_than_or_equal: 0 }
 
   # Build a Tournament from an icu_tournament object parsed from an uploaded file.
   def self.build_from_icut(icut, upload=nil)
@@ -772,7 +775,10 @@ class Tournament < ActiveRecord::Base
     t = ICU::RatedTournament.new(desc: "Scratch")
     players.each { |p| p.add_player t }
     players.each { |p| p.add_results t }
-    t.rate!
+    t.rate!(max_iterations2: 30)
+    self.iterations1 = t.iterations1
+    self.iterations2 = t.iterations2
+    self.save
     t
   end
 

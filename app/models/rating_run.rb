@@ -63,7 +63,7 @@ class RatingRun < ActiveRecord::Base
       raise ICU::Error.new("expected #{t.name} to have rating order #{r}") unless t.rorder == r
       raise ICU::Error.new("expected #{t.name} to be next for rating")     unless t == Tournament.next_for_rating
       t.rate!
-      add("#{n} #{t.name_with_year}")
+      add("%-3d %2d/%-2d %s" % [n, t.iterations1, t.iterations2, t.name_with_year])
       t = t.next_tournament
       n+= 1
       r+= 1

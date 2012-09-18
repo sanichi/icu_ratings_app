@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120909083736) do
+ActiveRecord::Schema.define(:version => 20120917181939) do
 
   create_table "articles", :force => true do |t|
     t.string   "headline"
@@ -316,6 +316,8 @@ ActiveRecord::Schema.define(:version => 20120909083736) do
     t.boolean  "locked",                               :default => false
     t.text     "notes"
     t.integer  "fide_id"
+    t.integer  "iterations1",            :limit => 2,  :default => 0
+    t.integer  "iterations2",            :limit => 2,  :default => 0
   end
 
   add_index "tournaments", ["curr_signature"], :name => "index_tournaments_on_curr_signature"
