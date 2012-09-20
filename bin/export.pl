@@ -275,9 +275,16 @@ sub archive
     my $file = sprintf('%s/%s%s.zip', $opt{f}, $mon, $year);
     
     my $zip = Archive::Zip->new;
-    $zip->addFile($sp_file);
-    $zip->addFile($sm_file);
+    $zip->addFile($sp_file, &_nodir($sp_file));
+    $zip->addFile($sm_file, &_nodir($sm_file));
     die "couldn't write ZIP archive $file" unless $zip->writeToFileNamed($file) == 0;
 
+    $file;
+}
+
+sub _nodir
+{
+    my ($path) = @_;
+    my ($file) = $path =~ /([^\/]+)$/;
     $file;
 }
