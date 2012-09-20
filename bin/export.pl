@@ -16,7 +16,7 @@ my %def =
 
 # Options.
 my %opt;
-my $opt = 'hercf';
+my $opt = 'he:r:c:f:';
 getopts($opt, \%opt);
 sub help
 {
