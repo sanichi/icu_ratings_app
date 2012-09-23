@@ -1,9 +1,106 @@
-require 'net/http'
+require "net/http"
 
 module FIDE
   class Download
     SyncError = Class.new(StandardError)
     SyncInfo  = Class.new(StandardError)
+
+    class Player
+      attr_reader :id, :first_name, :last_name, :fed, :born, :gender, :title, :rating, :active
+
+      def initialize(hash)
+        self.id     = hash["fideid"]   if hash["fideid"]
+        self.name   = hash["name"]     if hash["name"]
+        self.fed    = hash["country"]  if hash["country"]
+        self.born   = hash["birthday"] if hash["birthday"]
+        self.gender = hash["sex"]      if hash["sex"]
+        self.title  = hash["title"]    if hash["title"]
+        self.rating = hash["rating"]   if hash["rating"]
+        self.active = hash["flag"]
+      end
+
+      def id=(fideid)
+        @id = fideid.to_i
+        @id = nil if @id == 0
+      end
+
+      def name=(name)
+        @last_name, @first_name = name.strip.squeeze(" ").split(/\s*,\s*/)
+        @last_name = nil if last_name == ""
+        @first_name = nil if first_name == ""
+      end
+
+      def fed=(country)
+        @fed = country if country.match(/^[A-Z]{3}$/)
+      end
+
+      def born=(birthday)
+        @born = birthday.to_i if birthday.match(/^(19|20)\d\d$/)
+      end
+
+      def gender=(sex)
+        @gender = sex if sex.match(/^[MF]$/)
+      end
+
+      def title=(title)
+        if title.match("^W?[GIFC]M")
+          @title = title
+        elsif title.match("^W[GIFC]")
+          @title = "#{title}M"
+        end
+      end
+
+      def rating=(rating)
+        @rating = rating.to_i
+        @rating = nil if @rating == 0
+      end
+
+      def active=(flag)
+        @active = flag && flag.match(/i/) ? false : true
+      end
+
+      def error(string)
+        raise SyncError.new("SAX error: #{string}")
+      end
+    end
+
+    class Parser < Nokogiri::XML::SAX::Document
+      attr_reader :state, :total, :irish
+
+      def initialize(&block)
+        @block = block
+        @attrs = Regexp.new("^(fideid|name|country|sex|title|rating|birthday|flag)$")
+        @state = ""
+      end
+
+      def start_element(name, attr)
+        if @state == "player" && @attrs.match(name)
+          @state = name
+        elsif @state == "playerslist" && name == "player"
+          @state = name
+          @player = Hash.new
+        elsif @state == "" && name == "playerslist"
+          @state = name
+        end
+      end
+
+      def end_element(name)
+        if @attrs.match(@state) && @attrs.match(name)
+          @state = "player"
+        elsif @state == "player" && name == "player"
+          @state = "playerslist"
+          @block.call(@player)
+        elsif @state == "playerslist" && name == "playerslist"
+          @state = ""
+        end
+      end
+
+      def characters(string)
+        if @attrs.match(@state)
+          @player[@state] = string
+        end
+      end
+    end
 
     class Irish < Download
       def initialize
