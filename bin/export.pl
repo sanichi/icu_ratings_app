@@ -139,10 +139,12 @@ sub get_ratings
     $data = eval { $dbh->selectall_arrayref($sql, { Slice => {} }) };
     die sprintf("published ratings database query failed: %s\n", $@ || 'no reason') unless 'ARRAY' eq ref $data;
     $ratings->{$_->{icu_id}} ||= $_->{rating} for @{$data};
-    $ids = join(',', sort keys %{$ratings});
 
     # Or from the legacy list if necessary.
+    $ids = join(',', sort keys %{$ratings});
     $sql = "SELECT icu_id, rating FROM old_ratings WHERE icu_id NOT IN ($ids)";
+    $data = eval { $dbh->selectall_arrayref($sql, { Slice => {} }) };
+    die sprintf("old ratings database query failed: %s\n", $@ || 'no reason') unless 'ARRAY' eq ref $data;
     $ratings->{$_->{icu_id}} ||= $_->{rating} for @{$data};
 
     $ratings;
@@ -165,15 +167,15 @@ sub export_sp
     };
     die "cannot write file $file\n" if $@ || !$dbf;
 
-    foreach my $id (sort { $a <=> $b } keys %{$ratings})
+    foreach my $id (sort { $a <=> $b } keys %{$players})
     {
-        my $player = $players->{$id} || next;
+        my $player = $players->{$id};
         my $arr = [];
         my $dob = "$3-$2-$1" if $player->{dob} =~ /^(\d{4})-(\d\d)-(\d\d)$/;
         push @{$arr}, $player->{id};
         push @{$arr}, substr($player->{first_name}, 0, 50);
         push @{$arr}, substr($player->{last_name}, 0, 50);
-        push @{$arr}, $ratings->{$id} || '';
+        push @{$arr}, $ratings->{$id} || 0;
         push @{$arr}, $player->{gender} || '';
         push @{$arr}, substr($player->{club}, 0, 25);
         push @{$arr}, $dob || '';
@@ -207,10 +209,10 @@ sub export_sm
     my $fmt = "%-8s  %-32s  %-2s  %3s  %-4s  %3d  %-4s  %s\n";
 
     # Export the data to this file.
-    foreach my $id (sort { $a <=> $b } keys %{$ratings})
+    foreach my $id (sort { $a <=> $b } keys %{$players})
     {
         # Get the player.
-        my $player = $players->{$id} || next;
+        my $player = $players->{$id};
 
         # Prepare for the data for this record.
         my @data;
