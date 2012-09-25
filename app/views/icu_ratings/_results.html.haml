@@ -1,13 +1,15 @@
 %table
   %tr
     %th Player
+    - if @show_id
+      %th ID
     %th List
     %th Rtng
     - if @show_original
       %th Orig
     %th Fed
     %th Club
-  - width = 5 + (@show_original ? 1 : 0)
+  - width = 5 + (@show_original ? 1 : 0) + (@show_id ? 1 : 0)
   - if @icu_ratings.count == 0
     %tr
       %td{colspan: width, class: "centered"} No matches
@@ -20,6 +22,8 @@
     - @icu_ratings.matches.each_with_index do |r, i|
       %tr
         = render "shared/rowspan", rowspan: @icu_ratings.rowspan(i, icu_id, name), attrs: { title: r.icu_id }
+        - if @show_id
+          = render "shared/rowspan", rowspan: @icu_ratings.rowspan(i, icu_id), attrs: { class: "righted" }
         = render "shared/rowspan", rowspan: @icu_ratings.rowspan(i, list)
         %td{class: "#{r.type}"}= link_to r.rating, icu_rating_path(r, format: "js"), remote: true
         - if @show_original
