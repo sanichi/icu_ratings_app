@@ -167,7 +167,7 @@ sub export_sp
     };
     die "cannot write file $file\n" if $@ || !$dbf;
 
-    foreach my $id (sort { $a <=> $b } keys %{$players})
+    foreach my $id (sort { $players->{$a}->{last_name} cmp $players->{$b}->{last_name} || $players->{$a}->{first_name} cmp $players->{$b}->{first_name} } keys %{$players})
     {
         my $player = $players->{$id};
         my $arr = [];
@@ -209,7 +209,7 @@ sub export_sm
     my $fmt = "%-8s  %-32s  %-2s  %3s  %-4s  %3d  %-4s  %s\n";
 
     # Export the data to this file.
-    foreach my $id (sort { $a <=> $b } keys %{$players})
+    foreach my $id (sort { $players->{$a}->{last_name} cmp $players->{$b}->{last_name} || $players->{$a}->{first_name} cmp $players->{$b}->{first_name} } keys %{$players})
     {
         # Get the player.
         my $player = $players->{$id};
