@@ -1,4 +1,4 @@
-#!/opt/local/bin/perl
+#!/usr/local/bin/perl
 use strict;
 use DBI;
 use YAML;
