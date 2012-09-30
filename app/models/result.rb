@@ -55,7 +55,7 @@ class Result < ActiveRecord::Base
     match = match.where(tournaments: { stage: "rated" })
     case type
     when :gain
-      match = match.where("results.rating_change >= 0")
+      match = match.where("results.rating_change > 0")
       match = match.order("round(results.rating_change) DESC")
     when :loss
       match = match.where("results.rating_change < 0")

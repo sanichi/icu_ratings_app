@@ -32,11 +32,11 @@ module ApplicationHelper
     "%.#{decimals}f" % num
   end
 
-  # A signed integer (e.g "-10", "+125", "0"). Nil allowed.
+  # A signed integer (e.g "-10", "+125", "0"). Nil allowed, float input allowed.
   def sign(num, opt={space: false})
     return "" unless num
-    sgn = num >= 0 ? "+" : "−"
-    spc = opt[:space] ? ' ' : ''
+    sgn = num == 0 ? (opt[:space] ? "+" : "") : (num > 0 ? "+" : "−")
+    spc = opt[:space] ? " " : ""
     num = num.abs.round
     "#{sgn}#{spc}#{num}"
   end
