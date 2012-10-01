@@ -43,9 +43,10 @@ module ApplicationHelper
 
   def federation_menu(opt = { top: 'IRL', none: 'None' })
     menu = ICU::Federation.menu(opt)
-    menu.insert(1, [opt[:irl_unk], "IR?"]) if opt[:irl_unk]
-    menu.insert(1, [opt[:unknown], "???"]) if opt[:unknown]
-    menu.insert(1, [opt[:foreign], "XXX"]) if opt[:foreign]
+    drop = (opt[:top] ? 1 : 0) + (opt[:none] ? 1 : 0)
+    menu.insert(drop, [opt[:unknown], "???"]) if opt[:unknown]
+    menu.insert(drop, [opt[:foreign], "XXX"]) if opt[:foreign]
+    menu.insert(drop, [opt[:irl_unk], "IR?"]) if opt[:irl_unk]
     menu
   end
 
