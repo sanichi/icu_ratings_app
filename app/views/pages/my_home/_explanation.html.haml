@@ -14,8 +14,7 @@
           %p
             We have no record of any published ratings for you or any recent rateable games.
             However we do have an old rating,
-            = succeed(".") do
-              = render partial: "#{views}explain_old_rating", locals: { old_rating: old_rating }
+            = render partial: "#{views}explain_old_rating", locals: { old_rating: old_rating, ending: "." }
             If you play in rated tournaments in the future this will be your start rating
             and details of your tournament rating performances will appear here.
           = render partial: "#{views}explain_rated_tournaments"
