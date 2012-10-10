@@ -3,6 +3,7 @@ class AddOldRatingsFromArchive < ActiveRecord::Migration
   # RAILS_ENV=production bin/rake db:migrate:redo VERSION=20120604061351
   RECORDS =
   [
+    {icu_id:   552, rating: 1692, games: 11, full: true},
     {icu_id:  1074, rating: 1821, games:  7, full: true},
     {icu_id:  1305, rating: 1190, games: 30, full: true},
     {icu_id:  2404, rating: 1210, games:  6, full: true},
