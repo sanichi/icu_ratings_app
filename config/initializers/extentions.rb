@@ -10,9 +10,9 @@ end
 class Array
   def examples(n=4)
     if size <= n
-      join(", ")
+      map(&:to_s).join(", ")
     else
-      "#{self[0..n-1].join(', ')} ... #{last}"
+      self[0..n-1].map(&:to_s).join(", ") + " ... #{last}"
     end
   end
 end

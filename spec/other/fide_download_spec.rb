@@ -31,6 +31,7 @@ module FIDE
       me.gender.should == "M"
       me.born.should == 1955
       me.rating.should == 2240
+      me.games.should == 0
       me.title.should == "IM"
       me.fed.should == "IRL"
       me.active.should be_true
@@ -41,6 +42,7 @@ module FIDE
       april.gender.should == "F"
       april.born.should == 1960
       april.rating.should == 2055
+      april.games.should == 0
       april.title.should be_nil
       april.fed.should == "IRL"
       april.active.should be_false
@@ -51,6 +53,7 @@ module FIDE
       gearoidin.gender.should == "F"
       gearoidin.born.should == 1964
       gearoidin.rating.should == 1894
+      gearoidin.games.should == 0
       gearoidin.title.should == "WCM"
       gearoidin.fed.should == "IRL"
       gearoidin.active.should be_true
@@ -61,6 +64,7 @@ module FIDE
       mark.gender.should == "M"
       mark.born.should == 1976
       mark.rating.should == 2388
+      mark.games.should == 0
       mark.title.should == "IM"
       mark.fed.should == "IRL"
       mark.active.should be_true
@@ -71,6 +75,7 @@ module FIDE
       bernard.gender.should == "M"
       bernard.born.should == 1955
       bernard.rating.should == 2380
+      bernard.games.should == 0
       bernard.title.should be_nil
       bernard.fed.should == "IRL"
       bernard.active.should be_false
@@ -81,6 +86,7 @@ module FIDE
       debbie.gender.should == "F"
       debbie.born.should == 1969
       debbie.rating.should == 1841
+      debbie.games.should == 0
       debbie.title.should be_nil
       debbie.fed.should == "IRL"
       debbie.active.should be_false
@@ -104,6 +110,7 @@ module FIDE
       magnus.gender.should == "M"
       magnus.born.should == 1990
       magnus.rating.should == 2843
+      magnus.games.should == 10
       magnus.title.should == "GM"
       magnus.fed.should == "NOR"
       magnus.active.should be_true
@@ -114,6 +121,7 @@ module FIDE
       shakri.gender.should == "M"
       shakri.born.should == 1985
       shakri.rating.should == 2729
+      shakri.games.should == 0
       shakri.title.should == "GM"
       shakri.fed.should == "AZE"
       shakri.active.should be_true
@@ -124,6 +132,7 @@ module FIDE
       sofia.gender.should == "F"
       sofia.born.should be nil
       sofia.rating.should == 2080
+      sofia.games.should == 0
       sofia.title.should be_nil
       sofia.fed.should == "RUS"
       sofia.active.should be_true
