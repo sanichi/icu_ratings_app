@@ -108,7 +108,6 @@ module FIDE
                   end
                 else
                   @invalid.push("#{id} #{ofr.errors.inspect}")
-                  raise SyncError.new("too many invalid records") if @invalid.size > 10
                 end
               else
                 oplr.fide_ratings.create(list: @list, rating: rating, games: games)
@@ -117,8 +116,8 @@ module FIDE
             end
           else
             @invalid.push("#{id} #{oplr.errors.inspect}")
-            raise SyncError.new("too many invalid records") if @invalid.size > 10
           end
+          raise SyncError.new("too many invalid records") if @invalid.size > 10
         end
         @time["update"] = Time.now - @start
       end
@@ -157,7 +156,7 @@ module FIDE
 
       def summarize_changes
         return "none" if @changes.keys.size == 0
-        @changes.keys.sort.map { |key| "#{key}: #{@changes[key]}" }.join(", ")
+        @changes.keys.sort_by(&:to_s).map { |key| "#{key}: #{@changes[key]}" }.join(", ")
       end
 
       def summarize_invalid
