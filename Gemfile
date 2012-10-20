@@ -12,6 +12,7 @@ gem "whenever", :require => false
 gem "redcarpet"
 gem "cancan", "~> 1.6"
 gem "jquery-rails"
+gem "nokogiri"
 
 group :assets do
   gem "sass-rails", ">= 3.2.3"

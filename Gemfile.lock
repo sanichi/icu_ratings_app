@@ -223,6 +223,7 @@ DEPENDENCIES
   jquery-rails
   launchy
   mysql2
+  nokogiri
   quiet_assets
   rails (= 3.2.8)
   redcarpet
