@@ -12,4 +12,4 @@ $('#sortable_tie_breaks')
   .sortable({ axis: 'y', delay: 100, distance: 5, opacity: 0.6, revert: true, tolerance: 'pointer', update: sortable_tie_breaks })
   .disableSelection()
   .find('input')
-  .bind('change', sortable_tie_breaks);
+  .on('change', sortable_tie_breaks);

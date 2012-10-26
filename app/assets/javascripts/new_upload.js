@@ -30,9 +30,7 @@ function check_form() {
   if (errors.length > 0) alert("Please provide: " + errors.join(", "))
   return errors.length > 0 ? false : true;
 }
-// Notes:
-// 1. Using .on() instead of .bind() was necessary for the new_upload onsubmit behaviour to work in FireFox and IE.
-// 2. Using coffescript didn't work in FireFox and IE (got the same syntax error as in note 1).
+// Notes: using coffescript didn't work in FireFox and IE (got syntax error).
 $(function() {
   $("#start").datepicker({ dateFormat: 'yy-mm-dd' });
   $("#finish").datepicker({ dateFormat: 'yy-mm-dd' });

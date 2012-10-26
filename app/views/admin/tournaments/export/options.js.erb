@@ -9,5 +9,5 @@ function toggle_export_option(key, status) {
 }
 $("#dialog_export_tournament")
   .html("<%= j render('admin/tournaments/export/form') %>")
-  .find("select[name='type']").bind("change", toggle_export_options).trigger("change").end()
+  .find("select[name='type']").on("change", toggle_export_options).trigger("change").end()
   .dialog("open");
