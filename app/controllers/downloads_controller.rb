@@ -4,6 +4,7 @@ class DownloadsController < ApplicationController
 
   def index
     @downloads = Download.search(params, downloads_path)
+    @exports_article = Article.get_by_identity("rating exports")
     render :results if request.xhr?
   end
 

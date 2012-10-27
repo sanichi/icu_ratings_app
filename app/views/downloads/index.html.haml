@@ -36,3 +36,14 @@
       %td{class: "centered", colspan: 6}= pagination_links(@downloads)
       - if can? :manage, Download
         %td{class: "floater"}
+
+#help
+  %dl
+    %dt Should I use the latest published or live ratings?
+    %dd
+      It's your choice.
+      - if @exports_article
+        See this
+        = link_to "article", @exports_article
+        for more details.
+
