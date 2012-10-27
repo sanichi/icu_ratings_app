@@ -21,8 +21,8 @@ getopts($opt, \%opt);
 sub help
 {
     print <<EOH;
-dbf_export [$opt] [root_dir]
-export a DBF file for SwissPerfect
+dbf_export [$opt]
+export lastest ratings
   -r  rails root directory (default: current directory)
   -e  environment (default: $def{e})
   -c  database config file (default: $def{c})
@@ -48,25 +48,34 @@ $opt{f} ||= $def{f};
 my $root = $opt{r};
 !$root || chdir($root) || die "cannot cd to $root\n";
 
+# Report start time.
+&report_time('start');
+
 # Get the current year and month.
 my ($year, $mon) = &get_year_month();
 
 # Get a handle to the database.
 my $dbh = &get_dbh();
 
-# Get the data we need from the database.
+# Get the player data.
 my $players = &get_players();
-my $ratings = &get_ratings();
 
-# Write the files.
-my $sp_file = &export_sp();
-my $sm_file = &export_sm();
+# Export two types of latest ratings: published and live.
+foreach my $type (qw/published live/)
+{
+    # Query for the ratings.
+    my $ratings = &get_ratings($type);
 
-# Put them both in a ZIP archive file and print the file's name.
-my $zip_file = &archive();
+    # Write the files.
+    my $sp_file = &export_sp($type, $ratings);
+    my $sm_file = &export_sm($type, $ratings);
 
-# Finally, print the file's name (this is the success signal).
-print "$zip_file\n";
+    # Put them both in a ZIP archive file.
+    &archive($type, $sp_file, $sm_file);
+}
+
+# Report the finish time.
+&report_time('finish');
 
 #
 # Helpers.
@@ -78,8 +87,17 @@ sub get_year_month
     ($year) = $year =~ /(\d\d)$/;
     $mon = qw/jan feb mar apr may jun jul aug sep oct nov dec/[$mon];
     die "invalid year ($year) or month ($mon)" unless $year =~ /^\d\d$/ && $mon =~ /^[a-z]{3}$/;
+    print "year/month: $year/$mon\n";
     ($year, $mon);
 }
+
+sub report_time
+{
+    my ($desc) = @_;
+    my ($sec, $min, $hour, $day) = localtime;
+    printf "%s time: %-02d %-02d:%-02d:%-02d\n", $desc, $day, $hour, $min, $sec;
+}
+
 
 sub get_dbh
 {
@@ -126,33 +144,51 @@ EOS
 
     my $players = {};
     $players->{$_->{id}} = $_ for @{$data};
+    printf "%-5d players\n", scalar(keys %{$players});
     $players;
 }
 
 sub get_ratings
 {
+    my ($type) = @_;
     my ($sql, $data, $ids);
     my $ratings = {};
 
-    # Latest from the rating lists.
-    $sql = "SELECT icu_id, rating FROM icu_ratings ORDER BY list DESC";
+    # Get the latest published or live ratings.
+    $sql = $type eq 'published' ? 'SELECT icu_id, rating FROM icu_ratings ORDER BY list DESC' : <<EOS;
+SELECT
+  icu_id,
+  new_rating
+FROM
+  players,
+  tournaments
+WHERE
+  tournament_id = tournaments.id AND
+  stage = 'rated' AND
+  icu_id IS NOT NULL
+ORDER BY
+  rorder DESC
+EOS
     $data = eval { $dbh->selectall_arrayref($sql, { Slice => {} }) };
-    die sprintf("published ratings database query failed: %s\n", $@ || 'no reason') unless 'ARRAY' eq ref $data;
-    $ratings->{$_->{icu_id}} ||= $_->{rating} for @{$data};
+    die sprintf("$type ratings query failed: %s\n", $@ || 'no reason') unless 'ARRAY' eq ref $data;
+    $ratings->{$_->{icu_id}} ||= $_->{$type eq 'published' ? 'rating' : 'new_rating'} for @{$data};
+    printf "%-5d initial %s ratings\n", scalar(keys %{$ratings}), $type;
 
-    # Or from the legacy list if necessary.
+    # Complete missing ratings from the legacy list.
     $ids = join(',', sort keys %{$ratings});
     $sql = "SELECT icu_id, rating FROM old_ratings WHERE icu_id NOT IN ($ids)";
     $data = eval { $dbh->selectall_arrayref($sql, { Slice => {} }) };
     die sprintf("old ratings database query failed: %s\n", $@ || 'no reason') unless 'ARRAY' eq ref $data;
     $ratings->{$_->{icu_id}} ||= $_->{rating} for @{$data};
+    printf "%-5d augmented %s ratings\n", scalar(keys %{$ratings}), $type;
 
     $ratings;
 }
 
 sub export_sp
 {
-    my $file = sprintf('%s/swiss_perfect.dbf', $opt{f});
+    my ($type, $ratings) = @_;
+    my $file = sprintf('%s/swiss_perfect_%s.dbf', $opt{f}, &_short($type));
     my $dbf = eval
     {
         CAM::DBF->create($file,
@@ -183,14 +219,16 @@ sub export_sp
     }
 
     $dbf->closeDB;
+    printf "wrote %s (%d)\n", $file, -s $file;
     $file;
 }
 
 sub export_sm
 {
-    my $file = sprintf('%s/swiss_manager.txt', $opt{f});
+    my ($type, $ratings) = @_;
+    my $file = sprintf('%s/swiss_manager_%s.txt', $opt{f}, &_short($type));
     open(FILE, '>:encoding(UTF-8)', $file) || die "can't write to file $file\n";
-    
+
     # What month/year is it?
     my $mmyy = "\u$mon$year";
 
@@ -267,20 +305,23 @@ sub export_sm
         # Append it to the file.
         printf FILE $fmt, @data;
     }
-    close FILE;
 
+    close FILE;
+    printf "wrote %s (%d)\n", $file, -s $file;
     $file;
 }
 
 sub archive
 {
-    my $file = sprintf('%s/%s%s.zip', $opt{f}, $mon, $year);
-    
+    my ($type, $sp_file, $sm_file) = @_;
+    my $file = sprintf('%s/%s.zip', $opt{f}, &_short($type));
+
     my $zip = Archive::Zip->new;
     $zip->addFile($sp_file, &_nodir($sp_file));
     $zip->addFile($sm_file, &_nodir($sm_file));
     die "couldn't write ZIP archive $file" unless $zip->writeToFileNamed($file) == 0;
 
+    printf "wrote %s (%d)\n", $file, -s $file;
     $file;
 }
 
@@ -289,4 +330,9 @@ sub _nodir
     my ($path) = @_;
     my ($file) = $path =~ /([^\/]+)$/;
     $file;
+}
+
+sub _short
+{
+    $_[0] eq 'published' ? 'pub' : 'live'
 }

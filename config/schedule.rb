@@ -20,10 +20,14 @@ every :day, at: "4:30am" do
   rake "sync:icu_subs"
 end
 
-every :sunday, at: "5:00am" do
-  rake "sync:irish_fide_players"
+every :day, at: "5:00am" do
+  rake "export:ratings"
 end
 
 every :sunday, at: "5:30am" do
+  rake "sync:irish_fide_players"
+end
+
+every :sunday, at: "6:0am" do
   rake "sync:other_fide_players"
 end

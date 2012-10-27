@@ -6,7 +6,7 @@
 #  comment      :string(255)
 #  file_name    :string(255)
 #  content_type :string(255)
-#  data         :binary(16777215
+#  data         :binary(16777215)
 #  created_at   :datetime
 #  updated_at   :datetime
 #
