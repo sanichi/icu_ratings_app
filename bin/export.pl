@@ -155,7 +155,7 @@ sub get_ratings
     my $ratings = {};
 
     # Get the latest published or live ratings.
-    $sql = $type eq 'published' ? 'SELECT icu_id, rating FROM icu_ratings ORDER BY list DESC' : <<EOS;
+    $sql = $type eq 'published' ? "SELECT icu_id, rating FROM icu_ratings WHERE list >= '2011-09-01' ORDER BY list DESC" : <<EOS;
 SELECT
   icu_id,
   new_rating
