@@ -1,4 +1,5 @@
-= form_tag icu_ratings_path, method: "get", remote: true, id: "rating_form" do
+- handleRemote = "$.rails.handleRemote($('#rating_form'))"
+= form_tag icu_ratings_path, method: "get", id: "rating_form" do
   = hidden_field_tag :per_page, params[:per_page]
   %table{class: "invisible"}
     %tr
@@ -9,11 +10,11 @@
       %th= label_tag :icu_id, "ICU ID"
       %th
     %tr
-      %td= select_tag :list, options_for_select(icu_rating_list_menu("Any"), params[:list])
-      %td= text_field_tag :last_name, params[:last_name], class: "centered", size: 10
-      %td= text_field_tag :first_name, params[:first_name], class: "centered", size: 10
-      %td= select_tag :gender, options_for_select(gender_menu("Any"), params[:gender])
-      %td= text_field_tag :icu_id, params[:icu_id], class: "centered", size: 10
+      %td= select_tag :list, options_for_select(icu_rating_list_menu("Any"), params[:list]), onchange: handleRemote
+      %td= text_field_tag :last_name, params[:last_name], onchange: handleRemote, class: "centered", size: 10
+      %td= text_field_tag :first_name, params[:first_name], onchange: handleRemote, class: "centered", size: 10
+      %td= select_tag :gender, options_for_select(gender_menu("Any"), params[:gender]), onchange: handleRemote
+      %td= text_field_tag :icu_id, params[:icu_id], onchange: handleRemote, class: "centered", size: 10
       %td= submit_tag "Search"
   %table{class: "invisible"}
     %tr
@@ -22,14 +23,14 @@
       %th= label_tag :type, "Rating Type"
       %th
     %tr
-      %td= select_tag :club, options_for_select(club_menu, params[:club])
-      %td= select_tag :fed, options_for_select(federation_menu(top: "IRL", none: "Any", unknown: "Unknown", foreign: "Foreign", irl_unk: "Ireland or Unknown"), params[:fed])
-      %td= select_tag :type, options_for_select(rating_type_menu("Any"), params[:type])
+      %td= select_tag :club, options_for_select(club_menu, params[:club]), onchange: handleRemote
+      %td= select_tag :fed, options_for_select(federation_menu(top: "IRL", none: "Any", unknown: "Unknown", foreign: "Foreign", irl_unk: "Ireland or Unknown"), params[:fed]), onchange: handleRemote
+      %td= select_tag :type, options_for_select(rating_type_menu("Any"), params[:type]), onchange: handleRemote
   %table{class: "invisible"}
     %tr
       %th
         = label_tag :show_original, "show original ratings"
-        = check_box_tag :show_original, "true", params[:show_original], onchange: "$.rails.handleRemote($('#rating_form'))"
+        = check_box_tag :show_original, "true", params[:show_original], onchange: handleRemote
       %th
         = label_tag :show_id, "show ICU ID"
-        = check_box_tag :show_id, "true", params[:show_id], onchange: "$.rails.handleRemote($('#rating_form'))"
+        = check_box_tag :show_id, "true", params[:show_id], onchange: handleRemote

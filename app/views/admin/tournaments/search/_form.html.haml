@@ -1,4 +1,5 @@
-= form_tag admin_tournaments_path, method: "get", remote: true do
+- handleRemote = "$.rails.handleRemote($('#_search_form'))"
+= form_tag admin_tournaments_path, method: "get", id: "_search_form" do
   = hidden_field_tag :per_page, params[:per_page]
   %table{class: "invisible"}
     %tr
@@ -12,13 +13,13 @@
       %th= label_tag :user_id, "Reporter"
       %th= label_tag :fide_rated, "FIDE"
     %tr
-      %td= text_field_tag :name, params[:name], class: "centered", size: 20
-      %td= text_field_tag :year, params[:year], class: "centered", size: 4
-      %td= select_tag :status, options_for_select(tournament_status_menu("Any"), params[:status])
-      %td= select_tag :stage, options_for_select(tournament_stage_menu("Any"), params[:stage])
-      %td= select_tag :locked, options_for_select(tournament_lock_menu("Any"), params[:locked])
-      %td= select_tag :user_id, options_for_select(user_menu(:tournaments, "Any"), params[:user_id])
-      %td= select_tag :fide_rated, options_for_select(fide_rated_menu("Any"), params[:fide_rated])
+      %td= text_field_tag :name, params[:name], onchange: handleRemote, class: "centered", size: 20
+      %td= text_field_tag :year, params[:year], onchange: handleRemote, class: "centered", size: 4
+      %td= select_tag :status, options_for_select(tournament_status_menu("Any"), params[:status]), onchange: handleRemote
+      %td= select_tag :stage, options_for_select(tournament_stage_menu("Any"), params[:stage]), onchange: handleRemote
+      %td= select_tag :locked, options_for_select(tournament_lock_menu("Any"), params[:locked]), onchange: handleRemote
+      %td= select_tag :user_id, options_for_select(user_menu(:tournaments, "Any"), params[:user_id]), onchange: handleRemote
+      %td= select_tag :fide_rated, options_for_select(fide_rated_menu("Any"), params[:fide_rated]), onchange: handleRemote
   %table{class: "invisible"}
     %tr
       %th{colspan: 3, class: "underlined"} Player
@@ -27,9 +28,9 @@
       %th= label_tag :first_name, "First Name"
       %th= label_tag :icu_id, "ICU ID"
     %tr
-      %td= text_field_tag :last_name, params[:last_name], class: "centered", size: 15
-      %td= text_field_tag :first_name, params[:first_name], class: "centered", size: 10
-      %td= text_field_tag :icu_id, params[:icu_id], class: "centered", size: 10
+      %td= text_field_tag :last_name, params[:last_name], onchange: handleRemote, class: "centered", size: 15
+      %td= text_field_tag :first_name, params[:first_name], onchange: handleRemote, class: "centered", size: 10
+      %td= text_field_tag :icu_id, params[:icu_id], onchange: handleRemote, class: "centered", size: 10
   %table{class: "invisible turbaned"}
     %tr
       %td= submit_tag "Search"
