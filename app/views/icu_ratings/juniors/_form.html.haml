@@ -1,4 +1,5 @@
-= form_tag juniors_icu_ratings_path, method: "get", remote: true do
+- handleRemote = "$.rails.handleRemote($('#_search_form'))"
+= form_tag juniors_icu_ratings_path, method: "get", id: "_search_form" do
   %table{class: "invisible"}
     %tr
       %th= label_tag :under
@@ -8,9 +9,9 @@
       %th= label_tag :club
       %th
     %tr
-      %td= select_tag :under, options_for_select(@juniors.under_menu, params[:under])
-      %td= select_tag :least, options_for_select(@juniors.least_menu, params[:least])
-      %td= select_tag :date, options_for_select(@juniors.date_menu, params[:date])
-      %td= select_tag :gender, options_for_select(gender_menu("Any"), params[:gender])
-      %td= select_tag :club, options_for_select(club_menu(nil), params[:club])
+      %td= select_tag :under, options_for_select(@juniors.under_menu, params[:under]), onchange: handleRemote
+      %td= select_tag :least, options_for_select(@juniors.least_menu, params[:least]), onchange: handleRemote
+      %td= select_tag :date, options_for_select(@juniors.date_menu, params[:date]), onchange: handleRemote
+      %td= select_tag :gender, options_for_select(gender_menu("Any"), params[:gender]), onchange: handleRemote
+      %td= select_tag :club, options_for_select(club_menu(nil), params[:club]), onchange: handleRemote
       %td= submit_tag "Search"

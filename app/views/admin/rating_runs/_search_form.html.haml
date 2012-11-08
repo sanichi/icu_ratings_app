@@ -1,9 +1,9 @@
-= form_tag admin_rating_runs_path, method: "get", remote: true do
+= form_tag admin_rating_runs_path, method: "get", id: "_search_form" do
   = hidden_field_tag :per_page, params[:per_page]
   %table{class: "invisible"}
     %tr
       %th= label_tag :status
       %th
     %tr
-      %td= select_tag :status, options_for_select(rating_run_status_menu("any"), params[:status])
+      %td= select_tag :status, options_for_select(rating_run_status_menu("any"), params[:status]), onchange: "$.rails.handleRemote($('#_search_form'))"
       %td= submit_tag "Search"

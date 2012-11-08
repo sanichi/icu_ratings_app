@@ -1,4 +1,5 @@
-= form_tag fide_ratings_path, method: "get", remote: true do
+- handleRemote = "$.rails.handleRemote($('#_search_form'))"
+= form_tag fide_ratings_path, method: "get", id: "_search_form" do
   = hidden_field_tag :per_page, params[:per_page]
   %table{class: "invisible"}
     %tr
@@ -9,9 +10,9 @@
       %th= label_tag :fide_id, "FIDE ID"
       %th
     %tr
-      %td= select_tag :list, options_for_select(fide_rating_list_menu("Any"), params[:list])
-      %td= text_field_tag :last_name, params[:last_name], class: "centered", size: 10
-      %td= text_field_tag :first_name, params[:first_name], class: "centered", size: 10
-      %td= select_tag :gender, options_for_select(gender_menu("Any"), params[:gender])
-      %td= text_field_tag :fide_id, params[:fide_id], class: "centered", size: 10
+      %td= select_tag :list, options_for_select(fide_rating_list_menu("Any"), params[:list]), onchange: handleRemote
+      %td= text_field_tag :last_name, params[:last_name], onchange: handleRemote, class: "centered", size: 10
+      %td= text_field_tag :first_name, params[:first_name], onchange: handleRemote, class: "centered", size: 10
+      %td= select_tag :gender, options_for_select(gender_menu("Any"), params[:gender]), onchange: handleRemote
+      %td= text_field_tag :fide_id, params[:fide_id], onchange: handleRemote, class: "centered", size: 10
       %td= submit_tag "Search"

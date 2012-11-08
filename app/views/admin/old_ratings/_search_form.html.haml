@@ -1,4 +1,5 @@
-= form_tag admin_old_ratings_path, method: "get", remote: true do
+- handleRemote = "$.rails.handleRemote($('#_search_form'))"
+= form_tag admin_old_ratings_path, method: "get", id: "_search_form" do
   = hidden_field_tag :per_page, params[:per_page]
   %table{class: "invisible"}
     %tr
@@ -8,8 +9,8 @@
       %th= label_tag :icu_id, "ICU ID"
       %th
     %tr
-      %td= text_field_tag :last_name, params[:last_name], class: "centered", size: 15
-      %td= text_field_tag :first_name, params[:first_name], class: "centered", size: 10
-      %td= select_tag :type, options_for_select(rating_type_menu("Any"), params[:type])
-      %td= text_field_tag :icu_id, params[:icu_id], class: "centered", size: 10
+      %td= text_field_tag :last_name, params[:last_name], onchange: handleRemote, class: "centered", size: 15
+      %td= text_field_tag :first_name, params[:first_name], onchange: handleRemote, class: "centered", size: 10
+      %td= select_tag :type, options_for_select(rating_type_menu("Any"), params[:type]), onchange: handleRemote
+      %td= text_field_tag :icu_id, params[:icu_id], onchange: handleRemote, class: "centered", size: 10
       %td= submit_tag "Search"
