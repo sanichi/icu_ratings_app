@@ -1,4 +1,4 @@
-= form_tag articles_path, method: "get", remote: true do
+= form_tag articles_path, method: "get", id: handle_remote_id do
   = hidden_field_tag :per_page, 20
   - extra = can?(:create, Article)
   %table{class: "invisible"}
@@ -12,11 +12,11 @@
         %th= label_tag :identity
       %th
     %tr
-      %td= text_field_tag :headline, params[:headline], class: "centered", size: 15
-      %td= text_field_tag :story, params[:story], class: "centered", size: 15
-      %td= select_tag :order, options_for_select([["title", "headline"], ["created date", "created_at"], ["last updated date", "updated_at"]], params[:order] || "headline")
+      %td= text_field_tag :headline, params[:headline], onchange: handle_remote, class: "centered", size: 15
+      %td= text_field_tag :story, params[:story], onchange: handle_remote, class: "centered", size: 15
+      %td= select_tag :order, options_for_select([["title", "headline"], ["created date", "created_at"], ["last updated date", "updated_at"]], params[:order] || "headline"), onchange: handle_remote
       - if extra
-        %td= select_tag :user_id, options_for_select(user_menu(:articles, "Any"), params[:user_id])
-        %td= select_tag :published, options_for_select(published_menu("Any"), params[:published])
-        %td= text_field_tag :identity, params[:identity], class: "centered", size: 15
+        %td= select_tag :user_id, options_for_select(user_menu(:articles, "Any"), params[:user_id]), onchange: handle_remote
+        %td= select_tag :published, options_for_select(published_menu("Any"), params[:published]), onchange: handle_remote
+        %td= text_field_tag :identity, params[:identity], onchange: handle_remote, class: "centered", size: 15
       %td= submit_tag "Search"

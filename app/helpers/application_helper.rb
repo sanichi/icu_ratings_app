@@ -325,4 +325,15 @@ module ApplicationHelper
   def admin?
     current_user && current_user.role?("admin")
   end
+
+  # The default ID to use for search forms that submit remotely onchange.
+  def handle_remote_id
+    "_search_id"
+  end
+
+  # The JavaScript that submits forms remotely.
+  def handle_remote(form_id = nil)
+    form_id ||= handle_remote_id
+    "$.rails.handleRemote($('##{form_id}'))"
+  end
 end

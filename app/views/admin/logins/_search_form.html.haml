@@ -1,4 +1,4 @@
-= form_tag admin_logins_path, method: "get", remote: true do
+= form_tag admin_logins_path, method: "get", id: handle_remote_id do
   = hidden_field_tag :per_page, params[:per_page]
   %table{class: "invisible"}
     %tr
@@ -7,10 +7,10 @@
       %th= label_tag :role
       %th= label_tag :problem
     %tr
-      %td= text_field_tag :email, params[:email], class: "centered", size: 25
-      %td= text_field_tag :icu_id, params[:icu_id], class: "centered", size: 8
-      %td= select_tag :role, options_for_select(role_menu("Any"), params[:role])
-      %td= select_tag :problem, options_for_select(problem_menu("Any"), params[:problem])
+      %td= text_field_tag :email, params[:email], onchange: handle_remote, class: "centered", size: 25
+      %td= text_field_tag :icu_id, params[:icu_id], onchange: handle_remote, class: "centered", size: 8
+      %td= select_tag :role, options_for_select(role_menu("Any"), params[:role]), onchange: handle_remote
+      %td= select_tag :problem, options_for_select(problem_menu("Any"), params[:problem]), onchange: handle_remote
   %table{class: "invisible"}
     %tr
       %th= label_tag :last_name
@@ -18,7 +18,7 @@
       %th= label_tag :ip, "IP Address"
       %th
     %tr
-      %td= text_field_tag :last_name, params[:last_name], class: "centered", size: 10
-      %td= text_field_tag :first_name, params[:first_name], class: "centered", size: 10
-      %td= text_field_tag :ip, params[:ip], class: "centered", size: 15
+      %td= text_field_tag :last_name, params[:last_name], onchange: handle_remote, class: "centered", size: 10
+      %td= text_field_tag :first_name, params[:first_name], onchange: handle_remote, class: "centered", size: 10
+      %td= text_field_tag :ip, params[:ip], onchange: handle_remote, class: "centered", size: 15
       %td= submit_tag "Search"

@@ -1,4 +1,4 @@
-= form_tag admin_uploads_path, method: "get", remote: true do
+= form_tag admin_uploads_path, method: "get", id: handle_remote_id do
   = hidden_field_tag :per_page, params[:per_page]
   %table{class: "invisible"}
     %tr
@@ -8,8 +8,8 @@
       %th= label_tag :name, "Filename"
       %th
     %tr
-      %td= select_tag :user_id, options_for_select(user_menu(:uploads, "Any"), params[:user_id])
-      %td= select_tag :format, options_for_select(upload_format_menu("Any"), params[:format])
-      %td= text_field_tag :created_at, params[:created_at], class: "centered", size: 10
-      %td= text_field_tag :name, params[:name], class: "centered", size: 20
+      %td= select_tag :user_id, options_for_select(user_menu(:uploads, "Any"), params[:user_id]), onchange: handle_remote
+      %td= select_tag :format, options_for_select(upload_format_menu("Any"), params[:format]), onchange: handle_remote
+      %td= text_field_tag :created_at, params[:created_at], onchange: handle_remote, class: "centered", size: 10
+      %td= text_field_tag :name, params[:name], onchange: handle_remote, class: "centered", size: 20
       %td= submit_tag "Search"

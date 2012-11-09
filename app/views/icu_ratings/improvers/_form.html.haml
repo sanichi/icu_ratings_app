@@ -1,9 +1,10 @@
-= form_tag improvers_icu_ratings_path, method: "get", remote: true, id: "improvers_form" do
+- handleRemote = handle_remote("improvers_form")
+= form_tag improvers_icu_ratings_path, method: "get", id: "improvers_form" do
   %table{class: "invisible"}
     %tr
       %th= label_tag :from
       %th= label_tag :upto, "To"
     %tr
       - menu = @improvers.dates.map { |d| [year_month(d), d.to_s] }
-      %td= select_tag :from, options_for_select(menu.drop(1), params[:from]), onchange: "$.rails.handleRemote($('#improvers_form'))"
-      %td= select_tag :upto, options_for_select(menu.reverse.drop(1).reverse, params[:upto]), onchange: "$.rails.handleRemote($('#improvers_form'))"
+      %td= select_tag :from, options_for_select(menu.drop(1), params[:from]), onchange: handleRemote
+      %td= select_tag :upto, options_for_select(menu.reverse.drop(1).reverse, params[:upto]), onchange: handleRemote

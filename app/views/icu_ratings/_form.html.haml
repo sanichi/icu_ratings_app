@@ -1,4 +1,4 @@
-- handleRemote = "$.rails.handleRemote($('#rating_form'))"
+- handleRemote = handle_remote("rating_form")
 = form_tag icu_ratings_path, method: "get", id: "rating_form" do
   = hidden_field_tag :per_page, params[:per_page]
   %table{class: "invisible"}

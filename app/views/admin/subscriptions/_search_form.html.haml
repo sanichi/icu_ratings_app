@@ -1,4 +1,4 @@
-= form_tag admin_subscriptions_path, method: "get", remote: true do
+= form_tag admin_subscriptions_path, method: "get", id: handle_remote_id do
   = hidden_field_tag :per_page, params[:per_page]
   %table{class: "invisible"}
     %tr
@@ -9,9 +9,9 @@
       %th= label_tag :icu_id, "ICU ID"
       %th
     %tr
-      %td= text_field_tag :last_name, params[:last_name], class: "centered", size: 15
-      %td= text_field_tag :first_name, params[:first_name], class: "centered", size: 15
-      %td= select_tag :season, options_for_select(sub_season_menu("Any"), params[:season])
-      %td= select_tag :category, options_for_select(sub_category_menu("Any"), params[:category])
-      %td= text_field_tag :icu_id, params[:icu_id], class: "centered", size: 5
+      %td= text_field_tag :last_name, params[:last_name], onchange: handle_remote, class: "centered", size: 15
+      %td= text_field_tag :first_name, params[:first_name], onchange: handle_remote, class: "centered", size: 15
+      %td= select_tag :season, options_for_select(sub_season_menu("Any"), params[:season]), onchange: handle_remote
+      %td= select_tag :category, options_for_select(sub_category_menu("Any"), params[:category]), onchange: handle_remote
+      %td= text_field_tag :icu_id, params[:icu_id], onchange: handle_remote, class: "centered", size: 5
       %td= submit_tag "Search"
