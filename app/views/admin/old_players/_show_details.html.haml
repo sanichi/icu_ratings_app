@@ -1,0 +1,44 @@
+%table{class: "right-headers"}
+  %tr
+    %th ICU ID
+    %td= @old_player.icu_id
+  %tr
+    %th First Name
+    %td= @old_player.first_name
+  %tr
+    %th Last Name
+    %td= @old_player.last_name
+  %tr
+    %th Gender
+    %td= @old_player.gender
+  %tr
+    %th Date of Birth
+    %td= @old_player.dob
+  %tr
+    %th Date Joined
+    %td= @old_player.joined
+  %tr
+    %th Club
+    %td= @old_player.club
+  %tr
+    %th Rating
+    %td= @old_player.rating
+  %tr
+    %th Events
+    %td= @old_player.events
+  %tr
+    %th Games
+    %td= @old_player.games
+  %tr
+    %th Status
+    %td#old_player_status= @old_player.status
+    - if can? :edit, @old_player
+      %td{class: "floater"}
+        = link_to edit_admin_old_player_path(@old_player), remote: true do
+          = icon_tag "edit", "Update Former Player"
+  %tr
+    %th Created
+    %td= @old_player.created_at.to_s(:db)
+  %tr
+    %th Last Updated
+    %td#old_player_updated= @old_player.updated_at.to_s(:db)

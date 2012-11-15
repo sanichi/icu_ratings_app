@@ -1,0 +1,8 @@
+<% if @old_player.errors.size == 0 %>
+  $("#old_player_status").text("<%= @old_player.status %>");
+  $("#old_player_updated").text("<%= @old_player.updated_at.to_s(:db) %>");
+  $("#old_player_show_note").html("<%= j render('show_note') %>");
+  $("#dialog_update_old_player").dialog("close");
+<% else %>
+  alert("<%= j render('shared/error', object: @old_player, title: 'Error updating old player:') %>")
+<% end %>

@@ -10,8 +10,18 @@
   %dl
     %dt What is meant by "legacy ratings"?
     %dd
-      These are the ratings inherited by the current ICU rating system (this web application)
+      Most of these ratings were inherited by the current ICU rating system (this web application)
       from the previous system (which was based on a Microsoft Access database) in September 2011.
+    %dt Apart from the inherited ratings, are there any others that appear here?
+    %dd
+      There are occasionally additions to this list by the ratings of two groups of players:
+      (1) players who have been resurrected from the archive (see
+      = succeed(")") do
+        = link_to "Former ICU Players", admin_old_players_path
+      and (2) players who have an established FIDE rating at the time they join the ICU (usually foreigners).
+      In the first case the ratings are lagacy (old) ratings, but belong to players who have been inactive
+      and in the second case the (FIDE) ratings aren't legacy ratings but treating them as such is a
+      convenient mechanism to provide players with realistic start ratings.
     %dt Why are some full ratings associated with less than 20 games?
     %dd
       The old rating system had to create new ICU players with full ratings

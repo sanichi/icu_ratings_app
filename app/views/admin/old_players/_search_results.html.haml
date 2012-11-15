@@ -1,0 +1,23 @@
+%table
+  %tr
+    %th ICU ID
+    %th Name
+    %th G
+    %th DOB
+    %th Club
+    %th Status
+  - if @old_players.count == 0
+    %tr
+      %td{class: "centered", colspan: 6} No matches
+  - else
+    - @old_players.matches.each do |p|
+      %tr
+        %td= p.icu_id
+        %td= link_to p.name, [:admin, p]
+        %td{class: "centered"}= p.gender
+        %td= p.dob
+        %td= p.club
+        %td{class: "centered"}= p.status
+    - if @old_players.multi_page
+      %tr
+        %td{class: "centered", colspan: 6}= pagination_links(@old_players)

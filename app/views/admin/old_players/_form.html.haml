@@ -1,0 +1,10 @@
+= form_for [:admin, @old_player], remote: true do |f|
+  %table{class: "right-headers noborder"}
+    %tr
+      %th= f.label :status
+      %td= f.select :status, old_players_status_menu
+  %div.centered.turbaned
+    = f.label :note, "Notes"
+  %div.centered
+    = f.text_area :note, size: "80x20"
+      

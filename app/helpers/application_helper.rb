@@ -41,15 +41,6 @@ module ApplicationHelper
     "#{sgn}#{spc}#{num}"
   end
 
-  def federation_menu(opt = { top: 'IRL', none: 'None' })
-    menu = ICU::Federation.menu(opt)
-    drop = (opt[:top] ? 1 : 0) + (opt[:none] ? 1 : 0)
-    menu.insert(drop, [opt[:unknown], "???"]) if opt[:unknown]
-    menu.insert(drop, [opt[:foreign], "XXX"]) if opt[:foreign]
-    menu.insert(drop, [opt[:irl_unk], "IR?"]) if opt[:irl_unk]
-    menu
-  end
-
   def club_menu(none="None", any="Any")
     menu = IcuPlayer.unscoped.select("DISTINCT(club)").where("club IS NOT NULL").order("club").map{ |c| [c.club, c.club] }
     menu.unshift([none, "None"]) if none
@@ -60,6 +51,15 @@ module ApplicationHelper
   def colour_menu(none=nil)
     menu = [["White", "W"], ["Black", "B"]]
     menu.unshift([none, ""]) if none
+    menu
+  end
+
+  def federation_menu(opt = { top: 'IRL', none: 'None' })
+    menu = ICU::Federation.menu(opt)
+    drop = (opt[:top] ? 1 : 0) + (opt[:none] ? 1 : 0)
+    menu.insert(drop, [opt[:unknown], "???"]) if opt[:unknown]
+    menu.insert(drop, [opt[:foreign], "XXX"]) if opt[:foreign]
+    menu.insert(drop, [opt[:irl_unk], "IR?"]) if opt[:irl_unk]
     menu
   end
 
@@ -82,7 +82,7 @@ module ApplicationHelper
   end
 
   def fide_rating_list_menu(any=nil)
-    menu = FideRating.lists.map{ |list| [year_month(list), list]}
+    menu = FideRating.lists.map{ |list| [year_month(list), list] }
     menu.unshift([any, ""]) if any
     menu
   end
@@ -94,7 +94,13 @@ module ApplicationHelper
   end
 
   def icu_rating_list_menu(any=nil)
-    menu = IcuRating.lists.map{ |list| [year_month(list), list]}
+    menu = IcuRating.lists.map { |list| [year_month(list), list] }
+    menu.unshift([any, ""]) if any
+    menu
+  end
+
+  def old_players_status_menu(any=nil)
+    menu = OldPlayer::STATUS.map{ |s| [s, s] }
     menu.unshift([any, ""]) if any
     menu
   end
@@ -194,6 +200,7 @@ module ApplicationHelper
   end
 
   def markdown(text)
+    return "" unless text
     renderer = Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true, strikethrough: true, superscript: true, no_intra_emphasis: true)
     renderer.render(text).html_safe
   end

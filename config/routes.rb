@@ -7,6 +7,7 @@ Ratings::Application.routes.draw do
   get "log_in"  => "sessions#new"
   get "log_out" => "sessions#destroy"
 
+  resources :articles
   resources :downloads
   resources :federations,  only: [:index]
   resources :fide_players, only: [:index, :show, :update]
@@ -17,16 +18,16 @@ Ratings::Application.routes.draw do
   resources :icu_ratings,  only: [:index, :show] do
     get :war, :juniors, :improvers, on: :collection
   end
-  resources :articles
+  resources :players,      only: [:show]
   resources :sessions,     only: [:create]
   resources :tournaments,  only: [:index, :show]
-  resources :players,      only: [:show]
 
   namespace "admin" do
     resources :events,               only: [:index, :show, :destroy]
     resources :failures,             only: [:index, :show, :destroy, :new]
     resources :fees,                 only: [:index, :update]
     resources :logins,               only: [:index]
+    resources :old_players,          only: [:index, :show, :edit, :update]
     resources :old_ratings,          only: [:index]
     resources :old_rating_histories, only: [:index]
     resources :old_tournaments,      only: [:index]
