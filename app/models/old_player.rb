@@ -45,6 +45,7 @@ class OldPlayer < ActiveRecord::Base
     matches = matches.where("dob LIKE ?", "%#{params[:dob]}%") if params[:dob] && params[:dob].match(/^[-\d]+$/)
     matches = matches.where(icu_id: params[:icu_id]) if params[:icu_id].to_i > 0
     matches = matches.where("club LIKE ?", "%#{params[:club]}%") if params[:club].present?
+    matches = matches.where("note LIKE ?", "%#{params[:note]}%") if params[:note].present?
     matches = matches.where(resurrected: true) if params[:resurrected] == "true"
     matches = matches.where(resurrected: false) if params[:resurrected] == "false"
     paginate(matches, path, params)

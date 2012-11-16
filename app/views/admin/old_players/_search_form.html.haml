@@ -9,6 +9,7 @@
       %th= label_tag :dob, "DOB"
       %th= label_tag :club
       %th= label_tag :status
+      %th= label_tag :note
       %th
     %tr
       %td= text_field_tag :icu_id, params[:icu_id], onchange: handle_remote, class: "centered", size: 6, maxlength: 6
@@ -18,4 +19,5 @@
       %td= text_field_tag :dob, params[:dob], onchange: handle_remote, class: "centered", size: 10
       %td= text_field_tag :club, params[:club], onchange: handle_remote, class: "centered", size: 15
       %td= select_tag :status, options_for_select(old_players_status_menu("Any"), params[:status]), onchange: handle_remote
+      %td= text_field_tag :note, params[:note], onchange: handle_remote, class: "centered", size: 15
       %td= submit_tag "Search"
