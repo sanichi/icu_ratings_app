@@ -2,6 +2,11 @@ module Admin
   class PlayersController < ApplicationController
     authorize_resource
 
+    def index
+      @players = Player.search(params, admin_players_path)
+      render :player_results
+    end
+
     def show
       @player = Player.includes(results: [:opponent]).find(params[:id])
       @tournament = @player.tournament

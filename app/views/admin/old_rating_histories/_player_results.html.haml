@@ -1,7 +1,9 @@
 %p
-  = raw "Old tournaments (#{link_to "details", admin_old_rating_histories_path(icu_player_id: icu_id)}):"
+  Tournaments before
+  = succeed(":") do
+    = t "system.new.start"
   - if @old_rating_histories.multi_page
     = pagination_links(@old_rating_histories)
 %ul
   - @old_rating_histories.matches.each do |rh|
-    %li= "#{rh.old_tournament.date}, #{rh.games}, #{rh.old_rating}-#{rh.new_rating}, #{rh.old_tournament.name}"
+    %li= "#{rh.old_tournament.date}, #{rh.old_rating} → #{rh.new_rating}, #{rh.old_tournament.name} (#{rh.games})"

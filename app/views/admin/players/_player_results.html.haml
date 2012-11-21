@@ -1,0 +1,9 @@
+%p
+  Tournaments after
+  = succeed(":") do
+    = t "system.new.start"
+  - if @players.multi_page
+    = pagination_links(@players)
+%ul
+  - @players.matches.each do |p|
+    %li= raw "#{p.tournament.finish}, #{p.old_rating || 0} → #{p.new_rating || 0}, #{p.tournament.name} (#{p.new_games - p.old_games})"

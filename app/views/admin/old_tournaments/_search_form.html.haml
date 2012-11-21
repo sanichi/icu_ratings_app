@@ -1,4 +1,4 @@
-= form_tag admin_old_tournaments_path, method: "get", remote: true do
+= form_tag admin_old_tournaments_path, method: "get", id: handle_remote_id do
   = hidden_field_tag :per_page, params[:per_page]
   %table{class: "invisible"}
     %tr
@@ -6,6 +6,6 @@
       %th= label_tag :icu_id, "ICU ID"
       %th
     %tr
-      %td= text_field_tag :name, params[:name], class: "centered", size: 20
-      %td= text_field_tag :icu_id, params[:icu_id], class: "centered", size: 10
+      %td= text_field_tag :name, params[:name], onchange: handle_remote, class: "centered", size: 20
+      %td= text_field_tag :icu_id, params[:icu_id], onchange: handle_remote, class: "centered", size: 10
       %td= submit_tag "Search"

@@ -50,6 +50,8 @@
 require "icu/error"
 
 class Player < ActiveRecord::Base
+  extend ICU::Util::Pagination
+
   FEDS = ICU::Federation.codes
   TITLES = %w[GM IM FM CM NM WGM WIM WFM WCM WNM]
   GENDERS = %w[M F]
@@ -244,6 +246,15 @@ SQL
     end
     match = match.order("tournaments.rorder DESC")
     match.limit(limit)
+  end
+
+  # Search for players and return paginated results.
+  def self.search(params, path)
+    matches = joins(:tournament).includes(:tournament)
+    matches = matches.where(icu_id: params[:icu_id].to_i)  # normally icu_id will be set, but, if not, both nil and non-integers maps to 0
+    matches = matches.where(tournaments: { stage: "rated" })
+    matches = matches.order("tournaments.rorder DESC")
+    paginate(matches, path, params)
   end
 
   # Set the k-factor for an ICU player with a full rating (is called after get_old_ratings).

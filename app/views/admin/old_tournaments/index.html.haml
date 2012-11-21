@@ -5,3 +5,28 @@
 
 #old_tournament_results.turbaned
   = render "search_results"
+
+#help
+  %dl
+    %dt What defines "old" tournaments?
+    %dd
+      Played before
+      = t "system.new.start"
+      when the old ICU rating system was superceded by this web site.
+    %dt What is the old tournament data used for?
+    %dd
+      To aid the process of identifying players. When a player's identity (ICU number) is uncertain because
+      they share a name with other players and there is no opportunity to discriminate using additional personal
+      information such as middle initials or date of birth, it may be possible to eliminate some of the
+      candidate matches based on their tournament history. For example, if the tournament is for juniors and
+      some of the candidate matches have histories stetching back over many years.
+    %dt Here I just see a list of tournaments, where can I see the tournaments a given player has competed in?
+    %dd
+      %p
+        The best way to see the old tournament histories of potential matches is to use the matching facility on
+        the player's page. Start by clicking the little magnifying glass icon next to "ICU ID", then click the
+        linked ICU ID of any of the suggested matches. Part of the information displayed for the match will be
+        the old tournament history.
+      %p
+        Alternatively, type an ICU ID into the search form on this page. Or click a tournament name and
+        then a player name. In both cases you will get a list of tournaments that player competed in.

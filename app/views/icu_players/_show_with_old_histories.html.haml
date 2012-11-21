@@ -6,6 +6,10 @@
     - if summary.present?
       %li= summary
 
+- if @players.count > 0
+  #players.turbaned
+    = render "admin/players/player_results", icu_id: @icu_player.id
+
 - if @old_rating_histories.count > 0
   #old_rating_history_results.turbaned
     = render "admin/old_rating_histories/player_results", icu_id: @icu_player.id
