@@ -114,7 +114,7 @@ class Tournament < ActiveRecord::Base
       matches = matches.where("players.first_name LIKE ?", "%#{first_name}%") if first_name
       matches = matches.where("players.last_name  LIKE ?", "%#{last_name}%")  if last_name
     end
-    
+
     # FIDE rated.
     matches = matches.where("tournaments.fide_id IS NOT NULL") if params[:fide_rated] == "true"
     matches = matches.where("tournaments.fide_id IS NULL")     if params[:fide_rated] == "false"
@@ -571,10 +571,10 @@ class Tournament < ActiveRecord::Base
     snippet = snippet[0,29] + "..." if snippet.length > 32
     snippet
   end
-  
+
   def fide_url
     return nil unless fide_id
-    "http://ratings.fide.com/tournament_report.phtml?event16=#{fide_id}"
+    "http://ratings.fide.com/tournament_details.phtml?event=#{fide_id}"
   end
 
   private
