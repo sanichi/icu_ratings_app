@@ -6,12 +6,12 @@
 #  email           :string(50)
 #  preferred_email :string(50)
 #  password        :string(32)
+#  salt            :string(32)
 #  role            :string(20)      default("member")
 #  icu_id          :integer(4)
 #  expiry          :date
 #  created_at      :datetime
 #  updated_at      :datetime
-#  salt            :string(32)
 #
 
 class User < ActiveRecord::Base
@@ -26,7 +26,8 @@ class User < ActiveRecord::Base
   ROLES = %w[member reporter officer admin]  # MUST be in order lowest to highest (see role?)
   EMAIL = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i
 
-  attr_accessible :role, :preferred_email
+  attr_reader :new_password
+  attr_accessible :role, :preferred_email, :password
 
   before_validation :normalise_attributes
 
@@ -104,6 +105,35 @@ class User < ActiveRecord::Base
     else
       password == pass
     end
+  end
+
+  def change_password(params)
+    # Just in case this might help a hacker.
+    [:password, :salt].each { |a| params.delete(a) }
+    # Have we got a new password?
+    pass = params.delete(:new_password)
+    return true unless pass.present?
+    # Make sure it's valid.
+    pass.strip!
+    errors.add(:password, "too short") and return unless pass.length >= 6
+    errors.add(:password, "too long")  and return unless pass.length <= 32
+    # Has this record got a salt (normally this will be true)?
+    if salt_set?
+      # It has.
+      salt = self.salt
+    else
+      # No, it hasn't, so make a new one and prepare to set it.
+      salt = Digest::MD5.hexdigest(Time.now.to_s + rand.to_s)
+      params[:salt] = salt
+    end
+    # Compute the new hashed password (which depends on pass and salt).
+    password = eval(APP_CONFIG["hasher"])
+    # Attempt to update the ICU database, aborting on error.
+    error = ICU::Database::Push.new.update_password(id, email, password, salt)
+    errors.add(:password, error) and return if error
+    # Prepare to update the hashed password and signal success.
+    params[:password] = password
+    return true
   end
 
   private

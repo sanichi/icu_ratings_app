@@ -6,33 +6,28 @@
   %tr
     %th Email
     %td= @user.email
-    %td{class: "floater"}
-  - if can? :manage, User
-    %tr
-      %th Preferred Email
-      %td{id: "user_preferred_email"}= @user.preferred_email
+    - if can? :manage, User
       %td{class: "floater"}
         = link_to edit_admin_user_path(@user), remote: true do
           = icon_tag "edit", "Edit User"
   %tr
+    %th Preferred Email
+    %td{id: "user_preferred_email"}= @user.preferred_email
+  %tr
     %th Player
     - if @user.icu_player
-      %td= link_to @user.icu_player.name, @user.icu_player, remote: true
+      %td= link_to @user.icu_player.name, their_home_path(id: @user.icu_id)
     - else
       %td{class: :error} None
-    %td{class: "floater", rowspan: 3}
   %tr
     %th ICU ID
-    %td= @user.icu_id
+    %td= link_to_if @user.icu_player, @user.icu_id, @user.icu_player, remote: true
   %tr
     %th Expiry Date
     %td= @user.expiry
   %tr
     %th Role
     %td{id: "user_role"}= @user.role
-    %td{class: "floater"}
-      = link_to edit_admin_user_path(@user), remote: true do
-        = icon_tag "edit", "Edit User"
 
 %table
   %tr

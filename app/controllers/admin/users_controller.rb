@@ -12,9 +12,9 @@ module Admin
     end
 
     def update
-      @user.update_attributes(params[:user])
+      @user.update_attributes(params[:user]) if @user.change_password(params[:user])
     end
-    
+
     def show
     end
   end

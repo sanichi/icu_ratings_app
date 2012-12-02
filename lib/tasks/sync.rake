@@ -4,27 +4,27 @@
 namespace :sync do
   desc "Synchronize IcuPlayers with icu_players in the www.icu.ie database (schedule daily)"
   task icu_players: :environment do
-    ICU::Database::Player.new.sync
+    ICU::Database::Pull::Player.new.sync
   end
 
   desc "Synchronize Users with members in the www.icu.ie database (schedule daily)"
   task icu_users: :environment do
-    ICU::Database::Member.new.sync
+    ICU::Database::Pull::Member.new.sync
   end
 
   desc "Synchronize Fees with items in the www.icu.ie database (schedule weekly)"
   task icu_items: :environment do
-    ICU::Database::Item.new.sync
+    ICU::Database::Pull::Item.new.sync
   end
 
   desc "Synchronize Subscriptions with the www.icu.ie database (schedule at least weekly, but run manually before producing a rating list)"
   task :icu_subs, [:season] => :environment do |t, args|
-    ICU::Database::Subs.new.sync(args[:season])
+    ICU::Database::Pull::Subs.new.sync(args[:season])
   end
 
   desc "Synchronize FidePlayers and FideRatings with fide_players and fide_ratings in the www.icu.ie database (perform once)"
   task icu_fide_data: :environment do
-    ICU::Database::FIDE.new.sync
+    ICU::Database::Pull::FIDE.new.sync
   end
 
   desc "Synchronize Irish FIDE players with the full download file from fide.com (use [F] to force, schedule weekly)"
