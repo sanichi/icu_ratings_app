@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem "rails", "3.2.8"
+gem "rails", "3.2.9"
 gem "mysql2"
 gem "haml"
 gem "sass"
@@ -23,7 +23,6 @@ end
 group :development do
   gem "capistrano"
   gem "quiet_assets"
-  gem "brakeman"
 end
 
 group :test, :development do
