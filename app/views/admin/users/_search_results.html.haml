@@ -4,10 +4,11 @@
     %th Player
     %th ICU ID
     %th Role
+    %th Status
     %th Expiry Date
   - if @users.count == 0
     %tr
-      %td{class: "centered", colspan: 5} No matches
+      %td{class: "centered", colspan: 6} No matches
   - else
     - @users.matches.each do |u|
       %tr
@@ -19,7 +20,8 @@
           %td{class: :error} None
           %td{class: "righted"}= u.icu_id
         %td{class: "centered"}= u.role
+        %td{class: "centered"}= u.status
         %td{class: "centered"}= u.expiry
   - if @users.multi_page
     %tr
-      %td{class: "centered", colspan: 5}= pagination_links(@users)
+      %td{class: "centered", colspan: 6}= pagination_links(@users)

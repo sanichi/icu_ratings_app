@@ -199,6 +199,12 @@ module ApplicationHelper
     menu
   end
 
+  def user_status_menu(any=nil)
+    menu = User::STATUS.map{ |r| [r == "ok" ? "OK" : r.capitalize, r] }
+    menu.unshift([any, ""]) if any
+    menu
+  end
+
   def markdown(text)
     return "" unless text
     renderer = Redcarpet::Markdown.new(Redcarpet::Render::HTML, autolink: true, strikethrough: true, superscript: true, no_intra_emphasis: true)

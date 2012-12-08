@@ -151,6 +151,7 @@ module ICU
           mem_salt:     :salt,
           mem_icu_id:   :icu_id,
           mem_expiry:   :expiry,
+          mem_status:   :status,
         }
 
         def get_our_users
@@ -159,6 +160,7 @@ module ICU
 
         def get_their_members
           @bad_icu_ids = []
+          @bad_emails = []
           @their_members = @client.query(sql).inject({}) do |members, member|
             id = member.delete(:mem_id)
             members[id] = member.keys.inject({}) do |hash, their_key|
@@ -167,16 +169,21 @@ module ICU
               hash
             end
             icu_id = members[id][:icu_id]
+            email = members[id][:email]
             unless icu_id && @our_players[icu_id]
               members.delete(id)
               @bad_icu_ids.push(icu_id || 0)
+            end
+            unless email && email.match(User::EMAIL)
+              members.delete(id)
+              @bad_emails.push("#{id}|#{email.to_s}")
             end
             members
           end
         end
 
         def sql
-          "SELECT #{MAP.keys.join(', ')} FROM members WHERE mem_status = 'ok' AND mem_icu_id IS NOT NULL AND mem_expiry IS NOT NULL"
+          "SELECT #{MAP.keys.join(', ')} FROM members WHERE (mem_status = 'ok' OR mem_status = 'pending') AND mem_icu_id IS NOT NULL AND mem_expiry IS NOT NULL"
         end
 
         def update_ours_from_theirs
@@ -205,6 +212,7 @@ module ICU
           str = Array.new
           str.push "users: #{@our_users.size}" if @our_users
           str.push "members: #{@their_members.size}" if @their_members
+          str.push "bad emails: #{summarize_list(@bad_emails)}"
           str.push "creates: #{summarize_list(@creates)}"
           str.push "updates: #{summarize_list(@updates)}"
           str.push "changes: #{summarize_changes}"

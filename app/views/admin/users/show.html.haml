@@ -47,3 +47,16 @@
 
 = icu_player_details_dialog
 = render "shared/dialog", id: "update_user", width: 600
+
+#help
+  %dl
+    %dt What is a user's preferred email?
+    %dd
+      The order of precedence for establishing which email to use for sending messages from the
+      ratings web application to users is as follows:
+      %ol
+        %li user's preferred email (if it exists)
+        %li member's email (if it exists)
+        %li login email
+      Note that the preferred email only exists in the ratings database. The other two emails also exist in
+      the main ICU database, and are regularly synced from that database to the ratings database.

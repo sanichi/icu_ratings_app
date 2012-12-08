@@ -12,7 +12,7 @@
 
 class Login < ActiveRecord::Base
   extend ICU::Util::Pagination
-  PROBLEMS = %w[none password expiry]
+  PROBLEMS = %w[none password expiry status]
 
   belongs_to :user
 

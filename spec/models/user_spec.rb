@@ -98,7 +98,7 @@ describe User do
 
   context "password_ok?" do
     before(:each) do
-      @p = 'icuicj'
+      @p = "icuicj"
       @u1 = FactoryGirl.create(:user, password: "be3ab3d3be49b8304b8604a3268dfcf2", salt: "b3f0f553a916b0e8ab6b2469cabd200f")
       @u2 = FactoryGirl.create(:user, password: @p)
     end
@@ -114,6 +114,38 @@ describe User do
     it "with salt special case for admin" do
       @u1.password_ok?(@u1.password, false).should be_false
       @u1.password_ok?(@u1.password,  true).should be_true
+    end
+  end
+
+  context "authentication" do
+    before(:each) do
+      @i = "192.168.2.165"
+      @p = "icuicj"
+      @e = "joe@example.com"
+      @h = "be3ab3d3be49b8304b8604a3268dfcf2"
+      @s = "b3f0f553a916b0e8ab6b2469cabd200f"
+      @u = FactoryGirl.create(:user, email: @e, password: @h, salt: @s)
+    end
+
+    it "valid login" do
+      User.authenticate!({ email: @e, password: @p }, @i, false).should == @u
+    end
+
+    it "use of hashed password requires admin" do
+      lambda { User.authenticate!({ email: @e, password: @h }, @i, true) }.should_not raise_error
+      lambda { User.authenticate!({ email: @e, password: @h }, @i, false) }.should raise_error(/invalid/i)
+    end
+
+    it "expiry date" do
+      @u.expiry = Date.yesterday
+      @u.save
+      lambda { User.authenticate!({ email: @e, password: @p }, @i, false) }.should raise_error(/expir/i)
+    end
+
+    it "status" do
+      @u.status = "pending"
+      @u.save
+      lambda { User.authenticate!({ email: @e, password: @p }, @i, false) }.should raise_error(/verif/i)
     end
   end
 

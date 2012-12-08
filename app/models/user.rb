@@ -8,6 +8,7 @@
 #  password        :string(32)
 #  salt            :string(32)
 #  role            :string(20)      default("member")
+#  status          :string(20)      default("ok")
 #  icu_id          :integer(4)
 #  expiry          :date
 #  created_at      :datetime
@@ -23,21 +24,23 @@ class User < ActiveRecord::Base
   has_many :tournaments
   has_many :articles
 
-  ROLES = %w[member reporter officer admin]  # MUST be in order lowest to highest (see role?)
-  EMAIL = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i
+  ROLES  = %w[member reporter officer admin]  # MUST be in order lowest to highest (see role?)
+  EMAIL  = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i
+  STATUS = %w[ok pending]
 
   attr_reader :new_password
-  attr_accessible :role, :preferred_email, :password
+  attr_accessible :role, :status, :preferred_email, :password
 
   before_validation :normalise_attributes
 
-  validates_format_of       :email, with: EMAIL, message: "(%{value}) is invalid"
-  validates_format_of       :preferred_email, with: EMAIL, allow_nil: true, message: "(%{value}) is invalid"
-  validates_uniqueness_of   :email, case_sensitive: false
-  validates_presence_of     :password
-  validates_inclusion_of    :role, in: ROLES, message: "(%{value}) is invalid"
-  validates_numericality_of :icu_id, only_integer: true, greater_than: 0, message: "(%{value}) is invalid"
-  validates_date            :expiry, on_or_after: "2004-12-31", message: "(%{value}) is invalid"
+  validates :email, format: { with: EMAIL, message: "(%{value}) is invalid"}
+  validates :preferred_email, format: { with: EMAIL, message: "(%{value}) is invalid" }, allow_nil: true
+  validates :email, uniqueness: { case_sensitive: false }
+  validates :password, presence: true
+  validates :role, inclusion: { in: ROLES, message: "(%{value}) is invalid" }
+  validates :status, inclusion: { in: STATUS, message: "(%{value}) is invalid" }
+  validates :icu_id, numericality: { only_integer: true, greater_than: 0, message: "(%{value}) is invalid" }
+  validates :expiry, timeliness: { on_or_after: "2004-12-31", type: :date }  
 
   default_scope includes(:icu_player)
 
@@ -50,6 +53,7 @@ class User < ActiveRecord::Base
     end
     matches = matches.where("users.icu_id = ?", params[:icu_id].to_i) if params[:icu_id].to_i > 0
     matches = matches.where("users.role = ?", params[:role]) if params[:role].present?
+    matches = matches.where("users.status = ?", params[:status]) if params[:status].present?
     matches = matches.where("users.email LIKE ?", "%#{params[:email]}%") if params[:email].present?
     paginate(matches, path, params)
   end
@@ -67,22 +71,27 @@ class User < ActiveRecord::Base
   def self.authenticate!(params, ip, admin)
     user = find_by_email(params[:email])
     raise "Invalid email or password" unless user
-    user.login_event(ip, admin, "password") unless user.password_ok?(params[:password], admin)
-    user.login_event(ip, admin, "expiry") if user.expiry.past?
-    user.login_event(ip, admin, "none")
+    user.login_event(ip, admin, :password) unless user.password_ok?(params[:password], admin)
+    user.login_event(ip, admin, :status) unless user.status == "ok"
+    user.login_event(ip, admin, :expiry) if user.expiry.past?
+    user.login_event(ip, admin, :none)
     user
+  end
+
+  def login_event(ip, admin, problem)
+    logins.create(ip: ip, problem: problem.to_s, role: role) unless admin
+    err = case problem
+      when :expiry   then "Sorry, your ICU membership expired on #{expiry}"
+      when :status   then "Sorry, your email has not yet been verified"
+      when :password then "Invalid email or password"
+    end
+    raise err if err
   end
 
   def role?(at_least)
     return false if new_record?
     return false unless ROLES.include?(at_least.to_s) && ROLES.include?(role)
     ROLES.index(at_least.to_s) <= ROLES.index(role)  # Needs ROLES in order lowest to highest!
-  end
-
-  def login_event(ip, admin, problem)
-    logins.create(ip: ip, problem: problem, role: role) unless admin
-    raise "Sorry, your ICU membership expired on #{expiry}" if problem == "expiry"
-    raise "Invalid email or password" if problem == "password"
   end
 
   def name(reversed=true)
