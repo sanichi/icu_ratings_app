@@ -96,7 +96,7 @@ describe User do
     end
   end
 
-  context "password_ok?" do
+  context "#password_ok?" do
     before(:each) do
       @p = "icuicj"
       @u1 = FactoryGirl.create(:user, password: "be3ab3d3be49b8304b8604a3268dfcf2", salt: "b3f0f553a916b0e8ab6b2469cabd200f")
@@ -117,7 +117,7 @@ describe User do
     end
   end
 
-  context "authentication" do
+  context "#authenticate!" do
     before(:each) do
       @i = "192.168.2.165"
       @p = "icuicj"
@@ -149,7 +149,7 @@ describe User do
     end
   end
 
-  context "change_password" do
+  context "#update_www_member" do
     before(:each) do
       pass = "icuicj"
       salt = "b3f0f553a916b0e8ab6b2469cabd200f"
@@ -157,19 +157,21 @@ describe User do
       @p = pass
       @u1 = FactoryGirl.create(:user, password: password, salt: salt)
       @u2 = FactoryGirl.create(:user, password: @p)
-      ICU::Database::Push.stub_chain(:new, :update_password).and_return(nil)
+      @params = { status: "ok" }
+      ICU::Database::Push.stub_chain(:new, :update_member).and_return(nil)
     end
 
     it "new password, old salt" do
       @q = "password1"
-      params = { new_password: @q }
-      @u1.change_password(params).should be_true
-      params[:new_password].should_not be_present
-      params[:salt].should_not be_present
-      params[:password].should be_present
-      params[:password].length.should == 32
+      @params[:new_password] = @q
+      @u1.update_www_member(@params).should be_true
+      @params[:new_password].should_not be_present
+      @params[:salt].should_not be_present
+      @params[:password].should be_present
+      @params[:password].length.should == 32
+      @params[:status].should_not be_present
       @u1.password_ok?(@p).should be_true
-      @u1.password = params[:password]
+      @u1.password = @params[:password]
       @u1.password_ok?(@p).should be_false
       @u1.password_ok?(@q).should be_true
       @u1.errors.should be_empty
@@ -177,56 +179,70 @@ describe User do
 
     it "new password, new salt" do
       @q = "password2"
-      params = { new_password: @q }
-      @u2.change_password(params).should be_true
-      params[:new_password].should_not be_present
-      params[:salt].should be_present
-      params[:salt].length.should == 32
-      params[:password].should be_present
-      params[:password].length.should == 32
+      @params[:new_password] = @q
+      @u2.update_www_member(@params).should be_true
+      @params[:new_password].should_not be_present
+      @params[:salt].should be_present
+      @params[:salt].length.should == 32
+      @params[:password].should be_present
+      @params[:password].length.should == 32
+      @params[:status].should_not be_present
       @u2.password_ok?(@p).should be_true
-      @u2.password = params[:password]
-      @u2.salt = params[:salt]
+      @u2.password = @params[:password]
+      @u2.salt = @params[:salt]
       @u2.password_ok?(@p).should be_false
       @u2.password_ok?(@q).should be_true
     end
 
+    it "new status" do
+      @u1.status = "pending"
+      @u1.update_www_member(@params).should be_true
+      @params[:status].should == "ok"
+      @params = { status: "pending" }
+      @u1.status = "ok"
+      @u1.update_www_member(@params).should be_true
+      @params[:status].should == "pending"
+    end
+
     it "no (or blank) password" do
-      params = { }
-      @u1.change_password(params).should be_true
+      @u1.update_www_member(@params).should be_true
       @u1.errors.should be_empty
-      params[:new_password].should_not be_present
-      params[:password].should_not be_present
-      params[:salt].should_not be_present
-      params = { new_password: "    " }
-      @u1.change_password(params).should be_true
+      @params[:new_password].should_not be_present
+      @params[:password].should_not be_present
+      @params[:salt].should_not be_present
+      @params[:status].should_not be_present
+      @params = { new_password: "    ", status: "ok" }
+      @u1.update_www_member(@params).should be_true
       @u1.errors.should be_empty
-      params[:new_password].should_not be_present
-      params[:password].should_not be_present
-      params[:salt].should_not be_present
+      @params[:new_password].should_not be_present
+      @params[:password].should_not be_present
+      @params[:salt].should_not be_present
     end
 
     it "password too short or too long" do
-      params = { new_password: "123" }
-      @u1.change_password(params).should be_false
+      @params[:new_password] = "123"
+      @u1.update_www_member(@params).should be_false
       @u1.errors.should_not be_empty
-      params[:password].should_not be_present
-      params[:salt].should_not be_present
-      params = { new_password: "1234567890123456789012345678901234567890" }
-      @u1.change_password(params).should be_false
+      @params[:password].should_not be_present
+      @params[:salt].should_not be_present
+      @params[:status].should_not be_present
+      @params = { new_password: "1234567890123456789012345678901234567890" }
+      @u1.update_www_member(@params).should be_false
       @u1.errors.should_not be_empty
-      params[:password].should_not be_present
-      params[:salt].should_not be_present
+      @params[:password].should_not be_present
+      @params[:salt].should_not be_present
     end
 
     it "ICU database push fails" do
-      ICU::Database::Push.stub_chain(:new, :update_password).and_return("woops")
-      params = { new_password: "password3" }
-      @u1.change_password(params).should be_false
-      params[:new_password].should_not be_present
-      params[:salt].should_not be_present
-      params[:password].should_not be_present
-      @u1.errors.should_not be_empty
+      ICU::Database::Push.stub_chain(:new, :update_member).and_return("woops")
+      @params[:new_password] = "password3"
+      @u1.update_www_member(@params).should be_false
+      @params[:new_password].should_not be_present
+      @params[:salt].should_not be_present
+      @params[:password].should_not be_present
+      @params[:status].should_not be_present
+      @u1.errors[:base].first.should_not be_empty
+      @u1.errors[:base].first.should match(/woops/)
     end
   end
 end

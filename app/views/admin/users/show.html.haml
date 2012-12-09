@@ -23,6 +23,9 @@
     %th ICU ID
     %td= link_to_if @user.icu_player, @user.icu_id, @user.icu_player, remote: true
   %tr
+    %th Status
+    %td{id: "user_status"}= @user.status
+  %tr
     %th Expiry Date
     %td= @user.expiry
   %tr

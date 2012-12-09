@@ -617,16 +617,25 @@ module ICU
         @client.query_options.merge!(symbolize_keys: true)
       end
 
-      def update_password(id, mail, pass, salt)
-        return "attempt to set invalid password #{pass}" unless pass.present? && pass.length == 32
-        return "attempt to set invalid salt #{salt}"     unless salt.present? && salt.length == 32
+      def update_member(id, email, pass, salt, status)
+        return unless status || (pass && salt)
+        return "attempt to set invalid password '#{pass}'" if pass && pass.length != 32
+        return "attempt to set invalid salt '#{salt}'"     if salt && salt.length != 32
+        return "attempt to set invalid status '#{status}'" if status && !User::STATUS.include?(status)
         ms = @client.query("SELECT mem_email, mem_status, mem_password, mem_salt FROM members WHERE mem_id = #{id}")
         return "couldn't find member with ID #{id}" if ms.size == 0
         return "found more than one (#{ms.size}) members with ID #{id}" if ms.size > 1
         m = ms.first
-        return "expected email #{mail} but got #{m[:mem_email]}" unless mail == m[:mem_email]
-        return "can't update member record with status #{m[:mem_status]}" unless m[:mem_status] == "ok"
-        @client.query("UPDATE members SET mem_password = '#{pass}', mem_salt = '#{salt}' WHERE mem_id = #{id}") unless pass == m[:mem_password] && salt == m[:mem_salt]
+        return "expected email #{email} but got '#{m[:mem_email]}'" unless email == m[:mem_email]
+        return "can't update member record with status '#{m[:mem_status]}'" unless User::STATUS.include?(m[:mem_status])
+        updates = []
+        updates.push "mem_password = '#{pass}'" if pass && pass != m[:mem_password]
+        updates.push "mem_salt = '#{salt}'"     if salt && salt != m[:mem_salt]
+        if status && status != m[:mem_status]
+          updates.push "mem_status = '#{status}'"
+          updates.push "mem_verified = %s" % (status == "ok" ? "'#{Time.now.to_s(:db)}'" : "NULL")
+        end
+        @client.query("UPDATE members SET #{updates.join(', ')} WHERE mem_id = #{id}") unless updates.empty?
         nil
       rescue Mysql2::Error => e
         return "mysql error: #{e.message}"

@@ -12,7 +12,7 @@ module Admin
     end
 
     def update
-      @user.update_attributes(params[:user]) if @user.change_password(params[:user])
+      @user.update_attributes(params[:user]) if @user.update_www_member(params[:user])
     end
 
     def show

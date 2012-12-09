@@ -116,32 +116,35 @@ class User < ActiveRecord::Base
     end
   end
 
-  def change_password(params)
+  def update_www_member(params)
     # Just in case this might help a hacker.
     [:password, :salt].each { |a| params.delete(a) }
-    # Have we got a new password?
-    pass = params.delete(:new_password)
-    return true unless pass.present?
-    # Make sure it's valid.
-    pass.strip!
-    errors.add(:password, "too short") and return unless pass.length >= 6
-    errors.add(:password, "too long")  and return unless pass.length <= 32
-    # Has this record got a salt (normally this will be true)?
-    if salt_set?
-      # It has.
-      salt = self.salt
+    # Get the new password, if there is one.
+    pass = params.delete(:new_password).presence
+    # Get and check the status. If it's not new, blank it.
+    status = params.delete(:status)
+    errors.add(:status, "invalid") and return unless User::STATUS.include?(status)
+    status = nil if status == self.status
+    # Unless there's a new password or a changed status then there's nothing to do.
+    return true unless pass || status
+    # Make sure the password is valid if present.
+    if pass
+      pass.strip!
+      errors.add(:password, "too short") and return unless pass.length >= 6
+      errors.add(:password, "too long")  and return unless pass.length <= 32
+      salt = salt_set? ? self.salt : Digest::MD5.hexdigest(Time.now.to_s + rand.to_s)
+      password = eval(APP_CONFIG["hasher"])
     else
-      # No, it hasn't, so make a new one and prepare to set it.
-      salt = Digest::MD5.hexdigest(Time.now.to_s + rand.to_s)
-      params[:salt] = salt
+      salt = nil
+      password = nil
     end
-    # Compute the new hashed password (which depends on pass and salt).
-    password = eval(APP_CONFIG["hasher"])
     # Attempt to update the ICU database, aborting on error.
-    error = ICU::Database::Push.new.update_password(id, email, password, salt)
-    errors.add(:password, error) and return if error
-    # Prepare to update the hashed password and signal success.
-    params[:password] = password
+    error = ICU::Database::Push.new.update_member(id, email, password, salt, status)
+    errors.add(:base, error) and return if error
+    # Prepare to update the instance and signal success.
+    params[:password] = password if password
+    params[:salt]     = salt     if salt && salt != self.salt
+    params[:status]   = status   if status
     return true
   end
 

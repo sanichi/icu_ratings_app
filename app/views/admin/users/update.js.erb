@@ -1,5 +1,6 @@
 <% if @user.errors.size == 0 %>
   $("#dialog_update_user").dialog("close");
+  $("#user_status").text("<%= @user.status %>");
   $("#user_role").text("<%= @user.role %>");
   $("#user_preferred_email").text("<%= @user.preferred_email %>");
 <% else %>

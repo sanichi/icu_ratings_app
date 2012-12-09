@@ -9,3 +9,6 @@
     %tr
       %th= f.label :new_password
       %td= f.text_field :new_password, size: 40
+    %tr
+      %th= f.label :status
+      %td= f.select :status, user_status_menu
