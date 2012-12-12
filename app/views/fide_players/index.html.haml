@@ -17,22 +17,23 @@
       %dd
         For the most part, no. The FIDE player (and ratings) information in this application's
         database is kept synchronized with FIDE's by automated background jobs.
-      %dt So is there anything at all I have control over?
+      %dt So is there anything at all I have control over here?
       %dd
         Yes: you can create, remove or change what ICU player any given FIDE player
         is associated with. However this only applies to FIDE players whose federation
-        is Ireland.
+        is Ireland. In particular, you should periodically look for players whose
+        federation is IRL but which have no match yet and try to find one for them.
       %dt How do I do that?
       %dd
         %p
-          Click on the ICU ID of the Irish FIDE player, or the question mark if no association exists yet.
+          Click on the question mark where the player's ICU ID would be if there was one.
           You will be presented with a search over ICU players already initialised with the player's FIDE
           name. This may or may not be showing any ICU matches (the same player can sometimes have different
           ICU and FIDE names) so you may need to make some adjustments before obtaining a match.
         %p
           Click the
           = icon_tag "link", "Link FIDE player to this ICU player"
-          button when you've found the ICU player that matches.
+          button if you've found an ICU player that matches.
         %p
           Click the
           = icon_tag "unlink", "Unlink FIDE player from this ICU player"
@@ -44,6 +45,6 @@
       %dt Is it possible for an Irish FIDE player not to match any ICU player?
       %dd
         Yes. The FIDE database includes players who retired before the ICU database was established
-        and so will not have a match. It's also possible (though unlikely) for an Irish player
-        to appear in the FIDE database without having played any games in Ireland (an
-        expatriate for example).
+        and so will not have a match. There are about 20 such players, for example, John Moles and
+        Bernard Kernam. It would also be possible (though unlikely) for an Irish player to appear
+        in the FIDE database without having played any games in Ireland. An expatriate for example.

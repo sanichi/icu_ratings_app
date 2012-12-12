@@ -10,4 +10,4 @@
   = render "search_results"
 %hr
 
-= render "search_form"
+= render partial: "search_form", locals: { remote_only: true }
