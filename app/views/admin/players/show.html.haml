@@ -25,11 +25,13 @@
 - html = render "shared/pipe_list", :error => @player.status
 = render "shared/dialog", id: "status", button: false, cancel: "Dismiss", html: html
 
-
 - if @tournament.stage == "rated"
   %table{class: "turbaned"}
     %tr
       %td= link_to "Member View", @player
+
+- if @player.icu_id && can?(:their_home, ::Pages::MyHome)
+  - add_top_link(their_home_path(id: @player.icu_id), "home", "#{@player.name(false)} Home")
 
 #help
   %dl

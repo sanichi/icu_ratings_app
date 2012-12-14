@@ -83,7 +83,8 @@
       = link_to "Log out", log_out_path
     - else
       = link_to "Log in", log_in_path
-  - if current_user
+  - add_top_link current_user.icu_player, current_user.role, "#{current_user.name(false)} (#{t(current_user.role, count: 1)})" if current_user
+  - add_top_links do |path, icon, text|
     %li
-      = link_to current_user.icu_player do
-        = icon_tag current_user.role, "#{current_user.name} (#{t(current_user.role, count: 1)})"
+      = link_to path do
+        = icon_tag icon, text

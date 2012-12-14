@@ -20,6 +20,9 @@
     %tr
       %td= link_to "Admin View", [:admin, @player]
 
+- if @player.icu_id && can?(:their_home, ::Pages::MyHome)
+  - add_top_link(their_home_path(id: @player.icu_id), "home", "#{@player.name(false)} Home")
+
 #help
   %table{class: "right-headers note"}
     %tr

@@ -1,5 +1,5 @@
 .header
-  %span= @icu_player.name
+  %span= @icu_player.name(false)
 
 - if current_user.icu_id == @icu_player.id
   - role = t(current_user.role, count: 1)
@@ -71,6 +71,9 @@
     %span
       If any of your details are wrong or missing please contact the
       = mail_to_icu :membership
+
+- if can?(:their_home, ::Pages::MyHome) && current_user.icu_id != @icu_player.id
+  - add_top_link(their_home_path(id: @icu_player.id), "home", "#{@icu_player.name(false)} Home")
 
 #help
   %dl

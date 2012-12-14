@@ -349,4 +349,16 @@ module ApplicationHelper
     form_id ||= handle_remote_id
     "$.rails.handleRemote($('##{form_id}'))"
   end
+
+  # Add a link, icon and text to display at the top in the header.
+  def add_top_link(link, icon, text)
+    @top_links ||= []
+    @top_links.unshift([link, icon, text])
+  end
+
+  # Output top links in the header (display code should be in supplied block).
+  def add_top_links
+    return unless @top_links
+    @top_links.each { |top_link| yield top_link }
+  end
 end

@@ -20,6 +20,9 @@
 
 = render "shared/ratings_graph/dialog"
 
+- if can?(:their_home, ::Pages::MyHome) && current_user.icu_id != @icu_player.id
+  - add_top_link(@icu_player, "user_green", "#{@icu_player.name(false)} (#{@icu_player.id})")
+
 #help
   %dl
     %dt Why is an Irish tournament in which I recently played not yet rated?
