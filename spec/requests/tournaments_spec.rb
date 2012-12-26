@@ -552,36 +552,38 @@ describe "Tournament" do
     it "should be able to make modifications if tournament is not locked" do
       visit "/admin/tournaments/#{@t.id}"
       page.should have_link("Edit Tournament")
-      page.should have_no_link("Lock Tournament")
+      page.should have_no_link("Tournament locked")
+      page.should have_no_link("Tournament unlocked")
       visit "/admin/players/#{@t.players.first.id}"
       page.should have_link("Update Player")
       page.should have_link("Edit Result")
       login @o
       visit "/admin/tournaments/#{@t.id}"
       page.should have_link("Edit Tournament")
-      page.should have_link("Lock Tournament")
+      page.should have_link("Tournament unlocked")
       login @a
       visit "/admin/tournaments/#{@t.id}"
       page.should have_link("Edit Tournament")
-      page.should have_link("Lock Tournament")
+      page.should have_link("Tournament unlocked")
     end
 
     it "should not be able to make modifications if tournament is locked" do
       @t.update_column(:locked, true)
       visit "/admin/tournaments/#{@t.id}"
       page.should have_no_link("Edit Tournament")
-      page.should have_no_link("UnLock Tournament")
+      page.should have_no_link("Tournament locked")
+      page.should have_no_link("Tournament unlocked")
       visit "/admin/players/#{@t.players.first.id}"
       page.should have_no_link("Update Player")
       page.should have_no_link("Edit Result")
       login @o
       visit "/admin/tournaments/#{@t.id}"
       page.should have_no_link("Edit Tournament")
-      page.should have_link("Unlock Tournament")
+      page.should have_link("Tournament locked")
       login @a
       visit "/admin/tournaments/#{@t.id}"
       page.should have_no_link("Edit Tournament")
-      page.should have_link("Unlock Tournament")
+      page.should have_link("Tournament locked")
     end
   end
   

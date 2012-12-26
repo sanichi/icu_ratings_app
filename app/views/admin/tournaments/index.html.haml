@@ -30,3 +30,6 @@
           = icon_tag lock, t(lock), class: "inline"
           %b= t(lock)
           = "- #{t(lock, scope: :desc)}"
+  %p
+    The next tournament due to be rated (if there is one) is indicated by:
+    = icon_tag "next_for_rating", "Next Tournament for Rating", class: "inline"

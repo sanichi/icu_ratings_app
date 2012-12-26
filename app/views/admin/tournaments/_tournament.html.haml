@@ -72,7 +72,10 @@
         %a{href: "javascript: $('#dialog_status').dialog('open'); void(0)"}= t("problems")
   %tr
     %th Stage
-    %td{id: "show_stage"}= t(@tournament.stage)
+    %td{id: "show_stage"}
+      = t(@tournament.stage)
+      - if @tournament.stage == "rated"
+        = "(#{@tournament.iterations1}/#{@tournament.iterations2})"
     %td{class: "floater"}
       - if editable && @tournament.move_stage_options(current_user).size > 0
         = link_to edit_admin_tournament_path(@tournament, stage: ""), remote: true do
@@ -84,10 +87,21 @@
       - if manageable
         - if @tournament.locked
           = link_to admin_tournament_path(@tournament, locked: "false"), remote: true, method: :put do
-            = icon_tag "unlock", "Unlock Tournament"
+            = icon_tag "lock", "Tournament locked"
         - else
           = link_to admin_tournament_path(@tournament, locked: "true"), remote: true, method: :put do
-            = icon_tag "lock", "Lock Tournament"
+            = icon_tag "unlock", "Tournament unlocked"
+  %tr
+    %th Rerate
+    %td= @tournament.rerate ? "Yes" : "No"
+    %th{class: "floater"}
+      - if editable
+        - if @tournament.rerate
+          = link_to admin_tournament_path(@tournament, rerate: "false"), remote: true, method: :put do
+            = icon_tag "next_for_rating", "Rerate Tournament"
+        - else
+          = link_to admin_tournament_path(@tournament, rerate: "true"), remote: true, method: :put do
+            = icon_tag "rated", "Don't Rerate Tournament"
   - if @tournament.rorder
     %tr
       %th Rating Order

@@ -185,7 +185,7 @@ describe Tournament do
       p.new_full.should be_false
       p.rating_change.should == 0
       p.bonus.should be_nil
-      p.expected_score.should be_within(0.0001).of(2.9319)
+      p.expected_score.should be_within(0.0001).of(2.9321)
       p.last_signature.should == "12376 1W31 2D1 3L11 4D10 5W22 6L5"
       p.curr_signature.should == p.last_signature
 
@@ -206,7 +206,7 @@ describe Tournament do
       p.new_full.should be_false
       p.rating_change.should == 0
       p.bonus.should be_nil
-      p.expected_score.should be_within(0.0001).of(1.6341)
+      p.expected_score.should be_within(0.0001).of(1.6339)
       p.last_signature.should == "1L16 2D10 3L26 4D29 5L17 6D33"
       p.curr_signature.should == p.last_signature
 
@@ -677,6 +677,46 @@ describe Tournament do
     end
   end
 
+  context "rerate" do
+    it "should allow tournaments to be rerated without any data changes" do
+      # Setup two tournaments to begin with.
+      @p = load_icu_players
+      @r = load_old_ratings
+      @u = FactoryGirl.create(:user, role: "officer")
+      @t1, @t2 = %w{bunratty_masters_2011.tab kilkenny_masters_2011.tab}.map do |f|
+        t = test_tournament(f, @u.id)
+        t.move_stage("ready", @u)
+        t.move_stage("queued", @u)
+        t
+      end
+
+      # What tournament should be rated next?
+      Tournament.next_for_rating.should == @t1
+
+      # Rate the 1st tournament.
+      @t1.rate!
+
+      # What tournament should be rated next now?
+      Tournament.next_for_rating.should == @t2
+
+      # Rate the 2nd tournament.
+      @t2.rate!
+
+      # What tournament should be rated next now?
+      Tournament.next_for_rating.should be_nil
+
+      # Arrange for the second tournament to be rerated.
+      @t2.rerate = true
+      @t2.save
+      Tournament.next_for_rating.should == @t2
+
+      # Arrange for the second tournament to be rerated.
+      @t1.rerate = true
+      @t1.save
+      Tournament.next_for_rating.should == @t1
+    end
+  end
+
   context "automatic requeuing" do
     before(:each) do
       load_icu_players
@@ -752,7 +792,7 @@ describe Tournament do
       @t.curr_signature.should be_nil
     end
 
-    it "players signature differ after a rated tournament is changed" do
+    it "players signature differs after a rated tournament is changed" do
       @t.rate!
       @t.last_signature.should_not be_nil
       @t.curr_signature.should == @t.last_signature

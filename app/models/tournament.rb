@@ -36,6 +36,7 @@
 #  locked                 :boolean(1)      default(FALSE)
 #  iterations1            :integer(2)      default(0)
 #  iterations2            :integer(2)      default(0)
+#  rerate                 :boolean(1)      default(FALSE)
 #
 
 require "icu/error"
@@ -410,22 +411,23 @@ class Tournament < ActiveRecord::Base
   # What is the first tournament due for rating or re-rating? Note that queued and rated
   # tournaments should have order and ordered tournaments should either be queued or rated.
   def self.next_for_rating
-    first_queued    = where(stage: "queued").order(:rorder).limit(1).first
-    first_changed   = where(stage: "rated").where("last_signature != curr_signature").order(:rorder).limit(1).first
-    first_moved     = where(stage: "rated").where("last_tournament_id != old_last_tournament_id").order(:rorder).limit(1).first
-    first_outofdate = find_by_sql(first_outofdate_sql).first
-    firsts          = [first_queued, first_changed, first_moved, first_outofdate].reject! { |i| i.nil? }
+    queued     = where(stage: "queued").order(:rorder).limit(1).first
+    changed    = where(stage: "rated").where("last_signature != curr_signature").order(:rorder).limit(1).first
+    moved      = where(stage: "rated").where("last_tournament_id != old_last_tournament_id").order(:rorder).limit(1).first
+    rerateable = where(stage: "rated").where(rerate: true).order(:rorder).limit(1).first
+    outofdate  = find_by_sql(first_outofdate_sql).first
+    firsts     = [queued, changed, moved, rerateable, outofdate].reject! { |i| i.nil? }
     return nil if firsts.empty?
     firsts.sort{ |a,b| a.rorder <=> b.rorder }.first
   end
 
-  # What is the first tournament due for rating or re-rating?
+  # What is the first tournament that could be rating or re-rating?
   def self.first_for_rating
     min_rorder = Tournament.minimum(:rorder)
     Tournament.where(rorder: min_rorder).first if min_rorder
   end
 
-  # What is the last tournament due for rating or re-rating?
+  # What is the last tournament that could be rating or re-rating?
   def self.last_for_rating
     max_rorder = Tournament.maximum(:rorder)
     Tournament.where(rorder: max_rorder).first if max_rorder
@@ -775,7 +777,7 @@ class Tournament < ActiveRecord::Base
     t = ICU::RatedTournament.new(desc: "Scratch")
     players.each { |p| p.add_player t }
     players.each { |p| p.add_results t }
-    t.rate!(max_iterations2: 30)
+    t.rate!(version: 2)
     self.iterations1 = t.iterations1
     self.iterations2 = t.iterations2
     self.save
@@ -795,6 +797,7 @@ class Tournament < ActiveRecord::Base
     update_column(:last_rated, now)
     update_column(:last_rated_msec, msec)
     update_column(:reratings, reratings + 1)
+    update_column(:rerate, false)
     update_column_if_changed(:stage, "rated")
     update_column_if_changed(:old_last_tournament_id, last_tournament_id)
     update_column_if_changed(:locked, true)

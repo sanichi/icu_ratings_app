@@ -57,6 +57,9 @@ module Admin
       when params[:locked]
         @tournament.update_column(:locked, params[:locked] == "false" ? false : true)
         render view(:update, :locked)
+      when params[:rerate]
+        @tournament.update_column(:rerate, params[:rerate] == "false" ? false : true)
+        render view(:update, :rerate)
       when params[:tournament][:fide]
         @data = Tournaments::FideData.new(@tournament, true)
         render view(:update, :fide)
@@ -88,7 +91,7 @@ module Admin
     private
 
     def view(file, group=nil)
-      extras if (!group && file == :update) || group == :locked
+      extras if (!group && file == :update) || group == :locked || group == :rerate
       group ? "admin/tournaments/#{group}/#{file}" : file
     end
 
