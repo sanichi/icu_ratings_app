@@ -325,7 +325,15 @@ SQL
         update_column_if_changed(a, nil)
       end
     end
-    update_column_if_changed(:bonus, count > 0 && category == "icu_player" && icu_player_type == "full_rating" ? p.bonus : nil)
+    if count > 0 && category == "icu_player" && icu_player_type == "full_rating"
+      update_column_if_changed(:bonus, p.bonus)
+      update_column_if_changed(:pre_bonus_rating, p.pb_rating)
+      update_column_if_changed(:pre_bonus_performance, p.pb_performance)
+    else
+      update_column_if_changed(:bonus, nil)
+      update_column_if_changed(:pre_bonus_rating, nil)
+      update_column_if_changed(:pre_bonus_performance, nil)      
+    end
     results.each do |r|
       pr = p.results.find { |s| s.round == r.round }
       if pr

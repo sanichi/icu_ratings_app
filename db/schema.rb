@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121225144822) do
+ActiveRecord::Schema.define(:version => 20121229204128) do
 
   create_table "articles", :force => true do |t|
     t.string   "headline"
@@ -183,46 +183,48 @@ ActiveRecord::Schema.define(:version => 20121225144822) do
   create_table "players", :force => true do |t|
     t.string   "first_name"
     t.string   "last_name"
-    t.string   "fed",                  :limit => 3
-    t.string   "title",                :limit => 3
-    t.string   "gender",               :limit => 1
+    t.string   "fed",                   :limit => 3
+    t.string   "title",                 :limit => 3
+    t.string   "gender",                :limit => 1
     t.integer  "icu_id"
     t.integer  "fide_id"
-    t.integer  "icu_rating",           :limit => 2
-    t.integer  "fide_rating",          :limit => 2
+    t.integer  "icu_rating",            :limit => 2
+    t.integer  "fide_rating",           :limit => 2
     t.date     "dob"
     t.string   "status"
     t.string   "category"
-    t.integer  "rank",                 :limit => 2
+    t.integer  "rank",                  :limit => 2
     t.integer  "num"
     t.integer  "tournament_id"
     t.string   "original_name"
-    t.string   "original_fed",         :limit => 3
-    t.string   "original_title",       :limit => 3
-    t.string   "original_gender",      :limit => 1
+    t.string   "original_fed",          :limit => 3
+    t.string   "original_title",        :limit => 3
+    t.string   "original_gender",       :limit => 1
     t.integer  "original_icu_id"
     t.integer  "original_fide_id"
-    t.integer  "original_icu_rating",  :limit => 2
-    t.integer  "original_fide_rating", :limit => 2
+    t.integer  "original_icu_rating",   :limit => 2
+    t.integer  "original_fide_rating",  :limit => 2
     t.date     "original_dob"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "old_rating",           :limit => 2
-    t.integer  "new_rating",           :limit => 2
-    t.integer  "trn_rating",           :limit => 2
-    t.integer  "old_games",            :limit => 2
-    t.integer  "new_games",            :limit => 2
-    t.integer  "bonus",                :limit => 2
-    t.integer  "k_factor",             :limit => 1
+    t.integer  "old_rating",            :limit => 2
+    t.integer  "new_rating",            :limit => 2
+    t.integer  "trn_rating",            :limit => 2
+    t.integer  "old_games",             :limit => 2
+    t.integer  "new_games",             :limit => 2
+    t.integer  "bonus",                 :limit => 2
+    t.integer  "k_factor",              :limit => 1
     t.integer  "last_player_id"
-    t.decimal  "actual_score",                      :precision => 3, :scale => 1
-    t.decimal  "expected_score",                    :precision => 8, :scale => 6
+    t.decimal  "actual_score",                       :precision => 3, :scale => 1
+    t.decimal  "expected_score",                     :precision => 8, :scale => 6
     t.string   "last_signature"
     t.string   "curr_signature"
-    t.boolean  "old_full",                                                        :default => false
-    t.boolean  "new_full",                                                        :default => false
-    t.boolean  "unrateable",                                                      :default => false
-    t.integer  "rating_change",        :limit => 2,                               :default => 0
+    t.boolean  "old_full",                                                         :default => false
+    t.boolean  "new_full",                                                         :default => false
+    t.boolean  "unrateable",                                                       :default => false
+    t.integer  "rating_change",         :limit => 2,                               :default => 0
+    t.integer  "pre_bonus_rating",      :limit => 2
+    t.integer  "pre_bonus_performance", :limit => 2
   end
 
   add_index "players", ["fide_id"], :name => "index_players_on_fide_id"
