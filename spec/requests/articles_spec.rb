@@ -15,7 +15,7 @@ describe "Article" do
       page.fill_in "Headline", with: headline
       page.fill_in "Story", with: story
       page.click_button "Create"
-      page.should have_selector("head title", text: "Article")
+      page.should have_selector("head title", text: headline)
       page.should have_selector("span.notice", text: /created/i)
       page.should have_selector("span", text: headline)
       page.should have_selector("p", text: story)
@@ -81,7 +81,7 @@ describe "Article" do
       page.should have_selector("head title", text: "Article")
       @article.each { |article| page.should have_link(article.headline) }
       visit "/articles/#{@article.first.id}"
-      page.should have_selector("head title", text: "Article")
+      page.should have_selector("head title", text: @article.first.headline)
       page.should have_selector("span", text: @article.first.headline)
       page.should have_no_link "Edit"
       page.should have_no_link "Delete"
