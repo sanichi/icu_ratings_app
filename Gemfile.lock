@@ -80,7 +80,7 @@ GEM
     icu_name (1.0.14)
       activesupport
       i18n
-    icu_ratings (1.5.2)
+    icu_ratings (1.5.3)
     icu_tournament (1.6.8)
       dbf
       icu_name
