@@ -17,7 +17,7 @@ describe "Pages" do
         "Rating Officers"       => 2,
         "Website Administrator" => 1,
       }.each_pair do |h, n|
-        page.find("h3", text: h).find(:xpath, "following-sibling::ul").all("li").should have(n).items
+        page.find("h3", text: h).find(:xpath, "following-sibling::ul[1]").all("li").should have(n).items
       end
     end
 

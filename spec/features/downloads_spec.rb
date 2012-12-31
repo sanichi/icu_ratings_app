@@ -54,7 +54,7 @@ describe "Download" do
     it "can create, view, edit and delete downloads" do
       Download.count.should == 0
       visit "/downloads/new"
-      page.should have_selector("head title", text: "New Download")
+      page.should have_selector(:xpath, "/html/head/title[.='New Download']")
       page.attach_file "download[uploaded_file]", @text
       page.fill_in "Comment", with: "Test Text"
       page.click_button "Create"
@@ -70,7 +70,7 @@ describe "Download" do
       page.driver.response.headers["Content-Type"].should == "text/plain"
       visit "/downloads"
       click_link "Edit Download"
-      page.should have_selector("head title", text: "Update Download")
+      page.should have_selector(:xpath, "/html/head/title[.='Update Download']")
       page.attach_file "download[uploaded_file]", @image
       page.fill_in "Comment", with: "Test Image"
       page.click_button "Update"

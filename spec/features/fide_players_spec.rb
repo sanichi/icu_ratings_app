@@ -22,7 +22,7 @@ describe FidePlayer do
       sleep 0.1
       @f.reload
       @f.icu_id.should == @i.id
-      page.click_link @i.id.to_s
+      first(:link, @i.id.to_s).click
       page.click_link @unlink
       sleep 0.1
       @f.reload

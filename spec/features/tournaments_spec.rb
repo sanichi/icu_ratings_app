@@ -35,7 +35,7 @@ describe "Tournament" do
 
     def set_tournament_name(page, file, arg)
       return unless file =~ /\.(txt)/
-      page.fill_in "name", with: arg[:name] || "Tournament"
+      page.fill_in "Tournament name", with: arg[:name] || "Tournament"
     end
 
     def set_feds_option(page, file, arg)
@@ -287,14 +287,19 @@ describe "Tournament" do
 
   describe "queueing" do
     before(:each) do
-      @bpath = "//button/span[.='Update']"
       @stgid = "#show_stage"
       @bname = "Update Stage"
 
-      # One particular button seems to need a bit of time to complete.
+      # This button seems to need a bit of time to complete.
       @click = Proc.new do
         click_on @bname
         sleep 0.1
+      end
+
+      # This button seems to need a little bit more time to complete.
+      @update = Proc.new do
+        page.first(:xpath, "//button/span[.='Update']").click
+        sleep 0.2
       end
     end
 
@@ -325,11 +330,11 @@ describe "Tournament" do
         visit "/admin/tournaments/#{@t[0].id}"
         page.should have_selector(@stgid, text: "Initial")
         @click.call
-        page.find(:xpath, @bpath).click
+        @update.call
         page.should have_selector(@stgid, text: "Ready")
         @click.call
         select "Queued", from: "tournament_stage"
-        page.find(:xpath, @bpath).click
+        @update.call
         page.should have_selector(@stgid, text: "Queued")
         Tournament.where("rorder IS NOT NULL").count.should == 1
         @t.each { |t| t.reload }
@@ -347,11 +352,11 @@ describe "Tournament" do
         visit "/admin/tournaments/#{@t[1].id}"
         page.should have_selector(@stgid, text: "Initial")
         @click.call
-        page.find(:xpath, @bpath).click
+        @update.call
         page.should have_selector(@stgid, text: "Ready")
         @click.call
         select "Queued", from: "tournament_stage"
-        page.find(:xpath, @bpath).click
+        @update.call
         page.should have_selector(@stgid, text: "Queued")
         Tournament.where("rorder IS NOT NULL").count.should == 2
         @t.each { |t| t.reload }
@@ -369,11 +374,11 @@ describe "Tournament" do
         visit "/admin/tournaments/#{@t[2].id}"
         page.should have_selector(@stgid, text: "Initial")
         @click.call
-        page.find(:xpath, @bpath).click
+        @update.call
         page.should have_selector(@stgid, text: "Ready")
         @click.call
         select "Queued", from: "tournament_stage"
-        page.find(:xpath, @bpath).click
+        @update.call
         page.should have_selector(@stgid, text: "Queued")
         Tournament.where("rorder IS NOT NULL").count.should == 3
         @t.each { |t| t.reload }
@@ -391,7 +396,7 @@ describe "Tournament" do
         visit "/admin/tournaments/#{@t[0].id}"
         page.should have_selector(@stgid, text: "Queued")
         @click.call
-        page.find(:xpath, @bpath).click
+        @update.call
         page.should have_selector(@stgid, text: "Ready")
         Tournament.where("rorder IS NOT NULL").count.should == 2
         @t.each { |t| t.reload }
@@ -409,7 +414,7 @@ describe "Tournament" do
         visit "/admin/tournaments/#{@t[1].id}"
         page.should have_selector(@stgid, text: "Queued")
         @click.call
-        page.find(:xpath, @bpath).click
+        @update.call
         page.should have_selector(@stgid, text: "Ready")
         Tournament.where("rorder IS NOT NULL").count.should == 1
         @t.each { |t| t.reload }
@@ -427,7 +432,7 @@ describe "Tournament" do
         visit "/admin/tournaments/#{@t[2].id}"
         page.should have_selector(@stgid, text: "Queued")
         @click.call
-        page.find(:xpath, @bpath).click
+        @update.call
         page.should have_selector(@stgid, text: "Ready")
         Tournament.where("rorder IS NOT NULL").count.should == 0
         @t.each { |t| t.reload }
@@ -467,11 +472,11 @@ describe "Tournament" do
             @click.call
             page.should have_selector(:xpath, "//select[@id='tournament_stage']")
             select "Queued", from: "tournament_stage"
-            page.find(:xpath, @bpath).click
+            @update.call
             page.should have_selector(@stgid, text: "Queued")
             @t.reload.stage.should == "queued"
             @click.call
-            page.find(:xpath, @bpath).click
+            @update.call
             page.should have_selector(@stgid, text: "Ready")
             @t.reload.stage.should == "ready"
           elsif !role # owning reporter
@@ -612,7 +617,7 @@ describe "Tournament" do
       visit "/admin/tournaments/#{@t3.id}"
       page.should have_no_link(@lnk)
       visit "/admin/tournaments/#{@t1.id}"
-      page.click_link "Rate"
+      page.first(:link, "Rate").click
       Tournament.next_for_rating.should == @t2
       visit "/admin/tournaments/#{@t1.id}"
       page.should have_no_link(@lnk)
@@ -621,7 +626,7 @@ describe "Tournament" do
       visit "/admin/tournaments/#{@t3.id}"
       page.should have_no_link(@lnk)
       visit "/admin/tournaments/#{@t2.id}"
-      page.click_link "Rate"
+      page.first(:link, "Rate").click
       Tournament.next_for_rating.should == @t3
       visit "/admin/tournaments/#{@t1.id}"
       page.should have_no_link(@lnk)
@@ -629,7 +634,7 @@ describe "Tournament" do
       page.should have_no_link(@lnk)
       visit "/admin/tournaments/#{@t3.id}"
       page.should have_no_link(@lnk)          # not when it's the last tournament for rating
-      page.click_link "Rate"                  # but it still has the Rate button (for rating one tournament)
+      page.first(:link, "Rate").click         # but it still has the Rate button (for rating one tournament)
       visit "/admin/tournaments/#{@t1.id}"
       page.should have_no_link(@lnk)
       visit "/admin/tournaments/#{@t2.id}"

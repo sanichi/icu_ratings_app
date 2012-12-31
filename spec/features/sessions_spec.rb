@@ -9,7 +9,7 @@ describe "Sessions" do
     end
     
     it "login page" do
-      page.should have_selector("head title", text: "Log in")
+      page.should have_selector(:xpath, "/html/head/title['Log in']")
       page.should have_xpath("//form//input[@name='email']")
       page.should have_xpath("//form//input[@name='password']")
     end
@@ -18,7 +18,7 @@ describe "Sessions" do
       page.fill_in "Email", with: "wrong_email@icu.ie"
       page.fill_in "Password", with: @user.password
       click_button "Log in"
-      page.should have_selector("head title", text: "Log in")
+      page.should have_selector(:xpath, "/html/head/title['Log in']")
       page.should have_selector("span.alert", text: /invalid email or password/i)
       Login.count.should == 0
     end
@@ -27,7 +27,7 @@ describe "Sessions" do
       page.fill_in "Email", with: @user.email
       page.fill_in "Password", with: "wrong password"
       click_button "Log in"
-      page.should have_selector("head title", text: "Log in")
+      page.should have_selector(:xpath, "/html/head/title['Log in']")
       page.should have_selector("span.alert", text: /invalid email or password/i)
       @user.logins.where(problem: "password", role: "member").count.should == 1
     end
@@ -36,7 +36,7 @@ describe "Sessions" do
       page.fill_in "Email", with: @loser.email
       page.fill_in "Password", with: @loser.password
       click_button "Log in"
-      page.should have_selector("head title", text: "Log in")
+      page.should have_selector(:xpath, "/html/head/title['Log in']")
       page.should have_selector("span.alert", text: /membership expired/i)
       @loser.logins.where(problem: "expiry", role: "member").count.should == 1
     end

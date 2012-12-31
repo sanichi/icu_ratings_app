@@ -27,7 +27,7 @@ describe "Upload" do
       it "can upload and then delete" do
         Upload.count.should == 0
         visit "/admin/uploads/new"
-        page.should have_selector("head title", text: "File Upload")
+        page.should have_selector(:xpath, "/html/head/title['File Upload']")
         page.select "FIDE-Krause", from: "upload_format"
         page.attach_file "file", @file
         page.click_button "Upload"
@@ -37,9 +37,9 @@ describe "Upload" do
         upload.error.should_not be_blank
         upload.tournament.should be_blank
         visit "/admin/uploads/#{upload.id}"
-        page.should have_selector("head title", text: "Upload")
+        page.should have_selector(:xpath, "/html/head/title['Upload']")
         page.click_link("Delete")
-        page.should have_selector("head title", text: "File Upload")
+        page.should have_selector(:xpath, "/html/head/title['File Upload']")
         Upload.count.should == 0
       end
 
@@ -132,9 +132,9 @@ describe "Upload" do
       it "should process Swiss Perfect Export" do
         visit "/admin/uploads/new"
         page.select "Swiss Perfect Export", from: "upload_format"
-        page.fill_in "start", with: "2010-04-11"
-        page.fill_in "name", with: "U-19 All Ireland"
-        page.attach_file "file", test_file_path("junior_championships_u19_2010.txt")
+        page.fill_in "Tournament start date", with: "2010-04-11"
+        page.fill_in "Tournament name", with: "U-19 All Ireland"
+        page.attach_file "File to upload", test_file_path("junior_championships_u19_2010.txt")
         page.click_button "Upload"
 
         page.should have_selector("div span", text: "U-19 All Ireland")
