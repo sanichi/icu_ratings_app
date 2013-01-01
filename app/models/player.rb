@@ -257,6 +257,17 @@ SQL
     paginate(matches, path, params)
   end
 
+  # Search for new players and return paginated results.
+  def self.search_new_players(params, path)
+    matches = joins(:tournament).includes(:tournament)
+    matches = matches.where(tournaments: { stage: "rated" })
+    matches = matches.where(category: "new_player")
+    matches = matches.where("last_name LIKE ?", "%#{params[:last_name]}%") if params[:last_name].present?
+    matches = matches.where("first_name LIKE ?", "%#{params[:first_name]}%") if params[:first_name].present?
+    matches = matches.order("last_name ASC, first_name ASC, tournaments.name DESC")
+    paginate(matches, path, params)
+  end
+
   # Set the k-factor for an ICU player with a full rating (is called after get_old_ratings).
   def get_k_factor(start)
     return unless category == "icu_player" && old_full

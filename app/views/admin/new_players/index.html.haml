@@ -1,0 +1,37 @@
+.header
+  %span= @page_title = "New Players"
+
+= render "search_form"
+
+#new_players_results.turbaned
+  = render "search_results"
+
+#help
+  %dl
+    %dt What is a "new player"?
+    %dd
+      A player who, at the time of competing in a given tournament, was new to the ICU
+      (having no record in the ICU player database) and had no previous chess rating
+      (whether ICU, FIDE or other).
+    %dt Are new players rated?
+    %dd
+      Yes but, without an ID, their ratings cannot be tracked from tournament to tournament.
+      They are treated as having no rating history in every tournament they play in until
+      they enter the player database. To enter this database a player either have to join
+      the ICU or the rating officer has to create a record for them.
+    %dt Does the rating officer normally create new records for new players?
+    %dd
+      Current practice is not to routinely create records for new players but to
+      rely on them joining the ICU if they want their rating tracked. One reason
+      for this is that new players often have nothing to identify them except
+      their name. Without a date of birth, names are often insufficient for
+      reliable identification. When players join the ICU they must supply
+      their date of birth and federation as well as their name.
+    %dt What happens to a player's old games after they join the ICU?
+    %dd
+      Current practice is that they are ignored and the player's rating is tracked
+      from the first tournament they play as a member. However the rating officer will
+      try to take old games into account if any new member specifically requests it.
+      This involves assigning IDs, rerating tournaments and possibly also republishing
+      rating lists.
+      

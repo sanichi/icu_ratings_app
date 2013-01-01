@@ -54,6 +54,8 @@
         %li= link_to "FIDE Players", fide_players_path
         - if can? :read, OldPlayer
           %li= link_to "Former Players", admin_old_players_path
+        - if can? :manage, Player
+          %li= link_to "New Players", admin_new_players_path
   - if can? :read, Download
     %li
       = link_to "Admin", overview_path
