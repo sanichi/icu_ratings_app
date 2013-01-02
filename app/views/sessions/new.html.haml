@@ -15,12 +15,12 @@
   %dl
     %dt What email and password should I use to log in?
     %dd
-      = succeed "." do
-        The same ones you previously
-        = link_to_icu "registered", "members/register.php"
-        on the main
-        = link_to_icu "ICU site"
-    %dt I've forgotten my password, can you help me?
+      If you're a current ICU member and have previously
+      = link_to_icu "registered", "members/register.php"
+      a login account on the main
+      = link_to_icu "ICU site"
+      then you can use the same account to log in to this site.
+    %dt What should I do if I've forgotten my password?
     %dd
       Please email the ICU
       = mail_to_icu(:admin)
