@@ -15,14 +15,22 @@
   %dl
     %dt What email and password should I use to log in?
     %dd
-      = succeed "." do
-        The same ones you use to log into the main
-        = link_to_icu "ICU site"
+      The same ones you previously
+      = link_to_icu "registered", "members/register.php"
+      on the main
+        = succeed "." do
+          = link_to_icu "ICU site"
     %dt I've forgotten my password, can you help me?
     %dd
       Please email the ICU
       = mail_to_icu(:admin)
-      giving your name, ICU number and login email and request that your password be reset.
+      giving your name and PIN number and request that your password be reset.
+      If the email address you used for your login is still in use, please send the message from that email.
+      If you have a new email address you could, as an alternative to reseting your old password, just
+      = link_to_icu "register", "members/register.php"
+      a new login account (please note though that you may have to wait a day for this site to catch up with the change). See
+      = link_to_icu "thses instructions", "articles/display.php?id=283"
+      for more help.
     %dt What does "your account has not yet been activated" mean?
     %dd
       %p
@@ -32,7 +40,7 @@
         would have been activated if you had received this message and clicked the link.
       %p
         If you don't have a record of this message (even in your spam folder) then please contact the
-        = mail_to_icu
+        = mail_to_icu(:admin)
         using the same email address as the one you chose for your login account and stating your PIN number.
     %dt If I don't yet have an account, how can I get one?
     %dd
