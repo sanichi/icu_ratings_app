@@ -145,7 +145,7 @@ describe User do
     it "status" do
       @u.status = "pending"
       @u.save
-      lambda { User.authenticate!({ email: @e, password: @p }, @i, false) }.should raise_error(/verif/i)
+      lambda { User.authenticate!({ email: @e, password: @p }, @i, false) }.should raise_error(/activat/i)
     end
   end
 

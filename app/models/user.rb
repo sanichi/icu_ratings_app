@@ -82,7 +82,7 @@ class User < ActiveRecord::Base
     logins.create(ip: ip, problem: problem.to_s, role: role) unless admin
     err = case problem
       when :expiry   then "Sorry, your ICU membership expired on #{expiry}"
-      when :status   then "Sorry, your email has not yet been verified"
+      when :status   then "Sorry, your account has not yet been activated (see Help)"
       when :password then "Invalid email or password"
     end
     raise err if err
