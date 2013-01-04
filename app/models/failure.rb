@@ -24,7 +24,7 @@ class Failure < ActiveRecord::Base
   end
 
   def self.record(e, max=8)
-    details = e.backtrace[0..max-1]
+    details = e.backtrace ? e.backtrace[0..max-1] : []
     details.unshift(e.message)
     create!(name: e.class.to_s, details: details.join("\n"))
   end

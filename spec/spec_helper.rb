@@ -12,6 +12,9 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 # Permit Capybara to recognize ".tab" as a text/plain when file is uploaded.
 ICU::Util::Hacks.fix_mime_types
 
+# Don't in general allow pulling member data from www during testing (unless explicitly reset).
+User.pulls_disabled = true
+
 RSpec.configure do |config|
   # Mock framework.
   config.mock_with :rspec

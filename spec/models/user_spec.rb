@@ -245,4 +245,91 @@ describe User do
       @u1.errors[:base].first.should match(/woops/)
     end
   end
+
+  context "#pull_www_member" do
+    before(:each) do
+      @h =
+      {
+        salt:     "abcdefabcdefabcdefabcdefabcdef10",
+        password: "abcdefabcdefabcdefabcdefabcdef20",
+        status:   "ok",
+        expiry:   Date.new(2012, 12, 31),
+      }
+      @user = FactoryGirl.create(:user, @h)
+    end
+
+    before(:all) do
+      User.pulls_disabled = false
+    end
+
+    after(:all) do
+      User.pulls_disabled = true
+    end
+
+    it "no change" do
+      ICU::Database::Pull.stub_chain(:new, :get_member).with(@user.id, @user.email).and_return(@h)
+      @user.pull_www_member
+      @user.password.should  == @h[:password]
+      @user.salt.should      == @h[:salt]
+      @user.status.should    == @h[:status]
+      @user.expiry.should    == @h[:expiry]
+      Failure.count.should   == 0
+      @user.last_pull.should == "none"
+      @user.last_pulled_at.should be_within(1).of(Time.now)
+    end
+
+    it "changed password" do
+      password = "abcdefabcdefabcdefabcdefabcdef11"
+      ICU::Database::Pull.stub_chain(:new, :get_member).with(@user.id, @user.email).and_return(@h.merge(password: password))
+      @user.pull_www_member
+      @user.password.should  == password
+      @user.salt.should      == @h[:salt]
+      @user.status.should    == @h[:status]
+      @user.expiry.should    == @h[:expiry]
+      Failure.count.should   == 0
+      @user.last_pull.should == "password"
+      @user.last_pulled_at.should be_within(1).of(Time.now)
+    end
+
+    it "changed salt and password" do
+      password = "abcdefabcdefabcdefabcdefabcdef12"
+      salt     = "abcdefabcdefabcdefabcdefabcdef22"
+      ICU::Database::Pull.stub_chain(:new, :get_member).with(@user.id, @user.email).and_return(@h.merge(password: password, salt: salt))
+      @user.pull_www_member
+      @user.password.should  == password
+      @user.salt.should      == salt
+      @user.status.should    == @h[:status]
+      @user.expiry.should    == @h[:expiry]
+      Failure.count.should   == 0
+      @user.last_pull.should == "password, salt"
+      @user.last_pulled_at.should be_within(1).of(Time.now)
+    end
+
+    it "changed status and expiry" do
+      status = "pending"
+      expiry = Date.new(2013, 12, 31)
+      ICU::Database::Pull.stub_chain(:new, :get_member).with(@user.id, @user.email).and_return(@h.merge(status: status, expiry: expiry))
+      @user.pull_www_member
+      @user.password.should  == @h[:password]
+      @user.salt.should      == @h[:salt]
+      @user.status.should    == status
+      @user.expiry.should    == expiry
+      Failure.count.should   == 0
+      @user.last_pull.should == "status, expiry"
+      @user.last_pulled_at.should be_within(1).of(Time.now)
+    end
+
+    it "an error" do
+      ICU::Database::Pull.stub_chain(:new, :get_member).with(@user.id, @user.email).and_return("error xxx")
+      @user.pull_www_member
+      @user.password.should  == @h[:password]
+      @user.salt.should      == @h[:salt]
+      @user.status.should    == @h[:status]
+      @user.expiry.should    == @h[:expiry]
+      @user.last_pull.should be_nil
+      @user.last_pulled_at.should be_nil
+      Failure.count.should   == 1
+      Failure.first.details.should match(/error xxx/)
+    end
+  end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121229204128) do
+ActiveRecord::Schema.define(:version => 20130102180118) do
 
   create_table "articles", :force => true do |t|
     t.string   "headline"
@@ -376,6 +376,8 @@ ActiveRecord::Schema.define(:version => 20121229204128) do
     t.datetime "updated_at"
     t.string   "salt",            :limit => 32
     t.string   "status",          :limit => 20, :default => "ok"
+    t.datetime "last_pulled_at"
+    t.string   "last_pull"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

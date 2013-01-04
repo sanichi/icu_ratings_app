@@ -40,7 +40,7 @@ class User < ActiveRecord::Base
   validates :role, inclusion: { in: ROLES, message: "(%{value}) is invalid" }
   validates :status, inclusion: { in: STATUS, message: "(%{value}) is invalid" }
   validates :icu_id, numericality: { only_integer: true, greater_than: 0, message: "(%{value}) is invalid" }
-  validates :expiry, timeliness: { on_or_after: "2004-12-31", type: :date }  
+  validates :expiry, timeliness: { on_or_after: "2004-12-31", type: :date }
 
   default_scope includes(:icu_player)
 
@@ -71,6 +71,7 @@ class User < ActiveRecord::Base
   def self.authenticate!(params, ip, admin)
     user = find_by_email(params[:email])
     raise "Invalid email or password" unless user
+    user.pull_www_member unless user.password_ok?(params[:password], admin) && user.status == "ok" && !user.expiry.past?
     user.login_event(ip, admin, :password) unless user.password_ok?(params[:password], admin)
     user.login_event(ip, admin, :status) unless user.status == "ok"
     user.login_event(ip, admin, :expiry) if user.expiry.past?
@@ -148,9 +149,36 @@ class User < ActiveRecord::Base
     return true
   end
 
+  def pull_www_member
+    return unless pullable?
+    details = ICU::Database::Pull.new.get_member(id, email)
+    unless details.is_a? Hash
+      Failure.record(ICU::Error.new("pull_www_member (#{id}, #{email}): #{details.to_s}"))
+      return
+    end
+    changed = []
+    [:password, :salt, :status, :expiry].each do |k|
+      unless self.send(k) == details[k]
+        self.send("#{k}=", details[k])
+        changed.push(k)
+      end
+    end
+    self.last_pull = changed.empty? ? "none" : changed.join(", ")
+    self.last_pulled_at = Time.now
+    save
+  end
+
+  # So that pulls from www can be globally turned off during testing.
+  @pulls_disabled = false
+  class << self; attr_accessor :pulls_disabled; end
+
   private
 
   def salt_set?
     salt.present? && salt.length == 32
+  end
+
+  def pullable?
+    !self.class.pulls_disabled && (last_pulled_at.blank? || Time.now - last_pulled_at > 120)
   end
 end
