@@ -11,6 +11,8 @@
 #  status          :string(20)      default("ok")
 #  icu_id          :integer(4)
 #  expiry          :date
+#  last_pull       :string(255)
+#  last_pulled_at  :datetime
 #  created_at      :datetime
 #  updated_at      :datetime
 #
