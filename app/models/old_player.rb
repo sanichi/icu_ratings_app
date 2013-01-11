@@ -46,6 +46,8 @@ class OldPlayer < ActiveRecord::Base
     matches = matches.where(icu_id: params[:icu_id]) if params[:icu_id].to_i > 0
     matches = matches.where("club LIKE ?", "%#{params[:club]}%") if params[:club].present?
     matches = matches.where("note LIKE ?", "%#{params[:note]}%") if params[:note].present?
+    matches = matches.where("rating >= ?", params[:min_rating].to_i) if params[:min_rating].to_i > 0
+    matches = matches.where("rating <= ?", params[:max_rating].to_i) if params[:max_rating].to_i > 0
     matches = matches.where(status: params[:status]) if params[:status].present?
     paginate(matches, path, params)
   end

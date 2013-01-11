@@ -11,38 +11,26 @@
   %dl
     %dt What are "Former ICU Players"?
     %dd
-      The original data came from 5202 records in the
-      %em Old Members Table
-      of the
+      The original data came from 5202 records in the "Old Members Table" of the
       %em MSAccess
       database that constituted the ICU rating system preceding this web site.
-      It's unknown when, why and by whom this table was compiled. Many
-      of the records matched existing members, represented foreign players or were
-      duplicates. Some records were marked in obscure ways that a previous rating
-      officer may have understood but which now are meaningless.
-      After a cleanup operation, 3372 remaining records were transferred here.
+      Many of the records matched existing members, represented foreign players
+      or were duplicates but, after a cleanup operation, 3372 remaining records
+      were transferred here.
     %dt What are they used for?
     %dd
-      When players come out of retirement, start playing again and want to rejoin
-      the ICU they should use their old ID and rating if they can be found (if not,
-      they are treated like any other new player). If they cannot be found in the main
-      = link_to "list of players", icu_players_path
-      or in the
-      = link_to "list of old ratings", admin_old_ratings_path
-      they might be in this list of former players. If they are found here,
-      then the player should be resurrected by (a) creating a new record in the
-      %em icu_players
-      table of the main ICU database
-      (which automatically synchronizes to the ratings database) and (b) creating
-      a corresponding new record in the
-      %em old_ratings
-      table of the ratings database. Then the player can rejoin using their old ICU
-      number and play rated games again starting with their old rating.
-    %dt Why not just dump all this data in the main database tables?
+      When players come out of retirement and start playing again they
+      often want to use their old rating, if it can be found (if not,
+      they have to be treated like any other new player). If their old
+      rating isn't in the list of
+      = link_to "legacy ratings", admin_old_ratings_path
+      it might be still be here in this list of former members.
+      If so, the player can be resurrected from the dead, so to speak,
+      by creating new player and legacy rating records for them.
+      Then they can rejoin the ICU with their old ID and have their
+      rating tracked from it's last known value, instead of starting from scratch.
+    %dt Why not just create new player and legacy ratings from this data now?
     %dd
-      That was considered but the resulting increase in the number of players with the
-      same or similar names which it would have caused was the deciding factor against,
-      in addition to some doubt about the quality and provenance of the
-      %em Old Members
-      data. Instead the information is preserved here to assist in the relatively rare cases
-      (1-3 per year) when former members need to be resurrected with their old ID and rating.
+      That would result in even more players with similar names and an increased likelihood
+      of misidentications. Considering the number of returning players is only a few
+      per year, its better just to add them one at a time as required.

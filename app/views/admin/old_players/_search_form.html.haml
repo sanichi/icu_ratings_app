@@ -2,22 +2,29 @@
   = hidden_field_tag :per_page, params[:per_page]
   %table{class: "invisible"}
     %tr
-      %th= label_tag :icu_id, "ICU ID"
       %th= label_tag :last_name, "Last Name"
       %th= label_tag :first_name, "First Name"
       %th= label_tag :gender
       %th= label_tag :dob, "DOB"
-      %th= label_tag :club
-      %th= label_tag :status
-      %th= label_tag :note
-      %th
+      %th= label_tag :icu_id, "ICU ID"
     %tr
-      %td= text_field_tag :icu_id, params[:icu_id], onchange: handle_remote, class: "centered", size: 6, maxlength: 6
       %td= text_field_tag :last_name, params[:last_name], onchange: handle_remote, class: "centered", size: 15
       %td= text_field_tag :first_name, params[:first_name], onchange: handle_remote, class: "centered", size: 10
       %td= select_tag :gender, options_for_select(gender_menu("Any"), params[:gender]), onchange: handle_remote
       %td= text_field_tag :dob, params[:dob], onchange: handle_remote, class: "centered", size: 10
+      %td= text_field_tag :icu_id, params[:icu_id], onchange: handle_remote, class: "centered", size: 6, maxlength: 6
+  %table{class: "invisible"}
+    %tr
+      %th= label_tag :club
+      %th= label_tag :status
+      %th= label_tag :note
+      %th= label_tag :min_rating, "Min Rtg"
+      %th= label_tag :max_rating, "Max Rtg"
+      %th
+    %tr
       %td= text_field_tag :club, params[:club], onchange: handle_remote, class: "centered", size: 15
       %td= select_tag :status, options_for_select(old_players_status_menu("Any"), params[:status]), onchange: handle_remote
       %td= text_field_tag :note, params[:note], onchange: handle_remote, class: "centered", size: 15
+      %td= text_field_tag :min_rating, params[:min_rating], onchange: handle_remote, class: "centered", size: 4, maxlength: 4
+      %td= text_field_tag :max_rating, params[:max_rating], onchange: handle_remote, class: "centered", size: 4, maxlength: 4
       %td= submit_tag "Search"
