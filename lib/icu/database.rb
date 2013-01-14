@@ -578,6 +578,26 @@ module ICU
         end
       end
 
+      # This is for checking stuff when a member has difficulty loggining in.
+      def get_member(id, email)
+        ms = @client.query("SELECT mem_email, mem_status, mem_password, mem_salt, mem_expiry FROM members WHERE mem_id = #{id}")
+        return "couldn't find member with ID #{id}" if ms.size == 0
+        return "found more than one (#{ms.size}) members with ID #{id}" if ms.size > 1
+        m = ms.first
+        address, password, salt, status, expiry = [:mem_email, :mem_password, :mem_salt, :mem_status, :mem_expiry].map { |k| m[k] }
+        return "expected email '#{email}' but got '#{address}'"                      unless email == address
+        return "expected status in (#{User::STATUS.join(', ')}) but got '#{status}'" unless User::STATUS.include?(status)
+        return "expected password but got nothing"                                   unless password
+        return "expected 32 character password but got #{password.length}"           unless password.length == 32
+        return "expected salt but got nothing"                                       unless salt
+        return "expected 32 character salt but got #{salt.length}"                   unless salt.length == 32
+        { password: password, salt: salt, status: status, expiry: expiry }
+      rescue Mysql2::Error => e
+        return "mysql error: #{e.message}"
+      rescue => e
+        return "error: #{e.message}"
+      end
+
       private
 
       def initialize
@@ -637,32 +657,6 @@ module ICU
         end
         @client.query("UPDATE members SET #{updates.join(', ')} WHERE mem_id = #{id}") unless updates.empty?
         nil
-      rescue Mysql2::Error => e
-        return "mysql error: #{e.message}"
-      rescue => e
-        return "error: #{e.message}"
-      end
-    end
-
-    class Pull
-      def initialize
-        @client = Mysql2::Client.new(APP_CONFIG["icu_db_ro"].symbolize_keys)
-        @client.query_options.merge!(symbolize_keys: true)
-      end
-
-      def get_member(id, email)
-        ms = @client.query("SELECT mem_email, mem_status, mem_password, mem_salt, mem_expiry FROM members WHERE mem_id = #{id}")
-        return "couldn't find member with ID #{id}" if ms.size == 0
-        return "found more than one (#{ms.size}) members with ID #{id}" if ms.size > 1
-        m = ms.first
-        address, password, salt, status, expiry = [:mem_email, :mem_password, :mem_salt, :mem_status, :mem_expiry].map { |k| m[k] }
-        return "expected email '#{email}' but got '#{address}'"                      unless email == address
-        return "expected status in (#{User::STATUS.join(', ')}) but got '#{status}'" unless User::STATUS.include?(status)
-        return "expected password but got nothing"                                   unless password
-        return "expected 32 character password but got #{password.length}"           unless password.length == 32
-        return "expected salt but got nothing"                                       unless salt
-        return "expected 32 character salt but got #{salt.length}"                   unless salt.length == 32
-        { password: password, salt: salt, status: status, expiry: expiry }
       rescue Mysql2::Error => e
         return "mysql error: #{e.message}"
       rescue => e
