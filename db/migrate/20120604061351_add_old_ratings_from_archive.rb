@@ -5,6 +5,7 @@ class AddOldRatingsFromArchive < ActiveRecord::Migration
   [
     {icu_id:   552, rating: 1692, games: 11, full: true},
     {icu_id:  1074, rating: 1821, games:  7, full: true},
+    {icu_id:  1211, rating: 1727, games: 11, full: true},
     {icu_id:  1305, rating: 1190, games: 30, full: true},
     {icu_id:  2404, rating: 1210, games:  6, full: true},
     {icu_id:  3758, rating: 1507, games: 12, full: true},
