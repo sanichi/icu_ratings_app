@@ -24,6 +24,9 @@ group :development do
   gem "capistrano"
   gem "capistrano-maintenance"
   gem "quiet_assets"
+  gem "better_errors"      # see ...
+  gem "binding_of_caller"  # railscasts ...
+  gem "meta_request"       # 402
 end
 
 group :test, :development do
