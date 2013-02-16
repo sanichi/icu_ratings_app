@@ -102,7 +102,7 @@ sub report_time
 sub get_dbh
 {
     my $cnf = $opt{c};
-    die "configuration file ($cnf) does not exists\n" unless -f $cnf;
+    die "configuration file ($cnf) does not exist\n" unless -f $cnf;
     open CNF, $cnf || die "cannot read configuration file $cnf";
     my $yml = do { local $/ = undef; <CNF> };
     close CNF;
@@ -273,7 +273,7 @@ sub export_sm
             $title = 'c',  last if $title eq 'CM';
             $title = '';
         }
-        $title = "w$title" if $woman;
+        $title = "w$title" if $woman && $title;
         push @data, $title;
 
         # Federation.
