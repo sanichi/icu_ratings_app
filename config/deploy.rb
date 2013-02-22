@@ -35,7 +35,7 @@ namespace :deploy do
 
   desc "Symlink extra configs and folders."
   task :symlink_extras do
-    %w{database app_config}.each do |yml|
+    %w{database app_config newrelic}.each do |yml|
       run "ln -nfs #{shared_path}/config/#{yml}.yml #{release_path}/config/#{yml}.yml"
     end
     %w{webalizer}.each do |share|
