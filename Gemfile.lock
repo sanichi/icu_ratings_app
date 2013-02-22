@@ -118,6 +118,7 @@ GEM
     net-ssh (2.6.2)
     net-ssh-gateway (1.1.0)
       net-ssh (>= 1.99.1)
+    newrelic_rpm (3.5.7.59)
     nokogiri (1.5.6)
     polyglot (0.3.3)
     quiet_assets (1.0.1)
@@ -217,6 +218,7 @@ DEPENDENCIES
   launchy
   meta_request
   mysql2
+  newrelic_rpm
   nokogiri
   quiet_assets
   rails (= 3.2.12)

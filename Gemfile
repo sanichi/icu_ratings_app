@@ -37,3 +37,5 @@ group :test, :development do
   gem "faker"
   gem "database_cleaner"
 end
+
+gem "newrelic_rpm"
