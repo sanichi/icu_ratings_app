@@ -81,6 +81,6 @@ end
 
 before "deploy", "deploy:check_revision"
 after "deploy", "deploy:cleanup"
-after "deploy", "newrelic:notice_deployment"
+after "deploy:update", "newrelic:notice_deployment"
 after "deploy:setup", "deploy:setup_shared"
 before "deploy:assets:precompile", "deploy:symlink_extras"
