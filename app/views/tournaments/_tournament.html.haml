@@ -65,7 +65,7 @@
   - if @tournament.notes.present?
     %tr
       %th Notes
-      %td= link_to(@tournament.notes_snippet, tournament_path(@tournament, notes: ""), remote: true) if @tournament.notes.present?
+      %td= link_to(@tournament.notes_snippet, tournament_path(@tournament, format: :js), remote: true) if @tournament.notes.present?
 
 - if can? :modify, Tournament
   %table{class: "turbaned"}
