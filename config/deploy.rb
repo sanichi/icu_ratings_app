@@ -64,7 +64,7 @@ namespace :deploy do
   namespace :web do
     desc "Present a maintenance page to visitors using REASON and BACK enviroment variables (or defaults)."
     task :disable, roles: :web, except: { no_release: true } do
-      require 'haml'
+      require "haml"
       file = "#{shared_path}/system/#{maintenance_basename}.html"
       on_rollback { run "rm #{file}" }
 
