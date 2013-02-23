@@ -2,6 +2,7 @@ set :whenever_command, "bin/whenever"
 require "bundler/capistrano"
 require "capistrano/maintenance"
 require "whenever/capistrano"
+require "new_relic/recipes"
 
 set :bundle_without, [:darwin, :development, :test]
 
@@ -80,5 +81,6 @@ end
 
 before "deploy", "deploy:check_revision"
 after "deploy", "deploy:cleanup"
+after "deploy", "newrelic:notice_deployment"
 after "deploy:setup", "deploy:setup_shared"
 before "deploy:assets:precompile", "deploy:symlink_extras"
