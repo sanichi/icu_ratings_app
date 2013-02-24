@@ -19,6 +19,7 @@
           %ul
             %li= link_to "New", new_article_path
       %li= link_to "Contacts", contacts_path
+      %li= link_to_icu "Main ICU Site", "", ""
   %li
     = link_to "Tournaments", tournaments_path
     - if can?(:manage, Upload) || can?(:read, OldTournament)

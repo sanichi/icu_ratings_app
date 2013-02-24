@@ -266,8 +266,8 @@ module ApplicationHelper
   end
 
   # Returns a plain link to the main ICU site.
-  def link_to_icu(label, path="")
-    link_to label, "http://www.icu.ie/#{path}", target: "_icu_ie", class: "external"
+  def link_to_icu(label, path="", style="external")
+    link_to label, "http://www.icu.ie/#{path}", target: "_icu_ie", class: style
   end
 
   # Returns an ICU email link.
