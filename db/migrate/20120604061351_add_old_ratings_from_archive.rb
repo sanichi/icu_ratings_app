@@ -14,7 +14,7 @@ class AddOldRatingsFromArchive < ActiveRecord::Migration
     {icu_id:  4126, rating:  938, games: 35, full: true},
     {icu_id: 13382, rating: 1196, games: 80, full: true},
     {icu_id: 13386, rating: 1514, games: 20, full: true},  # old Fred Harte data, number of games guessed
-    {icu_id: 13442, rating: 1930, games: 20, full: true},  # old Fred Harte data, number of games guessed
+    {icu_id: 13442, rating: 1339, games: 20, full: true},  # old Fred Harte data, number of games guessed
     {icu_id: 13448, rating: 1401, games: 20, full: true},  # old Fred Harte data, number of games guessed
     {icu_id: 13450, rating: 1444, games: 20, full: true},  # old Fred Harte data, number of games guessed
   ]
