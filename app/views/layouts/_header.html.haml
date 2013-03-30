@@ -81,7 +81,7 @@
         - if can? :system_info, ::Pages::SystemInfo
           %li= link_to "System Info", system_info_path
         - if current_user.role?(:admin)
-          %li= link_to "Usage Stats", "/webalizer/"
+          %li= link_to "Usage Stats", "/webalizer/", target: "_usage"
   %li= link_to "Help", "#", id: "help-link", class: "emphasize"
   %li
     - if current_user
