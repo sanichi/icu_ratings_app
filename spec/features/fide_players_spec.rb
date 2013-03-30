@@ -13,18 +13,20 @@ describe FidePlayer do
       login("admin")
       visit fide_players_path
       page.click_link "?"
-      sleep 0.1
+      @sleep = 0.2
+      sleep @sleep
     end
 
-    it "create a link bewteen a FIDE and ICU player then destroy it" do
+    it "create a link between a FIDE and ICU player then destroy it" do
       @f.icu_id.should be_nil
       page.click_link @link
-      sleep 0.1
+      sleep @sleep
       @f.reload
       @f.icu_id.should == @i.id
       first(:link, @i.id.to_s).click
+      sleep @sleep
       page.click_link @unlink
-      sleep 0.1
+      sleep @sleep
       @f.reload
       @f.icu_id.should be_nil
     end
@@ -33,7 +35,7 @@ describe FidePlayer do
       @i.update_column(:fed, "SCO")
       page.click_link @link
       page.driver.browser.switch_to.alert.dismiss
-      sleep 0.1
+      sleep @sleep
       @f.reload
       @f.icu_id.should be_nil
     end
@@ -42,7 +44,7 @@ describe FidePlayer do
       @i.update_column(:title, "GM")
       page.click_link @link
       page.driver.browser.switch_to.alert.dismiss
-      sleep 0.1
+      sleep @sleep
       @f.reload
       @f.icu_id.should be_nil
     end
@@ -51,7 +53,7 @@ describe FidePlayer do
       @i.update_column(:dob, "1986-06-16")
       page.click_link @link
       page.driver.browser.switch_to.alert.dismiss
-      sleep 0.1
+      sleep @sleep
       @f.reload
       @f.icu_id.should be_nil
     end
@@ -60,7 +62,7 @@ describe FidePlayer do
       @i.update_column(:gender, "F")
       page.click_link @link
       page.driver.browser.switch_to.alert.dismiss
-      sleep 0.1
+      sleep @sleep
       @f.reload
       @f.icu_id.should be_nil
     end
@@ -70,7 +72,7 @@ describe FidePlayer do
       @i.update_column(:last_name, "Algeo")
       page.click_link @link
       page.driver.browser.switch_to.alert.dismiss
-      sleep 0.1
+      sleep @sleep
       @f.reload
       @f.icu_id.should be_nil
     end
@@ -78,7 +80,7 @@ describe FidePlayer do
     it "should create a link if only one name is mismatched" do
       @i.update_column(:first_name, "Malcolm")
       page.click_link @link
-      sleep 0.1
+      sleep @sleep
       @f.reload
       @f.icu_id.should == @i.id
     end
