@@ -25,13 +25,13 @@ class FidePlayer < ActiveRecord::Base
   default_scope order("last_name, first_name")
 
   attr_accessible :first_name, :last_name, :fed, :title, :gender, :born, :rating, :icu_id
-  validates_presence_of     :last_name
-  validates_format_of       :fed, with: /\A[A-Z]{3}\z/
-  validates_format_of       :gender, with: /\A(M|F)\z/
-  validates_format_of       :title, with: /\AW?[GIFC]M\z/, allow_nil: true
-  validates_numericality_of :born, only_integer: true, greater_than: 1899, less_than: 2010, allow_nil: true
-  validates_numericality_of :icu_id, only_integer: true, greater_than: 0, allow_nil: true
-  validates_uniqueness_of   :icu_id, allow_nil: true
+
+  validates :last_name, presence: true
+  validates :fed, format: { with: /\A[A-Z]{3}\z/ }
+  validates :gender, format: { with: /\A(M|F)\z/ }
+  validates :title, format: { with: /\AW?[GIFC]M\z/ }, allow_nil: true
+  validates :born, numericality: { only_integer: true, greater_than: 1899, less_than: 2010 }, allow_nil: true
+  validates :icu_id, numericality: { only_integer: true, greater_than: 0 }, uniqueness: true, allow_nil: true
 
   def name(*args)
     args.push :reversed if args.empty?

@@ -1,0 +1,66 @@
+.header
+  %span= @page_title = "Upload FIDE Player File"
+
+= form_for [:admin, @fide_player_file], html: { class: "simple-form" } do |f|
+  = f.hidden_field :user_id
+  .input
+    = f.label :file, "File to upload"
+    = f.file_field :file
+  .input
+    = f.label :update, "Update"
+    = f.check_box :update
+  .input
+    = f.submit "Upload"
+
+#help
+  %dl
+    %dt Where can I get a FIDE player file?
+    %dd
+      %ul
+        %li
+          Log into the
+          = link_to "FIDE Rating Server", "http://frs.fide.com/frslogin.phtml", class: "external"
+          (FRS) as the Irish national rating officer
+        %li
+          Click the link
+          %em Export list of players
+        %li
+          Click the button
+          %em Download XML
+        %li Save the file to your hard disk
+    %dt How do I upload it to this site?
+    %dd
+      %ul
+        %li Select the file you downloaded from the FRS by using the form input on this page
+        %li
+          Leave the
+          %em Update
+          option unchecked, at least to begin with
+        %li
+          Click the
+          %em Upload
+          button
+    %dt What happens after I upload a file?
+    %dd
+      The file will be analysed and a report generated.
+      You may then take further action as appropriate, based on the content of the report.
+      One thing you can do is upload the file again, but this time with the
+      %em Update
+      option checked. If there are new FIDE players not already in the ICU's database, new
+      records will be created. If any FIDE records can be unambiguously matched to ICU player
+      records, those links will be created as well.
+    %dt What other actions can I take?
+    %dd
+      If FIDE's data is incorrect you can sometimes fix it yourself via the FRS, for example, a misspelt name or missing/incorrect DOB or gender.
+      For other cases, such as duplicate players, you would have to contact FIDE to have the issue resolved.
+      Occasionally, FIDE may have more complete or correct data for a player, in which the data on the person as an ICU player may need updating.
+      Sometimes, if the ICU and FIDE data are not the same (e.g. same name, different but similar DOBs), you may need to contact the player first
+      before you can tell which version is correct.
+    %dt Does the system keep track of old reports and what, if any, updates were performed?
+    %dd
+      Yes, you can find them
+      = succeed(".") do
+        = link_to "here", admin_fide_player_files_path
+      Read the
+      %em Help
+      on that page as well.

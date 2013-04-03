@@ -1,0 +1,63 @@
+.header
+  %span FIDE Player Files
+
+#search_form{class: "cushioned"}
+  = render "search_form"
+
+#fide_player_files
+  = render "search_results"
+
+#help
+  %dl
+    %dt What are FIDE player files?
+    %dd
+      They contain data on Irish players registered with FIDE and can be downloaded from the
+      = link_to "FIDE Rating Server", "http://frs.fide.com/frslogin.phtml", class: "external"
+      (FRS). For instructions on how to download them, go to this
+      = link_to "page", new_admin_fide_player_file_path
+      and click the
+      %em Help
+      link.
+    %dt What do we use them for?
+    %dd
+      We keep our own table of FIDE players which is kept in sync with FIDE's data mainly by
+      automated jobs which regularly download and process files that are
+      = succeed(".") do
+        = foreign_url("publically available on FIDE's site", "http://ratings.fide.com/download.phtml")
+      However, these files don't contain all the players available from the FRS downloads nor do they
+      contain full dates of birth (which are useful when trying to match FIDE and ICU players).
+      We use the FRS downloads as a supplement to this automated process.
+    %dt How do we use them?
+    %dd
+      The ICU rating officer downloads a the latest file from the FRS then uploads it to this site from
+      = succeed(".") do
+        = link_to "this page", new_admin_fide_player_file_path
+      The file is then anyalysed and a report produced which gives details of the differences between the
+      ICU's records of Irish players and FIDE's. There is an option to create new FIDE records and to
+      link FIDE records with ICU players based on name, gender and DOB matches.
+    %dt What's the recommened best practice?
+    %dd
+      Once in a while (every couple of months, say) the rating officer should download the latest FRS
+      file, upload it with the update option off (as it is by default) and examine the report produced.
+      Based on its contents, appropriate action can then be taken, including possibly uploading the
+      report a second time but with the update option on.
+    %dt What do P, N and M stand for?
+    %dd
+      %ul
+        %li P is the number of Irish FIDE players in the file
+        %li N is the number of new FIDE player records created
+        %li L is the number of new links created between FIDE and ICU player records
+    %dt How can I search for past reports?
+    %dd
+      By default, clicking
+      %em Search
+      lists all reports with the most recent first.
+      If you want only reports created during a given year, month or day,
+      enter the first part of the date in the
+      %em Created
+      box.
+      For example, enter "2013" to see only reports generated in that year.
+      Or enter "2013-05" to see only reports generated in May 2013.
+      To see reports that created new FIDE records or FIDE-ICU links, check the
+      %em Updates
+      option.

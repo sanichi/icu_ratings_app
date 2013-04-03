@@ -1,0 +1,29 @@
+.header
+  %span= @page_title = "FIDE Player File"
+
+%table{class: "cushioned"}
+  %tr
+    - if @last
+      %td= link_to "← last", [:admin, @last]
+    %td= link_to "list", admin_fide_player_files_path
+    - if @next
+      %td= link_to "next →", [:admin, @next]
+
+#fide_player_file
+  .details
+    by
+    %span
+      = @fide_player_file.user.name(false)
+    .times
+      created
+      %span
+        = @fide_player_file.created_at.to_s(:db)
+  .description
+    = markdown(@fide_player_file.description)
+
+- if can?(:destroy, @fide_player_file) && !@fide_player_file.db_updated?
+  %table{class: "turbaned"}
+    %tr
+      %td
+        = link_to "Delete", [:admin, @fide_player_file], method: :delete
+

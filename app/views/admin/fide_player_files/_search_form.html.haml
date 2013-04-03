@@ -1,0 +1,11 @@
+= form_tag admin_fide_player_files_path, method: "get", id: handle_remote_id do
+  = hidden_field_tag :per_page, params[:per_page]
+  %table{class: "invisible"}
+    %tr
+      %th= label_tag :created_at, "Created"
+      %th= label_tag :updates, "Updates"
+      %th
+    %tr
+      %td= text_field_tag :created_at, params[:created_at], onchange: handle_remote, class: "centered", size: 15
+      %td{class: "centered"}= check_box_tag :updates, 1, params[:updates], onchange: handle_remote
+      %td= submit_tag "Search"
