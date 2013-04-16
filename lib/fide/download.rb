@@ -52,10 +52,10 @@ module FIDE
         # Parse the data using SAX parser based on FIDE::Download::Parser and FIDE::Download::Player.
         @their_players = Hash.new
         sax = Parser.new do |p|
-          if p["country"] == "IRL"
-            player = FIDE::Download::Player.new(p)
-            @their_players[player.id] = player
-          end
+          next unless p["country"] == "IRL"
+          next if p["fideid"] == "2505665" and p["sex"].blank? # this invalid (no sex) and duplcate FIDE record was a problem in April 2013, FIDE asked to remove it
+          player = FIDE::Download::Player.new(p)
+          @their_players[player.id] = player
         end
         parser = Nokogiri::XML::SAX::Parser.new(sax)
         begin
