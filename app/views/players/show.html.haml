@@ -8,10 +8,11 @@
     %td= render "results"
     %td
       %table{class: "right-headers"}
-        = render case
+        - partial = case
           - when @player.rateable_games == 0 then "no_rateable_games"
           - when @player.unrateable          then "unrateable_games"
           - else @player.category
+        = render partial
 
 = render "prev_next_links"
 
