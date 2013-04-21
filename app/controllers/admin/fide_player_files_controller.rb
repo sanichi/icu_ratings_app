@@ -11,7 +11,7 @@ module Admin
       @fide_player_file = FidePlayerFile.find(params[:id])
       if created_at = @fide_player_file.try(:created_at)
         @next = FidePlayerFile.where("created_at > ?", created_at).order("created_at ASC").first
-        @last = FidePlayerFile.where("created_at < ?", created_at).order("created_at DESC").first
+        @prev = FidePlayerFile.where("created_at < ?", created_at).order("created_at DESC").first
       end
     end
 

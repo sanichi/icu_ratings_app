@@ -3,8 +3,8 @@
 
 %table{class: "cushioned"}
   %tr
-    - if @last
-      %td= link_to "← last", [:admin, @last]
+    - if @prev
+      %td= link_to "← prev", [:admin, @prev]
     %td= link_to "list", admin_fide_player_files_path
     - if @next
       %td= link_to "next →", [:admin, @next]
