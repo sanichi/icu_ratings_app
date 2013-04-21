@@ -52,11 +52,17 @@
     %li
       = link_to "Players", icu_players_path
       %ul
-        %li= link_to "FIDE Players", fide_players_path
         - if can? :read, OldPlayer
           %li= link_to "Former Players", admin_old_players_path
         - if can? :manage, Player
           %li= link_to "New Players", admin_new_players_path
+        %li= link_to "FIDE Players", fide_players_path
+        - if can? :read, FidePlayerFile
+          %li
+            = link_to "FIDE Player Files", admin_fide_player_files_path
+            - if can? :create, FidePlayerFile
+              %ul
+                %li= link_to "New", new_admin_fide_player_file_path
   - if can? :read, Download
     %li
       = link_to "Admin", overview_path

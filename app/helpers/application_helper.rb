@@ -258,7 +258,7 @@ module ApplicationHelper
     unless target
       target = case url
         when /^https?:\/\/(www\.)?icu\.ie/i   then "_icu_ie"
-        when /^https?:\/\/(www\.)?fide\.com/i then "_fide_com"
+        when /^https?:\/\/(\w+\.)?fide\.com/i then "_fide_com"
       end
     end
     opt[:target] = target if target

@@ -2,7 +2,7 @@ source "http://rubygems.org"
 
 gem "rails", "3.2.12"
 gem "mysql2"
-gem "haml"
+gem "haml-rails"
 gem "sass"
 gem "icu_tournament"
 gem "icu_ratings"

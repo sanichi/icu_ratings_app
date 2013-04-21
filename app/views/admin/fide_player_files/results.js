@@ -1,0 +1,1 @@
+$("#fide_player_files").html("<%= j render('search_results') %>");

@@ -1,0 +1,21 @@
+%table
+  %tr
+    %th P
+    %th N
+    %th L
+    %th Created
+    %th By
+  - if @fide_player_files.count == 0
+    %tr
+      %td{class: "centered", colspan: 5} No matches
+  - else
+    - @fide_player_files.matches.each do |f|
+      %tr
+        %td= link_to f.players_in_file, [:admin, f]
+        %td= f.new_fide_records
+        %td= f.new_icu_mappings
+        %td= f.created_at.strftime("%Y-%m-%d %H:%M")
+        %td= f.user.name
+    - if @fide_player_files.multi_page
+      %tr
+        %td{class: "centered", colspan: 5}= pagination_links(@fide_player_files)

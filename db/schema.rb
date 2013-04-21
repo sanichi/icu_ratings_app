@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130102180118) do
+ActiveRecord::Schema.define(:version => 20130403204420) do
 
   create_table "articles", :force => true do |t|
     t.string   "headline"
@@ -58,6 +58,15 @@ ActiveRecord::Schema.define(:version => 20130102180118) do
     t.boolean  "used",                      :default => false
     t.datetime "created_at",                                   :null => false
     t.datetime "updated_at",                                   :null => false
+  end
+
+  create_table "fide_player_files", :force => true do |t|
+    t.text     "description"
+    t.integer  "players_in_file",  :limit => 2, :default => 0
+    t.integer  "new_fide_records", :limit => 1, :default => 0
+    t.integer  "new_icu_mappings", :limit => 1, :default => 0
+    t.integer  "user_id"
+    t.datetime "created_at"
   end
 
   create_table "fide_players", :force => true do |t|
