@@ -151,62 +151,62 @@ describe "FidePlayerFile" do
 
   describe "reporting and updating" do
     context "an empty DB" do
-      it "should create new fide records" do
+      it "should not create any new records" do
         load_file("fide_player_file.xml", true)
-        FidePlayer.count.should == 12
+        FidePlayer.count.should == 0
         (fpf = FidePlayerFile.first).should_not be_nil
         fpf.players_in_file.should == 12
-        fpf.new_fide_records.should == 12
+        fpf.new_fide_records.should == 0
         fpf.new_icu_mappings.should == 0
         page.should have_selector("ul li", text: /update option: on/i)
-        page.should have_selector("ul li", text: /new fide records created: 12\b/i)
+        page.should have_selector("ul li", text: /new fide records created: 0\b/i)
         page.should have_selector("ul li", text: /new icu mappings created: 0\b/i)
-        page.should have_selector("ul li", text: "Allen, Keith (M, 2501147) 1962-02-02 (created new FIDE record)")
-        page.should have_selector("ul li", text: "Astaneh Lopez, Alex (M, 2501430) 1987-06-13 (created new FIDE record)")
-        page.should have_selector("ul li", text: "Baburin, Alexander (M, 2500914) 1967-02-19 (created new FIDE record)")
-        page.should have_selector("ul li", text: "Bradley, Sean (M, 2500132) 1954-01-11 (created new FIDE record)")
-        page.should have_selector("ul li", text: "Brady, Stephen (M, 2500124) 1969-03-12 (created new FIDE record)")
-        page.should have_selector("ul li", text: "Cronin, April (F, 2500370) 1960-02-20 (created new FIDE record)")
-        page.should have_selector("ul li", text: "Orr, Mark J L (M, 2500035) 1955-11-09 (created new FIDE record)")
-        page.should have_selector("ul li", text: "O'Cinneide, Mel (M, 2500620) 1965-01-06 (created new FIDE record)")
-        page.should have_selector("ul li", text: "O'Muireagain, Colm (M, 2507382) 1966-09-25 (created new FIDE record)")
-        page.should have_selector("ul li", text: "Quinn, Deborah (F, 2501333) 1969-11-20 (created new FIDE record)")
-        page.should have_selector("ul li", text: "Quinn, Mark (M, 2500450) 1976-08-08 (created new FIDE record)")
-        page.should have_selector("ul li", text: "Ui Laighleis, Gearoidin (F, 2501171) 1964-06-10 (created new FIDE record)")
+        page.should have_selector("ul li", text: "Allen, Keith (M, 2501147) 1962-02-02")
+        page.should have_selector("ul li", text: "Astaneh Lopez, Alex (M, 2501430) 1987-06-13")
+        page.should have_selector("ul li", text: "Baburin, Alexander (M, 2500914) 1967-02-19")
+        page.should have_selector("ul li", text: "Bradley, Sean (M, 2500132) 1954-01-11")
+        page.should have_selector("ul li", text: "Brady, Stephen (M, 2500124) 1969-03-12")
+        page.should have_selector("ul li", text: "Cronin, April (F, 2500370) 1960-02-20")
+        page.should have_selector("ul li", text: "Orr, Mark J L (M, 2500035) 1955-11-09")
+        page.should have_selector("ul li", text: "O'Cinneide, Mel (M, 2500620) 1965-01-06")
+        page.should have_selector("ul li", text: "O'Muireagain, Colm (M, 2507382) 1966-09-25")
+        page.should have_selector("ul li", text: "Quinn, Deborah (F, 2501333) 1969-11-20")
+        page.should have_selector("ul li", text: "Quinn, Mark (M, 2500450) 1976-08-08")
+        page.should have_selector("ul li", text: "Ui Laighleis, Gearoidin (F, 2501171) 1964-06-10")
       end
     end
 
     context "only FIDE matches" do
-      it "should find them" do
+      it "should not create any new records" do
         FactoryGirl.create(:fide_player, id: 2500035, last_name: "Orr", first_name: "Mark", fed: "IRL", born: 1955, title: "IM", gender: "M", icu_player: nil)
         FactoryGirl.create(:fide_player, id: 2500370, last_name: "Cronin", first_name: "April", fed: "IRL", born: 1960, gender: "F", icu_player: nil)
         FactoryGirl.create(:fide_player, id: 2507382, last_name: "O`Muireagain", first_name: "Colm", fed: "IRL", born: 1966, gender: "M", icu_player: nil)
         load_file("fide_player_file.xml", true)
-        FidePlayer.count.should == 12
+        FidePlayer.count.should == 3
         (fpf = FidePlayerFile.first).should_not be_nil
         fpf.players_in_file.should == 12
-        fpf.new_fide_records.should == 9
+        fpf.new_fide_records.should == 0
         fpf.new_icu_mappings.should == 0
         page.should have_selector("ul li", text: /update option: on/i)
-        page.should have_selector("ul li", text: /new fide records created: 9\b/i)
+        page.should have_selector("ul li", text: /new fide records created: 0\b/i)
         page.should have_selector("ul li", text: /new icu mappings created: 0\b/i)
       end
     end
 
     context "only ICU matches" do
-      it "should find them" do
+      it "should create new records and mappings" do
         FactoryGirl.create(:icu_player, id: 1350, last_name: "Orr", first_name: "Mark", fed: "IRL", dob: "1955-11-09", gender: "M")
         FactoryGirl.create(:icu_player, id: 87, last_name: "Bradley", first_name: "John", fed: "IRL", dob: "1954-01-11", gender: "M")
         FactoryGirl.create(:icu_player, id: 12275, last_name: "O'Muireagain", first_name: "Colm", fed: "IRL", dob: "1966-09-25", gender: "M")
         FactoryGirl.create(:icu_player, id: 3364, last_name: "Ui Laighleis", first_name: "Gearoidin", fed: "IRL", dob: "1964-06-10", gender: "F")
         load_file("fide_player_file.xml", true)
-        FidePlayer.count.should == 12
+        FidePlayer.count.should == 4
         (fpf = FidePlayerFile.first).should_not be_nil
         fpf.players_in_file.should == 12
-        fpf.new_fide_records.should == 12
+        fpf.new_fide_records.should == 4
         fpf.new_icu_mappings.should == 4
         page.should have_selector("ul li", text: /update option: on/i)
-        page.should have_selector("ul li", text: /new fide records created: 12\b/i)
+        page.should have_selector("ul li", text: /new fide records created: 4\b/i)
         page.should have_selector("ul li", text: /new icu mappings created: 4\b/i)
         page.should have_selector("ul li", text: "Bradley, Sean (M, 2500132) 1954-01-11 (created new FIDE record, created new ICU mapping)")
         page.should have_selector("ul li", text: "Orr, Mark J L (M, 2500035) 1955-11-09 (created new FIDE record, created new ICU mapping)")
@@ -216,7 +216,7 @@ describe "FidePlayerFile" do
     end
 
     context "FIDE and ICU matches" do
-      it "should find them" do
+      it "should create new records and mappings" do
         # FIDE and matched ICU
         icu = FactoryGirl.create(:icu_player, id: 1350, last_name: "Orr", first_name: "Mark", fed: "IRL", dob: "1955-11-09", gender: "M")
         FactoryGirl.create(:fide_player, id: 2500035, last_name: "Orr", first_name: "Mark", fed: "IRL", born: 1955, title: "IM", gender: "M", icu_player: icu)
@@ -232,23 +232,23 @@ describe "FidePlayerFile" do
         FactoryGirl.create(:icu_player, id: 90, last_name: "Brady", first_name: "Stephen", fed: "IRL", dob: "1969-03-12", gender: "M")
         FactoryGirl.create(:icu_player, id: 3364, last_name: "Ui Laighleis", first_name: "Gearoidin", fed: "IRL", dob: "1964-06-10", gender: "F")
         load_file("fide_player_file.xml", true)
-        FidePlayer.count.should == 12
+        FidePlayer.count.should == 7
         (fpf = FidePlayerFile.first).should_not be_nil
         fpf.players_in_file.should == 12
-        fpf.new_fide_records.should == 8
+        fpf.new_fide_records.should == 3
         fpf.new_icu_mappings.should == 4
         page.should have_selector("ul li", text: /update option: on/i)
-        page.should have_selector("ul li", text: /new fide records created: 8\b/i)
+        page.should have_selector("ul li", text: /new fide records created: 3\b/i)
         page.should have_selector("ul li", text: /new icu mappings created: 4\b/i)
-        page.should have_selector("ul li", text: "Allen, Keith (M, 2501147) 1962-02-02 (created new FIDE record)")
-        page.should have_selector("ul li", text: "Astaneh Lopez, Alex (M, 2501430) 1987-06-13 (created new FIDE record)")
+        page.should have_selector("ul li", text: "Allen, Keith (M, 2501147) 1962-02-02")
+        page.should have_selector("ul li", text: "Astaneh Lopez, Alex (M, 2501430) 1987-06-13")
         page.should have_selector("ul li", text: "Baburin, Alexander (M, 2500914) 1967-02-19 (created new FIDE record, created new ICU mapping)")
         page.should have_selector("ul li", text: "Bradley, Sean (M, 2500132, 87) 1954-01-11")
         page.should have_selector("ul li", text: "Brady, Stephen (M, 2500124) 1969-03-12 (created new FIDE record, created new ICU mapping)")
-        page.should have_selector("ul li", text: "Cronin, April (F, 2500370) 1960-02-20 (created new FIDE record)")
+        page.should have_selector("ul li", text: "Cronin, April (F, 2500370) 1960-02-20")
         page.should have_selector("ul li", text: "Orr, Mark J L (M, 2500035, 1350) 1955-11-09")
-        page.should have_selector("ul li", text: "O'Cinneide, Mel (M, 2500620) 1965-01-06 (created new FIDE record)")
-        page.should have_selector("ul li", text: "O'Muireagain, Colm (M, 2507382) 1966-09-25 (created new FIDE record)")
+        page.should have_selector("ul li", text: "O'Cinneide, Mel (M, 2500620) 1965-01-06")
+        page.should have_selector("ul li", text: "O'Muireagain, Colm (M, 2507382) 1966-09-25")
         page.should have_selector("ul li", text: "Quinn, Deborah (F, 2501333) 1969-11-20")
         page.should have_selector("ul li", text: "Quinn, Mark (M, 2500450) 1976-08-08 (created new ICU mapping)")
         page.should have_selector("ul li", text: "Ui Laighleis, Gearoidin (F, 2501171) 1964-06-10 (created new FIDE record, created new ICU mapping)")
@@ -256,26 +256,18 @@ describe "FidePlayerFile" do
     end
 
     context "duplicates" do
-      it "should not create new records" do
+      it "should not create new records based on duplicates" do
+        FactoryGirl.create(:icu_player, id: 1350, last_name: "Orr", first_name: "Mark", fed: "IRL", dob: "1955-11-09", gender: "M")
+        FactoryGirl.create(:icu_player, id: 271, last_name: "Cronin", first_name: "April", fed: "IRL", dob: "1960-02-20", gender: "F")
         load_file("fide_player_file_duplicates.xml", true)
-        FidePlayer.count.should == 10
+        FidePlayer.count.should == 0
         (fpf = FidePlayerFile.first).should_not be_nil
         fpf.players_in_file.should == 14
-        fpf.new_fide_records.should == 10
+        fpf.new_fide_records.should == 0
         fpf.new_icu_mappings.should == 0
         page.should have_selector("ul li", text: /update option: on/i)
-        page.should have_selector("ul li", text: /new fide records created: 10\b/i)
+        page.should have_selector("ul li", text: /new fide records created: 0\b/i)
         page.should have_selector("ul li", text: /new icu mappings created: 0\b/i)
-        page.should have_selector("ul li", text: "Allen, Keith (M, 2501147) 1962-02-02 (created new FIDE record)")
-        page.should have_selector("ul li", text: "Astaneh Lopez, Alex (M, 2501430) 1987-06-13 (created new FIDE record)")
-        page.should have_selector("ul li", text: "Baburin, Alexander (M, 2500914) 1967-02-19 (created new FIDE record)")
-        page.should have_selector("ul li", text: "Bradley, Sean (M, 2500132) 1954-01-11 (created new FIDE record)")
-        page.should have_selector("ul li", text: "Brady, Stephen (M, 2500124) 1969-03-12 (created new FIDE record)")
-        page.should have_selector("ul li", text: "O'Cinneide, Mel (M, 2500620) 1965-01-06 (created new FIDE record)")
-        page.should have_selector("ul li", text: "O'Muireagain, Colm (M, 2507382) 1966-09-25 (created new FIDE record)")
-        page.should have_selector("ul li", text: "Quinn, Deborah (F, 2501333) 1969-11-20 (created new FIDE record)")
-        page.should have_selector("ul li", text: "Quinn, Mark (M, 2500450) 1976-08-08 (created new FIDE record)")
-        page.should have_selector("ul li", text: "Ui Laighleis, Gearoidin (F, 2501171) 1964-06-10 (created new FIDE record)")
       end
     end
   end

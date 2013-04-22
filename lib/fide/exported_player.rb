@@ -136,7 +136,7 @@ module FIDE
     def update_db
       new_fide_record, new_icu_mapping = false, false
     
-      if category == :none || category == :none_suggestions
+      if category == :none_suggestions
         name = ICU::Name.new(self.name)
         born = $1.to_i if dob && dob.match(/\A((19|20)\d\d)/)
         hash = {id: id, first_name: name.first, last_name: name.last, fed: "IRL", born: born, gender: sex}
