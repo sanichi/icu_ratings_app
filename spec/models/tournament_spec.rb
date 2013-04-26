@@ -1,6 +1,12 @@
 require 'spec_helper'
 
 describe Tournament do
+  before(:all) do
+    # This seems to work better as a before-all. Before-each (in each group that needs it) is prone to hit
+    # an ActiveRecord::RecordNotUnique error when all tests are run (but not when just this file is run).
+    @u = FactoryGirl.create(:user, role: "officer")
+  end
+
   context "#name_with_year" do
     it "should add years to end of name" do
       t = Tournament.new
@@ -81,7 +87,7 @@ describe Tournament do
       # Setup two tournaments to begin with.
       @p = load_icu_players
       @r = load_old_ratings
-      @u = FactoryGirl.create(:user, role: "officer")
+      #@u = FactoryGirl.create(:user, role: "officer")
       @t1, @t3 = %w{bunratty_masters_2011.tab kilkenny_masters_2011.tab}.map do |f|
         t = test_tournament(f, @u.id)
         t.move_stage("ready", @u)
@@ -682,7 +688,7 @@ describe Tournament do
       # Setup two tournaments to begin with.
       @p = load_icu_players
       @r = load_old_ratings
-      @u = FactoryGirl.create(:user, role: "officer")
+      #@u = FactoryGirl.create(:user, role: "officer")
       @t1, @t2 = %w{bunratty_masters_2011.tab kilkenny_masters_2011.tab}.map do |f|
         t = test_tournament(f, @u.id)
         t.move_stage("ready", @u)
@@ -720,11 +726,11 @@ describe Tournament do
   context "automatic requeuing" do
     before(:each) do
       load_icu_players
-      u = FactoryGirl.create(:user, role: "officer")
+      #u = FactoryGirl.create(:user, role: "officer")
       @t1, @t2, @t3 = %w{bunratty_masters_2011.tab kilbunny_masters_2011.tab kilkenny_masters_2011.tab}.map do |f|
-        t = test_tournament(f, u.id)
-        t.move_stage("ready", u)
-        t.move_stage("queued", u)
+        t = test_tournament(f, @u.id)
+        t.move_stage("ready", @u)
+        t.move_stage("queued", @u)
         t
       end
       [@t1, @t2, @t3].each { |t| t.reload }
@@ -780,7 +786,7 @@ describe Tournament do
       f = "junior_championships_u19_2010.tab"
       load_icu_players_for(f)
       load_old_ratings
-      @u = FactoryGirl.create(:user, role: "officer")
+      #@u = FactoryGirl.create(:user, role: "officer")
       @t = test_tournament(f, @u.id)
       @t.move_stage("ready", @u)
       @t.move_stage("queued", @u)
@@ -808,7 +814,7 @@ describe Tournament do
       f = "bunratty_masters_2011.tab"
       load_icu_players_for(f)
       load_old_ratings
-      @u = FactoryGirl.create(:user, role: "officer")
+      #@u = FactoryGirl.create(:user, role: "officer")
       @t = test_tournament(f, @u.id)
       @t.move_stage("ready", @u)
       @t.move_stage("queued", @u)
@@ -847,8 +853,8 @@ describe Tournament do
       f = "bunratty_masters_2011.tab"
       load_icu_players_for(f)
       load_fide_players
-      u = FactoryGirl.create(:user, role: "officer")
-      @t = test_tournament(f, u.id)
+      #u = FactoryGirl.create(:user, role: "officer")
+      @t = test_tournament(f, @u.id)
     end
 
     it "initial and updated status" do
