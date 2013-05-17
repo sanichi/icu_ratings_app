@@ -35,7 +35,14 @@
         - @overview.queued.each_pair do |desc, data|
           %tr
             %th= desc
-            %td{class: "centered"}= data[:count] || link_to_if(data[:tournament], data[:rorder], [:admin, data[:tournament]])
+            %td{class: "centered"}
+              - if data[:count]
+                - if desc == "Unlocked"
+                  = link_to_if data[:count] > 0, data[:count], admin_tournaments_path(locked: "false")
+                - else
+                  = data[:count]
+              - else
+                = link_to_if data[:tournament], data[:rorder], [:admin, data[:tournament]]
             %td= icon_tag data[:icon], t(data[:icon])
     %td
       %table{class: "right-headers"}
