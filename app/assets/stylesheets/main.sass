@@ -11,38 +11,39 @@ $font-size: 14px
 $small-font: 11px
 
 // Normal colours.
-$col: #384A5B
+$col: #384a5b
 $bg-col: #063263
+$dark-bg-col: darken($bg-col, 5%)
 $lnk-col: #178059
-$hd-col: #4B70B3
-$bd-col: #178AFF
+$hd-col: #4b70b3
+$bd-col: #178aff
 $bdr: 1px solid $bd-col
 
 // Colours in the top header.
-$hd-lnk-col: #B0B5C4
+$hd-lnk-col: #b0b5c4
 
 // Colours in the content area.
-$cn-bg-col: #558AC7
+$cn-bg-col: #558ac7
 
 // Colours in the bottom footer.
-$ft-col: #B0B5C4
+$ft-col: #b0b5c4
 
 // Highlight colours.
 $hl-col: white
-$hl-bg-col: #73AF02
+$hl-bg-col: #73af02
 $hl-trn-col: black
-$hl-trn-bg-col: #90EE90
+$hl-trn-bg-col: lightgreen
 
 // Colours for prominent headers and buttons.
 $sp-col: white
-$sp-bg-col: #73AF02
-$sp-bdr: 1px solid #90EE90
+$sp-bg-col: #73af02
+$sp-bdr: 1px solid lightgreen
 
 // Table colours.
 $tab-bg-col: white
 $tab-bg-col-black: darken($tab-bg-col, 5%)
 $tab-hd-col: #004080
-$tab-bdr: 1px solid #506C90
+$tab-bdr: 1px solid #506c90
 
 // Notice and alert.
 $alert-bdr: 1px solid white
@@ -53,16 +54,16 @@ $notice-col: white
 $notice-bg: green
 
 // Micellaneous colours.
-$dsbl-col: #999
-$form-col: #EBEBFB
-$inpt-bdr: 1px solid #BBBBCB
+$dsbl-col: #999999
+$form-col: #ebebfb
+$inpt-bdr: 1px solid #bbbbcb
 $btn-col: $sp-col
 $btn-bg-col: $sp-bg-col
 $btn-bdr: 1px solid white
 
 // Articles code blocks
-$code-bg: #EEE
-$code-bdr: 1px solid #AAA
+$code-bg: #eeeeee
+$code-bdr: 1px solid #aaaaaa
 $code-pad: 0.3em 0.6em
 
 // Spacing.
@@ -79,257 +80,269 @@ $crnr-med: 5px
 //
 
 =rounded-corners($radius: $crnr-med)
-  :border-radius $radius
-  :-moz-border-radius $radius
-  :-webkit-border-radius $radius
+  border-radius: $radius
+  -moz-border-radius: $radius
+  -webkit-border-radius: $radius
 
 =header($size, $pad, $radius, $weight: bold)
-  :text-align center
-  :font
-    :size $size
-    :weight $weight
-  :padding $pad
-  :margin-bottom $vpad
+  text-align: center
+  font:
+    size: $size
+    weight: $weight
+  padding: $pad
+  margin-bottom: $vpad
   span
-    :color $sp-col
-    :background-color $sp-bg-col
-    :border $sp-bdr
-    :padding $radius
+    color: $sp-col
+    background-color: $sp-bg-col
+    border: $sp-bdr
+    padding: $radius
     +rounded-corners($radius)
     a
-      :color $sp-col !important
+      color: $sp-col !important
 
 =blurb($size, $pad, $radius, $weight: normal)
-  :text-align center
-  :font
-    :size $size
-    :weight $weight
-  :padding $pad
+  text-align: center
+  font:
+    size: $size
+    weight: $weight
+  padding: $pad
   span
-    :color $col
-    :background-color $tab-bg-col
-    :border $tab-bdr
-    :padding $radius
+    color: $col
+    background-color: $tab-bg-col
+    border: $tab-bdr
+    padding: $radius
     +rounded-corners($radius)
 
-=label()
-  :color $tab-hd-col !important
-  :font-style italic
-  :font-weight normal
-  :font-size 0.9em
-  :white-space nowrap
+=label
+  color: $tab-hd-col !important
+  font-style: italic
+  font-weight: normal
+  font-size: 0.9em
+  white-space: nowrap
 
 //
 // Default styles.
 //
 
 body
-  :background-color $bg-col
-  :color $col
-  :font
-    :family $sans
-    :size $font-size
-  :line-height 18px
-  :margin 0
-  :padding 0
+  background-color: $bg-col
+  color: $col
+  font:
+    family: $sans
+    size: $font-size
+  line-height: 18px
+  margin: 0
+  padding: 0
 
 h1, h2, h3, h4
-  :text-align center
-  :color $hd-col
+  text-align: center
+  color: $hd-col
   &.left
-    :text-align left
+    text-align: left
 
 a
-  :color $lnk-col !important
-  :text-decoration none
+  color: $lnk-col !important
+  text-decoration: none
   &:visited
-    :color $lnk-col
+    color: $lnk-col
   &:hover
-    :text-decoration underline
+    text-decoration: underline
   &.external
-    :background image-url("misc/external.png") no-repeat scroll right center transparent
-    :padding-right 13px
+    background: image-url("misc/external.png") no-repeat scroll right center transparent
+    padding-right: 13px
   img
-    :border 0
-    :margin-bottom -0.15em
+    border: 0
+    margin-bottom: -0.15em
+
 .error a
-  :color $alert-col !important
-  :text-decoration underline
+  color: $alert-col !important
+  text-decoration: underline
 
 hr
-  :border none
-  :border-top $bdr
-  :height 1px
-  :margin $vpad 0
+  border: none
+  border-top: $bdr
+  height: 1px
+  margin: $vpad 0
 
 table
-  :margin
-    :left auto
-    :right auto
-  :border-collapse collapse
+  margin:
+    left: auto
+    right: auto
+  border-collapse: collapse
   td, th
-    :border $tab-bdr
-    :background-color $tab-bg-col
-    :padding 4px 6px
+    border: $tab-bdr
+    background-color: $tab-bg-col
+    padding: 4px 6px
     pre
-      :margin 0
+      margin: 0
   th
-    +label()
+    +label
     &.round
-      :width 15px
-      :text-align center
+      width: 15px
+      text-align: center
   td.centered
-    :text-align center
+    text-align: center
   td.on-right
-    :text-align right
+    text-align: right
   td.hilite
-    :background-color $hl-trn-bg-col !important
-    :color $hl-trn-col
+    background-color: $hl-trn-bg-col !important
+    color: $hl-trn-col
   td, th
     &.floater
-      :background-color transparent
-      :border 0
+      background-color: transparent
+      border: 0
     &.top
-      :vertical-align top
+      vertical-align: top
     &.disabled
-      :color $dsbl-col
+      color: $dsbl-col
     &.underlined
-      :border-bottom 1px solid $hd-col !important
+      border-bottom: 1px solid $hd-col !important
     &.min-width
-      :width 1em
+      width: 1em
     &.B
-      :background-color $tab-bg-col-black
+      background-color: $tab-bg-col-black
     &.section
-      :vertical-align top
-      :padding 2em 3em
+      vertical-align: top
+      padding: 2em 3em
       h2
-        :margin-top 0
+        margin-top: 0
   &.invisible
     td, th
-      :border 0
-      :background-color transparent
+      border: 0
+      background-color: transparent
   tr.invisible > td
-    :border 0
-    :background-color transparent
-    :vertical-align top
+    border: 0
+    background-color: transparent
+    vertical-align: top
   &.normal
     td, th
-      :border $bdr
-      :background-color $tab-bg-col
+      border: $bdr
+      background-color: $tab-bg-col
   &.noborder
     td, th
-      :border 0
+      border: 0
   &.right-headers th
-    :text-align right
+    text-align: right
   &.left
-    :margin-left 0
+    margin-left: 0
   &.sections
-    :border-collapse separate
-    :border-spacing $vpad 0
+    border-collapse: separate
+    border-spacing: $vpad 0
   tr
     &.left-headers th
-      :text-align left
+      text-align: left
     &.disabled td, th
-      :color $dsbl-col
+      color: $dsbl-col
   tr.splitter > td
-    :border 0
-    :background-color transparent
-    :vertical-align top
-    :padding 0 10px
+    border: 0
+    background-color: transparent
+    vertical-align: top
+    padding: 0 10px
 
 ul
   &.home
-    :padding-left 0
-    :line-height 1.4
+    padding-left: 0
+    line-height: 1.4
 
 form
   input, select, textarea
-    :border $inpt-bdr
-    :padding 0.2em
-    :font-size $font-size
+    border: $inpt-bdr
+    padding: 0.2em
+    font-size: $font-size
   input[type='submit']
-    :color $btn-col
-    :background-color $btn-bg-col
-    :border $btn-bdr
-    +rounded-corners()
+    color: $btn-col
+    background-color: $btn-bg-col
+    border: $btn-bdr
+    +rounded-corners
   td
     label
-      :margin-left 2em
+      margin-left: 2em
       &:first-child
-        :margin-left 0
+        margin-left: 0
 
 img
   &.left-padded
-    :padding-left 10px
+    padding-left: 10px
   &.inline
-    :vertical-align text-bottom
+    vertical-align: text-bottom
 
 //
 // Headers and footers.
 //
 
 #header
-  :height 100px
-  :border-bottom $bdr
-  :background
-    :image image-url("misc/header_background.png")
-    :repeat no-repeat
-    :position right
+  height: 100px
+  border-bottom: $bdr
+  background:
+    image: image-url("misc/header_background.png")
+    repeat: no-repeat
+    position: right
   img
-    :float left
-    :padding 0px 10px
+    float: left
+    padding: 0px 10px
   h1
-    :margin-top 0px
-    :margin-bottom 0px
-    :padding-top 20px
-    :line-height 1.5
-    :text-align left
-    :color white
-    :font
-      :variant small-caps
-      :size 30px
+    margin-top: 0px
+    margin-bottom: 0px
+    padding-top: 20px
+    line-height: 1.5
+    text-align: left
+    color: white
+    font:
+      variant: small-caps
+      size: 30px
   li img
-    :padding 0px 0px
-    :float none
+    padding: 0px 0px
+    float: none
 
 #content
-  :background-color $cn-bg-col
-  :padding $vpad 0
+  background-color: $cn-bg-col
+  padding: $vpad 0
 
 #footer
-  :border-top $bdr
-  :color $ft-col
-  :text-align center
-  :font-size $small-font
+  border-top: $bdr
+  color: $ft-col
+  text-align: center
+  font-size: $small-font
 
 // Ratings graph
 #ratings_graph
-  :text-align center
+  text-align: center
 
 //
-// Superfish custom styling (see superfish.css).
+// Superfish custom styling (adapted from demo styles that come with superfish).
 //
 
 .sf-menu
-  :float left
-  :margin-bottom 1em
-  a
-    :padding .5em .5em
-    :color $hd-lnk-col !important
-    &.emphasize
-      :color $hl-col !important
-  li
-    :background $bg-col
-  li li
-    :background darken($bg-col, 5%)
-    :border $bdr
-    :border-bottom 0
-  li li li
-    :background darken($bg-col, 5%)
-    :border $bdr
-    :border-bottom 0
+  float: left
+  margin-bottom: 1em
   ul
-    :border-bottom $bdr
+    min-width: 6em
+    *width: 6em
+    border-bottom: $bdr
+  a
+    padding: 0.5em 0.5em
+    zoom: 1
+    color: $hd-lnk-col !important
+    &.emphasize
+      color: $hl-col !important
+  li
+    background: $bg-col
+    white-space: nowrap
+    *white-space: normal
+    &:hover, &.sfHover
+      background: $bg-col
+      -webkit-transition: none
+      transition: none
+  li li
+    background: $dark-bg-col
+    border: $bdr
+    border-bottom: 0
+    &:hover, &.sfHover
+      background: $dark-bg-col
+  li li li
+    background: $dark-bg-col
+    border: $bdr
+    border-bottom: 0
 
 //
 // Prominent, centered, rounded headers.
@@ -346,15 +359,15 @@ div.flash
 
 div
   span.notice
-    :color $notice-col
-    :background-color $notice-bg
-    :border $notice-bdr
+    color: $notice-col
+    background-color: $notice-bg
+    border: $notice-bdr
 
 div
   span.alert
-    :color $alert-col
-    :background-color $alert-bg
-    :border $alert-bdr
+    color: $alert-col
+    background-color: $alert-bg
+    border: $alert-bdr
 
 //
 // Informational centered, rounded blurbs.
@@ -368,66 +381,66 @@ div.blurb
 //
 
 .note
-  :font-size $small-font
+  font-size: $small-font
 
 .small
-  :font-size $small-font
+  font-size: $small-font
 
 .centered
-  :text-align center !important
+  text-align: center !important
 
 .righted
-  :text-align right !important
+  text-align: right !important
 
 .cushioned
-  :margin-bottom $vpad
+  margin-bottom: $vpad
 
 .turbaned
-  :margin-top $vpad
+  margin-top: $vpad
 
 .error
-  :color $alert-col
-  :background-color $alert-bg
+  color: $alert-col
+  background-color: $alert-bg
 
 .provisional
-  :font-style italic
+  font-style: italic
 
 .full
-  :font-style normal
+  font-style: normal
 
 .code
-  :font-family $code
+  font-family: $code
 
 //
 // Articles.
 //
 
 .article
-  :width 80%
-  :margin 0 auto
-  :border $bdr
+  width: 80%
+  margin: 0 auto
+  border: $bdr
   +rounded-corners($crnr-lrg)
-  :padding 1em
-  :background-color $tab-bg-col
+  padding: 1em
+  background-color: $tab-bg-col
   .headline
-    :text-align right
-    :font-size $small-font
+    text-align: right
+    font-size: $small-font
     span
-      :font-weight bold
+      font-weight: bold
     .times
-      :float left
+      float: left
   .story
     h1, h2, h3, h4
-      :text-align left !important
-      :color $col
+      text-align: left !important
+      color: $col
   hr
-    :margin $vpad/2.0 auto
-    :border-color $col
+    margin: $vpad / 2 auto
+    border-color: $col
   pre
-    :margin-left 2em
-    :background-color $code-bg
-    :border $code-bdr
-    :padding $code-pad
+    margin-left: 2em
+    background-color: $code-bg
+    border: $code-bdr
+    padding: $code-pad
 
 //
 // Old players.
@@ -435,49 +448,49 @@ div.blurb
 
 #old_player_show_note
   p.header
-    :font-size $small-font
-    :font-weight bold
-    :text-align center
+    font-size: $small-font
+    font-weight: bold
+    text-align: center
   hr
-    :margin $vpad/2.0 auto
-    :border-color $col
-  :width 60%
-  :margin-left auto
-  :margin-right auto
+    margin: $vpad / 2 auto
+    border-color: $col
+  width: 60%
+  margin-left: auto
+  margin-right: auto
   +rounded-corners($crnr-lrg)
-  :border $bdr
-  :padding 0.5em
-  :padding-top 0
-  :background-color $tab-bg-col
+  border: $bdr
+  padding: 0.5em
+  padding-top: 0
+  background-color: $tab-bg-col
 
 .edit_old_player
   label
-    +label()
+    +label
 
 //
 // FIDE Player Files
 //
 
 #fide_player_file
-  :margin-left $hpad
-  :margin-right $hpad
+  margin-left: $hpad
+  margin-right: $hpad
   .details
-    :background-color white
-    :border $bdr
-    :padding 1em
-    :text-align right
-    :font-size $small-font
+    background-color: white
+    border: $bdr
+    padding: 1em
+    text-align: right
+    font-size: $small-font
     .times
-      :float left
+      float: left
     span
-      :font-weight bold
+      font-weight: bold
   .description
-    :background-color white
-    :border $bdr
-    :padding 1em
+    background-color: white
+    border: $bdr
+    padding: 1em
     h1, h2, h3, h4
-      :text-align left !important
-      :color $col
+      text-align: left !important
+      color: $col
 
 //
 // Notes
@@ -485,65 +498,65 @@ div.blurb
 
 .notes
   h1, h2, h3, h4
-    :text-align left
-    :color $col
+    text-align: left
+    color: $col
 
 //
 // Help
 //
 
 #help
-  :font-size 0.8em
-  :display none
+  font-size: 0.8em
+  display: none
   dt
-    :color $tab-hd-col
+    color: $tab-hd-col
   dd
-    :margin-top 1em
-    :margin-bottom 1em
+    margin-top: 1em
+    margin-bottom: 1em
     p
-      :margin 1em 0
+      margin: 1em 0
     p:first-child
-      :margin-top 0
+      margin-top: 0
     p:last-child
-      :margin-bottom 0
+      margin-bottom: 0
     ul, ol
-      :padding-left 2em
+      padding-left: 2em
 
 //
 // Contacts.
 //
 
 #contacts
-  :width 210pt
-  :margin $vpad auto 0 auto
-  :border $bdr
-  :padding 1em
-  :background-color $tab-bg-col
+  width: 210pt
+  margin: $vpad auto 0 auto
+  border: $bdr
+  padding: 1em
+  background-color: $tab-bg-col
 
 //
 // Rails flash messages and errors.
 //
 
 .field_with_errors
-  :color red
+  color: red
 
 #error_explanation
-  :width 450px
-  :border $alert-bdr
-  :padding 7px
-  :margin 0 auto $vpad auto
-  :background-color #f0f0f0
+  width: 450px
+  border: $alert-bdr
+  padding: 7px
+  margin: 0 auto $vpad auto
+  background-color: #f0f0f0
   h2
-    :text-align left
-    :padding 5px 5px 5px 15px
-    :font-size $font-size
-    :margin -7px
-    :margin-bottom 0px
-    :background-color $alert-bg
-    :color $alert-col
+    text-align: left
+    padding: 5px 5px 5px 15px
+    font-size: $font-size
+    margin: -7px
+    margin-bottom: 0px
+    background-color: $alert-bg
+    color: $alert-col
   ul li
-    :font-size $font-size
-    :list-style square
+    font-size: $font-size
+    list-style: square
 
 //
 // Simple-form (adapted from Railscasts 234).
@@ -554,84 +567,86 @@ $form-label-width: 200px
 $form-input-margin: $form-label-width + 2 * $hpad
 
 form.simple-form
-  :background-color $form-col
-  :border $bdr
-  :width $form-width
-  :margin 0 auto 0 auto
-  :padding-top $vpad
+  background-color: $form-col
+  border: $bdr
+  width: $form-width
+  margin: 0 auto 0 auto
+  padding-top: $vpad
   +rounded-corners($crnr-lrg)
   label
-    :float left
-    :width $form-label-width
-    :text-align right
-    :margin $tpad $hpad
-    :clear left
-    +label()
+    float: left
+    width: $form-label-width
+    text-align: right
+    margin: $tpad $hpad
+    clear: left
+    +label
   div
     &.input
-      :margin-bottom 10px
+      margin-bottom: 10px
     &.boolean
-      :margin-left $form-label-width
+      margin-left: $form-label-width
   input[type='text'], select, textarea
-    :background-color $tab-bg-col
+    background-color: $tab-bg-col
   input[type='submit']
-    :margin-left $form-input-margin
+    margin-left: $form-input-margin
     &.extra
-      :margin-left 1em !important
+      margin-left: 1em !important
   div.boolean label
-    :float none
-    :margin 0
+    float: none
+    margin: 0
   label.collection_radio
-    :float none
-    :margin 0
-    :margin-right 10px
-    :margin-left 2px
+    float: none
+    margin: 0
+    margin-right: 10px
+    margin-left: 2px
   .error
-    :clear left
-    :margin-left $form-label-width
-    :font-size 12px
-    :color #D00
-    :display block
+    clear: left
+    margin-left: $form-label-width
+    font-size: 12px
+    color: #dd0000
+    display: block
   .hint
-    :clear left
-    :margin-left $form-label-width
-    :font-size 12px
-    :color #555
-    :display block
-    :font-style italic
+    clear: left
+    margin-left: $form-label-width
+    font-size: 12px
+    color: #555555
+    display: block
+    font-style: italic
+
 form.wide
-  :width $form-width * 1.75
+  width: $form-width * 1.75
+
 form.short-labels
   label
-    :width $form-label-width * 0.5
+    width: $form-label-width * 0.5
   input[type='submit']
-    :margin-left $form-input-margin - $form-label-width * 0.5
+    margin-left: $form-input-margin - $form-label-width * 0.5
     &.extra
-      :margin-left 1em
+      margin-left: 1em
 
 //
 // Maintenance mode warning
 //
 
 #maintenance
-  :position fixed
-  :top 0
-  :left 43%
-  :z-index 50
-  :background red
-  :color white
-  :font-weight bold
-  :padding 0.4em
-  :border 1px solid yellow
-  :border-top 0
+  position: fixed
+  top: 0
+  left: 43%
+  z-index: 50
+  background: red
+  color: white
+  font-weight: bold
+  padding: 0.4em
+  border: 1px solid yellow
+  border-top: 0
 
 //
 // Temporary beta-badge.
 //
 
 #beta-badge
-  :border none
-  :position fixed
-  :right 0
-  :top 0
-  :z-index 100
+  border: none
+  position: fixed
+  right: 0
+  top: 0
+  z-index: 100
