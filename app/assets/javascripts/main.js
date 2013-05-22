@@ -2,7 +2,7 @@ var DEFAULT_FADEIN_TIME = 1000;
 
 $(function() {
   // Activate top menus.
-  $("ul.sf-menu").superfish({cssArrows : false});
+  $("ul.sf-menu").superfish({"autoArrows" : false, "dropShadows" : false});
 
   // Fade out notices, but not completely. Leave alerts alone.
   $("div span.notice")
