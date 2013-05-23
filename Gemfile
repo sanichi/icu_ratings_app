@@ -32,6 +32,7 @@ end
 group :test, :development do
   gem "rspec-rails"
   gem "capybara"
+  gem "selenium-webdriver"
   gem "launchy"
   gem "factory_girl_rails"
   gem "faker"

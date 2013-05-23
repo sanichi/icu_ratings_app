@@ -9,20 +9,20 @@ describe "Article" do
 
     it "can create, edit and delete an article" do
       visit "/articles/new"
-      page.should have_selector(:xpath, "/html/head/title[.='Create Article']")
+      page.should have_title("Create Article")
       headline, story = "Latest News", "Latest Story"
       Article.where(headline: headline, story: story).should have(0).items
       page.fill_in "Headline", with: headline
       page.fill_in "Story", with: story
       page.click_button "Create"
-      page.should have_selector(:xpath, "/html/head/title[.='#{headline}']")
+      page.should have_title(headline)
       page.should have_selector("span.notice", text: /created/i)
       page.should have_selector("span", text: headline)
       page.should have_selector("p", text: story)
       page.should have_link("Markdown")
       Article.where(headline: headline, story: story).should have(1).item
       page.click_link "Edit"
-      page.should have_selector(:xpath, "/html/head/title[.='Update Article']")
+      page.should have_title("Update Article")
       headline = "Old News"
       page.fill_in "Headline", with: headline
       page.click_button "Update"
@@ -30,7 +30,7 @@ describe "Article" do
       page.should have_selector("span", text: headline)
       Article.where(headline: headline, story: story).should have(1).item
       page.click_link "Delete"
-      page.should have_selector(:xpath, "/html/head/title[.='Articles']")
+      page.should have_title("Articles")
       Article.where(headline: headline, story: story).should have(0).items
     end
 
@@ -78,10 +78,10 @@ describe "Article" do
 
     it "can list and read articles" do
       visit "/articles"
-      page.should have_selector(:xpath, "/html/head/title[.='Articles']")
+      page.should have_title("Articles")
       @article.each { |article| page.should have_link(article.headline) }
       visit "/articles/#{@article.first.id}"
-      page.should have_selector(:xpath, "/html/head/title['#{@article.first.headline}']")
+      page.should have_title(@article.first.headline)
       page.should have_selector("span", text: @article.first.headline)
       page.should have_no_link "Edit"
       page.should have_no_link "Delete"

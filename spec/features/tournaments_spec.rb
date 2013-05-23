@@ -229,7 +229,7 @@ describe "Tournament" do
 
       p = t.players.where(last_name: "Cafolla").first
       visit "/admin/players/#{p.id}"
-      page.should have_selector("div/span", text: "Cafolla")
+      page.should have_selector("div span", text: "Cafolla")
       page.click_link "Delete Player"
       page.driver.browser.switch_to.alert.accept
       page.should have_selector("div span", text: "U-19 All Ireland 2010")
@@ -241,12 +241,12 @@ describe "Tournament" do
 
       p = t.players.where(last_name: "Flynn").first
       visit "/admin/players/#{p.id}"
-      page.should have_selector("div/span", text: "Flynn")
+      page.should have_selector("div span", text: "Flynn")
       page.should have_no_link "Delete Player"
 
       p = t.players.where(last_name: "Fox").first
       visit "/admin/players/#{p.id}"
-      page.should have_selector("div/span", text: "Fox")
+      page.should have_selector("div span", text: "Fox")
       page.click_link "Delete Player"
       page.driver.browser.switch_to.alert.accept
       page.should have_selector("div span", text: "U-19 All Ireland 2010")
@@ -258,22 +258,22 @@ describe "Tournament" do
 
       p = t.players.where(last_name: "Griffiths").first
       visit "/admin/players/#{p.id}"
-      page.should have_selector("div/span", text: "Griffiths")
+      page.should have_selector("div span", text: "Griffiths")
       page.should have_no_link "Delete Player"
 
       p = t.players.where(last_name: "Hulleman").first
       visit "/admin/players/#{p.id}"
-      page.should have_selector("div/span", text: "Hulleman")
+      page.should have_selector("div span", text: "Hulleman")
       page.should have_no_link "Delete Player"
 
       p = t.players.where(last_name: "Orr").first
       visit "/admin/players/#{p.id}"
-      page.should have_selector("div/span", text: "Orr")
+      page.should have_selector("div span", text: "Orr")
       page.should have_no_link "Delete Player"
 
       p = t.players.where(last_name: "Sulskis").first
       visit "/admin/players/#{p.id}"
-      page.should have_selector("div/span", text: "Sulskis")
+      page.should have_selector("div span", text: "Sulskis")
       page.click_link "Delete Player"
       page.driver.browser.switch_to.alert.accept
       page.should have_selector("div span", text: "U-19 All Ireland 2010")

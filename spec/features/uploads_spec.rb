@@ -27,7 +27,7 @@ describe "Upload" do
       it "can upload and then delete" do
         Upload.count.should == 0
         visit "/admin/uploads/new"
-        page.should have_selector(:xpath, "/html/head/title['File Upload']")
+        page.should have_title("File Upload")
         page.select "FIDE-Krause", from: "upload_format"
         page.attach_file "file", @file
         page.click_button "Upload"
@@ -37,9 +37,9 @@ describe "Upload" do
         upload.error.should_not be_blank
         upload.tournament.should be_blank
         visit "/admin/uploads/#{upload.id}"
-        page.should have_selector(:xpath, "/html/head/title['Upload']")
+        page.should have_title("Upload")
         page.click_link("Delete")
-        page.should have_selector(:xpath, "/html/head/title['File Upload']")
+        page.should have_title("File Upload")
         Upload.count.should == 0
       end
 
