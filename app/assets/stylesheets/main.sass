@@ -313,23 +313,24 @@ img
 .sf-menu
   :float left
   :margin-bottom 1em
+  ul
+    :border-bottom $bdr
+    :min-width 6em
+    :*width 6em
   a
     :padding .5em .5em
+    :zoom 1
     :color $hd-lnk-col !important
     &.emphasize
       :color $hl-col !important
   li
     :background $bg-col
+    white-space: nowrap
+    *white-space: normal
   li li
     :background darken($bg-col, 5%)
     :border $bdr
     :border-bottom 0
-  li li li
-    :background darken($bg-col, 5%)
-    :border $bdr
-    :border-bottom 0
-  ul
-    :border-bottom $bdr
 
 //
 // Prominent, centered, rounded headers.
