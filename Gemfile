@@ -13,6 +13,7 @@ gem "redcarpet"
 gem "cancan", "~> 1.6"
 gem "jquery-rails"
 gem "nokogiri"
+gem "rack-mini-profiler"
 
 group :assets do
   gem "sass-rails", ">= 3.2.3"
