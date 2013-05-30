@@ -8,15 +8,15 @@
       - next if key == :num || key == :name
       %tr{"data-format" => "spexport"}
         %th= label_tag "spexport[#{key}]", text
-        %td= check_box_tag "spexport[#{key}]", 1, key == :id || key == :points
+        %td= check_box_tag "spexport[#{key}]", 1, [:id, :points].include?(key)
     - ICU::Tournament::Krause::OPTIONS.each do |c|
       - key, text = c
       %tr{"data-format" => "krause"}
         %th= label_tag "krause[#{key}]", text
-        %td= check_box_tag "krause[#{key}]", 1, true
+        %td= check_box_tag "krause[#{key}]", 1, [:dob, :fed, :id, :rank].include?(key)
     %tr{"data-format" => "krause"}
       %th= label_tag "krause[fide]", "Ratings and IDs"
-      %td= select_tag "krause[fide]", options_for_select([["ICU", 0], ["FIDE", 1]], 0)
+      %td= select_tag "krause[fide]", options_for_select([["ICU", 0], ["FIDE", 1]], 1)
     %tr{"data-format" => "krause spexport"}
       %th= label_tag :order
       %td= select_tag :order, options_for_select([["by rank", :rank], ["by name", :name]], :rank)
