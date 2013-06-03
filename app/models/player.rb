@@ -492,7 +492,7 @@ SQL
     if fide_player
       cname = ICU::Name.new(fide_player.first_name, fide_player.last_name)
       unless cname.match(first_name, last_name)
-        errors.push "FIDE name mismatch: #{fide_player.name}" if fed == "IRL"  # TODO: relax when we get all FIDE players
+        errors.push "FIDE name mismatch: #{fide_player.name}"
       end
       %w[fed gender].each do |attr|
         a = fide_player.send(attr).presence || next
@@ -507,7 +507,8 @@ SQL
         end
       end
     else
-      errors.push "#{fide_id}: no such FIDE player"
+      # Disable this check as our database of FIDE players is incomplete.
+      # errors.push "#{fide_id}: no such FIDE player"
     end
   end
 
