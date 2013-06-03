@@ -53,7 +53,6 @@ module FIDE
         @their_players = Hash.new
         sax = Parser.new do |p|
           next unless p["country"] == "IRL"
-          next if p["fideid"] == "2505665" and p["sex"].blank? # this invalid (no sex) and duplcate FIDE record was a problem in April 2013, FIDE asked to remove it
           player = FIDE::Download::Player.new(p)
           @their_players[player.id] = player
         end
@@ -452,7 +451,7 @@ module FIDE
         csv.push fed
         csv.push title || NULL
         csv.push gender
-        csv.push born.to_s
+        csv.push born ? born.to_s : NULL
         csv.push rating ? rating.to_s : NULL
         csv.push NULL # ICU ID
         csv.push created_at
