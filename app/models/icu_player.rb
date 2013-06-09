@@ -94,9 +94,12 @@ class IcuPlayer < ActiveRecord::Base
     matches = matches.where("dob LIKE ?", "%#{params[:dob]}%") if params[:dob] && params[:dob].match(/^[-\d]+$/)
     matches = matches.where("id = ?", params[:id].to_i) if params[:id].to_i > 0
     matches = search_fed(matches, params[:fed])
-    order   = "last_name, first_name"
-    order   = "updated_at DESC" if params[:order] == "update"
-    order   = "id" if params[:order] == "id"
+    order = case params[:order]
+    when "id"     then "id"
+    when "update" then "updated_at DESC, id DESC"
+    when "create" then "created_at DESC, id DESC"
+    else               "last_name, first_name"
+    end
     matches = matches.order(order)
     paginate(matches, path, params)
   end

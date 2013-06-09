@@ -22,7 +22,7 @@
       %td= select_tag :gender, options_for_select(gender_menu("Any"), params[:gender]), onchange: handleRemote
       %td= text_field_tag :dob, params[:dob], onchange: handleRemote, class: "centered", size: 10
       %td= text_field_tag :id, params[:id], onchange: handleRemote, class: "centered", size: 6, maxlength: 6
-      %td= select_tag :order, options_for_select([["Name", "default"], ["ID", "id"], ["Last Updated", "update"]], params[:order] || "default"), onchange: handleRemote
+      %td= select_tag :order, options_for_select(icu_player_order, params[:order] || "default"), onchange: handleRemote
       %td= submit_tag "Search"
   %table{class: "invisible turbaned"}
     %tr

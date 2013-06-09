@@ -99,6 +99,10 @@ module ApplicationHelper
     menu
   end
 
+  def icu_player_order
+    [["Name", "default"], ["ID", "id"], ["Last Updated", "update"], ["Last Created", "create"]]
+  end
+
   def old_players_status_menu(any=nil)
     menu = OldPlayer::STATUS.map{ |s| [s, s] }
     menu.unshift([any, ""]) if any
