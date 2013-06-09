@@ -80,7 +80,7 @@ class IcuPlayer < ActiveRecord::Base
   end
 
   def self.search(params, path)
-    matches = scoped
+    matches = unscoped
     matches = matches.where(master_id: nil) unless params[:include_duplicates]
     matches = matches.where(deceased: false) unless params[:include_deceased]
     matches = matches.where(last_name_like(params[:last_name], params[:first_name])) if params[:last_name].present?
@@ -94,6 +94,10 @@ class IcuPlayer < ActiveRecord::Base
     matches = matches.where("dob LIKE ?", "%#{params[:dob]}%") if params[:dob] && params[:dob].match(/^[-\d]+$/)
     matches = matches.where("id = ?", params[:id].to_i) if params[:id].to_i > 0
     matches = search_fed(matches, params[:fed])
+    order   = "last_name, first_name"
+    order   = "updated_at DESC" if params[:order] == "update"
+    order   = "id" if params[:order] == "id"
+    matches = matches.order(order)
     paginate(matches, path, params)
   end
   
