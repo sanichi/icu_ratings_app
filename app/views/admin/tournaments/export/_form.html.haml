@@ -2,7 +2,7 @@
   %table{class: "right-headers noborder"}
     %tr
       %th= label_tag :type
-      %td= select_tag :type, options_for_select(@tournament.export_formats, 'SPExport')
+      %td= select_tag :type, options_for_select(@tournament.export_formats, 'Krause')
     - ICU::Tournament::SPExport::COLUMNS.each do |c|
       - key, text = c
       - next if key == :num || key == :name
