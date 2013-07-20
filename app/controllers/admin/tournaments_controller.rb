@@ -36,6 +36,7 @@ module Admin
 
     def update
       @tournament = Tournament.includes(players: [:results]).find(params[:id])
+      params.permit!
       case
       when params[:ranks]
         @tournament.rank if params[:rank]

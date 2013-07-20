@@ -54,9 +54,7 @@ class Tournament < ActiveRecord::Base
   belongs_to :last_tournament, class_name: "Tournament"
   belongs_to :next_tournament, class_name: "Tournament"
 
-  scope :ordered, order("finish DESC, start DESC, rorder DESC, tournaments.name")
-
-  attr_accessible :name, :start, :finish, :fed, :city, :site, :arbiter, :deputy, :time_control, :tie_breaks, :user_id, :stage, :notes, :fide_id
+  scope :ordered, -> { order("finish DESC, start DESC, rorder DESC, tournaments.name") }
 
   before_validation :normalise_attributes, :guess_finish, :requeue
 
@@ -66,7 +64,7 @@ class Tournament < ActiveRecord::Base
   validate                  :finish_on_or_after_start
   validates_inclusion_of    :fed, in: FEDS, allow_nil: true, message: '(%{value}) is invalid'
   validates_inclusion_of    :stage, in: STAGE, message: '(%{value}) is invalid'
-  validates_format_of       :tie_breaks, with: /^#{TIEBREAK}(?:,#{TIEBREAK})*$/, allow_nil: true
+  validates_format_of       :tie_breaks, with: /\A#{TIEBREAK}(?:,#{TIEBREAK})*\z/, allow_nil: true
   validates_numericality_of :user_id, :rounds, only_integer: true, greater_than: 0, message: "(%{value}) is invalid"
   validates_numericality_of :rorder, :fide_id, only_integer: true, greater_than: 0, allow_nil: true, message: "(%{value}) is invalid"
   validates :iterations1, :iterations2, numericality: { only_integer: true, greater_than_or_equal: 0 }
@@ -694,7 +692,7 @@ class Tournament < ActiveRecord::Base
     a, b = last_tournament, next_tournament
     rorder = self.rorder
     [:rorder, :last_tournament_id, :next_tournament_id].each { |col| update_column(col, nil) }
-    Tournament.where("rorder > ?", rorder).order("rorder").each { |t| t.update_column(:rorder, t.rorder - 1) }
+    Tournament.where("rorder > ?", rorder).order(:rorder).each { |t| t.update_column(:rorder, t.rorder - 1) }
     a.update_column(:next_tournament_id, b.try(:id)) if a
     b.update_column(:last_tournament_id, a.try(:id)) if b
   end
@@ -715,7 +713,7 @@ class Tournament < ActiveRecord::Base
   def queue_position
     count = Tournament.where("rorder IS NOT NULL").count
     return 1 if count == 0
-    t = Tournament.first(conditions: { rorder: count })
+    t = Tournament.where(rorder: count).first
     raise ICU::Error, "queue_position: expected tournament with order #{count}" unless t
     return count + 1 if queue_position_higher(t)
     queue_position_finder(1, count)
@@ -727,7 +725,7 @@ class Tournament < ActiveRecord::Base
     return p2 if p1 == p2  # because solution is never higher than p2
     m = ((p1 + p2) / 2.0).floor
     raise ICU::Error, "queue_position_finder: expected mid-point (#{m}) to be less than last point (#{p2})" unless p2 > m
-    t = Tournament.first(conditions: { rorder: m })
+    t = Tournament.where(rorder: m).first
     raise ICU::Error, "queue_position_finder: expected tournament with rorder #{m}" unless t
     queue_position_higher(t) ? queue_position_finder(m + 1, p2) : queue_position_finder(p1, m)
   end

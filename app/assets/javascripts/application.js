@@ -6,7 +6,7 @@
 //
 //= require jquery.min
 //= require jquery_ujs
-//= require jquery-ui.min
+//= require jquery.ui.all
 //= require hoverIntent
 //= require superfish
 //= require main

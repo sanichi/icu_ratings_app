@@ -19,7 +19,13 @@ module Admin
 
     def update
       @rating_list = RatingList.find(params[:id])
-      @rating_list.update_attributes(params[:rating_list])
+      @rating_list.update_attributes(rating_list_params)
+    end
+    
+    private
+
+    def rating_list_params
+      params.require(:rating_list).permit(:tournament_cut_off, :payment_cut_off)
     end
   end
 end

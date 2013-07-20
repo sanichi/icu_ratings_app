@@ -12,7 +12,7 @@ module IcuRatings
 
     describe "enough data" do
       before(:each) do
-        Date.stub!(:today).and_return(Date.new(2011, 12, 17))
+        Date.stub(:today).and_return(Date.new(2011, 12, 17))
         @list = "2011-09-01"
         @p1 = FactoryGirl.create(:icu_player, dob: "2000-08-02", gender: "F")
         @p2 = FactoryGirl.create(:icu_player, dob: "2000-08-01")
@@ -83,7 +83,7 @@ module IcuRatings
     describe "beginning of month" do
       before(:each) do
         @today = Date.new(2012, 2, 1)
-        Date.stub!(:today).and_return(@today)
+        Date.stub(:today).and_return(@today)
       end
 
       it "date range" do
@@ -97,7 +97,7 @@ module IcuRatings
     describe "beginning of year" do
       before(:each) do
         @today = Date.new(2012, 1, 1)
-        Date.stub!(:today).and_return(@today)
+        Date.stub(:today).and_return(@today)
       end
 
       it "date range" do
@@ -111,7 +111,7 @@ module IcuRatings
     describe "end of year" do
       before(:each) do
         @today = Date.new(2012, 12, 31)
-        Date.stub!(:today).and_return(@today)
+        Date.stub(:today).and_return(@today)
       end
 
       it "date range" do

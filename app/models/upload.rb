@@ -23,8 +23,6 @@ class Upload < ActiveRecord::Base
 
   belongs_to :tournament
   belongs_to :user
-  
-  attr_accessible :format
 
   validates_inclusion_of    :format, in: FORMATS.map(&:last)
   validates_presence_of     :file_type, :content_type
@@ -73,10 +71,10 @@ class Upload < ActiveRecord::Base
   def self.search(params, path)
     matches = includes(:tournament)
     matches = matches.where("uploads.name LIKE ?", "%#{params[:name]}%") if params[:name].present?
-    matches = matches.where("uploads.format = ?", params[:format]) if params[:format].present?
     matches = matches.where("uploads.created_at LIKE ?", "%#{params[:created_at]}%") if params[:created_at].present?
+    matches = matches.where(format: params[:format]) if params[:format].present?
     matches = matches.where(user_id: params[:user_id].to_i) if params[:user_id].to_i > 0
-    matches = matches.order("uploads.created_at DESC")
+    matches = matches.order(created_at: :desc)
     paginate(matches, path, params)
   end
 end

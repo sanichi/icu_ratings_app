@@ -3,6 +3,11 @@ require 'spec_helper'
 
 module ICU
   describe Name do
+    before(:all) do
+      # Using the class seems to be required to cause the alternatives to load before the first test if they haven't already.
+      Name.new("Mark", "Orr")
+    end
+
     it "should handle new additions to alternative_first_names" do
       Name.new("Douglas", "McCann").match("Dougie", "McCann").should be_true
       Name.new("Edward", "Walsh").match("Ned", "Walsh").should be_true

@@ -22,10 +22,8 @@ class OldRatingHistory < ActiveRecord::Base
   belongs_to :old_tournament
   belongs_to :icu_player
 
-  attr_accessible # none
-
   def self.search(params, path)
-    matches = scoped
+    matches = all
     if params[:icu_player_id].to_i > 0
       matches = matches.includes(:old_tournament)
       matches = matches.where(icu_player_id: params[:icu_player_id].to_i)

@@ -10,13 +10,11 @@
 
 class Failure < ActiveRecord::Base
   extend ICU::Util::Pagination
-  
-  attr_accessible :name, :details
 
-  default_scope order("created_at DESC")
+  default_scope -> { order(created_at: :desc) }
 
   def self.search(params, path)
-    matches = scoped
+    matches = all
     matches = matches.where("name LIKE ?", "%#{params[:name]}%") if params[:name].present?
     age = params[:age].to_i
     matches = matches.where("created_at > '#{age.days.ago.to_s(:db)}'") if age > 0

@@ -1,16 +1,11 @@
-require File.expand_path('../boot', __FILE__)
-require 'yaml'
+require File.expand_path("../boot", __FILE__)
+require "yaml"
 
-APP_CONFIG = YAML.load(File.read(File.expand_path('../app_config.yml', __FILE__)))
+APP_CONFIG = YAML.load(File.read(File.expand_path("../app_config.yml", __FILE__)))
 
-require 'rails/all'
+require "rails/all"
 
-if defined?(Bundler)
-  # If you precompile assets before deploying to production, use this line
-  Bundler.require(*Rails.groups(:assets => %w(development test)))
-  # If you want your assets lazily compiled in production, use this line
-  # Bundler.require(:default, :assets, Rails.env)
-end
+Bundler.require(:default, Rails.env)
 
 module Ratings
   class Application < Rails::Application
@@ -45,13 +40,7 @@ module Ratings
     # Express preference for double quoted attributes (single quoted is HAML's default).
     Haml::Template.options[:attr_wrapper] = '"'
 
-    # Enable the asset pipeline
-    config.assets.enabled = true
-
-    # Version of your assets, change this if you want to expire all your assets
-    config.assets.version = '1.0'
-
-    # Enforce whitelist mode for mass-assignment
-    config.active_record.whitelist_attributes = true
+    # Version of your assets, change this if you want to expire all your assets.
+    config.assets.version = "1.0"
   end
 end

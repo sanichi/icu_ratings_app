@@ -14,7 +14,7 @@
 #  ratings       :integer(2)
 #  events        :integer(2)
 #  games         :integer(2)
-#  resurrected   :integer(1)
+#  status        :string(20)      default("archived")
 #  created_at    :datetime
 #  updated_at    :datetime
 #
@@ -24,8 +24,6 @@ class OldPlayer < ActiveRecord::Base
   extend ICU::Util::AlternativeNames
 
   STATUS = %w[archived resurrected duplicate]
-  
-  attr_accessible :status, :note
 
   validates :first_name, :last_name, presence: true
   validates :icu_id, numericality: { only_integer: true, greater_than: 0 }, uniqueness: true

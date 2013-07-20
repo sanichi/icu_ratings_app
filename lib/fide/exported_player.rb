@@ -141,7 +141,7 @@ module FIDE
         born = $1.to_i if dob && dob.match(/\A((19|20)\d\d)/)
         hash = {id: id, first_name: name.first, last_name: name.last, fed: "IRL", born: born, gender: sex}
         hash[:icu_id] = icu_suggestions[0].id if icu_suggestions.size == 1
-        if FidePlayer.create(hash, without_protection: true)
+        if FidePlayer.create(hash)
           new_fide_record = true
           updates.push("created new FIDE record")
           if hash[:icu_id]

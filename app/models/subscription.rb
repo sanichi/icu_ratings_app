@@ -16,8 +16,6 @@ class Subscription < ActiveRecord::Base
 
   belongs_to :icu_player, foreign_key: "icu_id"
 
-  attr_accessible # none
-
   validates_numericality_of :icu_id, only_integer: true, greater_than: 0
   validates_format_of       :season, with: /\A20\d\d-\d\d\z/, :if => Proc.new { |sub| sub.category != "lifetime" }
   validates_inclusion_of    :category, :in => CATEGORY, message: "%{value} is not a valid category"
@@ -47,14 +45,14 @@ class Subscription < ActiveRecord::Base
   end
 
   def self.get_subs(season, cut_off, last_season=nil)
-    current = where("category = 'lifetime' OR (season = ? AND (pay_date IS NULL OR pay_date <= ?))", season, cut_off).all
+    current = where("category = 'lifetime' OR (season = ? AND (pay_date IS NULL OR pay_date <= ?))", season, cut_off).to_a
     previous = []
     if last_season
       icu_ids = current.map(&:icu_id)
       if icu_ids.empty?
-        previous = where("season = ?", last_season).all
+        previous = where("season = ?", last_season).to_a
       else
-        previous = where("season = ? AND icu_id NOT IN (?)", last_season, icu_ids).all
+        previous = where("season = ? AND icu_id NOT IN (?)", last_season, icu_ids).to_a
       end
     end
     current + previous

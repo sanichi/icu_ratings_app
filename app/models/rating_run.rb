@@ -22,8 +22,6 @@ class RatingRun < ActiveRecord::Base
 
   STATUS = %w[waiting processing error finished]
 
-  attr_accessible :start_tournament_id, :user_id, :reason
-
   belongs_to :user
   belongs_to :start_tournament, class_name: "Tournament"
   belongs_to :last_tournament, class_name: "Tournament"
@@ -32,10 +30,10 @@ class RatingRun < ActiveRecord::Base
   after_create :throw_flag
   before_update :truncate_reason
 
-  default_scope order("created_at DESC")
+  default_scope -> { order(created_at: :desc) }
 
   def self.search(params, path)
-    matches = scoped.includes(:user)
+    matches = all.includes(:user)
     matches = matches.where(status: params[:status]) if STATUS.include?(params[:status])
     paginate(matches, path, params)
   end

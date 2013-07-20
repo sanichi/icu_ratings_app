@@ -57,13 +57,11 @@ class Player < ActiveRecord::Base
   GENDERS = %w[M F]
   CATEGORY = %w[icu_player foreign_player new_player]
 
-  belongs_to :tournament, include: :players
+  belongs_to :tournament, -> { includes(:players) }
   belongs_to :last_player, class_name: "Player"
   belongs_to :icu_player, foreign_key: "icu_id"
   belongs_to :fide_player, foreign_key: "fide_id"
   has_many :results, dependent: :destroy
-
-  attr_accessible :first_name, :last_name, :icu_id, :fide_id, :fed, :title, :gender, :dob, :icu_rating, :fide_rating
 
   before_validation :normalise_attributes, :canonicalize_names, :deduce_category_and_status
 
@@ -81,7 +79,7 @@ class Player < ActiveRecord::Base
   validates_presence_of     :status
 
   def self.build_from_icut(icup, tournament)
-    # Build basic player from an attribute hash (these must be unprotected attributes).
+    # Build basic player from an attribute hash.
     attrs = {}
     %w[first_name last_name fide_id fed title gender dob fide_rating].each do |key|
       attrs[key.to_sym] = icup.send(key) unless icup.send(key).blank?
@@ -90,11 +88,11 @@ class Player < ActiveRecord::Base
     attrs[:icu_rating] = icup.rating unless icup.rating.blank?
     player = tournament.players.build(attrs)
 
-    # Set protected (by attr_accessible or attr_protected) attributes.
+    # Additional attributes.
     player.num = icup.num
     player.rank = icup.rank unless icup.rank.blank?
 
-    # Set original data (also protected as it should never change).
+    # Set original data.
     player.original_name = icup.original_name
     player.original_icu_id = icup.id unless icup.id.blank?
     player.original_icu_rating = icup.rating unless icup.rating.blank?
@@ -238,13 +236,14 @@ SQL
     when :gain
       match = match.where("rating_change > 0")
       match = match.where("old_rating IS NOT NULL")
-      match = match.order("rating_change DESC")
+      match = match.order("rating_change DESC, tournaments.rorder DESC")
     when :loss
       match = match.where("rating_change < 0")
       match = match.where("old_rating IS NOT NULL")
-      match = match.order("rating_change ASC")
+      match = match.order("rating_change ASC, tournaments.rorder DESC")
+    else
+      match = match.order("tournaments.rorder DESC")
     end
-    match = match.order("tournaments.rorder DESC")
     match.limit(limit)
   end
 
@@ -343,7 +342,7 @@ SQL
     else
       update_column_if_changed(:bonus, nil)
       update_column_if_changed(:pre_bonus_rating, nil)
-      update_column_if_changed(:pre_bonus_performance, nil)      
+      update_column_if_changed(:pre_bonus_performance, nil)
     end
     results.each do |r|
       pr = p.results.find { |s| s.round == r.round }

@@ -11,7 +11,7 @@
     - @rating_runs.matches.each do |rating_run|
       %tr
         %td= link_to "#{rating_run.start_tournament_rorder}-#{rating_run.last_tournament_rorder}", [:admin, rating_run]
-        %td= time_ago_in_words(rating_run.created_at, true)
+        %td= time_ago_in_words(rating_run.created_at, include_seconds: true)
         %td= rating_run.start_tournament_name
         %td= truncate(rating_run.reason, :length => 40, :separator => ' ')
   - if @rating_runs.multi_page

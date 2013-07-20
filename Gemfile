@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem "rails", "3.2.13"
+gem "rails", "4.0.0"
 gem "mysql2"
 gem "haml-rails"
 gem "sass"
@@ -12,22 +12,19 @@ gem "whenever", :require => false
 gem "redcarpet"
 gem "cancan", "~> 1.6"
 gem "jquery-rails"
+gem "jquery-ui-rails"
 gem "nokogiri"
 gem "rack-mini-profiler"
-
-group :assets do
-  gem "sass-rails", ">= 3.2.3"
-  gem "coffee-rails", ">= 3.2.1"
-  gem "therubyracer", :require => "v8"
-end
+gem "sass-rails", "~> 4.0.0"
+gem "coffee-rails", "~> 4.0.0"
+gem "therubyracer", :require => "v8"
+gem "newrelic_rpm"
+gem "uglifier"
 
 group :development do
   gem "capistrano"
   gem "capistrano-maintenance"
   gem "quiet_assets"
-  gem "better_errors"      # see ...
-  gem "binding_of_caller"  # railscasts ...
-  gem "meta_request"       # 402
 end
 
 group :test, :development do
@@ -39,5 +36,3 @@ group :test, :development do
   gem "faker"
   gem "database_cleaner"
 end
-
-gem "newrelic_rpm"

@@ -165,7 +165,7 @@ describe "Tournament" do
       page.attach_file "file", @file
       page.click_button "Upload"
       Tournament.count.should == 1
-      t = Tournament.find(:first)
+      t = Tournament.first
       tpath = "/admin/tournaments/#{t.id}"
       visit tpath
       page.should have_selector("div span", text: "Bunratty 2011")
@@ -217,7 +217,7 @@ describe "Tournament" do
       page.attach_file "file", @file
       page.click_button "Upload"
       Tournament.count.should == 1
-      t = Tournament.find(:first)
+      t = Tournament.first
       tpath = "/admin/tournaments/#{t.id}"
       visit tpath
       page.should have_selector("div span", text: "U-19 All Ireland 2010")

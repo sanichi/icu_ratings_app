@@ -17,7 +17,6 @@ class FidePlayerFile < ActiveRecord::Base
   belongs_to :user
 
   attr_accessor :file, :update
-  attr_accessible :file, :update, :user_id
 
   before_validation :analyse_file
   validate :description, presence: true

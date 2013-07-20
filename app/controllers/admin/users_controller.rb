@@ -12,10 +12,16 @@ module Admin
     end
 
     def update
-      @user.update_attributes(params[:user]) if @user.update_www_member(params[:user])
+      @user.update_attributes(user_params) if @user.update_www_member(params[:user])
     end
 
     def show
+    end
+
+    private
+
+    def user_params
+      params.require(:user).permit(:role, :status, :preferred_email, :password)
     end
   end
 end

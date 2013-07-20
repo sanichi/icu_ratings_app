@@ -410,11 +410,11 @@ module ICU
                   @thesame[i].push(icu_id)
                 else
                   osub.destroy
-                  Subscription.create!(tsub, without_protection: true)
+                  Subscription.create!(tsub)
                   @updates[i].push(icu_id)
                 end
               else
-                Subscription.create!(tsub, without_protection: true)
+                Subscription.create!(tsub)
                 @creates[i].push(icu_id)
               end
             end

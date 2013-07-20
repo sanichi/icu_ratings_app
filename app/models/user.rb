@@ -27,11 +27,10 @@ class User < ActiveRecord::Base
   has_many :articles
 
   ROLES  = %w[member reporter officer admin]  # MUST be in order lowest to highest (see role?)
-  EMAIL  = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i
+  EMAIL  = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
   STATUS = %w[ok pending]
 
   attr_reader :new_password
-  attr_accessible :role, :status, :preferred_email, :password
 
   before_validation :normalise_attributes
 
@@ -44,7 +43,7 @@ class User < ActiveRecord::Base
   validates :icu_id, numericality: { only_integer: true, greater_than: 0, message: "(%{value}) is invalid" }
   validates :expiry, timeliness: { on_or_after: "2004-12-31", type: :date }
 
-  default_scope includes(:icu_player)
+  default_scope -> { includes(:icu_player).references(:icu_player) }
 
   def self.search(params, path)
     matches = order("users.email")
@@ -71,7 +70,7 @@ class User < ActiveRecord::Base
   end
 
   def self.authenticate!(params, ip, admin)
-    user = find_by_email(params[:email])
+    user = find_by(email: params[:email])
     raise "Invalid email or password" unless user
     user.pull_www_member unless user.password_ok?(params[:password], admin) && user.status == "ok" && !user.expiry.past?
     user.login_event(ip, admin, :password) unless user.password_ok?(params[:password], admin)

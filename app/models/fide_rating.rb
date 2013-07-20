@@ -16,7 +16,6 @@ class FideRating < ActiveRecord::Base
 
   belongs_to :fide_player, foreign_key: "fide_id"
 
-  attr_accessible :fide_id, :rating, :games, :list
   validates_numericality_of :fide_id, only_integer: true, greater_than: 0
   validates_numericality_of :rating, only_integer: true, greater_than: 0, less_than: 3000
   validates_numericality_of :games, only_integer: true, greater_than_or_equal_to: 0, less_than: 100
@@ -24,10 +23,10 @@ class FideRating < ActiveRecord::Base
   validates_uniqueness_of   :list, scope: :fide_id
   validate                  :list_should_be_first_of_month
 
-  default_scope includes(:fide_player).joins(:fide_player).order("list DESC, fide_ratings.rating DESC")
+  default_scope -> { includes(:fide_player).joins(:fide_player).order("list DESC, fide_ratings.rating DESC") }
 
   def self.search(params, path)
-    matches = scoped
+    matches = all
     matches = matches.where(list: params[:list]) if params[:list].present?
     matches = matches.where(fide_id: params[:fide_id].to_i) if params[:fide_id].to_i > 0
     matches = matches.where("first_name LIKE ?", "%#{params[:first_name]}%") if params[:first_name].present?
@@ -40,15 +39,15 @@ class FideRating < ActiveRecord::Base
     match = unscoped
     match = match.where(fide_id: fide_id)
     case type
-    when :latest  then match = match.order("list DESC")
-    when :highest then match = match.order("rating DESC, list ASC")
-    when :lowest  then match = match.order("rating ASC, list ASC")
+    when :latest  then match = match.order(list: :desc)
+    when :highest then match = match.order(rating: :desc, list: :asc)
+    when :lowest  then match = match.order(rating: :asc, list: :asc)
     end
     match.first
   end
 
   def self.lists
-    unscoped.select("DISTINCT(list)").order("list DESC").map(&:list)
+    unscoped.select("DISTINCT(list)").order(list: :desc).map(&:list)
   end
 
   private

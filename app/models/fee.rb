@@ -17,8 +17,6 @@ class Fee < ActiveRecord::Base
 
   belongs_to :icu_player, foreign_key: "icu_id"
 
-  attr_accessible # none
-
   validates_presence_of     :description, :status, :category
   validates_date            :date, on_or_after: "2008-01-01"
   validates_numericality_of :icu_id, only_integer: true, greater_than: 0

@@ -34,7 +34,7 @@ module ICU
               download.save!
             else
               action = "created"
-              download = Download.create!({comment: comment, file_name: file_name, content_type: content_type, data: data}, without_protection: true)
+              download = Download.create!(comment: comment, file_name: file_name, content_type: content_type, data: data)
             end
             report.push "#{action} #{type} ratings download"
           else

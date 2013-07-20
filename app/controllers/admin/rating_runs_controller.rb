@@ -13,7 +13,7 @@ module Admin
     end
 
     def create
-      @rating_run = RatingRun.new(params[:rating_run])
+      @rating_run = RatingRun.new(rating_run_params(:start_tournament_id))
       @rating_run.user = current_user
       if @rating_run.save
         redirect_to [:admin, @rating_run], notice: "Run was successfully created."
@@ -29,13 +29,19 @@ module Admin
 
     def update
       @rating_run = RatingRun.find(params[:id])
-      @rating_run.update_attributes(params[:rating_run])
+      @rating_run.update_attributes(rating_run_params(:reason))
     end
 
     def destroy
       @rating_run = RatingRun.find(params[:id])
       @rating_run.destroy
       redirect_to admin_rating_runs_path
+    end
+
+    private
+
+    def rating_run_params(*list)
+      params.require(:rating_run).permit(*list)
     end
   end
 end

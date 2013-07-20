@@ -22,7 +22,7 @@ module Admin
       @player = Player.find(params[:id])
       @tournament = @player.tournament
       update_from_id(params) unless params[:player]
-      @player.update_attributes(params[:player])
+      @player.update_attributes(player_params)
     end
 
     def destroy
@@ -32,7 +32,7 @@ module Admin
         @tournament.remove(@player)
         redirect_to [:admin, @tournament], notice: "Deleted player #{@player.name}"
       else
-        # Shouldn't happen because a delete button will not be provided.
+        # Shouldn't happen because a delete button should not be provided.
         extra
         flash.now[:alert] = "Players that have at least one opponent can't be deleted"
         render "show"
@@ -56,13 +56,19 @@ module Admin
       end
       params[:player] = hash
     end
-    
+
     def extra
       if @tournament.players.size > 2
         # Note that player.find_by_num started going into an infinte loop here after the upgrate to rails 3.1.
         @prev = @tournament.players.where("num = ?", @player.num - 1).first || @tournament.players.order("num").last
         @next = @tournament.players.where("num = ?", @player.num + 1).first || @tournament.players.order("num").first
       end
+    end
+
+    private
+
+    def player_params
+      params.require(:player).permit(:first_name, :last_name, :icu_id, :fide_id, :fed, :title, :gender, :dob, :icu_rating, :fide_rating)
     end
   end
 end

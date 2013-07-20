@@ -35,9 +35,8 @@ class IcuPlayer < ActiveRecord::Base
   has_many   :old_rating_histories
   has_many   :old_tournaments, through: :old_rating_histories
 
-  default_scope order("last_name, first_name")
+  default_scope -> { order("last_name, first_name") }
 
-  attr_accessible :first_name, :last_name, :email, :club, :address, :phone_numbers, :fed, :title, :gender, :note, :dob, :joined, :deceased, :master_id
   validates_presence_of     :first_name
   validates_presence_of     :last_name
   validates_format_of       :fed, with: /\A[A-Z]{3}\z/, allow_nil: true

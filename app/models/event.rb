@@ -13,12 +13,10 @@
 class Event < ActiveRecord::Base
   extend ICU::Util::Pagination
 
-  attr_accessible :name, :time, :report, :success
-
-  default_scope order("created_at DESC")
+  default_scope -> { order(created_at: :desc) }
 
   def self.search(params, path)
-    matches = scoped
+    matches = all
     matches = matches.where("name LIKE ?", "%#{params[:name]}%") unless params[:name].blank?
     matches = matches.where("report LIKE ?", "%#{params[:report]}%") unless params[:report].blank?
     matches = matches.where("success = ?", params[:success]) unless params[:success].blank?

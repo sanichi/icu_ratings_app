@@ -86,10 +86,10 @@
     %th{class: "floater"}
       - if manageable
         - if @tournament.locked
-          = link_to admin_tournament_path(@tournament, locked: "false"), remote: true, method: :put do
+          = link_to admin_tournament_path(@tournament, locked: "false"), remote: true, method: :patch do
             = icon_tag "lock", "Tournament locked"
         - else
-          = link_to admin_tournament_path(@tournament, locked: "true"), remote: true, method: :put do
+          = link_to admin_tournament_path(@tournament, locked: "true"), remote: true, method: :patch do
             = icon_tag "unlock", "Tournament unlocked"
   %tr
     %th Rerate
@@ -97,10 +97,10 @@
     %th{class: "floater"}
       - if editable
         - if @tournament.rerate
-          = link_to admin_tournament_path(@tournament, rerate: "false"), remote: true, method: :put do
+          = link_to admin_tournament_path(@tournament, rerate: "false"), remote: true, method: :patch do
             = icon_tag "next_for_rating", "Rerate Tournament"
         - else
-          = link_to admin_tournament_path(@tournament, rerate: "true"), remote: true, method: :put do
+          = link_to admin_tournament_path(@tournament, rerate: "true"), remote: true, method: :patch do
             = icon_tag "rated", "Don't Rerate Tournament"
   - if @tournament.rorder
     %tr
@@ -169,7 +169,7 @@
           = link_to "Delete", [:admin, @tournament], data: { confirm: "Are you sure you want to delete this tournament?" }, method: :delete
         - if @tournament == @next_for_rating
           •
-          = link_to "Rate", admin_tournament_path(@tournament, rate: "", format: "js"), method: :put, remote: true
+          = link_to "Rate", admin_tournament_path(@tournament, rate: "", format: "js"), method: :patch, remote: true
           - if @tournament.next_tournament
             •
             = link_to "Rate All", admin_rating_runs_path(rating_run: { start_tournament_id: @tournament.id }), method: :post

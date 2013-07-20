@@ -18,7 +18,13 @@ module Admin
 
     def update
       @old_player = OldPlayer.find(params[:id])
-      @old_player.update_attributes(params[:old_player])
+      @old_player.update_attributes(old_params)
+    end
+    
+    private
+    
+    def old_params
+      params.require(:old_player).permit(:status, :note)
     end
   end
 end

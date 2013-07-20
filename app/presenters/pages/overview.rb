@@ -5,7 +5,7 @@ module Pages
       reporters = {}
 
       # First, tournaments with reporters.
-      Tournament.includes(:user).all.each do |t|
+      Tournament.includes(:user).to_a.each do |t|
         hash = reporters[t.user_id]
         unless hash
           hash = { user: t.user, total: 0, status: { "ok" => 0, "problems" => 0 } }

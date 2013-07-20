@@ -21,7 +21,7 @@ module Admin
 
     def create
       params[:fide_player_file][:user_id] = session[:user_id]
-      @fide_player_file = FidePlayerFile.new(params[:fide_player_file])
+      @fide_player_file = FidePlayerFile.new(fpf_params)
       if @fide_player_file.save
         redirect_to [:admin, @fide_player_file], notice: "File was successfully analysed."
       else
@@ -29,7 +29,7 @@ module Admin
         render action: "new"
       end
     end
-    
+
     def destroy
       @fide_player_file = FidePlayerFile.find(params[:id])
       if @fide_player_file.db_updated?
@@ -38,6 +38,12 @@ module Admin
         @fide_player_file.destroy
         redirect_to admin_fide_player_files_path, notice: "Report for #{@fide_player_file.created_at.strftime("%Y-%m-%d %H:%M")} successfully deleted"
       end
+    end
+
+    private
+
+    def fpf_params
+      params.require(:fide_player_file).permit(:file, :update, :user_id)
     end
   end
 end

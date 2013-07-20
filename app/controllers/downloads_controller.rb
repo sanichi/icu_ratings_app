@@ -1,5 +1,5 @@
 class DownloadsController < ApplicationController
-  load_resource except: "index"
+  load_resource except: ["index", "create"]
   authorize_resource
 
   def index
@@ -19,6 +19,7 @@ class DownloadsController < ApplicationController
   end
 
   def create
+    @download = Download.new(download_params)
     if params[:commit] == "Cancel"
       redirect_to downloads_path
     elsif @download.save
@@ -31,7 +32,7 @@ class DownloadsController < ApplicationController
   def update
     if params[:commit] == "Cancel"
       redirect_to downloads_path
-    elsif @download.update_attributes(params[:download])
+    elsif @download.update_attributes(download_params)
       redirect_to downloads_path, notice: "Download was successfully updated."
     else
       render action: "edit"
@@ -41,5 +42,11 @@ class DownloadsController < ApplicationController
   def destroy
     @download.destroy
     redirect_to downloads_path
+  end
+
+  private
+
+  def download_params
+    params.require(:download).permit(:comment, :uploaded_file)
   end
 end

@@ -11,7 +11,7 @@
 
 -# Arrange for jQuery to build the dialog when the page loads.
 - content_for :javascript do
-  = render partial: "shared/dialog", formats: :js
+  = render partial: "shared/jq_dialog", formats: :js
 
 -# And provide the div into which jQuery will insert the dialog.
 %div{id: @id}= defined?(html) ? raw(html) : ""

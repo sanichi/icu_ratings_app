@@ -17,7 +17,7 @@ module Admin
     end
 
     def create
-      @upload = Upload.new(params[:upload])
+      @upload = Upload.new(upload_params)
       @upload.user = current_user
       authorize!(:create, @upload)
       @tournament = @upload.extract(params, session[:user_id])
@@ -37,7 +37,7 @@ module Admin
         render action: "new"
       end
     end
-    
+
     def destroy
       @upload = Upload.find(params[:id])
       authorize!(:destroy, @upload)
@@ -47,6 +47,12 @@ module Admin
         @upload.destroy
         redirect_to new_admin_upload_path
       end
+    end
+
+    private
+
+    def upload_params
+      params.require(:upload).permit(:format)
     end
   end
 end

@@ -16,7 +16,6 @@ class Article < ActiveRecord::Base
 
   belongs_to :user
 
-  attr_accessible :headline, :story, :published, :identity
   before_validation :normalise_attributes
 
   validates :user_id, :headline, :story, presence: true
@@ -41,12 +40,12 @@ class Article < ActiveRecord::Base
   end
 
   def self.get_by_identity(identity)
-    find_by_identity_and_published(identity, true)
+    find_by(identity: identity, published: true)
   end
 
   # Latest articles for home page.
   def self.latest(limit=10)
-    where(published: true).order("updated_at DESC").limit(limit)
+    where(published: true).order(updated_at: :desc).limit(limit)
   end
 
   private

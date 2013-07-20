@@ -23,8 +23,8 @@
         %td= download.comment
         %td= download.content_type
         %td= number_to_human_size(download.data.size)
-        %td= time_ago_in_words(download.created_at, true)
-        %td= time_ago_in_words(download.updated_at, true)
+        %td= time_ago_in_words(download.created_at, include_seconds: true)
+        %td= time_ago_in_words(download.updated_at, include_seconds: true)
         - if can? :manage, Download
           %td{class: "floater"}
             = link_to edit_download_path(download) do

@@ -16,8 +16,6 @@ class IcuRating < ActiveRecord::Base
 
   belongs_to :icu_player, foreign_key: "icu_id"
 
-  attr_accessible # none
-
   validates :rating, numericality: { only_integer: true }
   validates :full, inclusion: { in: [true, false] }
   validates :original_rating, numericality: { only_integer: true }, allow_nil: true
@@ -25,10 +23,10 @@ class IcuRating < ActiveRecord::Base
   validates :list, timeliness: { on_or_after: "2001-09-01", on_or_before: :today, type: :date }
   validates :list, list_date: true
 
-  default_scope includes(:icu_player).joins(:icu_player).order("list DESC, rating DESC, last_name")
+  default_scope -> { includes(:icu_player).joins(:icu_player).order("list DESC, rating DESC, icu_players.last_name") }
 
   def self.search(params, path, paginated=true)
-    matches = scoped
+    matches = all
     matches = matches.where("first_name LIKE ?", "%#{params[:first_name]}%") if params[:first_name].present?
     matches = matches.where("last_name LIKE ?", "%#{params[:last_name]}%") if params[:last_name].present?
     matches = matches.where("club IS NULL") if params[:club] == "None"
@@ -47,9 +45,9 @@ class IcuRating < ActiveRecord::Base
     match = unscoped
     match = match.where(icu_id: icu_id)
     case type
-    when :latest  then match = match.order("list DESC")
-    when :highest then match = match.order("rating DESC, list ASC")
-    when :lowest  then match = match.order("rating ASC, list ASC")
+    when :latest  then match = match.order(list: :desc)
+    when :highest then match = match.order(rating: :desc, list: :asc)
+    when :lowest  then match = match.order(rating: :asc, list: :asc)
     end
     match.first
   end
@@ -74,6 +72,6 @@ class IcuRating < ActiveRecord::Base
   end
 
   def self.lists
-    unscoped.select("DISTINCT(list)").order("list DESC").map(&:list)
+    unscoped.select("DISTINCT(list)").order(list: :desc).map(&:list)
   end
 end

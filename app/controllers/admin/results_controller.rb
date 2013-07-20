@@ -1,6 +1,6 @@
 module Admin
   class ResultsController < ApplicationController
-    load_and_authorize_resource except: "new"
+    load_and_authorize_resource except: ["new", "create"]
 
     def new
       @player = Player.find(params[:player_id])
@@ -11,6 +11,7 @@ module Admin
     end
 
     def create
+      @result = Article.new(result_params)
       if @result.save
         @player = @result.player
         @tournament = @player.tournament
@@ -25,10 +26,16 @@ module Admin
     end
 
     def update
-      if @result.update_results(params[:result], params[:opp_result])
+      if @result.update_results(result_params, params[:opp_result])
         @player = @result.player
         @tournament = @player.tournament
       end
+    end
+
+    private
+
+    def result_params
+      params.require(:result).permit(:round, :player_id, :opponent_id, :result, :colour, :rateable)
     end
   end
 end

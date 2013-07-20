@@ -1,9 +1,8 @@
 Ratings::Application.routes.draw do
-
   root to: "pages#home"
 
   %w[home my_home contacts overview system_info].each { |p| get p => "pages##{p}"}
-  match "/their_home/:id" => "pages#their_home", as: "their_home"
+  get "/their_home/:id" => "pages#their_home", as: "their_home"
   get "log_in"  => "sessions#new"
   get "log_out" => "sessions#destroy"
 
@@ -43,8 +42,11 @@ Ratings::Application.routes.draw do
     resources :users,               only: [:index, :show, :edit, :update]
   end
 
-  match "/news_items"     => redirect("/articles")
-  match "/news_items/:id" => redirect("/articles/%{id}")
+  if Rails.env.development?
+    get "/rails/info"            => "rails/info#routes"
+    get "/rails/info/routes"     => "rails/info#routes"
+    get "/rails/info/properties" => "rails/info#properties"
+  end
 
-  match "*url" => "pages#not_found"
+  match "*url", to: "pages#not_found", via: :all
 end

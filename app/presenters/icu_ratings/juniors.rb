@@ -44,7 +44,7 @@ module IcuRatings
     def ratings
       return @ratings if @ratings
       return [] unless available?
-      @ratings = IcuRating.unscoped.order("rating DESC, dob DESC").includes(:icu_player)
+      @ratings = IcuRating.unscoped.order("rating DESC, dob DESC").includes(:icu_player).references(:icu_player)
       @ratings = ratings.where(list: list).where("icu_players.fed = 'IRL' OR icu_players.fed IS NULL")
       @ratings = ratings.where("icu_players.gender = 'M' OR icu_players.gender IS NULL") if @gender == "M"
       @ratings = ratings.where("icu_players.gender = 'F'") if @gender == "F"

@@ -24,7 +24,13 @@ module Admin
 
     def update
       @publication = Publication.find(params[:id])
-      @publication.update_attributes(params[:publication])
+      @publication.update_attributes(pub_params)
+    end
+    
+    private
+
+    def pub_params
+      params.require(:publication).permit(:notes)
     end
   end
 end

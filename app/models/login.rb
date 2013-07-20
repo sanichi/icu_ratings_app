@@ -16,15 +16,14 @@ class Login < ActiveRecord::Base
 
   belongs_to :user
 
-  attr_accessible :ip, :problem, :role
   validates_presence_of  :user_id, :ip
   validates_inclusion_of :problem, in: PROBLEMS, message: "(%{value}) is invalid"
   validates_inclusion_of :role, in: User::ROLES, message: "(%{value}) is invalid"
 
-  default_scope order("logins.created_at DESC")
+  default_scope -> { order("logins.created_at DESC") }
 
   def self.search(params, path)
-    matches = scoped
+    matches = all
     if params[:email].present? || params[:icu_id].to_i > 0 || params[:first_name].present? || params[:last_name].present?
       matches = matches.joins(user: :icu_player)
       matches = matches.where("users.email LIKE ?", "%#{params[:email]}%") if params[:email].present?

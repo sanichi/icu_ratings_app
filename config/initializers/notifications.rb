@@ -1,9 +1,13 @@
 ActiveSupport::Notifications.subscribe "process_action.action_controller" do |name, start, finish, id, payload|
   if payload[:exception]
     name = payload[:exception].first
-    # Other ones to possibly ignore would be AbstractController::ActionNotFound and ActionController::RoutingError.
-    unless name == "ActiveRecord::RecordNotFound"
-      Failure.create!(:name => name, :details => payload.to_yaml)
+    # Ignore certain exceptions (other candidates would be AbstractController::ActionNotFound and ActionController::RoutingError).
+    unless ["ActiveRecord::RecordNotFound"].include?(name)
+      # This next is mainly because to_yaml (used to prettify the details) can't handle anonymous modules (e.g. in :request).
+      safe = [:controller, :action, :params, :format, :path, :exception]
+      details = payload.select{|k,v| safe.include?(k)}.to_yaml
+      # Create a failure to record this exception.
+      Failure.create!(name: name, details: details);
     end
   end
 end

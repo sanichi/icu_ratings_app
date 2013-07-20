@@ -3386,7 +3386,7 @@ class CreateOldPlayers < ActiveRecord::Migration
       { last_name: "Zimmerman", first_name: "Rita", icu_id: 7103, gender: "F", joined: "1984-01-01", club: "Rathfarnham", rating: 2159, games: 42, events: 6 },
       { last_name: "Zimmermann", first_name: "Carsten", icu_id: 7163, gender: "M", dob: "1975-01-02", joined: "1995-05-24", rating: 965, games: 2, events: 1 },
     ].each do |hash|
-      OldPlayer.create!(hash, without_protection: true)
+      OldPlayer.create!(hash)
     end
   end
 

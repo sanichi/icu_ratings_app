@@ -19,12 +19,10 @@ class FidePlayer < ActiveRecord::Base
   extend ICU::Util::Pagination
   extend ICU::Util::AlternativeNames
 
-  has_many :fide_ratings, foreign_key: "fide_id", order: "list DESC", dependent: :destroy
+  has_many :fide_ratings, -> { order(list: :desc) }, foreign_key: "fide_id", dependent: :destroy
   belongs_to :icu_player, foreign_key: "icu_id"
 
-  default_scope order("last_name, first_name")
-
-  attr_accessible :first_name, :last_name, :fed, :title, :gender, :born, :rating, :icu_id
+  default_scope -> { order("last_name, first_name") }
 
   validates :last_name, presence: true
   validates :fed, format: { with: /\A[A-Z]{3}\z/ }
@@ -57,7 +55,7 @@ class FidePlayer < ActiveRecord::Base
   end
 
   def icu_mismatches(icu_id)
-    p = IcuPlayer.find_by_id(icu_id)
+    p = IcuPlayer.find_by(id: icu_id)
     m = []
     if p
       m.push "mismatched gender"              if gender && p.gender && gender != p.gender
@@ -74,7 +72,7 @@ class FidePlayer < ActiveRecord::Base
   end
 
   def self.search(params, path)
-    matches = scoped
+    matches = all
     matches = matches.where(last_name_like(params[:last_name], params[:first_name])) unless params[:last_name].blank?
     matches = matches.where(first_name_like(params[:first_name], params[:last_name])) unless params[:first_name].blank?
     matches = matches.where("fed = ?", params[:fed]) unless params[:fed].blank?

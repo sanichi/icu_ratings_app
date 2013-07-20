@@ -20,7 +20,7 @@ class AddOldRatingsFromArchive < ActiveRecord::Migration
   ]
 
   def up
-    RECORDS.each { |hash| OldRating.where(icu_id: hash[:icu_id]).first_or_create(hash, without_protection: true) }
+    RECORDS.each { |hash| OldRating.where(icu_id: hash[:icu_id]).first_or_create(hash) }
   end
 
   def down

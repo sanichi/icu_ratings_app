@@ -47,7 +47,7 @@ module Tournaments
     private
 
     def match(fid, fed, dob)
-      matches = @tournament.players.order(:last_name, :first_name).where(sql(fid, fed, dob)).all
+      matches = @tournament.players.order(:last_name, :first_name).where(sql(fid, fed, dob)).to_a
       @status.push Matches.new(fid, fed, dob, matches) if matches.count > 0
     end
 

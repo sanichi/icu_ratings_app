@@ -15,14 +15,12 @@ class RatingList < ActiveRecord::Base
 
   has_many :publications, dependent: :destroy
 
-  attr_accessible :tournament_cut_off, :payment_cut_off
-
   validates :date, timeliness: { on_or_after: "2012-01-01", on_or_before: :today, type: :date }
   validates :date, list_date: true
   validates :tournament_cut_off, :payment_cut_off, timeliness: { type: :date }
   validate  :cut_off_rules
 
-  default_scope order("date DESC")
+  default_scope -> { order(date: :desc) }
 
   def publish(today = Date.today)
     @stats = Publication::STATS.inject({}) { |h, k| h[k] = 0; h }
@@ -60,21 +58,21 @@ class RatingList < ActiveRecord::Base
       todo.push(date) unless have[date]
       date = date >> 4
     end
-    todo.each { |date| create({date: date, tournament_cut_off: date.change(day: 15), payment_cut_off: date.end_of_month}, without_protection: true) }
+    todo.each { |date| create(date: date, tournament_cut_off: date.change(day: 15), payment_cut_off: date.end_of_month) }
   end
 
   def self.search(params, path)
-    matches = scoped
+    matches = all
     matches = matches.where("date LIKE '#{params[:year]}%'") if params[:year].present?
     paginate(matches, path, params)
   end
 
   def next_list
-    RatingList.unscoped.where("date > ?", date).order("date ASC").limit(1).first
+    RatingList.unscoped.where("date > ?", date).order(date: :asc).limit(1).first
   end
 
   def prev_list
-    RatingList.unscoped.where("date < ?", date).order("date DESC").limit(1).first
+    RatingList.unscoped.where("date < ?", date).order(date: :desc).limit(1).first
   end
 
   private
@@ -128,7 +126,7 @@ class RatingList < ActiveRecord::Base
         hash = { list: date, icu_id: icu_id, rating: rating, full: full }
         hash[:original_rating] = @originals ? rating : nil
         hash[:original_full] = @originals ? full : nil
-        IcuRating.create!(hash, without_protection: true)
+        IcuRating.create!(hash)
         creates.push icu_id
       when
         !current && !rating
@@ -202,7 +200,7 @@ class RatingList < ActiveRecord::Base
   end
 
   def get_current_ratings
-    ratings = IcuRating.unscoped.where(list: date).all
+    ratings = IcuRating.unscoped.where(list: date).to_a
     report_item "existing ratings: #{ratings.size}"
     ratings.inject({}){ |h, r| h[r.icu_id] = r; h }
   end

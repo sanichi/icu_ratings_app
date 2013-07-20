@@ -1,5 +1,5 @@
 class ArticlesController < ApplicationController
-  load_resource except: "index"
+  load_resource except: ["index", "create"]
   authorize_resource
 
   def index
@@ -22,6 +22,7 @@ class ArticlesController < ApplicationController
   end
 
   def create
+    @article = Article.new(article_params)
     @article.user = current_user
     if params[:commit] == "Cancel"
       redirect_to articles_path
@@ -35,7 +36,7 @@ class ArticlesController < ApplicationController
   def update
     if params[:commit] == "Cancel"
       redirect_to @article
-    elsif @article.update_attributes(params[:article])
+    elsif @article.update_attributes(article_params)
       redirect_to @article, notice: "Article was successfully updated."
     else
       render action: "edit"
@@ -45,5 +46,11 @@ class ArticlesController < ApplicationController
   def destroy
     @article.destroy
     redirect_to articles_path
+  end
+  
+  private
+  
+  def article_params
+    params.require(:article).permit(:headline, :identity, :published, :story)
   end
 end

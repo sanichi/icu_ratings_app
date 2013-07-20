@@ -20,8 +20,8 @@
           - state = article.published ? "published" : "unpublished"
           %td= icon_tag state, state
         %td= link_to article.headline, article
-        %td= time_ago_in_words(article.created_at, true)
-        %td= time_ago_in_words(article.updated_at, true)
+        %td= time_ago_in_words(article.created_at, include_seconds: true)
+        %td= time_ago_in_words(article.updated_at, include_seconds: true)
         %td= article.user.name
         - if extra > 0
           %td= article.identity
