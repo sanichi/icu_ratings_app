@@ -314,7 +314,7 @@ module ApplicationHelper
     summary = "created <span>#{I18n.l(created, format: :long)}</span>"
     unless updated == created
       format = created.year == updated.year ? :short : :long
-      summary << "; updated <span>#{I18n.l(updated, format: format)}<span>"
+      summary << "; last updated <span>#{I18n.l(updated, format: format)}<span>"
     end
     raw summary
   end
