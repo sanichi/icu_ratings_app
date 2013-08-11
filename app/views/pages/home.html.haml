@@ -72,9 +72,11 @@
         Please ask the
         = mail_to_icu
         to authorize your account for submissions.
+    %dt Where can I get more help?
     - unless current_user
       %dt How can I log in?
       %dd
         Go to the
         = link_to "Log in", log_in_path
         page where there is further help if you need it.
+    = render "more_help"
