@@ -1,61 +1,61 @@
 require 'spec_helper'
 
 describe "Tournament" do
+  def load_tournament(file, arg={})
+    visit "/admin/uploads/new"
+    set_upload_format(page, file)
+    set_tournament_name(page, file, arg)
+    set_start_date(page, file, arg)
+    set_feds_option(page, file, arg)
+    set_ratings_option(page, file, arg)
+    page.attach_file "file", test_file_path(file)
+    page.click_button "Upload"
+    Tournament.order(:id).last
+  end
+
+  def set_upload_format(page, file)
+    value = case file
+      when /\.csv$/ then "ICU-CSV"
+      when /\.tab$/ then "FIDE-Krause"
+      when /\.txt$/ then "Swiss Perfect Export"
+      when /\.zip$/ then "Swiss Perfect"
+    end
+    page.select value, from: "upload_format"
+  end
+
+  def set_start_date(page, file, arg)
+    return unless file =~ /\.(txt|zip)/
+    page.fill_in "start", with: arg[:start] || "2011-03-06"
+  end
+
+  def set_tournament_name(page, file, arg)
+    return unless file =~ /\.(txt)/
+    page.fill_in "Tournament name", with: arg[:name] || "Tournament"
+  end
+
+  def set_feds_option(page, file, arg)
+    return unless file =~ /\.(tab|txt|zip)/
+    value = case arg[:feds]
+      when "skip"   then "Skip if invalid"
+      when "ignore" then "Ignore all"
+      else "Error if invalid"
+    end
+    page.select value, from: "feds"
+  end
+
+  def set_ratings_option(page, file, arg)
+    return unless file =~ /\.(tab)/
+    value = case arg[:ratings]
+      when "ICU"   then "ICU"
+      when "FIDE"  then "FIDE"
+      else ""
+    end
+    page.select value, from: "ratings"
+  end
+
   describe "loading" do
     before(:each) do
       login("reporter")
-    end
-
-    def load_tournament(file, arg={})
-      visit "/admin/uploads/new"
-      set_upload_format(page, file)
-      set_tournament_name(page, file, arg)
-      set_start_date(page, file, arg)
-      set_feds_option(page, file, arg)
-      set_ratings_option(page, file, arg)
-      page.attach_file "file", test_file_path(file)
-      page.click_button "Upload"
-      Tournament.order(:id).last
-    end
-
-    def set_upload_format(page, file)
-      value = case file
-        when /\.csv$/ then "ICU-CSV"
-        when /\.tab$/ then "FIDE-Krause"
-        when /\.txt$/ then "Swiss Perfect Export"
-        when /\.zip$/ then "Swiss Perfect"
-      end
-      page.select value, from: "upload_format"
-    end
-
-    def set_start_date(page, file, arg)
-      return unless file =~ /\.(txt|zip)/
-      page.fill_in "start", with: arg[:start] || "2011-03-06"
-    end
-
-    def set_tournament_name(page, file, arg)
-      return unless file =~ /\.(txt)/
-      page.fill_in "Tournament name", with: arg[:name] || "Tournament"
-    end
-
-    def set_feds_option(page, file, arg)
-      return unless file =~ /\.(tab|txt|zip)/
-      value = case arg[:feds]
-        when "skip"   then "Skip if invalid"
-        when "ignore" then "Ignore all"
-        else "Error if invalid"
-      end
-      page.select value, from: "feds"
-    end
-
-    def set_ratings_option(page, file, arg)
-      return unless file =~ /\.(tab)/
-      value = case arg[:ratings]
-        when "ICU"   then "ICU"
-        when "FIDE"  then "FIDE"
-        else ""
-      end
-      page.select value, from: "ratings"
     end
 
     it "SwissPerfect" do
@@ -104,6 +104,34 @@ describe "Tournament" do
       tournament.name.should == "Isle of Man Masters, 2007"
       tournament.status.should_not == "ok"
       tournament.stage.should == "initial"
+    end
+  end
+
+  describe "email notification" do
+    before(:each) do
+      @n = ActionMailer::Base.deliveries.size
+      @t = Tournament.count
+    end
+
+    it "should get sent for a reporter" do
+      login("reporter")
+      load_tournament("isle_of_man_2007.csv")
+      Tournament.count.should == @t + 1
+      ActionMailer::Base.deliveries.size.should == @n + 1
+    end
+
+    it "should not get sent for an officer" do
+      login("officer")
+      load_tournament("isle_of_man_2007.csv")
+      Tournament.count.should == @t + 1
+      ActionMailer::Base.deliveries.size.should == @n
+    end
+
+    it "should not get sent for an admin" do
+      login("admin")
+      load_tournament("isle_of_man_2007.csv")
+      Tournament.count.should == @t + 1
+      ActionMailer::Base.deliveries.size.should == @n
     end
   end
 
@@ -591,7 +619,7 @@ describe "Tournament" do
       page.should have_link("Tournament locked")
     end
   end
-  
+
   describe "rating run" do
     before(:each) do
       tests = %w[isle_of_man_2007.csv junior_championships_u19_2010.txt kilbunny_masters_2011.tab]

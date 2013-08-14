@@ -53,7 +53,10 @@ Ratings::Application.configure do
   config.assets.precompile += %w( tournament.js rating_run.js new_upload.js )
 
   # Disable delivery errors, bad email addresses will be ignored
-  # config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = false
+  
+  # Use sendmail with default options.
+  config.action_mailer.delivery_method = :sendmail
 
   # Enable threaded mode
   # config.threadsafe!
