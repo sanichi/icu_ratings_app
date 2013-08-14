@@ -1,5 +1,6 @@
-Name: <%= @name %>
-Date: <%= @date %>
-User: <%= @user %>
-Time: <%= @time %>
-Link: <%= @link %>
+Name: <%= @tournament.name %>
+Start: <%= @tournament.start.to_s(:db) %>
+Finish: <%= @tournament.finish.to_s(:db) %>
+Reporter: <%= @tournament.user.name(false) %>
+Uploaded: <%= @tournament.created_at.to_s(:db) %>
+Link: <%= admin_tournament_url(@tournament.id, host: "ratings.icu.ie") %>
