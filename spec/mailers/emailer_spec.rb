@@ -12,7 +12,7 @@ describe Emailer do
       email = Emailer.notify_tournament_uploaded(@t).deliver
       expect(ActionMailer::Base.deliveries.size).to eq(@n + 1)
       expect(email.to).to include("ratings@icu.ie")
-      expect(email.from).to include("no-reply@icu.ie")
+      expect(email.from).to include("mjo@ratalacha.icu.ie")
       expect(email.subject).to eq("New Tournament Uploaded")
       expect(email.body).to include("Name: #{@t.name}")
       expect(email.body).to include("User: #{@u.name(false)}")

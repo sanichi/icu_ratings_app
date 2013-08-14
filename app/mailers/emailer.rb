@@ -1,6 +1,4 @@
 class Emailer < ActionMailer::Base
-  default from: "no-reply@icu.ie"
-  
   def notify_tournament_uploaded(tournament)
     @name = tournament.name
     @time = tournament.created_at.to_s(:db)

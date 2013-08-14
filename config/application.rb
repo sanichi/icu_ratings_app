@@ -42,5 +42,8 @@ module Ratings
 
     # Version of your assets, change this if you want to expire all your assets.
     config.assets.version = "1.0"
+
+    # no-reply@icu.ie causes an error at fwd{0,1,2}.hosts.co.uk so for now use this instead which has no problem.
+    config.action_mailer.default_options = { from: "mjo@ratalacha.icu.ie" }
   end
 end
