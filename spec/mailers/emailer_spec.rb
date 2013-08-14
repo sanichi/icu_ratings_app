@@ -15,6 +15,7 @@ describe Emailer do
       expect(email.from).to include("mjo@ratalacha.icu.ie")
       expect(email.subject).to eq("New Tournament Uploaded")
       expect(email.body).to include("Name: #{@t.name}")
+      expect(email.body).to include("Date: #{@t.finish.to_s(:db)}")
       expect(email.body).to include("User: #{@u.name(false)}")
       expect(email.body).to include("Time: #{@t.created_at.to_s(:db)}")
       expect(email.body).to include("Link: http://ratings.icu.ie/admin/tournaments/#{@t.id}")
