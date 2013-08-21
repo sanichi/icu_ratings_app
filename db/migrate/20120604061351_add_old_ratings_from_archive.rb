@@ -8,6 +8,7 @@ class AddOldRatingsFromArchive < ActiveRecord::Migration
     {icu_id:  1074, rating: 1821, games:  7, full: true},
     {icu_id:  1211, rating: 1727, games: 11, full: true},  # resurrected from former players
     {icu_id:  1305, rating: 1190, games: 30, full: true},
+    {icu_id:  1754, rating:  854, games: 20, full: true},  # resurrected from former players
     {icu_id:  2059, rating: 1071, games: 20, full: true},  # old Fred Harte data, number of games guessed
     {icu_id:  2404, rating: 1210, games:  6, full: true},
     {icu_id:  3758, rating: 1507, games: 12, full: true},
