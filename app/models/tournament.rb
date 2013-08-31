@@ -775,7 +775,7 @@ class Tournament < ActiveRecord::Base
     t = ICU::RatedTournament.new(desc: "Scratch")
     players.each { |p| p.add_player t }
     players.each { |p| p.add_results t }
-    t.rate!(version: 2)
+    t.rate!(version: 3)
     self.iterations1 = t.iterations1
     self.iterations2 = t.iterations2
     self.save
