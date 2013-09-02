@@ -17,7 +17,7 @@ gem "nokogiri"
 gem "rack-mini-profiler"
 gem "sass-rails", "~> 4.0.0"
 gem "coffee-rails", "~> 4.0.0"
-gem "therubyracer", :require => "v8"
+gem "therubyracer", "0.11.4", :require => "v8"  # 0.12.0 requires requires gcc 4.4 to compile v8 (ratalacha has 4.1)
 gem "newrelic_rpm"
 gem "uglifier"
 

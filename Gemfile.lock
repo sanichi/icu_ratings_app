@@ -222,7 +222,7 @@ DEPENDENCIES
   sass
   sass-rails (~> 4.0.0)
   selenium-webdriver
-  therubyracer
+  therubyracer (= 0.11.4)
   uglifier
   validates_timeliness
   whenever
