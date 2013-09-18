@@ -5,6 +5,7 @@ class AddOldRatingsFromArchive < ActiveRecord::Migration
   [
     {icu_id:   357, rating: 1631, games:  3, full: true},  # resurrected from former players
     {icu_id:   552, rating: 1692, games: 11, full: true},
+    {icu_id:  1001, rating: 1949, games:  9, full: true},  # resurrected from former players
     {icu_id:  1074, rating: 1821, games:  7, full: true},
     {icu_id:  1211, rating: 1727, games: 11, full: true},  # resurrected from former players
     {icu_id:  1305, rating: 1190, games: 30, full: true},
