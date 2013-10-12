@@ -196,8 +196,8 @@ PLATFORMS
 
 DEPENDENCIES
   cancan (~> 1.6)
-  capistrano
-  capistrano-maintenance
+  capistrano (~> 2.15)
+  capistrano-maintenance (~> 0.0.4)
   capybara
   coffee-rails (~> 4.0.0)
   database_cleaner

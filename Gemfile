@@ -22,8 +22,8 @@ gem "newrelic_rpm"
 gem "uglifier"
 
 group :development do
-  gem "capistrano"
-  gem "capistrano-maintenance"
+  gem "capistrano", "~> 2.15"
+  gem "capistrano-maintenance", "~> 0.0.4"
   gem "quiet_assets"
 end
 
