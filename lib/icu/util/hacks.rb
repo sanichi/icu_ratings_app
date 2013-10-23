@@ -9,7 +9,7 @@ module ICU
       # http://stackoverflow.com/questions/7477517/how-to-add-to-the-extensions-for-an-existing-type-in-rubys-mimetypes/7477635.
       def self.fix_mime_types
         orig_stderr = $stderr
-        $stderr = File.new('/dev/null', 'w')
+        $stderr = ::File.new('/dev/null', 'w')
 
         text_plain = MIME::Types['text/plain'].first.to_hash
         text_plain['Extensions'].push('tab')
