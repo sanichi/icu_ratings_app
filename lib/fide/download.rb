@@ -42,7 +42,7 @@ module FIDE
 
       def read_and_parse
         # Get the data out of the ZIP file.
-        zip = Zip::ZipFile.open(@zip.path)
+        zip = Zip::File.open(@zip.path)
         raise SyncError.new("zip file has no entry for #{@file}") unless zip.find_entry(@file)
         data = zip.read(@file)
         raise SyncError.new("unexpected zip data encoding (#{data.encoding.name})") unless data.encoding.name.match(/^ASCII-8BIT|US-ASCII$/)
@@ -199,7 +199,7 @@ module FIDE
 
       def read_parse_and_save
         # Get the data out of the ZIP file.
-        zip = Zip::ZipFile.open(@zip.path)
+        zip = Zip::File.open(@zip.path)
         raise SyncError.new("zip file has no entry for #{@file}") unless zip.find_entry(@file)
         data = zip.read(@file)
         raise SyncError.new("unexpected zip data encoding (#{data.encoding.name})") unless data.encoding.name.match(/^ASCII-8BIT|US-ASCII$/)
