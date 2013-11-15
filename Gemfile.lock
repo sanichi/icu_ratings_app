@@ -76,17 +76,17 @@ GEM
       activesupport (>= 3.1, < 4.1)
       haml (>= 3.1, < 4.1)
       railties (>= 3.1, < 4.1)
-    highline (1.6.19)
+    highline (1.6.20)
     hike (1.2.3)
     i18n (0.6.5)
-    icu_name (1.2.2)
-    icu_ratings (1.8.0)
-    icu_tournament (1.9.1)
+    icu_name (1.2.3)
+    icu_ratings (1.8.2)
+    icu_tournament (1.9.3)
       dbf
       icu_name
       icu_utils
       rubyzip
-    icu_utils (1.0.1)
+    icu_utils (1.1.1)
     jquery-rails (3.0.4)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
