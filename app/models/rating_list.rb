@@ -75,6 +75,10 @@ class RatingList < ActiveRecord::Base
     RatingList.unscoped.where("date < ?", date).order(date: :desc).limit(1).first
   end
 
+  def self.last_list
+    unscoped.order(date: :desc).first
+  end
+
   private
 
   def publish_list

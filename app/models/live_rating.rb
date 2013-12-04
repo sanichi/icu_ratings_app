@@ -5,8 +5,10 @@
 #  id              :integer(4)  not null, primary key
 #  icu_id          :integer(4)
 #  rating          :integer(2)
+#  full            :boolean     default(FALSE)
+#  last_rating     :integer(2)
+#  last_full       :boolean     default(FALSE)
 #  games           :integer(2)
-#  full            :boolean(1)  default(FALSE)
 #
 
 class LiveRating < ActiveRecord::Base
@@ -16,8 +18,10 @@ class LiveRating < ActiveRecord::Base
 
   validates :icu_id, numericality: { only_integer: true, greater_than_or_equal: 0 }, uniqueness: true
   validates :rating, numericality: { only_integer: true }
+  validates :last_rating, numericality: { only_integer: true }, allow_nil: true
   validates :games, numericality: { only_integer: true, greater_than_or_equal: 0 }
   validates :full, inclusion: { in: [true, false] }
+  validates :last_full, inclusion: { in: [true, false] }, allow_nil: true
 
   default_scope -> { includes(:icu_player).joins(:icu_player).order("rating DESC, icu_players.last_name") }
 
@@ -39,17 +43,21 @@ class LiveRating < ActiveRecord::Base
 
   def self.recalculate
     icu_ids = get_subscriptions
+    last_list = RatingList.last_list
     tournament_ratings = get_tournament_ratings(icu_ids)
+    published_ratings = get_published_ratings(last_list)
     legacy_ratings = get_legacy_ratings(icu_ids.reject{ |id| tournament_ratings[id] })
-    recent_games = get_recent_games(tournament_ratings.keys)
+    recent_games = get_recent_games(tournament_ratings.keys, last_list)
     unscoped.delete_all
     count = 0
     icu_ids.each do |icu_id|
+      old = published_ratings[icu_id]
+      attrs = { icu_id: icu_id, last_rating: old.try(:rating), last_full: old.try(:full) }
       if player = tournament_ratings[icu_id]
-        create(icu_id: icu_id, rating: player.new_rating, full: player.new_full, games: recent_games[icu_id])
+        create(attrs.merge(rating: player.new_rating, full: player.new_full, games: recent_games[icu_id]))
         count += 1
       elsif rating = legacy_ratings[icu_id]
-        create(icu_id: icu_id, rating: rating.rating, full: rating.full, games: 0)
+        create(attrs.merge(rating: rating.rating, full: rating.full, games: 0))
         count += 1
       end
     end
@@ -58,6 +66,10 @@ class LiveRating < ActiveRecord::Base
 
   def type
     full ? "full" : "provisional"
+  end
+
+  def last_type
+    last_full ? "full" : "provisional"
   end
 
   private
@@ -75,24 +87,27 @@ class LiveRating < ActiveRecord::Base
     Player.get_last_ratings(icu_ids)
   end
 
+  def self.get_published_ratings(last_list)
+    return {} unless last_list
+    IcuRating.unscoped.where(list: last_list.date).each_with_object({}) do |rating, hash|
+      hash[rating.icu_id] = rating
+    end
+  end
+
   # Adapted from RatingList#get_legacy_ratings.
   def self.get_legacy_ratings(icu_ids)
     OldRating.get_ratings(icu_ids)
   end
 
   # Returns a hash whose default value for missing keys is zero.
-  def self.get_recent_games(icu_ids)
-    rorder = last_tournament_rorder
+  def self.get_recent_games(icu_ids, last_list)
+    rorder = last_tournament_rorder(last_list)
     Player.get_recent_games(icu_ids, rorder)
   end
 
   # Returns the rating order number of the last tournament of the last rating list.
-  def self.last_tournament_rorder
-    rorder = 0
-    if list = RatingList.unscoped.order(date: :desc).first
-      tournament = Tournament.get_last_rated(list.tournament_cut_off)
-      rorder = tournament.rorder
-    end
-    rorder
+  def self.last_tournament_rorder(last_list)
+    return 0 unless last_list
+    Tournament.get_last_rated(last_list.tournament_cut_off).rorder
   end
 end

@@ -3,11 +3,13 @@
     %th Player
     - if @show_id
       %th ID
-    %th Rtng
-    %th Gms
+    - if @show_last
+      %th= year_month(@last_list.date, "mmm-yy")
+    %th Live
+    %th G
     %th Fed
     %th Club
-  - width = 5 + (@show_id ? 1 : 0)
+  - width = 5 + (@show_id ? 1 : 0) + (@show_last ? 1 : 0)
   - if @live_ratings.count == 0
     %tr
       %td{colspan: width, class: "centered"} No matches
@@ -19,8 +21,13 @@
         %td{title: r.icu_id}= link_to_if can?(:their_home, ::Pages::MyHome), r.icu_player.name, their_home_path(id: r.icu_id)
         - if @show_id
           %td{class: "righted"}= r.icu_id
-        %td{class: "#{r.type}"}= r.rating
-        %td= r.games
+        - if @show_last
+          %td{class: "centered #{r.last_type}"}= r.last_rating
+        %td
+          %span{class: "#{r.type}"}= r.rating
+          - if r.last_rating && r.games > 0
+            = "(#{sign(r.rating - r.last_rating)})"
+        %td{class: "righted"}= r.games
         = render "shared/rowspan", rowspan: @live_ratings.rowspan(i, fed)
         = render "shared/rowspan", rowspan: @live_ratings.rowspan(i, club)
   - if @live_ratings.multi_page

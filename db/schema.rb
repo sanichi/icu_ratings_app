@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131202144402) do
+ActiveRecord::Schema.define(version: 20131204093853) do
 
   create_table "articles", force: true do |t|
     t.string   "headline"
@@ -133,9 +133,11 @@ ActiveRecord::Schema.define(version: 20131202144402) do
 
   create_table "live_ratings", force: true do |t|
     t.integer "icu_id"
-    t.integer "rating", limit: 2
-    t.integer "games",  limit: 2
-    t.boolean "full",             default: false
+    t.integer "rating",      limit: 2
+    t.integer "games",       limit: 2
+    t.boolean "full",                  default: false
+    t.integer "last_rating", limit: 2
+    t.boolean "last_full",             default: false
   end
 
   add_index "live_ratings", ["icu_id"], name: "index_live_ratings_on_icu_id", unique: true, using: :btree

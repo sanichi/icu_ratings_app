@@ -25,6 +25,10 @@
       %td= select_tag :type, options_for_select(rating_type_menu("Any"), params[:type]), onchange: handleRemote
   %table{class: "invisible"}
     %tr
+      - if @last_list
+        %th
+          = label_tag :show_last, "show #{year_month(@last_list.date, "mmm-yy")} ratings"
+          = check_box_tag :show_last, "true", params[:show_last], onchange: handleRemote
       %th
         = label_tag :show_id, "show ICU ID"
         = check_box_tag :show_id, "true", params[:show_id], onchange: handleRemote
