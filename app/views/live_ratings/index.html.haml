@@ -23,8 +23,8 @@
       but will reappear if they subsequently resubscribe.
     %dt When is the list recalculated?
     %dd
-      Whenever any tournament is rated (for the first time or due to corrections) or
-      whenever the last rating list is published (for the first time or due to corrections).
+      Whenever any tournament is rated (for the first time or due to corrections)
+      or whenever the lastest rating list is published or republished.
       Please be patient if you've just renewed your subscription and are not yet on the live list,
       you will be as soon as one of the above happens.
     %dt How live is live?
@@ -45,10 +45,10 @@
         = precede("(") do
           = succeed(").") do
             = year_month(@last_list.date, "mmm-yy")
-        If it shows zero for a player, then that player should have the same live rating as
-        last published rating (assuming they have one - they might not be if they weren't
-        a member at the time the list was published).
-    %dt How can I see players ICU IDs?
+        If it shows zero for a player, then that player should have the same live and
+        last published ratings (assuming they have the latter - they might not if they
+        weren't a member at the time the list was published).
+    %dt How can I see player ICU IDs?
     %dd
       Check the
       %em show ICU ID
