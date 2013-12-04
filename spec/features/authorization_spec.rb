@@ -41,6 +41,7 @@ describe "authorized links for" do
         "/icu_ratings"             => %w[admin officer reporter member guest],
         "/icu_ratings/war"         => %w[admin officer reporter member guest],
         "/icu_ratings/juniors"     => %w[admin officer reporter member guest],
+        "/live_ratings"            => %w[admin officer reporter member guest],
         "/my_home"                 => %w[admin officer reporter member],
         "/overview"                => %w[admin officer reporter],
         "/system_info"             => %w[admin],

@@ -197,7 +197,9 @@ class Player < ActiveRecord::Base
   # Get multiple players from their last rated tournaments prior to a given rating order number.
   # Return as a hash from icu_id number to Player instance. For more ideas on how to do this, see
   # http://stackoverflow.com/questions/121387/fetch-the-row-which-has-the-max-value-for-a-column.
-  def self.get_last_ratings(icu_ids, rorder)
+  def self.get_last_ratings(icu_ids, rorder=nil)
+    hash = {}
+    return hash if icu_ids.empty?
     sql = <<SQL
 SELECT
   p.*
@@ -214,8 +216,7 @@ FROM
     WHERE
       p.icu_id IN (#{icu_ids.join(',')}) AND
       p.tournament_id = t.id AND
-      t.stage = "rated" AND
-      t.rorder < #{rorder}
+      t.stage = "rated"_RORDER_
     GROUP BY
       p.icu_id
   ) x
@@ -224,7 +225,18 @@ WHERE
   t.rorder = x.rorder AND
   p.icu_id = x.icu_id
 SQL
-    find_by_sql(sql).inject({}){ |h, p| h[p.icu_id] = p; h }
+    sql.sub!(/_RORDER_/, rorder ? " AND t.rorder < #{rorder}" : "")
+    find_by_sql(sql).inject(hash){ |h, p| h[p.icu_id] = p; h }
+  end
+
+  # Get counts of number of games for given IDs after a given tournament and return as a hash.
+  def self.get_recent_games(icu_ids, rorder)
+    games = Hash.new(0)
+    return games if icu_ids.empty?
+    players = joins(:tournament).where("tournaments.rorder > ?", rorder).where("tournaments.stage = 'rated'").where(icu_id: icu_ids)
+    players.each_with_object(games) do |player, hash|
+      hash[player.icu_id] += player.new_games - player.old_games
+    end
   end
 
   # Get a player's most recent tournaments or their biggest gains or losses.

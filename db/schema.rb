@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130403204420) do
+ActiveRecord::Schema.define(version: 20131202144402) do
 
   create_table "articles", force: true do |t|
     t.string   "headline"
@@ -130,6 +130,15 @@ ActiveRecord::Schema.define(version: 20130403204420) do
   add_index "icu_ratings", ["icu_id"], name: "index_icu_ratings_on_icu_id", using: :btree
   add_index "icu_ratings", ["list", "icu_id"], name: "index_icu_ratings_on_list_and_icu_id", unique: true, using: :btree
   add_index "icu_ratings", ["list"], name: "index_icu_ratings_on_list", using: :btree
+
+  create_table "live_ratings", force: true do |t|
+    t.integer "icu_id"
+    t.integer "rating", limit: 2
+    t.integer "games",  limit: 2
+    t.boolean "full",             default: false
+  end
+
+  add_index "live_ratings", ["icu_id"], name: "index_live_ratings_on_icu_id", unique: true, using: :btree
 
   create_table "logins", force: true do |t|
     t.integer  "user_id"

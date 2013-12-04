@@ -625,6 +625,9 @@ describe "Tournament" do
       tests = %w[isle_of_man_2007.csv junior_championships_u19_2010.txt kilbunny_masters_2011.tab]
       load_icu_players_for(tests)
       load_old_ratings
+      @subs = [159, 456, 1350, 6897].map do |icu_id| # add some subs to enable live ratings (choose players in tournaments.yml)
+        FactoryGirl.create(:subscription, icu_id: icu_id, season: nil, category: "lifetime", pay_date: nil)
+      end
       @u = login("officer")
       @t1, @t2, @t3 = tests.map do |f|
         t = test_tournament(f, @u.id)
@@ -637,6 +640,7 @@ describe "Tournament" do
     end
 
     it "should be available for the next for rating (unless it's the last)" do
+      LiveRating.unscoped.count.should == 0
       Tournament.next_for_rating.should == @t1
       visit "/admin/tournaments/#{@t1.id}"
       page.should have_link(@lnk)
@@ -646,6 +650,7 @@ describe "Tournament" do
       page.should have_no_link(@lnk)
       visit "/admin/tournaments/#{@t1.id}"
       page.first(:link, "Rate").click
+      LiveRating.unscoped.count.should == 0
       Tournament.next_for_rating.should == @t2
       visit "/admin/tournaments/#{@t1.id}"
       page.should have_no_link(@lnk)
@@ -655,6 +660,7 @@ describe "Tournament" do
       page.should have_no_link(@lnk)
       visit "/admin/tournaments/#{@t2.id}"
       page.first(:link, "Rate").click
+      LiveRating.unscoped.count.should == 0
       Tournament.next_for_rating.should == @t3
       visit "/admin/tournaments/#{@t1.id}"
       page.should have_no_link(@lnk)
@@ -663,6 +669,7 @@ describe "Tournament" do
       visit "/admin/tournaments/#{@t3.id}"
       page.should have_no_link(@lnk)          # not when it's the last tournament for rating
       page.first(:link, "Rate").click         # but it still has the Rate button (for rating one tournament)
+      LiveRating.unscoped.count.should == @subs.size
       visit "/admin/tournaments/#{@t1.id}"
       page.should have_no_link(@lnk)
       visit "/admin/tournaments/#{@t2.id}"
@@ -687,6 +694,9 @@ describe "Tournament" do
       data = ""
       lambda { File.open(RatingRun.flag) { |f| data = f.read } }.should_not raise_error
       data.should == rr.id.to_s
+      LiveRating.unscoped.count.should == 0
+      rr.process
+      LiveRating.unscoped.count.should == @subs.size
     end
   end
 end

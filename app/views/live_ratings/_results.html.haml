@@ -1,0 +1,28 @@
+%table
+  %tr
+    %th Player
+    - if @show_id
+      %th ID
+    %th Rtng
+    %th Gms
+    %th Fed
+    %th Club
+  - width = 5 + (@show_id ? 1 : 0)
+  - if @live_ratings.count == 0
+    %tr
+      %td{colspan: width, class: "centered"} No matches
+  - else
+    - fed    = Proc.new { |r| r.icu_player ? r.icu_player.fed.to_s : "" }
+    - club   = Proc.new { |r| r.icu_player ? r.icu_player.club.to_s : "" }
+    - @live_ratings.matches.each_with_index do |r, i|
+      %tr
+        %td{title: r.icu_id}= r.icu_player.name
+        - if @show_id
+          %td{class: "righted"}= r.icu_id
+        %td{class: "#{r.type}"}= r.rating
+        %td= r.games
+        = render "shared/rowspan", rowspan: @live_ratings.rowspan(i, fed)
+        = render "shared/rowspan", rowspan: @live_ratings.rowspan(i, club)
+  - if @live_ratings.multi_page
+    %tr
+      %td{colspan: width, class: "centered"}= pagination_links(@live_ratings)

@@ -1,0 +1,49 @@
+.header
+  %span= @page_title = "Live ICU Ratings"
+
+= render "form"
+
+#icu_rating_results.turbaned
+  = render "results"
+
+#help
+  %dl
+    %dt What ratings are these?
+    %dd
+      These are the latest available ratings for all current members. The
+      = link_to "official rating lists", icu_ratings_path
+      are snapshots of members' ratings at the time of their publication.
+      This list presents a more up to date view between the publication months (September, January and May).
+    %dt Who counts as a current member?
+    %dd
+      Membership is due in September at the start of each new season. However, for the purposes
+      of this list, players who were members in the previous season will be counted as members
+      of the new season up to the end of the year. After January 1st, all players who have neglected
+      to renew their subscription will disappear from this list when it next gets recalculated,
+      but will reappear if they subsequently resubscribe.
+    %dt When is the list recalculated?
+    %dd
+      Whenever any tournament is rated (for the first time) or rerated (due to corrections).
+      Please be patient if you've just renewed your subscription and are not yet on the list,
+      you will be as soon as the next tournament is rated.
+    %dt How live is live?
+    %dd
+      Don't expect the list to update as soon as you shake hands with your opponent. Several
+      things need to happen first: the tournament has to finish, the controller has to
+      prepare and submit a report and the rating officer has to check the report, fix any
+      problems and rate the tournament. Ideally it should take only a few hours from the end
+      of the tournament but in practice it can take a day or two and sometimes longer.
+      The people who run tournaments and work for the ICU are volunteers so please be patient.
+    %dt
+      What is the
+      %em Gms
+      column?
+    %dd
+      The number of games played since the last official rating list. If it shows zero for a player,
+      then that player should have the same live rating as on the last official list (assuming they're
+      in it - they might not be if they weren't members at the time it was published).
+    %dt How can I see players ICU IDs?
+    %dd
+      Check the
+      %em show ICU ID
+      option or hover your mouse over the player's name.

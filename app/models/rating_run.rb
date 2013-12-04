@@ -67,7 +67,9 @@ class RatingRun < ActiveRecord::Base
       r+= 1
       raise ICU::Error.new("expected to finish just before #{t.name}") if n > m && t
     end
-    add("Finished", false)
+    add("Recalculating live ratings")
+    count = LiveRating.recalculate
+    add("Finished (live ratings: #{count})", false)
     finish
   rescue => e
     Failure.record(e) unless e.instance_of?(ICU::Error)

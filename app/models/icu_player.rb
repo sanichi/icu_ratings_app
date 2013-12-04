@@ -30,6 +30,7 @@ class IcuPlayer < ActiveRecord::Base
   has_many   :players, foreign_key: "icu_id"
   has_many   :users, foreign_key: "icu_id"
   has_many   :icu_ratings, foreign_key: "icu_id"
+  has_one    :live_rating, foreign_key: "icu_id"
   has_one    :fide_player, foreign_key: "icu_id"
   has_one    :old_rating, foreign_key: "icu_id"
   has_many   :old_rating_histories

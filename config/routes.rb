@@ -17,6 +17,7 @@ Ratings::Application.routes.draw do
   resources :icu_ratings,  only: [:index, :show] do
     get :war, :juniors, :improvers, on: :collection
   end
+  resources :live_ratings, only: [:index]
   resources :players,      only: [:show]
   resources :sessions,     only: [:create]
   resources :tournaments,  only: [:index, :show]

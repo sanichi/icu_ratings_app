@@ -444,6 +444,7 @@ class Tournament < ActiveRecord::Base
   # Rate this tournament. Returning an error message or nil.
   def rate
     rate!
+    update_live_ratings
   rescue => e
     Failure.record(e, 16) unless e.instance_of?(ICU::Error)
     e.message
@@ -800,6 +801,18 @@ class Tournament < ActiveRecord::Base
     update_column_if_changed(:old_last_tournament_id, last_tournament_id)
     update_column_if_changed(:locked, true)
     reset_signatures(true)
+  end
+  
+  # Update live ratings if appropriate.
+  def update_live_ratings
+    return unless last_rated?
+    LiveRating.recalculate
+  end
+
+  # Is this the last rated tournament?
+  def last_rated?
+    return false unless stage == "rated" && rorder
+    Tournament.where("rorder > #{rorder}").count == 0
   end
 
   # Set the last and current signatures for the tournament and each player after the tournament has been rated,

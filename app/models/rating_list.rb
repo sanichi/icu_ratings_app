@@ -89,7 +89,7 @@ class RatingList < ActiveRecord::Base
     legacy, tournaments = 0, 0
     changes = Hash.new { |h, k| h[k] = [] }
     no_rating, creates, remains, updates, deletes_no_rat, deletes_no_sub = [], [], [], [], [], []
-    subs.keys.each do |icu_id|
+    icu_ids.each do |icu_id|
       rating, full = nil, nil
       if latest = tournament_ratings[icu_id]
         rating = latest.new_rating
