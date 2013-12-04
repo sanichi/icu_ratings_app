@@ -16,7 +16,7 @@
     - club   = Proc.new { |r| r.icu_player ? r.icu_player.club.to_s : "" }
     - @live_ratings.matches.each_with_index do |r, i|
       %tr
-        %td{title: r.icu_id}= r.icu_player.name
+        %td{title: r.icu_id}= link_to_if can?(:their_home, ::Pages::MyHome), r.icu_player.name, their_home_path(id: r.icu_id)
         - if @show_id
           %td{class: "righted"}= r.icu_id
         %td{class: "#{r.type}"}= r.rating
