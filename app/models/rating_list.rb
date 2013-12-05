@@ -79,6 +79,10 @@ class RatingList < ActiveRecord::Base
     unscoped.order(date: :desc).first
   end
 
+  def last_list?
+    RatingList.last_list.id == id
+  end
+
   private
 
   def publish_list
@@ -167,6 +171,14 @@ class RatingList < ActiveRecord::Base
     unless changes.empty?
       report_header "Change statistics"
       changes.keys.sort.each { |bucket| report_examples(changes[bucket], bucket) }
+    end
+    
+    if last_list?
+      t3 = Time.now      
+      report_header "Starting live rating recalculation at #{t1.to_s(:tbm)}"
+      count = LiveRating.recalculate
+      t4 = Time.now
+      report_item "recalculated #{count} live ratings in #{((t4 - t3) * 1000.0).round} ms"
     end
   end
 

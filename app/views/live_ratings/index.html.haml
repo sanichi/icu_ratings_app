@@ -18,7 +18,7 @@
     %dd
       Membership is due in September at the start of each new season. However, for the purposes
       of this list, players who were members in the previous season will be counted as members
-      of the new season up to the end of the year. After January 1st, all players who have neglected
+      of the new season up to the end of the year. After December 31st, all players who have neglected
       to renew their subscription will disappear from this list when it next gets recalculated,
       but will reappear if they subsequently resubscribe.
     %dt When is the list recalculated?
@@ -44,7 +44,7 @@
         The number of games played since the last published rating list
         = precede("(") do
           = succeed(").") do
-            = year_month(@last_list.date, "mmm-yy")
+            = year_month(@last_list.date, "mmm yyyy")
         If it shows zero for a player, then that player should have the same live and
         last published ratings (assuming they have the latter - they might not if they
         weren't a member at the time the list was published).
