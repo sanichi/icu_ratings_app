@@ -48,20 +48,47 @@ class LiveRating < ActiveRecord::Base
     published_ratings = get_published_ratings(last_list)
     legacy_ratings = get_legacy_ratings(icu_ids.reject{ |id| tournament_ratings[id] })
     recent_games = get_recent_games(tournament_ratings.keys, last_list)
-    unscoped.delete_all
-    count = 0
+    current = unscoped.to_a.each_with_object({}) { |live_rating, hash| hash[live_rating.icu_id] = live_rating }
+    done = []
     icu_ids.each do |icu_id|
       old = published_ratings[icu_id]
-      attrs = { icu_id: icu_id, last_rating: old.try(:rating), last_full: old.try(:full) }
-      if player = tournament_ratings[icu_id]
-        create(attrs.merge(rating: player.new_rating, full: player.new_full, games: recent_games[icu_id]))
-        count += 1
-      elsif rating = legacy_ratings[icu_id]
-        create(attrs.merge(rating: rating.rating, full: rating.full, games: 0))
-        count += 1
+      if live_rating = current[icu_id]
+        attrs = {}
+        attrs[:last_rating] = old.try(:rating)  unless live_rating.last_rating == old.try(:rating)
+        attrs[:last_full]   = old.try(:full)    unless live_rating.last_full   == old.try(:full)
+        if player = tournament_ratings[icu_id]
+          attrs[:rating] = player.new_rating    unless live_rating.rating == player.new_rating
+          attrs[:full]   = player.new_full      unless live_rating.full   == player.new_full
+          attrs[:games]  = recent_games[icu_id] unless live_rating.games  == recent_games[icu_id]
+        elsif rating = legacy_ratings[icu_id]
+          attrs[:rating] = rating.rating        unless live_rating.rating == rating.rating
+          attrs[:full]   = rating.full          unless live_rating.full   == rating.full
+          attrs[:games]  = 0                    unless live_rating.games  == 0
+        else
+          attrs = nil
+        end
+        if attrs
+          live_rating.update(attrs) if attrs.size > 0
+          done.push icu_id
+        end       
+      else
+        attrs = { icu_id: icu_id, last_rating: old.try(:rating), last_full: old.try(:full) }
+        if player = tournament_ratings[icu_id]
+          attrs.merge!(rating: player.new_rating, full: player.new_full, games: recent_games[icu_id])
+        elsif rating = legacy_ratings[icu_id]
+          attrs.merge!(rating: rating.rating, full: rating.full, games: 0)
+        else
+          attrs = nil
+        end
+        if attrs
+          create(attrs)
+          done.push icu_id
+        end
       end
     end
-    count
+    to_delete = current.keys - done
+    unscoped.where("icu_id IN (?)", to_delete).delete_all unless to_delete.empty?
+    done.count
   end
 
   def type

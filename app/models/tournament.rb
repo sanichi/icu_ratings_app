@@ -445,6 +445,7 @@ class Tournament < ActiveRecord::Base
   def rate
     rate!
     update_live_ratings
+    nil
   rescue => e
     Failure.record(e, 16) unless e.instance_of?(ICU::Error)
     e.message
@@ -460,7 +461,6 @@ class Tournament < ActiveRecord::Base
       update_player_ratings(icut)
       update_tournament_after_rating
     end
-    nil
   end
 
   # Check for any changes before Tournament#show.
