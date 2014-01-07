@@ -43,7 +43,7 @@ class LiveRating < ActiveRecord::Base
 
   def self.recalculate
     icu_ids = get_subscriptions
-    last_list = RatingList.last_list
+    last_list = get_last_list
     tournament_ratings = get_tournament_ratings(icu_ids)
     published_ratings = get_published_ratings(last_list)
     legacy_ratings = get_legacy_ratings(icu_ids.reject{ |id| tournament_ratings[id] })
@@ -107,6 +107,12 @@ class LiveRating < ActiveRecord::Base
     season = Subscription.season(date)
     last_season = Subscription.last_season(date) if date.month >= 9 && date.month <= 12
     Subscription.get_subs(season, date, last_season).map(&:icu_id)
+  end
+  
+  # Don't use RatingList.last_list as there might be an empty, as yet unpublished list sitting around.
+  def self.get_last_list
+    last_date = IcuRating.maximum(:list)
+    RatingList.find_by(date: last_date)
   end
 
   # Adapted from RatingList#get_tournament_ratings.
