@@ -99,6 +99,12 @@ class LiveRating < ActiveRecord::Base
     last_full ? "full" : "provisional"
   end
 
+  # Don't use RatingList.last_list as there might be an empty, as yet unpublished list sitting around.
+  def self.get_last_list
+    last_date = IcuRating.maximum(:list)
+    RatingList.find_by(date: last_date)
+  end
+
   private
 
   # Adapted from RatingList#get_subscriptions.
@@ -109,12 +115,6 @@ class LiveRating < ActiveRecord::Base
     Subscription.get_subs(season, date, last_season).map(&:icu_id)
   end
   
-  # Don't use RatingList.last_list as there might be an empty, as yet unpublished list sitting around.
-  def self.get_last_list
-    last_date = IcuRating.maximum(:list)
-    RatingList.find_by(date: last_date)
-  end
-
   # Adapted from RatingList#get_tournament_ratings.
   def self.get_tournament_ratings(icu_ids)
     Player.get_last_ratings(icu_ids)
