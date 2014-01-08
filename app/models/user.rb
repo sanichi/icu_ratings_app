@@ -83,7 +83,7 @@ class User < ActiveRecord::Base
   def login_event(ip, admin, problem)
     logins.create(ip: ip, problem: problem.to_s, role: role) unless admin
     err = case problem
-      when :expiry   then "Sorry, your ICU membership expired on #{expiry}"
+      when :expiry   then "Sorry, account suspended #{expiry} due to lapsed membership"
       when :status   then "Sorry, your account has not yet been activated (see Help)"
       when :password then "Invalid email or password"
     end

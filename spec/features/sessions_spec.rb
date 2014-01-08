@@ -37,7 +37,7 @@ describe "Sessions" do
       page.fill_in "Password", with: @loser.password
       click_button "Log in"
       page.should have_title("Log in")
-      page.should have_selector("span.alert", text: /membership expired/i)
+      page.should have_selector("span.alert", text: /suspended/i)
       @loser.logins.where(problem: "expiry", role: "member").count.should == 1
     end
 

@@ -139,7 +139,7 @@ describe User do
     it "expiry date" do
       @u.expiry = Date.yesterday
       @u.save
-      lambda { User.authenticate!({ email: @e, password: @p }, @i, false) }.should raise_error(/expir/i)
+      lambda { User.authenticate!({ email: @e, password: @p }, @i, false) }.should raise_error(/(expired|lapsed|suspended)/i)
     end
 
     it "status" do
