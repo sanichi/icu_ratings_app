@@ -21,7 +21,7 @@ getopts($opt, \%opt);
 sub help
 {
     print <<EOH;
-dbf_export [$opt]
+export.pl [$opt]
 export lastest ratings
   -r  rails root directory (default: current directory)
   -e  environment (default: $def{e})
@@ -29,8 +29,8 @@ export lastest ratings
   -f  output directory for file (default: $def{f})
   -h  print this help
 examples:
-  > $0 /Users/mjo/Projects/icu_ratings_app
-  > $0 -e production /var/apps/ratings/current
+  > $0 -r /Users/mjo/Projects/icu_ratings_app
+  > $0 -e production -r /var/apps/ratings/current
   > $0 -e production
 EOH
     exit 0;
@@ -52,13 +52,16 @@ my $root = $opt{r};
 &report_time('start');
 
 # Get the current year and month.
-my ($year, $mon) = &get_year_month();
+my ($year, $mon, $this_season, $last_season) = &get_year_month_season();
 
 # Get a handle to the database.
 my $dbh = &get_dbh();
 
 # Get the player data.
 my $players = &get_players();
+
+# Get the subscription data.
+my $subscriptions = &get_subscriptions();
 
 # Export two types of latest ratings: published and live.
 foreach my $type (qw/published live/)
@@ -81,23 +84,27 @@ foreach my $type (qw/published live/)
 # Helpers.
 #
 
-sub get_year_month
+sub get_year_month_season
 {
     my ($sec, $min, $hour, $day, $mon, $year) = localtime;
-    ($year) = $year =~ /(\d\d)$/;
-    $mon = qw/jan feb mar apr may jun jul aug sep oct nov dec/[$mon];
-    die "invalid year ($year) or month ($mon)" unless $year =~ /^\d\d$/ && $mon =~ /^[a-z]{3}$/;
-    print "year/month: $year/$mon\n";
-    ($year, $mon);
+    my ($yr) = substr($year, -2);
+    my $mn = qw/jan feb mar apr may jun jul aug sep oct nov dec/[$mon];
+    die "invalid year ($yr) or month ($mn)" unless $yr =~ /^\d\d$/ && $mn =~ /^[a-z]{3}$/;
+    print "year/month: $yr/$mn\n";
+    $year+= 1900;
+    $year-- if $mon < 8;
+    my @seasons = map sprintf('%s-%s', $year - $_, substr($year - $_ + 1, -2)), (0, 1);
+    print "this seasons: $seasons[0]\n";
+    print "last seasons: $seasons[1]\n";
+    ($yr, $mn, @seasons);
 }
 
 sub report_time
 {
     my ($desc) = @_;
     my ($sec, $min, $hour, $day) = localtime;
-    printf "%s time: %-02d %-02d:%-02d:%-02d\n", $desc, $day, $hour, $min, $sec;
+    printf "%s time: %02d %02d:%02d:%02d\n", $desc, $day, $hour, $min, $sec;
 }
-
 
 sub get_dbh
 {
@@ -146,6 +153,57 @@ EOS
     $players->{$_->{id}} = $_ for @{$data};
     printf "%-5d players\n", scalar(keys %{$players});
     $players;
+}
+
+sub get_subscriptions
+{
+    my $sql = <<EOS;
+SELECT
+  icu_id,
+  season,
+  category
+FROM
+  subscriptions
+WHERE
+  season IN ('$this_season', '$last_season') OR
+  category = 'lifetime'
+EOS
+    my $data = eval { $dbh->selectall_arrayref($sql, { Slice => {} }) };
+    die sprintf("subscriptions database query failed: %s\n", $@ || 'no reason') unless 'ARRAY' eq ref $data;
+
+    my $subscriptions = {};
+    foreach my $hash (@{$data})
+    {
+        my $icu_id   = $hash->{icu_id};
+        my $season   = $hash->{season};
+        my $category = $hash->{category};
+
+        my $score = 0;
+        if ($category eq 'lifetime')
+        {
+            $score = 3;
+        }
+        elsif ($season eq $this_season)
+        {
+            $score = 2;
+        }
+        elsif ($season eq $last_season)
+        {
+            $score = 1;
+        }
+
+        if (!$subscriptions->{$icu_id} || $score > $subscriptions->{$icu_id})
+        {
+            $subscriptions->{$icu_id} = $score;
+        }
+    }
+    foreach my $id (keys %{$subscriptions})
+    {
+        my $sub = $subscriptions->{$id};
+        $subscriptions->{$id} = $sub == 3 ? 'L' : ($sub == 2 ? 'S' : ($sub == 1 ? 'P' : 'U'));
+    }
+    printf "%-5d subscriptions\n", scalar(keys %{$subscriptions});
+    $subscriptions;
 }
 
 sub get_ratings
@@ -208,12 +266,13 @@ sub export_sp
         my $player = $players->{$id};
         my $arr = [];
         my $dob = "$3-$2-$1" if $player->{dob} =~ /^(\d{4})-(\d\d)-(\d\d)$/;
-        push @{$arr}, $player->{id};
+        my $club = join(' ', grep $_, ($subscriptions->{$id} || 'U', $player->{club}));
+        push @{$arr}, $id;
         push @{$arr}, substr($player->{first_name}, 0, 50);
         push @{$arr}, substr($player->{last_name}, 0, 50);
         push @{$arr}, $ratings->{$id} || 0;
         push @{$arr}, $player->{gender} || '';
-        push @{$arr}, substr($player->{club}, 0, 25);
+        push @{$arr}, substr($club, 0, 25);
         push @{$arr}, $dob || '';
         $dbf->appendrow_arrayref($arr);
     }
@@ -291,16 +350,17 @@ sub export_sm
         push @data, $year;
 
         # Add gender (if female) and club (if there is one) but replace any occurrences of "w" in club.
-        my $flag = '';
-        $flag = 'w' if $player->{gender} eq 'F';
+        # Also add a something to indicate subscription (lifetime, this season or last season).
+        my $flag = 'w' if $player->{gender} eq 'F';
+        my $sub = $subscriptions->{$id} || 'U';
         my $club = $player->{club};
         if ($club)
         {
             $club =~ s/W/U/g;
             $club =~ s/w/u/g;
-            $flag = $flag eq 'w' ? "$club $flag" : $club;
         }
-        push @data, $flag;
+        my $flags = join('', grep $_, ($flag, $sub));
+        push @data, join(' ', grep $_, ($flags, $club));
 
         # Append it to the file.
         printf FILE $fmt, @data;
