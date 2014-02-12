@@ -57,6 +57,9 @@ my ($year, $mon, $this_season, $last_season) = &get_year_month_season();
 # Get a handle to the database.
 my $dbh = &get_dbh();
 
+# Get the last tournament in the last rating list.
+my $last_rorder = &get_last_tournament_rorder();
+
 # Get the player data.
 my $players = &get_players();
 
@@ -97,6 +100,31 @@ sub get_year_month_season
     print "this seasons: $seasons[0]\n";
     print "last seasons: $seasons[1]\n";
     ($yr, $mn, @seasons);
+}
+
+sub get_last_tournament_rorder
+{
+    my ($list, $date, $tournament, $sql, $data);
+
+    $sql = 'SELECT max(list) AS last_list FROM icu_ratings';
+    $data = eval { $dbh->selectall_arrayref($sql, { Slice => {} }) };
+    $list = $data->[0]->{last_list};
+    die sprintf("couldn't get last list: %s\n", $@ || 'no reason') unless $list =~ /^20\d\d-\d\d-\d\d$/;
+    print "last list: $list\n";
+
+    $sql = "SELECT tournament_cut_off AS cut_off_date FROM rating_lists WHERE date = '$list'";
+    $data = eval { $dbh->selectall_arrayref($sql, { Slice => {} }) };
+    $date = $data->[0]->{cut_off_date};
+    die sprintf("couldn't get tournament cut-off date for $list list: %s\n", $@ || 'no reason') unless $date =~ /^20\d\d-\d\d-\d\d$/;
+    print "tournament cut-off date: $date\n";
+
+    $sql = "SELECT max(rorder) AS max_rorder FROM tournaments WHERE finish <= '$date' AND stage = 'rated' AND rorder IS NOT NULL";
+    $data = eval { $dbh->selectall_arrayref($sql, { Slice => {} }) };
+    $tournament = $data->[0]->{max_rorder};
+    die sprintf("couldn't get last tournament rating order for cut-off date $date: %s\n", $@ || 'no reason') unless $tournament =~ /^[1-9]\d*$/;
+    print "last tournament rating order number: $tournament\n";
+    
+    $tournament;
 }
 
 sub report_time
@@ -213,7 +241,8 @@ sub get_ratings
     my $ratings = {};
 
     # Get the latest published or live ratings.
-    $sql = $type eq 'published' ? "SELECT icu_id, rating FROM icu_ratings WHERE list >= '2011-09-01' ORDER BY list DESC" : <<EOS;
+    my $rorder_constraint = $type eq 'published' ? "rorder <= $last_rorder" : "rorder IS NOT NULL";
+    $sql = <<EOS;
 SELECT
   icu_id,
   new_rating
@@ -223,13 +252,15 @@ FROM
 WHERE
   tournament_id = tournaments.id AND
   stage = 'rated' AND
-  icu_id IS NOT NULL
+  icu_id IS NOT NULL AND
+  new_rating IS NOT NULL AND
+  $rorder_constraint
 ORDER BY
   rorder DESC
 EOS
     $data = eval { $dbh->selectall_arrayref($sql, { Slice => {} }) };
     die sprintf("$type ratings query failed: %s\n", $@ || 'no reason') unless 'ARRAY' eq ref $data;
-    $ratings->{$_->{icu_id}} ||= $_->{$type eq 'published' ? 'rating' : 'new_rating'} for @{$data};
+    $ratings->{$_->{icu_id}} ||= $_->{new_rating} for @{$data};
     printf "%-5d initial %s ratings\n", scalar(keys %{$ratings}), $type;
 
     # Complete missing ratings from the legacy list.
