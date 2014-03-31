@@ -1,11 +1,6 @@
 = render "rating_calculation"
 = render "player_type"
 %tr
-  %th= t "ratings.new_rating"
+  %th= t "ratings.performance"
   %td{class: "centered"}= @player.new_rating
   %td= explain_new_rating(@player)
-= render "more_info"
-%tr
-  %th= t "ratings.new_games"
-  %td{class: "centered"}= @player.new_games
-  %td= explain_new_games(@player)
