@@ -320,10 +320,10 @@ module FIDE
       note  = $4
       @file = "standard_#{month}#{year}frl_xml.xml"
       @list = check_list("1st #{month} #{year}")
-      raise SyncError.new("no updated date found in note") unless note.match(/Updated:\s+(\d[\d\w\s]+\d)\s*,/i)
+      raise SyncError.new("no updated date found in note") unless note.match(/\((\d[\d\w\s]+\d)\s*,/i)
       updated = Date.parse($1).to_s
-      raise SyncError.new("no file size found in note") unless note.match(/Size:\s+(\d[\d\s]+\d)\s+bytes/i)
-      size = $1.gsub(/\s/, "")
+      raise SyncError.new("no file size found in note") unless note.match(/Sz:\s+(\d[\d\.]+\d)\s+MB/i)
+      size = $1
       @signature = [@link, updated, size].join(", ")
       @time["index download"] = Time.now - @start
     end
