@@ -16,6 +16,7 @@ class AddOldRatingsFromArchive < ActiveRecord::Migration
     {icu_id:  2327, rating: 1389, games: 21, full: true},  # resurrected from former players
     {icu_id:  2404, rating: 1210, games:  6, full: true},
     {icu_id:  3928, rating: 1189, games: 13, full: true},  # resurrected from former players
+    {icu_id:  3712, rating: 1516, games:  4, full: true},  # resurrected from former players
     {icu_id:  3758, rating: 1507, games: 12, full: true},
     {icu_id:  4126, rating:  938, games: 35, full: true},
     {icu_id:  4574, rating: 1232, games: 89, full: true},  # resurrected from former players
