@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe "#get_member" do
   it "should return member details from the main database" do

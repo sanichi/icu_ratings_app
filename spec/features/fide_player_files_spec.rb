@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe "FidePlayerFile" do
   def load_file(file, update=false)

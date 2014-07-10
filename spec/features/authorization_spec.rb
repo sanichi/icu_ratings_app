@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe "authorized links for" do
   %w[guest member reporter officer admin].each do |role|

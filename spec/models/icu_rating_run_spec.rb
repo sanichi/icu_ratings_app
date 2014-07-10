@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe ICU::RatingRun do
   context "basic errors" do

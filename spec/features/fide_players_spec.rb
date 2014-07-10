@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 # Note: these tests are a little fragile because of the need to wait occasionally,
 # to allow things to synchronize. It would be better to find a way to avoid that.

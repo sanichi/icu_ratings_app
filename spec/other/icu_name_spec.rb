@@ -1,5 +1,5 @@
 # encoding: UTF-8
-require 'spec_helper'
+require 'rails_helper'
 
 # Sanity check stuff that is provided by icu_name.
 module ICU

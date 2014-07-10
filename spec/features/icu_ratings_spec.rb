@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe IcuRating do
   describe "list", js: true do

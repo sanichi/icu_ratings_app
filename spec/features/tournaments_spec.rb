@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe "Tournament" do
   def load_tournament(file, arg={})
