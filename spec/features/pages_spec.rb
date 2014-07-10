@@ -17,14 +17,14 @@ describe "Pages" do
         "Rating Officers"       => 2,
         "Website Administrator" => 1,
       }.each_pair do |h, n|
-        page.find("h3", text: h).find(:xpath, "following-sibling::ul[1]").all("li").should have(n).items
+        page.find("h3", text: h).find(:xpath, "following-sibling::ul[1]").all("li").size.should eq n
       end
     end
 
     it "a single admin becomes an officer if there are no officers" do
       @officers.each { |officer| officer.delete }
       visit "/contacts"
-      page.find("h3", text: "Rating Officer").find(:xpath, "following-sibling::ul").all("li").should have(1).items
+      page.find("h3", text: "Rating Officer").find(:xpath, "following-sibling::ul").all("li").size.should eq 1
       page.should have_no_selector("h3", text: "Website Administrator")
     end
   end

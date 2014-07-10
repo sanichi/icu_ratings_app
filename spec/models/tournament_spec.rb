@@ -106,7 +106,7 @@ describe Tournament do
       @t1.rorder.should == 1
       @t1.last_signature.should be_nil
       @t1.curr_signature.should be_nil
-      @t1.locked.should be_false
+      @t1.locked.should be false
 
       # Rate the 1st tournament.
       @t1.rate!
@@ -117,15 +117,15 @@ describe Tournament do
       p.icu_id.should == 159
       p.old_rating.should == 1982
       p.old_games.should == 1111
-      p.old_full.should be_true
+      p.old_full.should be true
       p.last_player_id.should be_nil
       p.k_factor.should == 24
       p.actual_score.should == 2.5
-      p.unrateable.should be_false
+      p.unrateable.should be false
       p.new_rating.should be_within(1).of(2000)
       p.trn_rating.should be_within(1).of(2156)
       p.new_games.should == 1116
-      p.new_full.should be_true
+      p.new_full.should be true
       p.rating_change.should be_within(1).of(18)
       p.bonus.should == 0
       p.expected_score.should be_within(0.0001).of(1.7660)
@@ -138,15 +138,15 @@ describe Tournament do
       p.icu_id.should == 10235
       p.old_rating.should == 1881
       p.old_games.should == 12
-      p.old_full.should be_true
+      p.old_full.should be true
       p.last_player_id.should be_nil
       p.k_factor.should == 40
       p.actual_score.should == 1.5
-      p.unrateable.should be_false
+      p.unrateable.should be false
       p.new_rating.should be_within(1).of(1871)
       p.trn_rating.should be_within(1).of(1842)
       p.new_games.should == 18
-      p.new_full.should be_true
+      p.new_full.should be true
       p.rating_change.should be_within(1).of(-10)
       p.bonus.should == 0
       p.expected_score.should be_within(0.0001).of(1.7566)
@@ -159,15 +159,15 @@ describe Tournament do
       p.icu_id.should == 8453
       p.old_rating.should == 2031
       p.old_games.should be < 20
-      p.old_full.should be_false
+      p.old_full.should be false
       p.last_player_id.should be_nil
       p.k_factor.should be_nil
       p.actual_score.should == 3.5
-      p.unrateable.should be_false
+      p.unrateable.should be false
       p.new_rating.should be_within(1).of(2039)
       p.trn_rating.should be_within(1).of(2039)
       p.new_games.should == p.old_games + 6
-      p.new_full.should be_true
+      p.new_full.should be true
       p.rating_change.should be_within(1).of(8)
       p.bonus.should be_nil
       p.expected_score.should be_within(0.0001).of(3.3911)
@@ -180,15 +180,15 @@ describe Tournament do
       p.icu_id.should == 12376
       p.old_rating.should be_nil
       p.old_games.should == 0
-      p.old_full.should be_false
+      p.old_full.should be false
       p.last_player_id.should be_nil
       p.k_factor.should be_nil
       p.actual_score.should == 3.0
-      p.unrateable.should be_false
+      p.unrateable.should be false
       p.new_rating.should be_within(1).of(2203)
       p.trn_rating.should be_within(1).of(2203)
       p.new_games.should == 6
-      p.new_full.should be_false
+      p.new_full.should be false
       p.rating_change.should == 0
       p.bonus.should be_nil
       p.expected_score.should be_within(0.0001).of(2.9321)
@@ -201,15 +201,15 @@ describe Tournament do
       p.icu_id.should be_nil
       p.old_rating.should be_nil
       p.old_games.should == 0
-      p.old_full.should be_false
+      p.old_full.should be false
       p.last_player_id.should be_nil
       p.k_factor.should be_nil
       p.actual_score.should == 1.5
-      p.unrateable.should be_false
+      p.unrateable.should be false
       p.new_rating.should be_within(1).of(1776)
       p.trn_rating.should be_within(1).of(1776)
       p.new_games.should == 6
-      p.new_full.should be_false
+      p.new_full.should be false
       p.rating_change.should == 0
       p.bonus.should be_nil
       p.expected_score.should be_within(0.0001).of(1.6339)
@@ -222,15 +222,15 @@ describe Tournament do
       p.icu_id.should be_nil
       p.old_rating.should == p.fide_rating
       p.old_games.should == 0
-      p.old_full.should be_false
+      p.old_full.should be false
       p.last_player_id.should be_nil
       p.k_factor.should be_nil
       p.actual_score.should == 4.0
-      p.unrateable.should be_false
+      p.unrateable.should be false
       p.new_rating.should == p.fide_rating
       p.trn_rating.should be_within(1).of(2464)
       p.new_games.should == 0
-      p.new_full.should be_false
+      p.new_full.should be false
       p.rating_change.should == 0
       p.bonus.should be_nil
       p.expected_score.should be_within(0.0001).of(5.0379)
@@ -243,15 +243,15 @@ describe Tournament do
       p.icu_id.should == 1350
       p.old_rating.should == 2192
       p.old_games.should == 329
-      p.old_full.should be_true
+      p.old_full.should be true
       p.last_player_id.should be_nil
       p.k_factor.should == 16
       p.actual_score.should be_nil
-      p.unrateable.should be_false
+      p.unrateable.should be false
       p.new_rating.should == 2192
       p.trn_rating.should be_nil
       p.new_games.should == 329
-      p.new_full.should be_true
+      p.new_full.should be true
       p.rating_change.should == 0
       p.bonus.should be_nil
       p.expected_score.should be_nil
@@ -264,15 +264,15 @@ describe Tournament do
       p.icu_id.should be_nil
       p.old_rating.should be_nil
       p.old_games.should == 0
-      p.old_full.should be_false
+      p.old_full.should be false
       p.last_player_id.should be_nil
       p.k_factor.should be_nil
       p.actual_score.should be_nil
-      p.unrateable.should be_false
+      p.unrateable.should be false
       p.new_rating.should be_nil
       p.trn_rating.should be_nil
       p.new_games.should == 0
-      p.new_full.should be_false
+      p.new_full.should be false
       p.rating_change.should == 0
       p.bonus.should be_nil
       p.expected_score.should be_nil
@@ -285,15 +285,15 @@ describe Tournament do
       p.icu_id.should be_nil
       p.old_rating.should == p.fide_rating
       p.old_games.should == 0
-      p.old_full.should be_false
+      p.old_full.should be false
       p.last_player_id.should be_nil
       p.k_factor.should be_nil
       p.actual_score.should == nil
-      p.unrateable.should be_false
+      p.unrateable.should be false
       p.new_rating.should == p.fide_rating
       p.trn_rating.should be_nil
       p.new_games.should == 0
-      p.new_full.should be_false
+      p.new_full.should be false
       p.rating_change.should == 0
       p.bonus.should be_nil
       p.expected_score.should be_nil
@@ -306,15 +306,15 @@ describe Tournament do
       p.icu_id.should == 12664
       p.old_rating.should == 497
       p.old_games.should == 5
-      p.old_full.should be_false
+      p.old_full.should be false
       p.last_player_id.should be_nil
       p.k_factor.should be_nil
       p.actual_score.should == nil
-      p.unrateable.should be_true
+      p.unrateable.should be true
       p.new_rating.should == p.old_rating
       p.trn_rating.should be_nil
       p.new_games.should == p.old_games
-      p.new_full.should be_false
+      p.new_full.should be false
       p.rating_change.should == 0
       p.bonus.should be_nil
       p.expected_score.should be_nil
@@ -327,15 +327,15 @@ describe Tournament do
       p.icu_id.should == 12833
       p.old_rating.should be_nil
       p.old_games.should == 0
-      p.old_full.should be_false
+      p.old_full.should be false
       p.last_player_id.should be_nil
       p.k_factor.should be_nil
       p.actual_score.should == nil
-      p.unrateable.should be_true
+      p.unrateable.should be true
       p.new_rating.should == p.old_rating
       p.trn_rating.should be_nil
       p.new_games.should == p.old_games
-      p.new_full.should be_false
+      p.new_full.should be false
       p.rating_change.should == 0
       p.bonus.should be_nil
       p.expected_score.should be_nil
@@ -348,15 +348,15 @@ describe Tournament do
       p.icu_id.should be_nil
       p.old_rating.should be_nil
       p.old_games.should == 0
-      p.old_full.should be_false
+      p.old_full.should be false
       p.last_player_id.should be_nil
       p.k_factor.should be_nil
       p.actual_score.should == nil
-      p.unrateable.should be_true
+      p.unrateable.should be true
       p.new_rating.should == p.old_rating
       p.trn_rating.should be_nil
       p.new_games.should == p.old_games
-      p.new_full.should be_false
+      p.new_full.should be false
       p.rating_change.should == 0
       p.bonus.should be_nil
       p.expected_score.should be_nil
@@ -381,7 +381,7 @@ describe Tournament do
       @t1.last_signature.should_not be_nil
       @t1.curr_signature.should == @t1.last_signature
       @t1.last_tournament_id.should == @t1.old_last_tournament_id
-      @t1.locked.should be_true
+      @t1.locked.should be true
 
       # What tournament should be rated next?
       Tournament.next_for_rating.should == @t3
@@ -401,14 +401,14 @@ describe Tournament do
       p3 = @t3.players.find_by_last_name("Cafolla")
       p3.old_rating.should == p1.new_rating
       p3.old_games.should == p1.new_games
-      p3.old_full.should be_true
+      p3.old_full.should be true
       p3.last_player_id.should == p1.id
       p3.k_factor.should == p1.k_factor
       p3.bonus.should == 0
-      p3.unrateable.should be_false
+      p3.unrateable.should be false
       p3.new_rating.should be < p3.old_rating
       p3.new_games.should == p3.old_games + 6
-      p3.new_full.should be_true
+      p3.new_full.should be true
       p3.rating_change.should == p3.new_rating - p3.old_rating
       ((p3.actual_score - p3.expected_score) * p3.k_factor).should be_within(0.5).of(p3.new_rating - p3.old_rating)
 
@@ -417,14 +417,14 @@ describe Tournament do
       p3 = @t3.players.find_by_last_name("O'Riordan")
       p3.old_rating.should == p1.new_rating
       p3.old_games.should == p1.new_games
-      p3.old_full.should be_true
+      p3.old_full.should be true
       p3.last_player_id.should == p1.id
       p3.k_factor.should == p1.k_factor
       p3.bonus.should == 0
-      p3.unrateable.should be_false
+      p3.unrateable.should be false
       p3.new_rating.should be < p3.old_rating
       p3.new_games.should == p3.old_games + 6
-      p3.new_full.should be_true
+      p3.new_full.should be true
       p3.rating_change.should == p3.new_rating - p3.old_rating
       ((p3.actual_score - p3.expected_score) * p3.k_factor).should be_within(0.5).of(p3.new_rating - p3.old_rating)
 
@@ -436,10 +436,10 @@ describe Tournament do
       p3.last_player_id.should be_nil
       p3.bonus.should == 0
       p3.k_factor.should == 16
-      p3.unrateable.should be_false
+      p3.unrateable.should be false
       p3.new_rating.should be > p3.old_rating
       p3.new_games.should == p3.old_games + 6
-      p3.new_full.should be_true
+      p3.new_full.should be true
       p3.rating_change.should == p3.new_rating - p3.old_rating
       ((p3.actual_score - p3.expected_score) * p3.k_factor).should be_within(0.5).of(p3.new_rating - p3.old_rating)
 
@@ -447,7 +447,7 @@ describe Tournament do
       p1 = @t1.players.find_by_last_name("Hebden")
       p3 = @t3.players.find_by_last_name("Hebden")
       p3.category.should == "foreign_player"
-      p3.unrateable.should be_false
+      p3.unrateable.should be false
       p3.old_rating.should_not == p1.new_rating
       p3.rating_change.should == 0
       p3.last_player_id.should be_nil
@@ -460,13 +460,13 @@ describe Tournament do
       p3.old_games.should == p1.new_games
       p1.old_games.should be < 20
       p3.old_games.should be >= 20
-      p1.old_full.should be_false
-      p3.old_full.should be_true
+      p1.old_full.should be false
+      p3.old_full.should be true
       p3.last_player_id.should == p1.id
       p3.k_factor.should_not be_nil
-      p3.unrateable.should be_false
+      p3.unrateable.should be false
       p3.new_games.should == p3.old_games + 6
-      p3.new_full.should be_true
+      p3.new_full.should be true
       p3.rating_change.should == p3.new_rating - p3.old_rating
       p3.bonus.should == 0
       ((p3.actual_score - p3.expected_score) * p3.k_factor).should be_within(0.5).of(p3.new_rating - p3.old_rating)
@@ -481,11 +481,11 @@ describe Tournament do
       p3.last_player_id.should == p1.id
       p3.k_factor.should be_nil
       p3.actual_score.should == 1.0
-      p3.unrateable.should be_false
+      p3.unrateable.should be false
       p3.new_rating.should_not == p1.new_rating
       p3.trn_rating.should_not be_nil
       p3.new_games.should == p1.new_games + 2
-      p3.new_full.should be_false
+      p3.new_full.should be false
       p3.rating_change.should == p3.new_rating - p3.old_rating
       p3.bonus.should be_nil
       p3.expected_score.should_not be_nil
@@ -496,15 +496,15 @@ describe Tournament do
       p3.category.should == "icu_player"
       p3.old_rating.should be_nil
       p3.old_games.should == 0
-      p3.old_full.should be_false
+      p3.old_full.should be false
       p3.last_player_id.should == p1.id
       p3.k_factor.should be_nil
       p3.actual_score.should == 0.5
-      p3.unrateable.should be_false
+      p3.unrateable.should be false
       p3.new_rating.should_not be_nil
       p3.trn_rating.should_not be_nil
       p3.new_games.should == 1
-      p3.new_full.should be_false
+      p3.new_full.should be false
       p3.rating_change.should == 0
       p3.bonus.should be_nil
       p3.expected_score.should_not be_nil
@@ -862,7 +862,7 @@ describe Tournament do
       @t.players.select{ |p| p.fed }.count.should == 3
       @t.players.select{ |p| p.dob }.count.should == 2
       data = Tournaments::FideData.new(@t)
-      data.should have(3).status
+      data.status.size.should be 3
 
       [
         ["FTT", 2, "Fehr|Short"],
@@ -875,7 +875,7 @@ describe Tournament do
       end
 
       data = Tournaments::FideData.new(@t, true)
-      data.should have(4).status
+      data.status.size.should be 4
       [
         ["TTF", 21, "Baburin|Cafolla|Collins|-|Short"],
         ["FTT", 15, "Cooper|Daianu|Eliens|-|Wynarczyk"],
@@ -924,7 +924,7 @@ describe Tournament do
       FidePlayer.find_by_last_name("Freeman").update_column(:born, 1981)  # artificially create a DOB mismatch
 
       data = Tournaments::FideData.new(@t, true)
-      data.should have(5).status
+      data.status.size.should be 5
       [
         ["TTF", 20, "Baburin|Cafolla|Collins|-|Short"],
         ["TFF",  1, "Osborne"],

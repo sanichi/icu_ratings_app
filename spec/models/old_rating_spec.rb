@@ -7,13 +7,13 @@ describe OldRating do
     old.icu_id.should == 1350
     old.rating.should be <= 2400
     old.games.should be <= 500
-    old.full.should be_true
+    old.full.should be true
     old = FactoryGirl.create(:old_rating, icu_id: 159, rating: 2198, games: 329, full: false)
     old.id.should == 2
     old.icu_id.should == 159
     old.rating.should == 2198
     old.games.should == 329
-    old.full.should be_false
+    old.full.should be false
   end
 
   it "yaml file" do
@@ -24,7 +24,7 @@ describe OldRating do
     cafolla = OldRating.find_by_icu_id(159)
     cafolla.rating.should == 1982
     cafolla.games.should == 1111
-    cafolla.full.should be_true
+    cafolla.full.should be true
     load_old_ratings
     OldRating.count.should == size
   end

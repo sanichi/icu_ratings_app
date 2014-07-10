@@ -50,12 +50,12 @@ describe ICU::RatingRun do
 
     it "success" do
       @rating_run.status.should == "waiting"
-      File.exists?(@flag).should be_true
+      File.exists?(@flag).should be true
 
       ICU::RatingRun.new.rate_all
 
       Failure.count.should == 0
-      File.exists?(@flag).should be_false
+      File.exists?(@flag).should be false
 
       @rating_run.reload
       @rating_run.status.should == "finished"
@@ -79,7 +79,7 @@ describe ICU::RatingRun do
       ICU::RatingRun.new.rate_all
 
       Failure.count.should == 0
-      File.exists?(@flag).should be_false
+      File.exists?(@flag).should be false
 
       @rating_run.reload
       @rating_run.status.should == "error"
@@ -100,7 +100,7 @@ describe ICU::RatingRun do
       ICU::RatingRun.new.rate_all
 
       Failure.count.should == 0
-      File.exists?(@flag).should be_false
+      File.exists?(@flag).should be false
 
       @rating_run.reload
       @rating_run.status.should == "error"
@@ -122,12 +122,12 @@ describe ICU::RatingRun do
       p.icu_id = p.icu_id + 1
       p.save
       @t1.reload
-      @t1.status_ok?.should be_false
+      @t1.status_ok?.should be false
 
       ICU::RatingRun.new.rate_all
 
       Failure.count.should == 0
-      File.exists?(@flag).should be_false
+      File.exists?(@flag).should be false
 
       @rating_run.reload
       @rating_run.status.should == "error"
@@ -150,7 +150,7 @@ describe ICU::RatingRun do
       ICU::RatingRun.new.rate_all
 
       Failure.count.should == 0
-      File.exists?(@flag).should be_false
+      File.exists?(@flag).should be false
 
       @rating_run.reload
       @rating_run.status.should == "error"

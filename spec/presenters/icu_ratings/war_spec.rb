@@ -25,7 +25,7 @@ module IcuRatings
 
       w = WAR.new(method: "war")
 
-      w.available?.should be_true
+      w.available?.should be true
       w.years.should == 3
       w.lists[:icu].map(&:to_s).join("|").should == "2008-09-01|2009-09-01|2010-09-01"
       w.lists[:fide].map(&:to_s).join("|").should == "2008-11-01|2009-11-01|2010-11-01"
@@ -37,14 +37,14 @@ module IcuRatings
 
       w = WAR.new(method: "war", gender: "F")
 
-      w.available?.should be_true
+      w.available?.should be true
       w.players.size.should == 1
       w.players.first.player.should == p2
       w.players.first.average.should be_within(0.01).of(1070.0)
 
       w = WAR.new(method: "simple")
 
-      w.available?.should be_true
+      w.available?.should be true
       w.years.should == 1
       w.lists[:icu].map(&:to_s).join("|").should == "2010-09-01"
       w.lists[:fide].map(&:to_s).join("|").should == "2010-11-01"
@@ -68,11 +68,11 @@ module IcuRatings
 
       w = WAR.new(method: "war")
 
-      w.available?.should be_false
+      w.available?.should be false
 
       w = WAR.new(method: "simple")
 
-      w.available?.should be_true
+      w.available?.should be true
       w.years.should == 1
       w.lists[:icu].map(&:to_s).join("|").should == "2010-09-01"
       w.lists[:fide].map(&:to_s).join("|").should == "2010-11-01"
@@ -82,14 +82,14 @@ module IcuRatings
 
       w = WAR.new(method: "simple", gender: "F")
 
-      w.available?.should be_true
+      w.available?.should be true
       w.players.size.should == 1
       w.players.first.average.should be_within(0.01).of(1000.0)
     end
 
     it "no data at all" do
-      WAR.new(method: "war").available?.should be_false
-      WAR.new(method: "simple").available?.should be_false
+      WAR.new(method: "war").available?.should be false
+      WAR.new(method: "simple").available?.should be false
     end
   end
 end

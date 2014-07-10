@@ -11,7 +11,7 @@ describe "Article" do
       visit "/articles/new"
       page.should have_title("Create Article")
       headline, story = "Latest News", "Latest Story"
-      Article.where(headline: headline, story: story).should have(0).items
+      Article.where(headline: headline, story: story).count.should == 0
       page.fill_in "Headline", with: headline
       page.fill_in "Story", with: story
       page.click_button "Create"
@@ -20,7 +20,7 @@ describe "Article" do
       page.should have_selector("span", text: headline)
       page.should have_selector("p", text: story)
       page.should have_link("Markdown")
-      Article.where(headline: headline, story: story).should have(1).item
+      Article.where(headline: headline, story: story).count.should == 1
       page.click_link "Edit"
       page.should have_title("Update Article")
       headline = "Old News"
@@ -28,10 +28,10 @@ describe "Article" do
       page.click_button "Update"
       page.should have_selector("span.notice", text: /updated/i)
       page.should have_selector("span", text: headline)
-      Article.where(headline: headline, story: story).should have(1).item
+      Article.where(headline: headline, story: story).count.should == 1
       page.click_link "Delete"
       page.should have_title("Articles")
-      Article.where(headline: headline, story: story).should have(0).items
+      Article.where(headline: headline, story: story).count.should == 0
     end
 
     it "can edit and delete other's articles" do
@@ -40,9 +40,9 @@ describe "Article" do
       page.fill_in "Headline", with: headline
       page.fill_in "Story", with: story
       page.click_button "Update"
-      Article.where(headline: headline, story: story).should have(1).item
+      Article.where(headline: headline, story: story).count.should == 1
       page.click_link "Delete"
-      Article.where(headline: headline, story: story).should have(0).items
+      Article.where(headline: headline, story: story).count.should == 0
     end
   end
 

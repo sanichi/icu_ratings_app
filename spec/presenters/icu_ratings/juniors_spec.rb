@@ -5,7 +5,7 @@ module IcuRatings
     describe "insufficient data" do
       it "should be unavailable" do
         j = Juniors.new({})
-        j.available?.should be_false
+        j.available?.should be false
         j.ratings.should be_empty
       end
     end
@@ -30,7 +30,7 @@ module IcuRatings
       it "default settings" do
         params = {}
         j = Juniors.new(params)
-        j.available?.should be_true
+        j.available?.should be true
         params[:date].should == "2011-12-17"
         params[:under].should == "21"
         params[:least].should == "0"

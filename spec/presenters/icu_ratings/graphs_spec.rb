@@ -19,7 +19,7 @@ module IcuRatings
       g = Graph.new(r)
       g.title.should == r.icu_player.name
       g.icu_ratings.size.should == 1
-      g.icu_ratings[0].selected.should be_true
+      g.icu_ratings[0].selected.should be true
     end
 
     it "initialize from FIDE player" do
@@ -33,19 +33,19 @@ module IcuRatings
       g = Graph.new(r)
       g.title.should == r.fide_player.name
       g.fide_ratings.size.should == 1
-      g.fide_ratings[0].selected.should be_true
+      g.fide_ratings[0].selected.should be true
     end
 
     it "no player" do
       g = Graph.new(nil)
-      g.available?.should be_false
+      g.available?.should be false
       g.title.should be_nil
     end
 
     it "no ratings" do
       p = FactoryGirl.create(:icu_player)
       g = Graph.new(p)
-      g.available?.should be_false
+      g.available?.should be false
       g.icu_ratings.should be_empty
       g.fide_ratings.should be_empty
       range = g.rating_range
@@ -57,7 +57,7 @@ module IcuRatings
     it "one ICU rating" do
       r = FactoryGirl.create(:icu_rating, rating: 2192, list: "2011-09-01")
       g = Graph.new(r.icu_player)
-      g.available?.should be_true
+      g.available?.should be true
       g.fide_ratings.should be_empty
       g.icu_ratings.should_not be_empty
       g.icu_ratings.size.should == 1
@@ -77,7 +77,7 @@ module IcuRatings
     it "one FIDE rating" do
       r = FactoryGirl.create(:fide_rating, rating: 2362, list: "2003-04-01")
       g = Graph.new(r.fide_player)
-      g.available?.should be_true
+      g.available?.should be true
       g.icu_ratings.should be_empty
       g.fide_ratings.should_not be_empty
       g.fide_ratings.size.should == 1
@@ -103,7 +103,7 @@ module IcuRatings
       FactoryGirl.create(:fide_rating, rating: 2362, list: "2003-04-01", fide_player: f)
       FactoryGirl.create(:fide_rating, rating: 2260, list: "2011-11-01", fide_player: f)
       g = Graph.new(p)
-      g.available?.should be_true
+      g.available?.should be true
       g.icu_ratings.size.should == 3
       g.fide_ratings.size.should == 2
       g.min_rating.should == 2192

@@ -10,7 +10,7 @@ module FIDE
     it "sanity check" do
       @players_list.length.should be > 0
       @players_list.encoding.name.should == "UTF-8"
-      @players_list.valid_encoding?.should be_true
+      @players_list.valid_encoding?.should be true
     end
 
     it "should retrieve Irish players" do
@@ -34,7 +34,7 @@ module FIDE
       me.games.should == 0
       me.title.should == "IM"
       me.fed.should == "IRL"
-      me.active.should be_true
+      me.active.should be true
 
       april = hash[2500370]
       april.last_name.should == "Cronin"
@@ -45,7 +45,7 @@ module FIDE
       april.games.should == 0
       april.title.should be_nil
       april.fed.should == "IRL"
-      april.active.should be_false
+      april.active.should be false
 
       gearoidin = hash[2501171]
       gearoidin.last_name.should == "Ui Laighleis"
@@ -56,7 +56,7 @@ module FIDE
       gearoidin.games.should == 0
       gearoidin.title.should == "WCM"
       gearoidin.fed.should == "IRL"
-      gearoidin.active.should be_true
+      gearoidin.active.should be true
 
       mark = hash[2500450]
       mark.last_name.should == "Quinn"
@@ -67,7 +67,7 @@ module FIDE
       mark.games.should == 0
       mark.title.should == "IM"
       mark.fed.should == "IRL"
-      mark.active.should be_true
+      mark.active.should be true
 
       bernard = hash[2500019]
       bernard.last_name.should == "Kernan"
@@ -78,7 +78,7 @@ module FIDE
       bernard.games.should == 0
       bernard.title.should be_nil
       bernard.fed.should == "IRL"
-      bernard.active.should be_false
+      bernard.active.should be false
 
       debbie = hash[4413504]
       debbie.last_name.should == "Quinn"
@@ -89,7 +89,7 @@ module FIDE
       debbie.games.should == 0
       debbie.title.should be_nil
       debbie.fed.should == "IRL"
-      debbie.active.should be_false
+      debbie.active.should be false
     end
 
     it "should retrieve foreign players" do
@@ -103,7 +103,7 @@ module FIDE
       parser = Nokogiri::XML::SAX::Parser.new(sax)
       parser.parse(@players_list)
       hash.size.should == 3
-      
+
       magnus = hash[1503014]
       magnus.last_name.should == "Carlsen"
       magnus.first_name.should == "Magnus"
@@ -113,8 +113,8 @@ module FIDE
       magnus.games.should == 10
       magnus.title.should == "GM"
       magnus.fed.should == "NOR"
-      magnus.active.should be_true
-      
+      magnus.active.should be true
+
       shakri = hash[13401319]
       shakri.last_name.should == "Mamedyarov"
       shakri.first_name.should == "Shakhriyar"
@@ -124,7 +124,7 @@ module FIDE
       shakri.games.should == 0
       shakri.title.should == "GM"
       shakri.fed.should == "AZE"
-      shakri.active.should be_true
+      shakri.active.should be true
 
       sofia = hash[24150797]
       sofia.last_name.should == "Zyzlova"
@@ -135,7 +135,7 @@ module FIDE
       sofia.games.should == 0
       sofia.title.should be_nil
       sofia.fed.should == "RUS"
-      sofia.active.should be_true
+      sofia.active.should be true
     end
   end
 end

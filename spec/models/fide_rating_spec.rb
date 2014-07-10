@@ -8,8 +8,8 @@ describe FideRating do
     end
 
     it "test players should be valid" do
-      @p1.valid?.should be_true
-      @p2.valid?.should be_true
+      @p1.valid?.should be true
+      @p2.valid?.should be true
       @p1.fide_ratings.size.should == 0
       @p2.fide_ratings.size.should == 0
     end

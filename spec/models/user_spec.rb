@@ -25,53 +25,53 @@ describe User do
   context "roles" do
     it "members" do
       user = FactoryGirl.create(:user)
-      user.role?(:member).should be_true
-      user.role?(:reporter).should be_false
-      user.role?(:officer).should be_false
-      user.role?(:admin).should be_false
-      user.role?("anything else").should be_false
-      user.role?(nil).should be_false
+      user.role?(:member).should be true
+      user.role?(:reporter).should be false
+      user.role?(:officer).should be false
+      user.role?(:admin).should be false
+      user.role?("anything else").should be false
+      user.role?(nil).should be false
     end
 
     it "tournament reporters" do
       user = FactoryGirl.create(:user, role: "reporter")
-      user.role?(:member).should be_true
-      user.role?(:reporter).should be_true
-      user.role?(:officer).should be_false
-      user.role?(:admin).should be_false
-      user.role?("anything else").should be_false
-      user.role?(nil).should be_false
+      user.role?(:member).should be true
+      user.role?(:reporter).should be true
+      user.role?(:officer).should be false
+      user.role?(:admin).should be false
+      user.role?("anything else").should be false
+      user.role?(nil).should be false
     end
 
     it "rating officers" do
       user = FactoryGirl.create(:user, role: "officer")
-      user.role?(:member).should be_true
-      user.role?(:reporter).should be_true
-      user.role?(:officer).should be_true
-      user.role?(:admin).should be_false
-      user.role?("anything else").should be_false
-      user.role?(nil).should be_false
+      user.role?(:member).should be true
+      user.role?(:reporter).should be true
+      user.role?(:officer).should be true
+      user.role?(:admin).should be false
+      user.role?("anything else").should be false
+      user.role?(nil).should be false
     end
 
     it "administrators" do
       user = FactoryGirl.create(:user, role: "admin")
-      user.role?(:member).should be_true
-      user.role?(:reporter).should be_true
-      user.role?(:officer).should be_true
-      user.role?(:admin).should be_true
-      user.role?("anything else").should be_false
-      user.role?(nil).should be_false
+      user.role?(:member).should be true
+      user.role?(:reporter).should be true
+      user.role?(:officer).should be true
+      user.role?(:admin).should be true
+      user.role?("anything else").should be false
+      user.role?(nil).should be false
     end
 
     it "invalid roles" do
       ["invalid", "", nil].each do |role|
         user = FactoryGirl.build(:user, role: role)
-        user.role?(:member).should be_false
-        user.role?(:reporter).should be_false
-        user.role?(:officer).should be_false
-        user.role?(:admin).should be_false
-        user.role?("anything else").should be_false
-        user.role?(nil).should be_false
+        user.role?(:member).should be false
+        user.role?(:reporter).should be false
+        user.role?(:officer).should be false
+        user.role?(:admin).should be false
+        user.role?("anything else").should be false
+        user.role?(nil).should be false
       end
     end
   end
@@ -104,16 +104,16 @@ describe User do
     end
 
     it "with salt" do
-      @u1.password_ok?(@p).should be_true
+      @u1.password_ok?(@p).should be true
     end
 
     it "without salt" do
-      @u2.password_ok?(@p).should be_true
+      @u2.password_ok?(@p).should be true
     end
 
     it "with salt special case for admin" do
-      @u1.password_ok?(@u1.password, false).should be_false
-      @u1.password_ok?(@u1.password,  true).should be_true
+      @u1.password_ok?(@u1.password, false).should be false
+      @u1.password_ok?(@u1.password,  true).should be true
     end
   end
 
@@ -164,55 +164,55 @@ describe User do
     it "new password, old salt" do
       @q = "password1"
       @params[:new_password] = @q
-      @u1.update_www_member(@params).should be_true
+      @u1.update_www_member(@params).should be true
       @params[:new_password].should_not be_present
       @params[:salt].should_not be_present
       @params[:password].should be_present
       @params[:password].length.should == 32
       @params[:status].should_not be_present
-      @u1.password_ok?(@p).should be_true
+      @u1.password_ok?(@p).should be true
       @u1.password = @params[:password]
-      @u1.password_ok?(@p).should be_false
-      @u1.password_ok?(@q).should be_true
+      @u1.password_ok?(@p).should be false
+      @u1.password_ok?(@q).should be true
       @u1.errors.should be_empty
     end
 
     it "new password, new salt" do
       @q = "password2"
       @params[:new_password] = @q
-      @u2.update_www_member(@params).should be_true
+      @u2.update_www_member(@params).should be true
       @params[:new_password].should_not be_present
       @params[:salt].should be_present
       @params[:salt].length.should == 32
       @params[:password].should be_present
       @params[:password].length.should == 32
       @params[:status].should_not be_present
-      @u2.password_ok?(@p).should be_true
+      @u2.password_ok?(@p).should be true
       @u2.password = @params[:password]
       @u2.salt = @params[:salt]
-      @u2.password_ok?(@p).should be_false
-      @u2.password_ok?(@q).should be_true
+      @u2.password_ok?(@p).should be false
+      @u2.password_ok?(@q).should be true
     end
 
     it "new status" do
       @u1.status = "pending"
-      @u1.update_www_member(@params).should be_true
+      @u1.update_www_member(@params).should be true
       @params[:status].should == "ok"
       @params = { status: "pending" }
       @u1.status = "ok"
-      @u1.update_www_member(@params).should be_true
+      @u1.update_www_member(@params).should be true
       @params[:status].should == "pending"
     end
 
     it "no (or blank) password" do
-      @u1.update_www_member(@params).should be_true
+      @u1.update_www_member(@params).should be true
       @u1.errors.should be_empty
       @params[:new_password].should_not be_present
       @params[:password].should_not be_present
       @params[:salt].should_not be_present
       @params[:status].should_not be_present
       @params = { new_password: "    ", status: "ok" }
-      @u1.update_www_member(@params).should be_true
+      @u1.update_www_member(@params).should be true
       @u1.errors.should be_empty
       @params[:new_password].should_not be_present
       @params[:password].should_not be_present
@@ -221,13 +221,13 @@ describe User do
 
     it "password too short or too long" do
       @params[:new_password] = "123"
-      @u1.update_www_member(@params).should be_false
+      @u1.update_www_member(@params).should be_nil
       @u1.errors.should_not be_empty
       @params[:password].should_not be_present
       @params[:salt].should_not be_present
       @params[:status].should_not be_present
       @params = { new_password: "1234567890123456789012345678901234567890" }
-      @u1.update_www_member(@params).should be_false
+      @u1.update_www_member(@params).should be_nil
       @u1.errors.should_not be_empty
       @params[:password].should_not be_present
       @params[:salt].should_not be_present
@@ -236,7 +236,7 @@ describe User do
     it "ICU database push fails" do
       ICU::Database::Push.stub_chain(:new, :update_member).and_return("woops")
       @params[:new_password] = "password3"
-      @u1.update_www_member(@params).should be_false
+      @u1.update_www_member(@params).should be_nil
       @params[:new_password].should_not be_present
       @params[:salt].should_not be_present
       @params[:password].should_not be_present

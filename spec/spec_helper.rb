@@ -30,6 +30,9 @@ RSpec.configure do |config|
       DatabaseCleaner.clean
     end
   end
+
+  # Deduce from location what spec types are (for example, which ones need capybara).
+  config.infer_spec_type_from_file_location!
 end
 
 # Return a saved Tournament derived from one of the test files.

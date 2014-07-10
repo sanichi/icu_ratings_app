@@ -11,18 +11,18 @@ module ICU
     end
 
     it "should handle recent additions to the default set of first name alternatives" do
-      Name.new("Douglas", "McCann").match("Dougie", "McCann").should be_true
-      Name.new("Edward", "Walsh").match("Ned", "Walsh").should be_true
-      Name.new("Michael", "Morgan").match("Míchéal", "Morgan", chars: "US-ASCII").should be_true
+      Name.new("Douglas", "McCann").match("Dougie", "McCann").should be true
+      Name.new("Edward", "Walsh").match("Ned", "Walsh").should be true
+      Name.new("Michael", "Morgan").match("Míchéal", "Morgan", chars: "US-ASCII").should be true
     end
 
     it "should handle recent additions to the default set of last name alternatives" do
-      Name.new("Alex", "Lopez").match("Alex", "Astaneh Lopez").should be_true
-      Name.new("William", "French").match("William", "Ffrench").should be_true
-      Name.new("Mairead", "King").match("Mairead", "O'Siochru").should be_true
+      Name.new("Alex", "Lopez").match("Alex", "Astaneh Lopez").should be true
+      Name.new("William", "French").match("William", "Ffrench").should be true
+      Name.new("Mairead", "King").match("Mairead", "O'Siochru").should be true
     end
   end
-  
+
   module Util
     class Dummy
       extend AlternativeNames

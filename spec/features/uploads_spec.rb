@@ -232,7 +232,7 @@ describe "Upload" do
         tony.results.find_by_round(1).opponent.name.should == "Taylor, Peter P."
         tony.results.find_by_round(1).opponent.original_name.should == "Taylor, Peter P"
         tony.results.find_by_round(4).colour.should == 'W'
-        tony.results.find_by_round(6).rateable.should be_false
+        tony.results.find_by_round(6).rateable.should be false
         tony.results.find_by_round(9).result.should == "D"
         peter.results.size.should == 9
         peter.results.where(rateable: true).size.should == 9  # should this be 8?
