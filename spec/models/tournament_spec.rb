@@ -12,11 +12,11 @@ describe Tournament do
       t = Tournament.new
       t.name = "Masters"
       t.start = "2012-05-12"
-      t.name_with_year.should == "Masters 2012"
+      expect(t.name_with_year).to eq("Masters 2012")
       t.finish = "2012-05-13"
-      t.name_with_year.should == "Masters 2012"
+      expect(t.name_with_year).to eq("Masters 2012")
       t.finish = "2013-05-13"
-      t.name_with_year.should == "Masters 2012-13"
+      expect(t.name_with_year).to eq("Masters 2012-13")
     end
   end
 
@@ -44,17 +44,17 @@ describe Tournament do
     end
 
     it "should create an ICU::Tournament copy" do
-      @icut.should be_an_instance_of(ICU::Tournament)
-      @icut.name.should == @t.name
-      @icut.start.should == @t.start.to_s
-      @icut.finish.should == (@t.finish ? @t.finish.to_s : nil)
+      expect(@icut).to be_an_instance_of(ICU::Tournament)
+      expect(@icut.name).to eq(@t.name)
+      expect(@icut.start).to eq(@t.start.to_s)
+      expect(@icut.finish).to eq(@t.finish ? @t.finish.to_s : nil)
       %w[rounds fed city site arbiter deputy time_control].each do |attr|
-        @icut.send(attr).should == @t.send(attr)
+        expect(@icut.send(attr)).to eq(@t.send(attr))
       end
-      @icut.players.size.should == @t.players.size
-      player_signature(@icut, 35).should == '35|35|David|Murray|||M|||4941|||1LBrMP|2DWrLP|6Lu'
-      player_signature(@icut,  6).should == '6|6|Nigel|Short|ENG|GM|M||2658|||1965-06-01|1WWrKM|2DBrAH|3WWrSC|4LBrGJ|5DWrDF|6WBrPS'
-      player_signature(@icut, 30).should == '30|30|Alexandra|Wilson||WCM|F|||7938|||1LBrMH|2LWrRW|3DBrSD|4LWrJC|5DBrRM|6WWrKO'
+      expect(@icut.players.size).to eq(@t.players.size)
+      expect(player_signature(@icut, 35)).to eq('35|35|David|Murray|||M|||4941|||1LBrMP|2DWrLP|6Lu')
+      expect(player_signature(@icut,  6)).to eq('6|6|Nigel|Short|ENG|GM|M||2658|||1965-06-01|1WWrKM|2DBrAH|3WWrSC|4LBrGJ|5DWrDF|6WBrPS')
+      expect(player_signature(@icut, 30)).to eq('30|30|Alexandra|Wilson||WCM|F|||7938|||1LBrMH|2LWrRW|3DBrSD|4LWrJC|5DBrRM|6WWrKO')
     end
   end
 
@@ -65,20 +65,20 @@ describe Tournament do
 
     it "should create an ordered array of a tie break rule paired with a true or false value" do
       @t.tie_breaks = 'buchholz,modified_median'
-      @t.tie_break_selections.map(&:first).map(&:code).join('|').should == "BH|MM|HK|NB|NW|PN|SB|SR|SP"
-      @t.tie_break_selections.map(&:last).join('_').should match(/^true_true(_false){7}$/)
+      expect(@t.tie_break_selections.map(&:first).map(&:code).join('|')).to eq("BH|MM|HK|NB|NW|PN|SB|SR|SP")
+      expect(@t.tie_break_selections.map(&:last).join('_')).to match(/^true_true(_false){7}$/)
     end
 
     it "should ignore invalid tie break identifiers" do
       @t.tie_breaks = 'invalid,harkness'
-      @t.tie_break_selections.map(&:first).map(&:code).join('|').should == "HK|BH|MM|NB|NW|PN|SB|SR|SP"
-      @t.tie_break_selections.map(&:last).join('_').should match(/^true(_false){8}$/)
+      expect(@t.tie_break_selections.map(&:first).map(&:code).join('|')).to eq("HK|BH|MM|NB|NW|PN|SB|SR|SP")
+      expect(@t.tie_break_selections.map(&:last).join('_')).to match(/^true(_false){8}$/)
     end
 
     it "second of the pairs should be false if there are no tie breaks" do
       @t.tie_breaks = nil
-      @t.tie_break_selections.map(&:first).map(&:code).join('|').should == "BH|HK|MM|NB|NW|PN|SB|SR|SP"
-      @t.tie_break_selections.map(&:last).join('_').should match(/^false(_false){8}$/)
+      expect(@t.tie_break_selections.map(&:first).map(&:code).join('|')).to eq("BH|HK|MM|NB|NW|PN|SB|SR|SP")
+      expect(@t.tie_break_selections.map(&:last).join('_')).to match(/^false(_false){8}$/)
     end
   end
 
@@ -96,302 +96,302 @@ describe Tournament do
       end
 
       # What tournament should be rated next?
-      Tournament.next_for_rating.should == @t1
+      expect(Tournament.next_for_rating).to eq(@t1)
 
       # Pre-rating 1st tournament data.
-      @t1.reratings.should == 0
-      @t1.first_rated.should be_nil
-      @t1.last_rated.should be_nil
-      @t1.stage.should == "queued"
-      @t1.rorder.should == 1
-      @t1.last_signature.should be_nil
-      @t1.curr_signature.should be_nil
-      @t1.locked.should be false
+      expect(@t1.reratings).to eq(0)
+      expect(@t1.first_rated).to be_nil
+      expect(@t1.last_rated).to be_nil
+      expect(@t1.stage).to eq("queued")
+      expect(@t1.rorder).to eq(1)
+      expect(@t1.last_signature).to be_nil
+      expect(@t1.curr_signature).to be_nil
+      expect(@t1.locked).to be false
 
       # Rate the 1st tournament.
       @t1.rate!
 
       # ICU player with full rating.
       p = @t1.players.find_by_last_name("Cafolla")
-      p.category.should == "icu_player"
-      p.icu_id.should == 159
-      p.old_rating.should == 1982
-      p.old_games.should == 1111
-      p.old_full.should be true
-      p.last_player_id.should be_nil
-      p.k_factor.should == 24
-      p.actual_score.should == 2.5
-      p.unrateable.should be false
-      p.new_rating.should be_within(1).of(2000)
-      p.trn_rating.should be_within(1).of(2156)
-      p.new_games.should == 1116
-      p.new_full.should be true
-      p.rating_change.should be_within(1).of(18)
-      p.bonus.should == 0
-      p.expected_score.should be_within(0.0001).of(1.7660)
-      p.last_signature.should == "159 1L11 2D19 3W27 4W25 5L7"
-      p.curr_signature.should == p.last_signature
+      expect(p.category).to eq("icu_player")
+      expect(p.icu_id).to eq(159)
+      expect(p.old_rating).to eq(1982)
+      expect(p.old_games).to eq(1111)
+      expect(p.old_full).to be true
+      expect(p.last_player_id).to be_nil
+      expect(p.k_factor).to eq(24)
+      expect(p.actual_score).to eq(2.5)
+      expect(p.unrateable).to be false
+      expect(p.new_rating).to be_within(1).of(2000)
+      expect(p.trn_rating).to be_within(1).of(2156)
+      expect(p.new_games).to eq(1116)
+      expect(p.new_full).to be true
+      expect(p.rating_change).to be_within(1).of(18)
+      expect(p.bonus).to eq(0)
+      expect(p.expected_score).to be_within(0.0001).of(1.7660)
+      expect(p.last_signature).to eq("159 1L11 2D19 3W27 4W25 5L7")
+      expect(p.curr_signature).to eq(p.last_signature)
 
       # ICU player with full rating but started with less than 20 games.
       p = @t1.players.find_by_last_name("O'Riordan")
-      p.category.should == "icu_player"
-      p.icu_id.should == 10235
-      p.old_rating.should == 1881
-      p.old_games.should == 12
-      p.old_full.should be true
-      p.last_player_id.should be_nil
-      p.k_factor.should == 40
-      p.actual_score.should == 1.5
-      p.unrateable.should be false
-      p.new_rating.should be_within(1).of(1871)
-      p.trn_rating.should be_within(1).of(1842)
-      p.new_games.should == 18
-      p.new_full.should be true
-      p.rating_change.should be_within(1).of(-10)
-      p.bonus.should == 0
-      p.expected_score.should be_within(0.0001).of(1.7566)
-      p.last_signature.should == "10235 1D24 2D20 3L19 4L21 5D29 6L30"
-      p.curr_signature.should == p.last_signature
+      expect(p.category).to eq("icu_player")
+      expect(p.icu_id).to eq(10235)
+      expect(p.old_rating).to eq(1881)
+      expect(p.old_games).to eq(12)
+      expect(p.old_full).to be true
+      expect(p.last_player_id).to be_nil
+      expect(p.k_factor).to eq(40)
+      expect(p.actual_score).to eq(1.5)
+      expect(p.unrateable).to be false
+      expect(p.new_rating).to be_within(1).of(1871)
+      expect(p.trn_rating).to be_within(1).of(1842)
+      expect(p.new_games).to eq(18)
+      expect(p.new_full).to be true
+      expect(p.rating_change).to be_within(1).of(-10)
+      expect(p.bonus).to eq(0)
+      expect(p.expected_score).to be_within(0.0001).of(1.7566)
+      expect(p.last_signature).to eq("10235 1D24 2D20 3L19 4L21 5D29 6L30")
+      expect(p.curr_signature).to eq(p.last_signature)
 
       # ICU player with provisional rating.
       p = @t1.players.find_by_last_name("Maroroa")
-      p.category.should == "icu_player"
-      p.icu_id.should == 8453
-      p.old_rating.should == 2031
-      p.old_games.should be < 20
-      p.old_full.should be false
-      p.last_player_id.should be_nil
-      p.k_factor.should be_nil
-      p.actual_score.should == 3.5
-      p.unrateable.should be false
-      p.new_rating.should be_within(1).of(2039)
-      p.trn_rating.should be_within(1).of(2039)
-      p.new_games.should == p.old_games + 6
-      p.new_full.should be true
-      p.rating_change.should be_within(1).of(8)
-      p.bonus.should be_nil
-      p.expected_score.should be_within(0.0001).of(3.3911)
-      p.last_signature.should == "8453 1L5 2L23 3W33 4D17 5W26 6W24"
-      p.curr_signature.should == p.last_signature
+      expect(p.category).to eq("icu_player")
+      expect(p.icu_id).to eq(8453)
+      expect(p.old_rating).to eq(2031)
+      expect(p.old_games).to be < 20
+      expect(p.old_full).to be false
+      expect(p.last_player_id).to be_nil
+      expect(p.k_factor).to be_nil
+      expect(p.actual_score).to eq(3.5)
+      expect(p.unrateable).to be false
+      expect(p.new_rating).to be_within(1).of(2039)
+      expect(p.trn_rating).to be_within(1).of(2039)
+      expect(p.new_games).to eq(p.old_games + 6)
+      expect(p.new_full).to be true
+      expect(p.rating_change).to be_within(1).of(8)
+      expect(p.bonus).to be_nil
+      expect(p.expected_score).to be_within(0.0001).of(3.3911)
+      expect(p.last_signature).to eq("8453 1L5 2L23 3W33 4D17 5W26 6W24")
+      expect(p.curr_signature).to eq(p.last_signature)
 
       # ICU player with no previous rating.
       p = @t1.players.find_by_last_name("Daianu")
-      p.category.should == "icu_player"
-      p.icu_id.should == 12376
-      p.old_rating.should be_nil
-      p.old_games.should == 0
-      p.old_full.should be false
-      p.last_player_id.should be_nil
-      p.k_factor.should be_nil
-      p.actual_score.should == 3.0
-      p.unrateable.should be false
-      p.new_rating.should be_within(1).of(2203)
-      p.trn_rating.should be_within(1).of(2203)
-      p.new_games.should == 6
-      p.new_full.should be false
-      p.rating_change.should == 0
-      p.bonus.should be_nil
-      p.expected_score.should be_within(0.0001).of(2.9321)
-      p.last_signature.should == "12376 1W31 2D1 3L11 4D10 5W22 6L5"
-      p.curr_signature.should == p.last_signature
+      expect(p.category).to eq("icu_player")
+      expect(p.icu_id).to eq(12376)
+      expect(p.old_rating).to be_nil
+      expect(p.old_games).to eq(0)
+      expect(p.old_full).to be false
+      expect(p.last_player_id).to be_nil
+      expect(p.k_factor).to be_nil
+      expect(p.actual_score).to eq(3.0)
+      expect(p.unrateable).to be false
+      expect(p.new_rating).to be_within(1).of(2203)
+      expect(p.trn_rating).to be_within(1).of(2203)
+      expect(p.new_games).to eq(6)
+      expect(p.new_full).to be false
+      expect(p.rating_change).to eq(0)
+      expect(p.bonus).to be_nil
+      expect(p.expected_score).to be_within(0.0001).of(2.9321)
+      expect(p.last_signature).to eq("12376 1W31 2D1 3L11 4D10 5W22 6L5")
+      expect(p.curr_signature).to eq(p.last_signature)
 
       # New player, no ICU number.
       p = @t1.players.find_by_last_name("Fehr")
-      p.category.should == "new_player"
-      p.icu_id.should be_nil
-      p.old_rating.should be_nil
-      p.old_games.should == 0
-      p.old_full.should be false
-      p.last_player_id.should be_nil
-      p.k_factor.should be_nil
-      p.actual_score.should == 1.5
-      p.unrateable.should be false
-      p.new_rating.should be_within(1).of(1776)
-      p.trn_rating.should be_within(1).of(1776)
-      p.new_games.should == 6
-      p.new_full.should be false
-      p.rating_change.should == 0
-      p.bonus.should be_nil
-      p.expected_score.should be_within(0.0001).of(1.6339)
-      p.last_signature.should == "1L16 2D10 3L26 4D29 5L17 6D33"
-      p.curr_signature.should == p.last_signature
+      expect(p.category).to eq("new_player")
+      expect(p.icu_id).to be_nil
+      expect(p.old_rating).to be_nil
+      expect(p.old_games).to eq(0)
+      expect(p.old_full).to be false
+      expect(p.last_player_id).to be_nil
+      expect(p.k_factor).to be_nil
+      expect(p.actual_score).to eq(1.5)
+      expect(p.unrateable).to be false
+      expect(p.new_rating).to be_within(1).of(1776)
+      expect(p.trn_rating).to be_within(1).of(1776)
+      expect(p.new_games).to eq(6)
+      expect(p.new_full).to be false
+      expect(p.rating_change).to eq(0)
+      expect(p.bonus).to be_nil
+      expect(p.expected_score).to be_within(0.0001).of(1.6339)
+      expect(p.last_signature).to eq("1L16 2D10 3L26 4D29 5L17 6D33")
+      expect(p.curr_signature).to eq(p.last_signature)
 
       # Foreign guest.
       p = @t1.players.find_by_last_name_and_first_name("Short", "Nigel")
-      p.category.should == "foreign_player"
-      p.icu_id.should be_nil
-      p.old_rating.should == p.fide_rating
-      p.old_games.should == 0
-      p.old_full.should be false
-      p.last_player_id.should be_nil
-      p.k_factor.should be_nil
-      p.actual_score.should == 4.0
-      p.unrateable.should be false
-      p.new_rating.should == p.fide_rating
-      p.trn_rating.should be_within(1).of(2464)
-      p.new_games.should == 0
-      p.new_full.should be false
-      p.rating_change.should == 0
-      p.bonus.should be_nil
-      p.expected_score.should be_within(0.0001).of(5.0379)
-      p.last_signature.should == "2658 1W19 2D11 3W8 4L1 5D9 6W14"
-      p.curr_signature.should == p.last_signature
+      expect(p.category).to eq("foreign_player")
+      expect(p.icu_id).to be_nil
+      expect(p.old_rating).to eq(p.fide_rating)
+      expect(p.old_games).to eq(0)
+      expect(p.old_full).to be false
+      expect(p.last_player_id).to be_nil
+      expect(p.k_factor).to be_nil
+      expect(p.actual_score).to eq(4.0)
+      expect(p.unrateable).to be false
+      expect(p.new_rating).to eq(p.fide_rating)
+      expect(p.trn_rating).to be_within(1).of(2464)
+      expect(p.new_games).to eq(0)
+      expect(p.new_full).to be false
+      expect(p.rating_change).to eq(0)
+      expect(p.bonus).to be_nil
+      expect(p.expected_score).to be_within(0.0001).of(5.0379)
+      expect(p.last_signature).to eq("2658 1W19 2D11 3W8 4L1 5D9 6W14")
+      expect(p.curr_signature).to eq(p.last_signature)
 
       # ICU player who played no rated games in this tournament.
       p = @t1.players.find_by_last_name("Orr")
-      p.category.should == "icu_player"
-      p.icu_id.should == 1350
-      p.old_rating.should == 2192
-      p.old_games.should == 329
-      p.old_full.should be true
-      p.last_player_id.should be_nil
-      p.k_factor.should == 16
-      p.actual_score.should be_nil
-      p.unrateable.should be false
-      p.new_rating.should == 2192
-      p.trn_rating.should be_nil
-      p.new_games.should == 329
-      p.new_full.should be true
-      p.rating_change.should == 0
-      p.bonus.should be_nil
-      p.expected_score.should be_nil
-      p.last_signature.should == "1350"
-      p.curr_signature.should == p.last_signature
+      expect(p.category).to eq("icu_player")
+      expect(p.icu_id).to eq(1350)
+      expect(p.old_rating).to eq(2192)
+      expect(p.old_games).to eq(329)
+      expect(p.old_full).to be true
+      expect(p.last_player_id).to be_nil
+      expect(p.k_factor).to eq(16)
+      expect(p.actual_score).to be_nil
+      expect(p.unrateable).to be false
+      expect(p.new_rating).to eq(2192)
+      expect(p.trn_rating).to be_nil
+      expect(p.new_games).to eq(329)
+      expect(p.new_full).to be true
+      expect(p.rating_change).to eq(0)
+      expect(p.bonus).to be_nil
+      expect(p.expected_score).to be_nil
+      expect(p.last_signature).to eq("1350")
+      expect(p.curr_signature).to eq(p.last_signature)
 
       # New player, no ICU number, no rated games in this tournament.
       p = @t1.players.find_by_last_name("Grennel")
-      p.category.should == "new_player"
-      p.icu_id.should be_nil
-      p.old_rating.should be_nil
-      p.old_games.should == 0
-      p.old_full.should be false
-      p.last_player_id.should be_nil
-      p.k_factor.should be_nil
-      p.actual_score.should be_nil
-      p.unrateable.should be false
-      p.new_rating.should be_nil
-      p.trn_rating.should be_nil
-      p.new_games.should == 0
-      p.new_full.should be false
-      p.rating_change.should == 0
-      p.bonus.should be_nil
-      p.expected_score.should be_nil
-      p.last_signature.should == ""
-      p.curr_signature.should == p.last_signature
+      expect(p.category).to eq("new_player")
+      expect(p.icu_id).to be_nil
+      expect(p.old_rating).to be_nil
+      expect(p.old_games).to eq(0)
+      expect(p.old_full).to be false
+      expect(p.last_player_id).to be_nil
+      expect(p.k_factor).to be_nil
+      expect(p.actual_score).to be_nil
+      expect(p.unrateable).to be false
+      expect(p.new_rating).to be_nil
+      expect(p.trn_rating).to be_nil
+      expect(p.new_games).to eq(0)
+      expect(p.new_full).to be false
+      expect(p.rating_change).to eq(0)
+      expect(p.bonus).to be_nil
+      expect(p.expected_score).to be_nil
+      expect(p.last_signature).to eq("")
+      expect(p.curr_signature).to eq(p.last_signature)
 
       # Foreign guest, no rated games in this tournament.
       p = @t1.players.find_by_last_name("Hebden")
-      p.category.should == "foreign_player"
-      p.icu_id.should be_nil
-      p.old_rating.should == p.fide_rating
-      p.old_games.should == 0
-      p.old_full.should be false
-      p.last_player_id.should be_nil
-      p.k_factor.should be_nil
-      p.actual_score.should == nil
-      p.unrateable.should be false
-      p.new_rating.should == p.fide_rating
-      p.trn_rating.should be_nil
-      p.new_games.should == 0
-      p.new_full.should be false
-      p.rating_change.should == 0
-      p.bonus.should be_nil
-      p.expected_score.should be_nil
-      p.last_signature.should == "2550"
-      p.curr_signature.should == p.last_signature
+      expect(p.category).to eq("foreign_player")
+      expect(p.icu_id).to be_nil
+      expect(p.old_rating).to eq(p.fide_rating)
+      expect(p.old_games).to eq(0)
+      expect(p.old_full).to be false
+      expect(p.last_player_id).to be_nil
+      expect(p.k_factor).to be_nil
+      expect(p.actual_score).to eq(nil)
+      expect(p.unrateable).to be false
+      expect(p.new_rating).to eq(p.fide_rating)
+      expect(p.trn_rating).to be_nil
+      expect(p.new_games).to eq(0)
+      expect(p.new_full).to be false
+      expect(p.rating_change).to eq(0)
+      expect(p.bonus).to be_nil
+      expect(p.expected_score).to be_nil
+      expect(p.last_signature).to eq("2550")
+      expect(p.curr_signature).to eq(p.last_signature)
 
       # Unrateable ICU player with provisional rating.
       p = @t1.players.find_by_last_name("Graham")
-      p.category.should == "icu_player"
-      p.icu_id.should == 12664
-      p.old_rating.should == 497
-      p.old_games.should == 5
-      p.old_full.should be false
-      p.last_player_id.should be_nil
-      p.k_factor.should be_nil
-      p.actual_score.should == nil
-      p.unrateable.should be true
-      p.new_rating.should == p.old_rating
-      p.trn_rating.should be_nil
-      p.new_games.should == p.old_games
-      p.new_full.should be false
-      p.rating_change.should == 0
-      p.bonus.should be_nil
-      p.expected_score.should be_nil
-      p.last_signature.should == "12664 1D36 2D37"
-      p.curr_signature.should == p.last_signature
+      expect(p.category).to eq("icu_player")
+      expect(p.icu_id).to eq(12664)
+      expect(p.old_rating).to eq(497)
+      expect(p.old_games).to eq(5)
+      expect(p.old_full).to be false
+      expect(p.last_player_id).to be_nil
+      expect(p.k_factor).to be_nil
+      expect(p.actual_score).to eq(nil)
+      expect(p.unrateable).to be true
+      expect(p.new_rating).to eq(p.old_rating)
+      expect(p.trn_rating).to be_nil
+      expect(p.new_games).to eq(p.old_games)
+      expect(p.new_full).to be false
+      expect(p.rating_change).to eq(0)
+      expect(p.bonus).to be_nil
+      expect(p.expected_score).to be_nil
+      expect(p.last_signature).to eq("12664 1D36 2D37")
+      expect(p.curr_signature).to eq(p.last_signature)
 
       # Unrateable ICU player with no previous rating.
       p = @t1.players.find_by_last_name("Mitchell")
-      p.category.should == "icu_player"
-      p.icu_id.should == 12833
-      p.old_rating.should be_nil
-      p.old_games.should == 0
-      p.old_full.should be false
-      p.last_player_id.should be_nil
-      p.k_factor.should be_nil
-      p.actual_score.should == nil
-      p.unrateable.should be true
-      p.new_rating.should == p.old_rating
-      p.trn_rating.should be_nil
-      p.new_games.should == p.old_games
-      p.new_full.should be false
-      p.rating_change.should == 0
-      p.bonus.should be_nil
-      p.expected_score.should be_nil
-      p.last_signature.should == "12833 1D34"
-      p.curr_signature.should == p.last_signature
+      expect(p.category).to eq("icu_player")
+      expect(p.icu_id).to eq(12833)
+      expect(p.old_rating).to be_nil
+      expect(p.old_games).to eq(0)
+      expect(p.old_full).to be false
+      expect(p.last_player_id).to be_nil
+      expect(p.k_factor).to be_nil
+      expect(p.actual_score).to eq(nil)
+      expect(p.unrateable).to be true
+      expect(p.new_rating).to eq(p.old_rating)
+      expect(p.trn_rating).to be_nil
+      expect(p.new_games).to eq(p.old_games)
+      expect(p.new_full).to be false
+      expect(p.rating_change).to eq(0)
+      expect(p.bonus).to be_nil
+      expect(p.expected_score).to be_nil
+      expect(p.last_signature).to eq("12833 1D34")
+      expect(p.curr_signature).to eq(p.last_signature)
 
       # Unrateable new player.
       p = @t1.players.find_by_last_name("Baczkowski")
-      p.category.should == "new_player"
-      p.icu_id.should be_nil
-      p.old_rating.should be_nil
-      p.old_games.should == 0
-      p.old_full.should be false
-      p.last_player_id.should be_nil
-      p.k_factor.should be_nil
-      p.actual_score.should == nil
-      p.unrateable.should be true
-      p.new_rating.should == p.old_rating
-      p.trn_rating.should be_nil
-      p.new_games.should == p.old_games
-      p.new_full.should be false
-      p.rating_change.should == 0
-      p.bonus.should be_nil
-      p.expected_score.should be_nil
-      p.last_signature.should == "2D34"
-      p.curr_signature.should == p.last_signature
+      expect(p.category).to eq("new_player")
+      expect(p.icu_id).to be_nil
+      expect(p.old_rating).to be_nil
+      expect(p.old_games).to eq(0)
+      expect(p.old_full).to be false
+      expect(p.last_player_id).to be_nil
+      expect(p.k_factor).to be_nil
+      expect(p.actual_score).to eq(nil)
+      expect(p.unrateable).to be true
+      expect(p.new_rating).to eq(p.old_rating)
+      expect(p.trn_rating).to be_nil
+      expect(p.new_games).to eq(p.old_games)
+      expect(p.new_full).to be false
+      expect(p.rating_change).to eq(0)
+      expect(p.bonus).to be_nil
+      expect(p.expected_score).to be_nil
+      expect(p.last_signature).to eq("2D34")
+      expect(p.curr_signature).to eq(p.last_signature)
 
       # The number of players who start without any rating.
-      @t1.players.find_all{ |p| p.old_rating.nil? }.count.should == 5
+      expect(@t1.players.find_all{ |p| p.old_rating.nil? }.count).to eq(5)
 
       # K-factors.
-      @t1.players.find_all{ |p| p.k_factor == 16 }.size.should == 18
-      @t1.players.find_all{ |p| p.k_factor == 24 }.size.should == 8
-      @t1.players.find_all{ |p| p.k_factor == 32 }.size.should == 1
-      @t1.players.find_all{ |p| p.k_factor == 40 }.size.should == 4
-      @t1.players.find_all{ |p| p.k_factor.nil?  }.size.should == 9
+      expect(@t1.players.find_all{ |p| p.k_factor == 16 }.size).to eq(18)
+      expect(@t1.players.find_all{ |p| p.k_factor == 24 }.size).to eq(8)
+      expect(@t1.players.find_all{ |p| p.k_factor == 32 }.size).to eq(1)
+      expect(@t1.players.find_all{ |p| p.k_factor == 40 }.size).to eq(4)
+      expect(@t1.players.find_all{ |p| p.k_factor.nil?  }.size).to eq(9)
 
       # New tournament data.
-      @t1.reratings.should == 1
-      @t1.first_rated.should_not be_nil
-      @t1.last_rated.should == @t1.first_rated
-      @t1.stage.should == "rated"
-      @t1.last_signature.should_not be_nil
-      @t1.curr_signature.should == @t1.last_signature
-      @t1.last_tournament_id.should == @t1.old_last_tournament_id
-      @t1.locked.should be true
+      expect(@t1.reratings).to eq(1)
+      expect(@t1.first_rated).to_not be_nil
+      expect(@t1.last_rated).to eq(@t1.first_rated)
+      expect(@t1.stage).to eq("rated")
+      expect(@t1.last_signature).to_not be_nil
+      expect(@t1.curr_signature).to eq(@t1.last_signature)
+      expect(@t1.last_tournament_id).to eq(@t1.old_last_tournament_id)
+      expect(@t1.locked).to be true
 
       # What tournament should be rated next?
-      Tournament.next_for_rating.should == @t3
+      expect(Tournament.next_for_rating).to eq(@t3)
 
       # Pre-rating 2nd tournament data.
-      @t3.reratings.should == 0
-      @t3.first_rated.should be_nil
-      @t3.last_rated.should be_nil
-      @t3.stage.should == "queued"
-      @t3.rorder.should == 2
+      expect(@t3.reratings).to eq(0)
+      expect(@t3.first_rated).to be_nil
+      expect(@t3.last_rated).to be_nil
+      expect(@t3.stage).to eq("queued")
+      expect(@t3.rorder).to eq(2)
 
       # Rate the 2nd tournament.
       @t3.rate!
@@ -399,125 +399,125 @@ describe Tournament do
       # ICU player with full rating who played in both tournaments.
       p1 = @t1.players.find_by_last_name("Cafolla")
       p3 = @t3.players.find_by_last_name("Cafolla")
-      p3.old_rating.should == p1.new_rating
-      p3.old_games.should == p1.new_games
-      p3.old_full.should be true
-      p3.last_player_id.should == p1.id
-      p3.k_factor.should == p1.k_factor
-      p3.bonus.should == 0
-      p3.unrateable.should be false
-      p3.new_rating.should be < p3.old_rating
-      p3.new_games.should == p3.old_games + 6
-      p3.new_full.should be true
-      p3.rating_change.should == p3.new_rating - p3.old_rating
-      ((p3.actual_score - p3.expected_score) * p3.k_factor).should be_within(0.5).of(p3.new_rating - p3.old_rating)
+      expect(p3.old_rating).to eq(p1.new_rating)
+      expect(p3.old_games).to eq(p1.new_games)
+      expect(p3.old_full).to be true
+      expect(p3.last_player_id).to eq(p1.id)
+      expect(p3.k_factor).to eq(p1.k_factor)
+      expect(p3.bonus).to eq(0)
+      expect(p3.unrateable).to be false
+      expect(p3.new_rating).to be < p3.old_rating
+      expect(p3.new_games).to eq(p3.old_games + 6)
+      expect(p3.new_full).to be true
+      expect(p3.rating_change).to eq(p3.new_rating - p3.old_rating)
+      expect((p3.actual_score - p3.expected_score) * p3.k_factor).to be_within(0.5).of(p3.new_rating - p3.old_rating)
 
       # ICU player with full rating but started with less than 20 games.
       p1 = @t1.players.find_by_last_name("O'Riordan")
       p3 = @t3.players.find_by_last_name("O'Riordan")
-      p3.old_rating.should == p1.new_rating
-      p3.old_games.should == p1.new_games
-      p3.old_full.should be true
-      p3.last_player_id.should == p1.id
-      p3.k_factor.should == p1.k_factor
-      p3.bonus.should == 0
-      p3.unrateable.should be false
-      p3.new_rating.should be < p3.old_rating
-      p3.new_games.should == p3.old_games + 6
-      p3.new_full.should be true
-      p3.rating_change.should == p3.new_rating - p3.old_rating
-      ((p3.actual_score - p3.expected_score) * p3.k_factor).should be_within(0.5).of(p3.new_rating - p3.old_rating)
+      expect(p3.old_rating).to eq(p1.new_rating)
+      expect(p3.old_games).to eq(p1.new_games)
+      expect(p3.old_full).to be true
+      expect(p3.last_player_id).to eq(p1.id)
+      expect(p3.k_factor).to eq(p1.k_factor)
+      expect(p3.bonus).to eq(0)
+      expect(p3.unrateable).to be false
+      expect(p3.new_rating).to be < p3.old_rating
+      expect(p3.new_games).to eq(p3.old_games + 6)
+      expect(p3.new_full).to be true
+      expect(p3.rating_change).to eq(p3.new_rating - p3.old_rating)
+      expect((p3.actual_score - p3.expected_score) * p3.k_factor).to be_within(0.5).of(p3.new_rating - p3.old_rating)
 
       # ICU player with full rating who only played in this tournament.
       p3 = @t3.players.find_by_last_name("Quinn")
-      p3.old_rating.should == @r[1402].rating
-      p3.old_games.should == @r[1402].games
-      p3.old_full.should == @r[1402].full
-      p3.last_player_id.should be_nil
-      p3.bonus.should == 0
-      p3.k_factor.should == 16
-      p3.unrateable.should be false
-      p3.new_rating.should be > p3.old_rating
-      p3.new_games.should == p3.old_games + 6
-      p3.new_full.should be true
-      p3.rating_change.should == p3.new_rating - p3.old_rating
-      ((p3.actual_score - p3.expected_score) * p3.k_factor).should be_within(0.5).of(p3.new_rating - p3.old_rating)
+      expect(p3.old_rating).to eq(@r[1402].rating)
+      expect(p3.old_games).to eq(@r[1402].games)
+      expect(p3.old_full).to eq(@r[1402].full)
+      expect(p3.last_player_id).to be_nil
+      expect(p3.bonus).to eq(0)
+      expect(p3.k_factor).to eq(16)
+      expect(p3.unrateable).to be false
+      expect(p3.new_rating).to be > p3.old_rating
+      expect(p3.new_games).to eq(p3.old_games + 6)
+      expect(p3.new_full).to be true
+      expect(p3.rating_change).to eq(p3.new_rating - p3.old_rating)
+      expect((p3.actual_score - p3.expected_score) * p3.k_factor).to be_within(0.5).of(p3.new_rating - p3.old_rating)
 
       # Foreign guest, played in both tournaments.
       p1 = @t1.players.find_by_last_name("Hebden")
       p3 = @t3.players.find_by_last_name("Hebden")
-      p3.category.should == "foreign_player"
-      p3.unrateable.should be false
-      p3.old_rating.should_not == p1.new_rating
-      p3.rating_change.should == 0
-      p3.last_player_id.should be_nil
+      expect(p3.category).to eq("foreign_player")
+      expect(p3.unrateable).to be false
+      expect(p3.old_rating).to_not eq(p1.new_rating)
+      expect(p3.rating_change).to eq(0)
+      expect(p3.last_player_id).to be_nil
 
       # Played in both tournaments and transitioned from provisional to full rating.
       p1 = @t1.players.find_by_last_name("Maroroa")
       p3 = @t3.players.find_by_last_name("Maroroa")
-      p3.category.should == "icu_player"
-      p3.old_rating.should == p1.new_rating
-      p3.old_games.should == p1.new_games
-      p1.old_games.should be < 20
-      p3.old_games.should be >= 20
-      p1.old_full.should be false
-      p3.old_full.should be true
-      p3.last_player_id.should == p1.id
-      p3.k_factor.should_not be_nil
-      p3.unrateable.should be false
-      p3.new_games.should == p3.old_games + 6
-      p3.new_full.should be true
-      p3.rating_change.should == p3.new_rating - p3.old_rating
-      p3.bonus.should == 0
-      ((p3.actual_score - p3.expected_score) * p3.k_factor).should be_within(0.5).of(p3.new_rating - p3.old_rating)
+      expect(p3.category).to eq("icu_player")
+      expect(p3.old_rating).to eq(p1.new_rating)
+      expect(p3.old_games).to eq(p1.new_games)
+      expect(p1.old_games).to be < 20
+      expect(p3.old_games).to be >= 20
+      expect(p1.old_full).to be false
+      expect(p3.old_full).to be true
+      expect(p3.last_player_id).to eq(p1.id)
+      expect(p3.k_factor).to_not be_nil
+      expect(p3.unrateable).to be false
+      expect(p3.new_games).to eq(p3.old_games + 6)
+      expect(p3.new_full).to be true
+      expect(p3.rating_change).to eq(p3.new_rating - p3.old_rating)
+      expect(p3.bonus).to eq(0)
+      expect((p3.actual_score - p3.expected_score) * p3.k_factor).to be_within(0.5).of(p3.new_rating - p3.old_rating)
 
       # ICU player with provisional rating who was unrateable in his last tournament.
       p1 = @t1.players.find_by_last_name("Graham")
       p3 = @t3.players.find_by_last_name("Graham")
-      p3.category.should == "icu_player"
-      p3.old_rating.should == p1.new_rating
-      p3.old_games.should == p1.new_games
-      p3.old_full.should == p1.new_full
-      p3.last_player_id.should == p1.id
-      p3.k_factor.should be_nil
-      p3.actual_score.should == 1.0
-      p3.unrateable.should be false
-      p3.new_rating.should_not == p1.new_rating
-      p3.trn_rating.should_not be_nil
-      p3.new_games.should == p1.new_games + 2
-      p3.new_full.should be false
-      p3.rating_change.should == p3.new_rating - p3.old_rating
-      p3.bonus.should be_nil
-      p3.expected_score.should_not be_nil
+      expect(p3.category).to eq("icu_player")
+      expect(p3.old_rating).to eq(p1.new_rating)
+      expect(p3.old_games).to eq(p1.new_games)
+      expect(p3.old_full).to eq(p1.new_full)
+      expect(p3.last_player_id).to eq(p1.id)
+      expect(p3.k_factor).to be_nil
+      expect(p3.actual_score).to eq(1.0)
+      expect(p3.unrateable).to be false
+      expect(p3.new_rating).to_not eq(p1.new_rating)
+      expect(p3.trn_rating).to_not be_nil
+      expect(p3.new_games).to eq(p1.new_games + 2)
+      expect(p3.new_full).to be false
+      expect(p3.rating_change).to eq(p3.new_rating - p3.old_rating)
+      expect(p3.bonus).to be_nil
+      expect(p3.expected_score).to_not be_nil
 
       # ICU player with no previous rating who was unrateable in his last tournament.
       p1 = @t1.players.find_by_last_name("Mitchell")
       p3 = @t3.players.find_by_last_name("Mitchell")
-      p3.category.should == "icu_player"
-      p3.old_rating.should be_nil
-      p3.old_games.should == 0
-      p3.old_full.should be false
-      p3.last_player_id.should == p1.id
-      p3.k_factor.should be_nil
-      p3.actual_score.should == 0.5
-      p3.unrateable.should be false
-      p3.new_rating.should_not be_nil
-      p3.trn_rating.should_not be_nil
-      p3.new_games.should == 1
-      p3.new_full.should be false
-      p3.rating_change.should == 0
-      p3.bonus.should be_nil
-      p3.expected_score.should_not be_nil
+      expect(p3.category).to eq("icu_player")
+      expect(p3.old_rating).to be_nil
+      expect(p3.old_games).to eq(0)
+      expect(p3.old_full).to be false
+      expect(p3.last_player_id).to eq(p1.id)
+      expect(p3.k_factor).to be_nil
+      expect(p3.actual_score).to eq(0.5)
+      expect(p3.unrateable).to be false
+      expect(p3.new_rating).to_not be_nil
+      expect(p3.trn_rating).to_not be_nil
+      expect(p3.new_games).to eq(1)
+      expect(p3.new_full).to be false
+      expect(p3.rating_change).to eq(0)
+      expect(p3.bonus).to be_nil
+      expect(p3.expected_score).to_not be_nil
 
       # Check new tournament data.
-      @t3.reratings.should == 1
-      @t3.first_rated.should_not be_nil
-      @t3.last_rated.should == @t3.first_rated
-      @t3.stage.should == "rated"
-      @t3.last_tournament_id.should == @t3.old_last_tournament_id
+      expect(@t3.reratings).to eq(1)
+      expect(@t3.first_rated).to_not be_nil
+      expect(@t3.last_rated).to eq(@t3.first_rated)
+      expect(@t3.stage).to eq("rated")
+      expect(@t3.last_tournament_id).to eq(@t3.old_last_tournament_id)
 
       # What tournament should be rated next?
-      Tournament.next_for_rating.should be_nil
+      expect(Tournament.next_for_rating).to be_nil
 
       # Add a new tournament and reload the others (which will have been requeued).
       @t2 = test_tournament("kilbunny_masters_2011.tab", @u.id)
@@ -526,51 +526,51 @@ describe Tournament do
       [@t1, @t3].each { |t| t.reload }
 
       # The order now.
-      @t1.rorder.should == 1
-      @t2.rorder.should == 2
-      @t3.rorder.should == 3
+      expect(@t1.rorder).to eq(1)
+      expect(@t2.rorder).to eq(2)
+      expect(@t3.rorder).to eq(3)
 
       # What tournament should be rated next?
-      Tournament.next_for_rating.should == @t2
+      expect(Tournament.next_for_rating).to eq(@t2)
 
       # Rate it.
       @t2.rate!
 
       # What tournament should be rated next?
-      Tournament.next_for_rating.should == @t3
+      expect(Tournament.next_for_rating).to eq(@t3)
 
       # Rate it.
       @t3.rate!
 
       # What tournament should be rated next?
-      Tournament.next_for_rating.should be_nil
+      expect(Tournament.next_for_rating).to be_nil
 
       # Check some player data.
       p1 = @t1.players.find_by_last_name("Cafolla")
       p2 = @t2.players.find_by_last_name("Cafolla")
       p3 = @t3.players.find_by_last_name("Cafolla")
-      p1.last_player.should be_nil
-      p2.last_player.should == p1
-      p3.last_player.should == p2
-      p2.old_rating.should == p1.new_rating
-      p3.old_rating.should == p2.new_rating
-      p2.new_rating.should be < p1.new_rating
+      expect(p1.last_player).to be_nil
+      expect(p2.last_player).to eq(p1)
+      expect(p3.last_player).to eq(p2)
+      expect(p2.old_rating).to eq(p1.new_rating)
+      expect(p3.old_rating).to eq(p2.new_rating)
+      expect(p2.new_rating).to be < p1.new_rating
       p1 = @t1.players.find_by_last_name("Orr")
       p2 = @t2.players.find_by_last_name("Orr")
       p3 = @t3.players.find_by_last_name("Orr")
-      p1.last_player.should be_nil
-      p2.last_player.should == p1
-      p3.should be_nil
-      p2.old_rating.should == p1.new_rating
-      p2.new_rating.should be > p1.new_rating
+      expect(p1.last_player).to be_nil
+      expect(p2.last_player).to eq(p1)
+      expect(p3).to be_nil
+      expect(p2.old_rating).to eq(p1.new_rating)
+      expect(p2.new_rating).to be > p1.new_rating
 
       # Check some tournament data.
-      @t1.reratings.should == 1
-      @t2.reratings.should == 1
-      @t3.reratings.should == 2
-      @t1.last_rated.should == @t1.first_rated
-      @t2.last_rated.should == @t2.first_rated
-      @t3.last_rated.should be > @t3.first_rated
+      expect(@t1.reratings).to eq(1)
+      expect(@t2.reratings).to eq(1)
+      expect(@t3.reratings).to eq(2)
+      expect(@t1.last_rated).to eq(@t1.first_rated)
+      expect(@t2.last_rated).to eq(@t2.first_rated)
+      expect(@t3.last_rated).to be > @t3.first_rated
 
       # Test the effect of altering a result in one of the tournaments.
       ["Orr", "Cafolla"].each do |n|
@@ -581,105 +581,105 @@ describe Tournament do
       end
       @t2.reload
       @t2.check_for_changes  # this is needed here to do what Tournament#show would normally do
-      @t2.last_signature.should_not == @t2.curr_signature
+      expect(@t2.last_signature).to_not eq(@t2.curr_signature)
 
       # What tournaments should be rated next?
-      Tournament.next_for_rating.should == @t2
+      expect(Tournament.next_for_rating).to eq(@t2)
       @t2.rate!
-      @t2.last_signature.should == @t2.curr_signature
-      Tournament.next_for_rating.should == @t3
+      expect(@t2.last_signature).to eq(@t2.curr_signature)
+      expect(Tournament.next_for_rating).to eq(@t3)
       @t3.rate!
-      Tournament.next_for_rating.should be_nil
+      expect(Tournament.next_for_rating).to be_nil
 
       # Check some player data.
       p1 = @t1.players.find_by_last_name("Cafolla")
       p2 = @t2.players.find_by_last_name("Cafolla")
-      p2.new_rating.should be > p1.new_rating
+      expect(p2.new_rating).to be > p1.new_rating
       p1 = @t1.players.find_by_last_name("Orr")
       p2 = @t2.players.find_by_last_name("Orr")
-      p2.new_rating.should be < p1.new_rating
+      expect(p2.new_rating).to be < p1.new_rating
 
       # Check some tournament data.
-      @t1.reratings.should == 1
-      @t2.reratings.should == 2
-      @t3.reratings.should == 3
-      @t1.last_rated.should == @t1.first_rated
-      @t2.last_rated.should be > @t2.first_rated
-      @t3.last_rated.should be > @t3.first_rated
+      expect(@t1.reratings).to eq(1)
+      expect(@t2.reratings).to eq(2)
+      expect(@t3.reratings).to eq(3)
+      expect(@t1.last_rated).to eq(@t1.first_rated)
+      expect(@t2.last_rated).to be > @t2.first_rated
+      expect(@t3.last_rated).to be > @t3.first_rated
 
       # Remember the rating of a player who played in both the last two tournaments.
       r123 = @t3.players.find_by_last_name("Cafolla").new_rating
 
       # Test the effect of moving the date of a tournament.
-      @t3.last_tournament_id.should == @t3.old_last_tournament_id
+      expect(@t3.last_tournament_id).to eq(@t3.old_last_tournament_id)
       @t3.start = @t2.start - 1.day
       @t3.finish = @t2.finish - 1.day
       @t3.save
       @t3.reload
-      @t3.last_tournament_id.should_not == @t3.old_last_tournament_id
+      expect(@t3.last_tournament_id).to_not eq(@t3.old_last_tournament_id)
 
       # The other two tournaments should have changed.
       [@t1, @t2].each { |t| t.reload }
-      @t1.rorder.should == 1
-      @t2.rorder.should == 3
-      @t3.rorder.should == 2
+      expect(@t1.rorder).to eq(1)
+      expect(@t2.rorder).to eq(3)
+      expect(@t3.rorder).to eq(2)
 
       # The tournament that moved back in time should be the next to be rated.
-      Tournament.next_for_rating.should == @t3
+      expect(Tournament.next_for_rating).to eq(@t3)
       @t3.rate!
-      @t3.last_signature.should == @t3.curr_signature
-      Tournament.next_for_rating.should == @t2
+      expect(@t3.last_signature).to eq(@t3.curr_signature)
+      expect(Tournament.next_for_rating).to eq(@t2)
       @t2.rate!
-      @t2.last_signature.should == @t2.curr_signature
-      Tournament.next_for_rating.should be_nil
+      expect(@t2.last_signature).to eq(@t2.curr_signature)
+      expect(Tournament.next_for_rating).to be_nil
 
       # Check some tournament data.
-      @t1.reratings.should == 1
-      @t2.reratings.should == 3
-      @t3.reratings.should == 4
+      expect(@t1.reratings).to eq(1)
+      expect(@t2.reratings).to eq(3)
+      expect(@t3.reratings).to eq(4)
 
       # The player's rating should have changed because of the different order.
-      @t2.players.find_by_last_name("Cafolla").new_rating.should_not == r123
+      expect(@t2.players.find_by_last_name("Cafolla").new_rating).to_not eq(r123)
 
       # Put the tournament's back in the right order.
-      @t3.last_tournament_id.should == @t3.old_last_tournament_id
+      expect(@t3.last_tournament_id).to eq(@t3.old_last_tournament_id)
       @t3.start = @t2.start + 1.day
       @t3.finish = @t2.finish + 1.day
       @t3.save
       @t3.reload
-      @t3.last_tournament_id.should_not == @t3.old_last_tournament_id
+      expect(@t3.last_tournament_id).to_not eq(@t3.old_last_tournament_id)
       [@t1, @t2].each { |t| t.reload }
-      @t1.rorder.should == 1
-      @t2.rorder.should == 2
-      @t3.rorder.should == 3
+      expect(@t1.rorder).to eq(1)
+      expect(@t2.rorder).to eq(2)
+      expect(@t3.rorder).to eq(3)
 
       # The middle tournament should be the first to be rated.
-      Tournament.next_for_rating.should == @t2
+      expect(Tournament.next_for_rating).to eq(@t2)
       @t2.rate!
-      @t2.last_signature.should == @t2.curr_signature
-      Tournament.next_for_rating.should == @t3
+      expect(@t2.last_signature).to eq(@t2.curr_signature)
+      expect(Tournament.next_for_rating).to eq(@t3)
       @t3.rate!
-      @t3.last_signature.should == @t3.curr_signature
-      Tournament.next_for_rating.should be_nil
+      expect(@t3.last_signature).to eq(@t3.curr_signature)
+      expect(Tournament.next_for_rating).to be_nil
 
       # Check some tournament data.
-      @t1.reratings.should == 1
-      @t2.reratings.should == 4
-      @t3.reratings.should == 5
+      expect(@t1.reratings).to eq(1)
+      expect(@t2.reratings).to eq(4)
+      expect(@t3.reratings).to eq(5)
 
       # The player's final rating should now be back to what it was.
-      @t3.players.find_by_last_name("Cafolla").new_rating.should == r123
+      expect(@t3.players.find_by_last_name("Cafolla").new_rating).to eq(r123)
 
       # Test the effect of merely rerating the first tournament without changing anything else.
       @t1.rate!
-      Tournament.next_for_rating.should == @t2
+      expect(Tournament.next_for_rating).to eq(@t2)
       @t2.rate!
-      Tournament.next_for_rating.should == @t3
+      expect(Tournament.next_for_rating).to eq(@t3)
       @t3.rate!
-      Tournament.next_for_rating.should be_nil
-      @t1.reratings.should == 2
-      @t2.reratings.should == 5
-      @t3.reratings.should == 6
+      expect(Tournament.next_for_rating).to be_nil
+      expect(@t1.reratings).to eq(2)
+      expect(@t2.reratings).to eq(5)
+      expect(@t3.reratings).to eq(6)
     end
   end
 
@@ -697,29 +697,29 @@ describe Tournament do
       end
 
       # What tournament should be rated next?
-      Tournament.next_for_rating.should == @t1
+      expect(Tournament.next_for_rating).to eq(@t1)
 
       # Rate the 1st tournament.
       @t1.rate!
 
       # What tournament should be rated next now?
-      Tournament.next_for_rating.should == @t2
+      expect(Tournament.next_for_rating).to eq(@t2)
 
       # Rate the 2nd tournament.
       @t2.rate!
 
       # What tournament should be rated next now?
-      Tournament.next_for_rating.should be_nil
+      expect(Tournament.next_for_rating).to be_nil
 
       # Arrange for the second tournament to be rerated.
       @t2.rerate = true
       @t2.save
-      Tournament.next_for_rating.should == @t2
+      expect(Tournament.next_for_rating).to eq(@t2)
 
       # Arrange for the second tournament to be rerated.
       @t1.rerate = true
       @t1.save
-      Tournament.next_for_rating.should == @t1
+      expect(Tournament.next_for_rating).to eq(@t1)
     end
   end
 
@@ -737,15 +737,15 @@ describe Tournament do
     end
 
     it "should have correct initial ordering" do
-      @t1.rorder.should == 1
-      @t2.rorder.should == 2
-      @t3.rorder.should == 3
-      @t1.last_tournament.should be_nil
-      @t2.last_tournament.should == @t1
-      @t3.last_tournament.should == @t2
-      @t1.next_tournament.should == @t2
-      @t2.next_tournament.should == @t3
-      @t3.next_tournament.should be_nil
+      expect(@t1.rorder).to eq(1)
+      expect(@t2.rorder).to eq(2)
+      expect(@t3.rorder).to eq(3)
+      expect(@t1.last_tournament).to be_nil
+      expect(@t2.last_tournament).to eq(@t1)
+      expect(@t3.last_tournament).to eq(@t2)
+      expect(@t1.next_tournament).to eq(@t2)
+      expect(@t2.next_tournament).to eq(@t3)
+      expect(@t3.next_tournament).to be_nil
     end
 
     it "should requeue a tournament that has changed significantly" do
@@ -753,31 +753,31 @@ describe Tournament do
       @t2.finish = "2010-06-18"
       @t2.save
       [@t1, @t2, @t3].each { |t| t.reload }
-      @t1.rorder.should == 2
-      @t2.rorder.should == 1
-      @t3.rorder.should == 3
+      expect(@t1.rorder).to eq(2)
+      expect(@t2.rorder).to eq(1)
+      expect(@t3.rorder).to eq(3)
       @t2.start = "2012-01-16"
       @t2.finish = "2012-01-18"
       @t2.save
       [@t1, @t2, @t3].each { |t| t.reload }
-      @t1.rorder.should == 1
-      @t2.rorder.should == 3
-      @t3.rorder.should == 2
+      expect(@t1.rorder).to eq(1)
+      expect(@t2.rorder).to eq(3)
+      expect(@t3.rorder).to eq(2)
     end
 
     it "finish is more significant than start" do
       @t1.finish = "2012-04-17"
       @t1.save
       [@t1, @t2, @t3].each { |t| t.reload }
-      @t1.rorder.should == 3
-      @t2.rorder.should == 1
-      @t3.rorder.should == 2
-      @t1.last_tournament.should == @t3
-      @t2.last_tournament.should be_nil
-      @t3.last_tournament.should == @t2
-      @t1.next_tournament.should be_nil
-      @t2.next_tournament.should == @t3
-      @t3.next_tournament.should == @t1
+      expect(@t1.rorder).to eq(3)
+      expect(@t2.rorder).to eq(1)
+      expect(@t3.rorder).to eq(2)
+      expect(@t1.last_tournament).to eq(@t3)
+      expect(@t2.last_tournament).to be_nil
+      expect(@t3.last_tournament).to eq(@t2)
+      expect(@t1.next_tournament).to be_nil
+      expect(@t2.next_tournament).to eq(@t3)
+      expect(@t3.next_tournament).to eq(@t1)
     end
   end
 
@@ -795,17 +795,17 @@ describe Tournament do
     it "players signature is not changed by moving a tournament" do
       @t.move_stage("ready", @u)
       @t.check_for_changes
-      @t.curr_signature.should be_nil
+      expect(@t.curr_signature).to be_nil
     end
 
     it "players signature differs after a rated tournament is changed" do
       @t.rate!
-      @t.last_signature.should_not be_nil
-      @t.curr_signature.should == @t.last_signature
+      expect(@t.last_signature).to_not be_nil
+      expect(@t.curr_signature).to eq(@t.last_signature)
       @t.players[0].results[1].result = 'D'
       @t.players[1].results[1].result = 'D'
       @t.check_for_changes
-      @t.curr_signature.should_not == @t.last_signature
+      expect(@t.curr_signature).to_not eq(@t.last_signature)
     end
   end
 
@@ -822,7 +822,7 @@ describe Tournament do
 
     it "should fail if wrong stage" do
       @t.move_stage("ready", @u)
-      lambda{ @t.rate! }.should raise_error(/stage.*ready/)
+      expect{ @t.rate! }.to raise_error(/stage.*ready/)
     end
 
     it "should fail if there are any player issues" do
@@ -830,21 +830,21 @@ describe Tournament do
       p.icu_id = p.icu_id + 1
       p.save
       @t.reload
-      lambda{ @t.rate! }.should raise_error(/bad status/)
+      expect{ @t.rate! }.to raise_error(/bad status/)
     end
 
     it "should not alter database if calculation fails" do
-      @t.reratings.should == 0
-      @t.stage.should == "queued"
+      expect(@t.reratings).to eq(0)
+      expect(@t.stage).to eq("queued")
       p = @t.players.find_by_last_name("Cafolla")
-      p.old_rating.should be_nil
-      @t.should_receive(:update_tournament_after_rating).and_raise(RuntimeError.new("oops"))
-      lambda{ @t.rate! }.should raise_error(/oops/)
+      expect(p.old_rating).to be_nil
+      expect(@t).to receive(:update_tournament_after_rating).and_raise(RuntimeError.new("oops"))
+      expect{ @t.rate! }.to raise_error(/oops/)
       @t.reload
-      @t.reratings.should == 0
-      @t.stage.should == "queued"
+      expect(@t.reratings).to eq(0)
+      expect(@t.stage).to eq("queued")
       p = @t.players.find_by_last_name("Cafolla")
-      p.old_rating.should be_nil
+      expect(p.old_rating).to be_nil
     end
   end
 
@@ -858,54 +858,54 @@ describe Tournament do
     end
 
     it "initial and updated status" do
-      @t.players.select{ |p| p.fide_id }.count.should == 0
-      @t.players.select{ |p| p.fed }.count.should == 3
-      @t.players.select{ |p| p.dob }.count.should == 2
+      expect(@t.players.select{ |p| p.fide_id }.count).to eq(0)
+      expect(@t.players.select{ |p| p.fed }.count).to eq(3)
+      expect(@t.players.select{ |p| p.dob }.count).to eq(2)
       data = Tournaments::FideData.new(@t)
-      data.status.size.should be 3
+      expect(data.status.size).to be 3
 
       [
         ["FTT", 2, "Fehr|Short"],
         ["FTF", 1, "Hebden"],
         ["FFF", 37, "Baburin|Baczkowski|Cafolla|-|Wynarczyk"],
       ].each_with_index do |e, i|
-        data.status[i].sig.should == e[0]
-        data.status[i].count.should == e[1]
-        data.status[i].samples.map{ |p| p ? p.last_name : "-" }.join("|").should == e[2]
+        expect(data.status[i].sig).to eq(e[0])
+        expect(data.status[i].count).to eq(e[1])
+        expect(data.status[i].samples.map{ |p| p ? p.last_name : "-" }.join("|")).to eq(e[2])
       end
 
       data = Tournaments::FideData.new(@t, true)
-      data.status.size.should be 4
+      expect(data.status.size).to be 4
       [
         ["TTF", 21, "Baburin|Cafolla|Collins|-|Short"],
         ["FTT", 15, "Cooper|Daianu|Eliens|-|Wynarczyk"],
         ["FTF",  2, "Hebden|Maroroa"],
         ["FFF",  2, "Baczkowski|Grennel"],
       ].each_with_index do |e, i|
-        data.status[i].sig.should == e[0]
-        data.status[i].count.should == e[1]
-        data.status[i].samples.map{ |p| p ? p.last_name : "-" }.join("|").should == e[2]
+        expect(data.status[i].sig).to eq(e[0])
+        expect(data.status[i].count).to eq(e[1])
+        expect(data.status[i].samples.map{ |p| p ? p.last_name : "-" }.join("|")).to eq(e[2])
       end
 
       updates = data.updates
-      updates.should be_instance_of(Hash)
-      updates.count.should == 16
-      updates[:with_icu_id].should == 35
-      updates[:fid_new].count.should == 21
-      updates[:fid_unchanged].count.should == 0
-      updates[:fid_changed].count.should == 0
-      updates[:fid_unrecognized].count.should == 0
-      updates[:fed_new].count.should == 35
-      updates[:fed_unchanged].count.should == 0
-      updates[:fed_changed].count.should == 0
-      updates[:fed_mismatch].count.should == 0
-      updates[:fed_unrecognized].count.should == 0
-      updates[:dob_new].count.should == 13
-      updates[:dob_unchanged].count.should == 0
-      updates[:dob_changed].count.should == 0
-      updates[:dob_mismatch].count.should == 0
-      updates[:dob_removed].count.should == 0
-      updates[:dob_unrecognized].count.should == 0
+      expect(updates).to be_instance_of(Hash)
+      expect(updates.count).to eq(16)
+      expect(updates[:with_icu_id]).to eq(35)
+      expect(updates[:fid_new].count).to eq(21)
+      expect(updates[:fid_unchanged].count).to eq(0)
+      expect(updates[:fid_changed].count).to eq(0)
+      expect(updates[:fid_unrecognized].count).to eq(0)
+      expect(updates[:fed_new].count).to eq(35)
+      expect(updates[:fed_unchanged].count).to eq(0)
+      expect(updates[:fed_changed].count).to eq(0)
+      expect(updates[:fed_mismatch].count).to eq(0)
+      expect(updates[:fed_unrecognized].count).to eq(0)
+      expect(updates[:dob_new].count).to eq(13)
+      expect(updates[:dob_unchanged].count).to eq(0)
+      expect(updates[:dob_changed].count).to eq(0)
+      expect(updates[:dob_mismatch].count).to eq(0)
+      expect(updates[:dob_removed].count).to eq(0)
+      expect(updates[:dob_unrecognized].count).to eq(0)
     end
 
     it "updated status corner cases" do
@@ -924,7 +924,7 @@ describe Tournament do
       FidePlayer.find_by_last_name("Freeman").update_column(:born, 1981)  # artificially create a DOB mismatch
 
       data = Tournaments::FideData.new(@t, true)
-      data.status.size.should be 5
+      expect(data.status.size).to be 5
       [
         ["TTF", 20, "Baburin|Cafolla|Collins|-|Short"],
         ["TFF",  1, "Osborne"],
@@ -932,30 +932,30 @@ describe Tournament do
         ["FTF",  2, "Hebden|Maroroa"],
         ["FFF",  2, "Baczkowski|Grennel"],
       ].each_with_index do |e, i|
-        data.status[i].sig.should == e[0]
-        data.status[i].count.should == e[1]
-        data.status[i].samples.map{ |p| p ? p.last_name : "-" }.join("|").should == e[2]
+        expect(data.status[i].sig).to eq(e[0])
+        expect(data.status[i].count).to eq(e[1])
+        expect(data.status[i].samples.map{ |p| p ? p.last_name : "-" }.join("|")).to eq(e[2])
       end
 
       updates = data.updates
-      updates.should be_instance_of(Hash)
-      updates.count.should == 16
-      updates[:with_icu_id].should == 35
-      updates[:fid_new].count.should == 19
-      updates[:fid_unchanged].map(&:last_name).join("|").should == "Baburin"
-      updates[:fid_changed].map(&:last_name).join("|").should == "Orr"
-      updates[:fid_unrecognized].count.should == 0
-      updates[:fed_new].count.should == 32
-      updates[:fed_unchanged].map(&:last_name).join("|").should == "Cafolla"
-      updates[:fed_changed].map(&:last_name).join("|").should == "Duffy"
-      updates[:fed_mismatch].map(&:last_name).join("|").should == "Osborne"
-      updates[:fed_unrecognized].count.should == 0
-      updates[:dob_new].count.should == 11
-      updates[:dob_unchanged].map(&:last_name).join("|").should == "Kosten"
-      updates[:dob_changed].map(&:last_name).join("|").should == "Williams"
-      updates[:dob_mismatch].map(&:last_name).join("|").should == "Freeman"
-      updates[:dob_removed].count.should == 1
-      updates[:dob_unrecognized].count.should == 0
+      expect(updates).to be_instance_of(Hash)
+      expect(updates.count).to eq(16)
+      expect(updates[:with_icu_id]).to eq(35)
+      expect(updates[:fid_new].count).to eq(19)
+      expect(updates[:fid_unchanged].map(&:last_name).join("|")).to eq("Baburin")
+      expect(updates[:fid_changed].map(&:last_name).join("|")).to eq("Orr")
+      expect(updates[:fid_unrecognized].count).to eq(0)
+      expect(updates[:fed_new].count).to eq(32)
+      expect(updates[:fed_unchanged].map(&:last_name).join("|")).to eq("Cafolla")
+      expect(updates[:fed_changed].map(&:last_name).join("|")).to eq("Duffy")
+      expect(updates[:fed_mismatch].map(&:last_name).join("|")).to eq("Osborne")
+      expect(updates[:fed_unrecognized].count).to eq(0)
+      expect(updates[:dob_new].count).to eq(11)
+      expect(updates[:dob_unchanged].map(&:last_name).join("|")).to eq("Kosten")
+      expect(updates[:dob_changed].map(&:last_name).join("|")).to eq("Williams")
+      expect(updates[:dob_mismatch].map(&:last_name).join("|")).to eq("Freeman")
+      expect(updates[:dob_removed].count).to eq(1)
+      expect(updates[:dob_unrecognized].count).to eq(0)
     end
   end
 end

@@ -8,29 +8,29 @@ describe IcuPlayer do
         @user = FactoryGirl.create(:user, icu_player: @player)
         login(@user)
       end
-      
+
       it "can access their own details" do
         click_link @player.name(false)
-        page.should have_selector("div.blurb span", text: /logged in as member/i)
-        page.should have_selector(:xpath, %{//tr[th[.='First Name']]/td[.="#{@player.first_name}"]})
-        page.should have_selector(:xpath, %{//tr[th[.='Last Name']]/td[.="#{@player.last_name}"]})
-        page.should have_selector(:xpath, %{//tr[th[.='Date of Birth']]/td[.="#{@player.dob}"]})
-        page.should have_selector(:xpath, %{//tr[th[.='Gender']]/td[.='M']})
-        page.should have_selector(:xpath, %{//tr[th[.='Club']]/td[.='Bangor']})
-        page.should have_selector(:xpath, %{//tr[th[.='Email']]/td[.="#{@player.email}"]})
-        page.should have_selector(:xpath, %{//tr[th[.='ID']]/td[.="#{@player.id}"]})
-        page.should have_selector(:xpath, %{//tr[th[.='Date joined']]/td[.="#{@player.joined}"]})
-        page.should have_selector(:xpath, %{//tr[th[.='ID']]/td[.='None']})
-        page.should have_selector(:xpath, %{//tr[th[.='Federation']]/td[.='IRL']})
-        page.should have_selector(:xpath, %{//tr[th[.='Title']]/td[.='IM']})
-        page.should have_selector("div.blurb span", text: /if.*wrong.*please contact/i)
+        expect(page).to have_selector("div.blurb span", text: /logged in as member/i)
+        expect(page).to have_selector(:xpath, %{//tr[th[.='First Name']]/td[.="#{@player.first_name}"]})
+        expect(page).to have_selector(:xpath, %{//tr[th[.='Last Name']]/td[.="#{@player.last_name}"]})
+        expect(page).to have_selector(:xpath, %{//tr[th[.='Date of Birth']]/td[.="#{@player.dob}"]})
+        expect(page).to have_selector(:xpath, %{//tr[th[.='Gender']]/td[.='M']})
+        expect(page).to have_selector(:xpath, %{//tr[th[.='Club']]/td[.='Bangor']})
+        expect(page).to have_selector(:xpath, %{//tr[th[.='Email']]/td[.="#{@player.email}"]})
+        expect(page).to have_selector(:xpath, %{//tr[th[.='ID']]/td[.="#{@player.id}"]})
+        expect(page).to have_selector(:xpath, %{//tr[th[.='Date joined']]/td[.="#{@player.joined}"]})
+        expect(page).to have_selector(:xpath, %{//tr[th[.='ID']]/td[.='None']})
+        expect(page).to have_selector(:xpath, %{//tr[th[.='Federation']]/td[.='IRL']})
+        expect(page).to have_selector(:xpath, %{//tr[th[.='Title']]/td[.='IM']})
+        expect(page).to have_selector("div.blurb span", text: /if.*wrong.*please contact/i)
       end
-      
+
       it "cannot access another user's details" do
         login("member")
-        page.should have_no_link "#{@player.name} (#{@user.role})"
+        expect(page).to have_no_link "#{@player.name} (#{@user.role})"
         visit icu_player_path(@player)
-        page.should have_selector("span.alert", text: /not authorized/i)
+        expect(page).to have_selector("span.alert", text: /not authorized/i)
       end
     end
 
@@ -41,19 +41,19 @@ describe IcuPlayer do
         @member = FactoryGirl.create(:icu_player)
         login(@user)
       end
-      
+
       it "can access their own details" do
         click_link @player.name(false)
-        page.should have_selector("div.blurb span", text: /logged in as tournament reporter/i)
-        page.should have_selector(:xpath, %{//tr[th[.='ID']]/td[.="#{@player.id}"]})
-        page.should have_selector("div.blurb span", text: /if.*wrong.*please contact/i)
+        expect(page).to have_selector("div.blurb span", text: /logged in as tournament reporter/i)
+        expect(page).to have_selector(:xpath, %{//tr[th[.='ID']]/td[.="#{@player.id}"]})
+        expect(page).to have_selector("div.blurb span", text: /if.*wrong.*please contact/i)
       end
-      
+
       it "can also access another user's details" do
         visit icu_player_path(@member)
-        page.should have_no_selector("div.blurb span", text: /logged in as/i)
-        page.should have_selector(:xpath, "//tr[th[.='ID']]/td[.='#{@member.id}']")
-        page.should have_no_selector("div.blurb span", text: /please contact/i)
+        expect(page).to have_no_selector("div.blurb span", text: /logged in as/i)
+        expect(page).to have_selector(:xpath, "//tr[th[.='ID']]/td[.='#{@member.id}']")
+        expect(page).to have_no_selector("div.blurb span", text: /please contact/i)
       end
     end
   end

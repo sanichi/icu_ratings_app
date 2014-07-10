@@ -5,13 +5,13 @@ module IcuRatings
     describe "insufficient data" do
       it "should be unavailable if there are no rating lists" do
         i = Improvers.new({})
-        i.available?.should be false
+        expect(i.available?).to be false
       end
 
       it "should be unavailable if there is only one rating list" do
         FactoryGirl.create(:icu_rating, list: "2011-09-01", icu_player: FactoryGirl.create(:icu_player))
         i = Improvers.new({})
-        i.available?.should be false
+        expect(i.available?).to be false
       end
     end
 
@@ -43,27 +43,27 @@ module IcuRatings
       it "default settings" do
         params = {}
         i = Improvers.new(params)
-        i.available?.should be true
-        i.from.to_s.should == @l1
-        i.upto.to_s.should == @l4
-        i.rows.size.should == 2
-        i.rows.first.player.id.should == @p1.id
-        i.rows.first.diff.should == 1000
-        i.rows.last.player.id.should == @p2.id
-        i.rows.last.diff.should == 300
+        expect(i.available?).to be true
+        expect(i.from.to_s).to eq(@l1)
+        expect(i.upto.to_s).to eq(@l4)
+        expect(i.rows.size).to eq(2)
+        expect(i.rows.first.player.id).to eq(@p1.id)
+        expect(i.rows.first.diff).to eq(1000)
+        expect(i.rows.last.player.id).to eq(@p2.id)
+        expect(i.rows.last.diff).to eq(300)
       end
 
       it "specific lists" do
         params = { from: @l2, upto: @l3 }
         i = Improvers.new(params)
-        i.available?.should be true
-        i.from.to_s.should == @l2
-        i.upto.to_s.should == @l3
-        i.rows.size.should == 2
-        i.rows.first.player.id.should == @p2.id
-        i.rows.first.diff.should == 100
-        i.rows.last.player.id.should == @p1.id
-        i.rows.last.diff.should == 0
+        expect(i.available?).to be true
+        expect(i.from.to_s).to eq(@l2)
+        expect(i.upto.to_s).to eq(@l3)
+        expect(i.rows.size).to eq(2)
+        expect(i.rows.first.player.id).to eq(@p2.id)
+        expect(i.rows.first.diff).to eq(100)
+        expect(i.rows.last.player.id).to eq(@p1.id)
+        expect(i.rows.last.diff).to eq(0)
       end
     end
   end

@@ -16,29 +16,29 @@ describe "OldRating" do
 
     it "list can be searched for names, IDs and types", js: true do
       visit "/admin/old_ratings"
-      page.should have_selector("#old_rating_results table tr", count: 4)
-      page.should have_selector(:xpath, @fmt1 % ["Orr, Mark", 1350, 2198, "full", 329, "full"])
-      page.should have_selector(:xpath, @fmt1 % ["Orr, John", 1349, 1349, "full",  51, "full"])
-      page.should have_selector(:xpath, @fmt1 % ["Bannon, Aoife", 10349, -58, "provisional", 4, "prov"])
+      expect(page).to have_selector("#old_rating_results table tr", count: 4)
+      expect(page).to have_selector(:xpath, @fmt1 % ["Orr, Mark", 1350, 2198, "full", 329, "full"])
+      expect(page).to have_selector(:xpath, @fmt1 % ["Orr, John", 1349, 1349, "full",  51, "full"])
+      expect(page).to have_selector(:xpath, @fmt1 % ["Bannon, Aoife", 10349, -58, "provisional", 4, "prov"])
       page.fill_in "Last Name", with: "Orr"
       click_button "Search"
-      page.should have_selector("#old_rating_results table tr", count: 3)
-      page.should have_selector(:xpath, @fmt2 % 1350)
-      page.should have_selector(:xpath, @fmt2 % 1349)
+      expect(page).to have_selector("#old_rating_results table tr", count: 3)
+      expect(page).to have_selector(:xpath, @fmt2 % 1350)
+      expect(page).to have_selector(:xpath, @fmt2 % 1349)
       page.fill_in "Last Name", with: ""
       page.fill_in "First Name", with: "Mark"
       click_button "Search"
-      page.should have_selector("#old_rating_results table tr", count: 2)
-      page.should have_selector(:xpath, @fmt2 % 1350)
+      expect(page).to have_selector("#old_rating_results table tr", count: 2)
+      expect(page).to have_selector(:xpath, @fmt2 % 1350)
       page.fill_in "First Name", with: ""
       page.select "Provisional", from: "type"
       click_button "Search"
-      page.should have_selector("#old_rating_results table tr", count: 2)
-      page.should have_selector(:xpath, @fmt2 % 10349)
+      expect(page).to have_selector("#old_rating_results table tr", count: 2)
+      expect(page).to have_selector(:xpath, @fmt2 % 10349)
       page.fill_in "First Name", with: "John"
       click_button "Search"
-      page.should have_selector("#old_rating_results table tr", count: 2)
-      page.should have_selector("td", text: /no matches/i)
+      expect(page).to have_selector("#old_rating_results table tr", count: 2)
+      expect(page).to have_selector("td", text: /no matches/i)
     end
   end
 end

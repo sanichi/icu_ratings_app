@@ -22,27 +22,27 @@ describe Player do
     end
 
     it "should not have changed" do
-      @p.changed_from_original?.should be false
+      expect(@p.changed_from_original?).to be false
     end
 
     it "should be sensitive to a change in name" do
       @p.last_name = "Fischer"
-      @p.changed_from_original?.should be true
-      @p.changed_from_original?(only: :name).should be true
-      @p.changed_from_original?(only: "name").should be true
-      @p.changed_from_original?(except: :name).should be false
-      @p.changed_from_original?(except: "name").should be false
-      @p.changed_from_original?(only: [:icu_id, :fide_rating]).should be false
-      @p.changed_from_original?(only: [:name, :fide_rating]).should be true
-      @p.changed_from_original?(only: %w[name dob]).should be true
-      @p.changed_from_original?(except: [:icu_id, :fide_rating]).should be true
-      @p.changed_from_original?(except: [:name, :fide_rating]).should be false
-      @p.changed_from_original?(except: %w[name fed]).should be false
+      expect(@p.changed_from_original?).to be true
+      expect(@p.changed_from_original?(only: :name)).to be true
+      expect(@p.changed_from_original?(only: "name")).to be true
+      expect(@p.changed_from_original?(except: :name)).to be false
+      expect(@p.changed_from_original?(except: "name")).to be false
+      expect(@p.changed_from_original?(only: [:icu_id, :fide_rating])).to be false
+      expect(@p.changed_from_original?(only: [:name, :fide_rating])).to be true
+      expect(@p.changed_from_original?(only: %w[name dob])).to be true
+      expect(@p.changed_from_original?(except: [:icu_id, :fide_rating])).to be true
+      expect(@p.changed_from_original?(except: [:name, :fide_rating])).to be false
+      expect(@p.changed_from_original?(except: %w[name fed])).to be false
     end
 
     it "should not be sensitive to a reversal of the original name" do
       @p.original_name = "Mark Orr"
-      @p.changed_from_original?.should be false
+      expect(@p.changed_from_original?).to be false
     end
   end
 
@@ -55,17 +55,17 @@ describe Player do
 
     it "should get right signature for foreign player who played in every round" do
       p = @t.players.find_by_last_name_and_first_name("Short", "Nigel")
-      p.signature.should == "2658 1W19 2D11 3W8 4L1 5D9 6W14"
+      expect(p.signature).to eq("2658 1W19 2D11 3W8 4L1 5D9 6W14")
     end
 
     it "should get right signature for ICU player who didn't play in every round" do
       p = @t.players.find_by_last_name("Cafolla")
-      p.signature.should == "159 1L11 2D19 3W27 4W25 5L7"
+      expect(p.signature).to eq("159 1L11 2D19 3W27 4W25 5L7")
     end
 
     it "should get right signature for new player who didn't play in any rounds" do
       p = @t.players.find_by_last_name("Grennel")
-      p.signature.should == ""
+      expect(p.signature).to eq("")
     end
   end
 end

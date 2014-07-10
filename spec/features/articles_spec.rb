@@ -9,29 +9,29 @@ describe "Article" do
 
     it "can create, edit and delete an article" do
       visit "/articles/new"
-      page.should have_title("Create Article")
+      expect(page).to have_title("Create Article")
       headline, story = "Latest News", "Latest Story"
-      Article.where(headline: headline, story: story).count.should == 0
+      expect(Article.where(headline: headline, story: story).count).to eq(0)
       page.fill_in "Headline", with: headline
       page.fill_in "Story", with: story
       page.click_button "Create"
-      page.should have_title(headline)
-      page.should have_selector("span.notice", text: /created/i)
-      page.should have_selector("span", text: headline)
-      page.should have_selector("p", text: story)
-      page.should have_link("Markdown")
-      Article.where(headline: headline, story: story).count.should == 1
+      expect(page).to have_title(headline)
+      expect(page).to have_selector("span.notice", text: /created/i)
+      expect(page).to have_selector("span", text: headline)
+      expect(page).to have_selector("p", text: story)
+      expect(page).to have_link("Markdown")
+      expect(Article.where(headline: headline, story: story).count).to eq(1)
       page.click_link "Edit"
-      page.should have_title("Update Article")
+      expect(page).to have_title("Update Article")
       headline = "Old News"
       page.fill_in "Headline", with: headline
       page.click_button "Update"
-      page.should have_selector("span.notice", text: /updated/i)
-      page.should have_selector("span", text: headline)
-      Article.where(headline: headline, story: story).count.should == 1
+      expect(page).to have_selector("span.notice", text: /updated/i)
+      expect(page).to have_selector("span", text: headline)
+      expect(Article.where(headline: headline, story: story).count).to eq(1)
       page.click_link "Delete"
-      page.should have_title("Articles")
-      Article.where(headline: headline, story: story).count.should == 0
+      expect(page).to have_title("Articles")
+      expect(Article.where(headline: headline, story: story).count).to eq(0)
     end
 
     it "can edit and delete other's articles" do
@@ -40,9 +40,9 @@ describe "Article" do
       page.fill_in "Headline", with: headline
       page.fill_in "Story", with: story
       page.click_button "Update"
-      Article.where(headline: headline, story: story).count.should == 1
+      expect(Article.where(headline: headline, story: story).count).to eq(1)
       page.click_link "Delete"
-      Article.where(headline: headline, story: story).count.should == 0
+      expect(Article.where(headline: headline, story: story).count).to eq(0)
     end
   end
 
@@ -55,18 +55,18 @@ describe "Article" do
 
       it "cannot manage articles, even their own" do
         visit "/articles/new"
-        page.should have_selector("span.alert", text: /authoriz/i)
+        expect(page).to have_selector("span.alert", text: /authoriz/i)
         visit "/articles/#{@article.first.id}/edit"
-        page.should have_selector("span.alert", text: /authoriz/i)
+        expect(page).to have_selector("span.alert", text: /authoriz/i)
         visit "/articles/#{@article.last.id}/edit"
-        page.should have_selector("span.alert", text: /authoriz/i)
+        expect(page).to have_selector("span.alert", text: /authoriz/i)
       end
 
       it "does not have a link to see Markdown" do
         visit "/articles/#{@article.first.id}"
-        page.should have_no_link("Markdown")
+        expect(page).to have_no_link("Markdown")
         visit "/articles/#{@article.last.id}"
-        page.should have_no_link("Markdown")
+        expect(page).to have_no_link("Markdown")
       end
     end
   end
@@ -78,21 +78,21 @@ describe "Article" do
 
     it "can list and read articles" do
       visit "/articles"
-      page.should have_title("Articles")
-      @article.each { |article| page.should have_link(article.headline) }
+      expect(page).to have_title("Articles")
+      @article.each { |article| expect(page).to have_link(article.headline) }
       visit "/articles/#{@article.first.id}"
-      page.should have_title(@article.first.headline)
-      page.should have_selector("span", text: @article.first.headline)
-      page.should have_no_link "Edit"
-      page.should have_no_link "Delete"
-      page.should have_no_link "Markdown"
+      expect(page).to have_title(@article.first.headline)
+      expect(page).to have_selector("span", text: @article.first.headline)
+      expect(page).to have_no_link "Edit"
+      expect(page).to have_no_link "Delete"
+      expect(page).to have_no_link "Markdown"
     end
 
     it "cannot manage articles" do
       visit "/articles/#{@article.first.id}/edit"
-      page.should have_selector("span.alert", text: /authoriz/i)
+      expect(page).to have_selector("span.alert", text: /authoriz/i)
       visit "/articles/new"
-      page.should have_selector("span.alert", text: /authoriz/i)
+      expect(page).to have_selector("span.alert", text: /authoriz/i)
     end
   end
 
@@ -103,10 +103,10 @@ describe "Article" do
 
     it "has only published items" do
       visit "/home"
-      page.should have_no_selector(:xpath, "//a[starts-with(@href,'/articles/')]")
+      expect(page).to have_no_selector(:xpath, "//a[starts-with(@href,'/articles/')]")
       @article.each { |n| n.update_attribute(:published, true) }
       visit "/home"
-      page.should have_selector(:xpath, "//a[starts-with(@href,'/articles/')]", count: @article.size)
+      expect(page).to have_selector(:xpath, "//a[starts-with(@href,'/articles/')]", count: @article.size)
     end
   end
 end

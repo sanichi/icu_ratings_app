@@ -9,11 +9,11 @@ describe "RatingList" do
     end
 
     it "visiting the index should automatically create any missing lists" do
-      RatingList.count.should == 0
+      expect(RatingList.count).to eq(0)
       visit "/admin/rating_lists"
-      RatingList.count.should be > 0
-      RatingList.minimum(:date).should be == @start
-      RatingList.maximum(:date).should be <= @today
+      expect(RatingList.count).to be > 0
+      expect(RatingList.minimum(:date)).to eq(@start)
+      expect(RatingList.maximum(:date)).to be <= @today
     end
   end
 end
