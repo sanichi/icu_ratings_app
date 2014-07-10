@@ -158,7 +158,7 @@ describe User do
       @u1 = FactoryGirl.create(:user, password: password, salt: salt)
       @u2 = FactoryGirl.create(:user, password: @p)
       @params = { status: "ok" }
-      ICU::Database::Push.stub_chain(:new, :update_member).and_return(nil)
+      allow(ICU::Database::Push).to receive_message_chain(:new, :update_member).and_return(nil)
     end
 
     it "new password, old salt" do
@@ -234,7 +234,7 @@ describe User do
     end
 
     it "ICU database push fails" do
-      ICU::Database::Push.stub_chain(:new, :update_member).and_return("woops")
+      allow(ICU::Database::Push).to receive_message_chain(:new, :update_member).and_return("woops")
       @params[:new_password] = "password3"
       expect(@u1.update_www_member(@params)).to be_nil
       expect(@params[:new_password]).to_not be_present
@@ -267,7 +267,7 @@ describe User do
     end
 
     it "no change" do
-      ICU::Database::Pull.stub_chain(:new, :get_member).with(@user.id, @user.email).and_return(@h)
+      allow(ICU::Database::Pull).to receive_message_chain(:new, :get_member).with(@user.id, @user.email).and_return(@h)
       @user.pull_www_member
       expect(@user.password).to  eq(@h[:password])
       expect(@user.salt).to      eq(@h[:salt])
@@ -280,7 +280,7 @@ describe User do
 
     it "changed password" do
       password = "abcdefabcdefabcdefabcdefabcdef11"
-      ICU::Database::Pull.stub_chain(:new, :get_member).with(@user.id, @user.email).and_return(@h.merge(password: password))
+      allow(ICU::Database::Pull).to receive_message_chain(:new, :get_member).with(@user.id, @user.email).and_return(@h.merge(password: password))
       @user.pull_www_member
       expect(@user.password).to  eq(password)
       expect(@user.salt).to      eq(@h[:salt])
@@ -294,7 +294,7 @@ describe User do
     it "changed salt and password" do
       password = "abcdefabcdefabcdefabcdefabcdef12"
       salt     = "abcdefabcdefabcdefabcdefabcdef22"
-      ICU::Database::Pull.stub_chain(:new, :get_member).with(@user.id, @user.email).and_return(@h.merge(password: password, salt: salt))
+      allow(ICU::Database::Pull).to receive_message_chain(:new, :get_member).with(@user.id, @user.email).and_return(@h.merge(password: password, salt: salt))
       @user.pull_www_member
       expect(@user.password).to  eq(password)
       expect(@user.salt).to      eq(salt)
@@ -308,7 +308,7 @@ describe User do
     it "changed status and expiry" do
       status = "pending"
       expiry = Date.new(2013, 12, 31)
-      ICU::Database::Pull.stub_chain(:new, :get_member).with(@user.id, @user.email).and_return(@h.merge(status: status, expiry: expiry))
+      allow(ICU::Database::Pull).to receive_message_chain(:new, :get_member).with(@user.id, @user.email).and_return(@h.merge(status: status, expiry: expiry))
       @user.pull_www_member
       expect(@user.password).to  eq(@h[:password])
       expect(@user.salt).to      eq(@h[:salt])
@@ -320,7 +320,7 @@ describe User do
     end
 
     it "an error" do
-      ICU::Database::Pull.stub_chain(:new, :get_member).with(@user.id, @user.email).and_return("error xxx")
+      allow(ICU::Database::Pull).to receive_message_chain(:new, :get_member).with(@user.id, @user.email).and_return("error xxx")
       @user.pull_www_member
       expect(@user.password).to  eq(@h[:password])
       expect(@user.salt).to      eq(@h[:salt])
