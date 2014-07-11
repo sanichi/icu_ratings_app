@@ -1,86 +1,39 @@
-set :whenever_command, "bin/whenever"
-require "bundler/capistrano"
-require "capistrano/maintenance"
-require "whenever/capistrano"
-require "new_relic/recipes"
+lock "3.2.1" # config valid only for this version of capistrano
 
-set :bundle_without, [:darwin, :development, :test]
+set :application, "icu_ratings_app"
 
-set :application, "ratings.icu.ie"
-role :app, application
-role :web, application
-role :db,  application, primary: true
-
-set :user, "mjo"
-set :deploy_to, "/var/apps/ratings"
-set :deploy_via, :remote_cache
-set :use_sudo, false
-
-set :scm, :git
-set :repository, "git://github.com/sanichi/icu_ratings_app.git"
+set :repo_url, "git://github.com/sanichi/icu_ratings_app.git"
 set :branch, "master"
 
-# With the asset pipeline, the directories in public touched by deploy:finalize_update no longer exist.
-set :normalize_asset_timestamps, false
+set :deploy_to, "/var/apps/ratings"
 
-namespace :deploy do
-  desc "Tell Passenger to restart."
-  task :restart, roles: :web do
-    run "touch #{deploy_to}/current/tmp/restart.txt"
-  end
+set :linked_files, %w{config/database.yml config/secrets.yml}
+set :linked_dirs, %w{log tmp/pids public/system public/webalizer}  # capistrano/rails adds public/assets
 
-  desc "Do nothing on startup so we don't get a script/spin error."
-  task :start do
-    puts "You may need to restart Apache"
-  end
+set :maintenance_file, "public/system/maintenance.html"
 
-  desc "Symlink extra configs and folders."
-  task :symlink_extras do
-    %w{database app_config newrelic}.each do |yml|
-      run "ln -nfs #{shared_path}/config/#{yml}.yml #{release_path}/config/#{yml}.yml"
-    end
-    %w{webalizer}.each do |share|
-      run "ln -nfs #{shared_path}/#{share} #{release_path}/public/#{share}"
-    end
-  end
+set :log_level, :info
 
-  desc "Setup shared directory."
-  task :setup_shared do
-    run "mkdir #{shared_path}/config"
-    put File.read("config/examples/database.yml"), "#{shared_path}/config/database.yml"
-    put File.read("config/examples/app_config.yml"), "#{shared_path}/config/app_config.yml"
-    puts "Now edit the config files in #{shared_path}."
-  end
+# Default value for :scm is :git
+# set :scm, :git
 
-  desc "Make sure there is something to deploy."
-  task :check_revision, roles: :web do
-    unless `git rev-parse HEAD` == `git rev-parse origin/master`
-      puts "WARNING: HEAD is not the same as origin/master"
-      puts "Run `git push` to sync changes."
-      exit
-    end
-  end
+# Default value for :format is :pretty
+# set :format, :pretty
 
-  namespace :web do
-    desc "Present a maintenance page to visitors using REASON and BACK enviroment variables (or defaults)."
-    task :disable, roles: :web, except: { no_release: true } do
-      require "haml"
-      file = "#{shared_path}/system/#{maintenance_basename}.html"
-      on_rollback { run "rm #{file}" }
+# Default value for :log_level is :debug
+# set :log_level, :debug
 
-      template = File.read("app/views/layouts/maintenance.html.haml")
-      engine = Haml::Engine.new(template, format: :html5, attr_wrapper: '"')
-      reason = ENV["REASON"] || "maintenance"
-      back = ENV["BACK"] || "shortly"
-      page = engine.render(binding)
+# Default value for :pty is false
+# set :pty, true
 
-      put page, file, mode: 0644
-    end
-  end
-end
+# Default value for :linked_files is []
+# set :linked_files, %w{config/database.yml}
 
-before "deploy", "deploy:check_revision"
-after "deploy", "deploy:cleanup"
-after "deploy:update", "newrelic:notice_deployment"
-after "deploy:setup", "deploy:setup_shared"
-before "deploy:assets:precompile", "deploy:symlink_extras"
+# Default value for linked_dirs is []
+# set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
+
+# Default value for default_env is {}
+# set :default_env, { path: "/opt/ruby/bin:$PATH" }
+
+# Default value for keep_releases is 5
+# set :keep_releases, 5

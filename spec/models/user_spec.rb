@@ -153,7 +153,7 @@ describe User do
     before(:each) do
       pass = "icuicj"
       salt = "b3f0f553a916b0e8ab6b2469cabd200f"
-      password = eval(APP_CONFIG["hasher"])
+      password = eval(Rails.application.secrets.hasher)
       @p = pass
       @u1 = FactoryGirl.create(:user, password: password, salt: salt)
       @u2 = FactoryGirl.create(:user, password: @p)

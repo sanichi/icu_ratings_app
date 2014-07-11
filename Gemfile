@@ -21,9 +21,7 @@ gem "therubyracer", platforms: :ruby
 gem "uglifier"
 
 group :development do
-  gem "capistrano", "~> 2.15"
-  gem "capistrano-maintenance", "~> 0.0.4"
-  gem "quiet_assets"
+  gem "capistrano-rails"
   gem "wirble"
 end
 

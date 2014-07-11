@@ -72,7 +72,7 @@ describe "Sessions" do
       salt = "b3f0f553a916b0e8ab6b2469cabd200f"
       @password = [0, 1].map do |i|
         pass = "password#{i}"
-        { password: pass, encrypted: eval(APP_CONFIG["hasher"]) }
+        { password: pass, encrypted: eval(Rails.application.secrets.hasher) }
       end
       @user = FactoryGirl.create(:user, salt: salt, password: @password[0].fetch(:encrypted))
       visit "/log_in"
