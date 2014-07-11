@@ -10,7 +10,7 @@ require 'icu/util/hacks'
 # Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
 # Checks for pending migrations before tests are run.
-# ActiveRecord::Migration.maintain_test_schema!
+ActiveRecord::Migration.maintain_test_schema!
 
 # Permit Capybara to recognize ".tab" as a text/plain when file is uploaded.
 ICU::Util::Hacks.fix_mime_types
