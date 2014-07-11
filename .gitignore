@@ -8,4 +8,4 @@ tmp/
 public/assets/
 config/database.yml
 config/app_config.yml
-config/newrelic.yml
+config/secrets.yml

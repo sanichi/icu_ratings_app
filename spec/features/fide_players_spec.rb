@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 # Note: these tests are a little fragile because of the need to wait occasionally,
 # to allow things to synchronize. It would be better to find a way to avoid that.
@@ -18,17 +18,17 @@ describe FidePlayer do
     end
 
     it "create a link between a FIDE and ICU player then destroy it" do
-      @f.icu_id.should be_nil
+      expect(@f.icu_id).to be_nil
       page.click_link @link
       sleep @sleep
       @f.reload
-      @f.icu_id.should == @i.id
+      expect(@f.icu_id).to eq(@i.id)
       first(:link, @i.id.to_s).click
       sleep @sleep
       page.click_link @unlink
       sleep @sleep
       @f.reload
-      @f.icu_id.should be_nil
+      expect(@f.icu_id).to be_nil
     end
 
     it "should not create a link if federation is mismatched" do
@@ -37,7 +37,7 @@ describe FidePlayer do
       page.driver.browser.switch_to.alert.dismiss
       sleep @sleep
       @f.reload
-      @f.icu_id.should be_nil
+      expect(@f.icu_id).to be_nil
     end
 
     it "should not create a link if title is mismatched" do
@@ -46,7 +46,7 @@ describe FidePlayer do
       page.driver.browser.switch_to.alert.dismiss
       sleep @sleep
       @f.reload
-      @f.icu_id.should be_nil
+      expect(@f.icu_id).to be_nil
     end
 
     it "should not create a link if YOB/DOB is mismatched" do
@@ -55,7 +55,7 @@ describe FidePlayer do
       page.driver.browser.switch_to.alert.dismiss
       sleep @sleep
       @f.reload
-      @f.icu_id.should be_nil
+      expect(@f.icu_id).to be_nil
     end
 
     it "should not create a link if gender is mismatched" do
@@ -64,7 +64,7 @@ describe FidePlayer do
       page.driver.browser.switch_to.alert.dismiss
       sleep @sleep
       @f.reload
-      @f.icu_id.should be_nil
+      expect(@f.icu_id).to be_nil
     end
 
     it "should not create a link if both names are mismatched" do
@@ -74,7 +74,7 @@ describe FidePlayer do
       page.driver.browser.switch_to.alert.dismiss
       sleep @sleep
       @f.reload
-      @f.icu_id.should be_nil
+      expect(@f.icu_id).to be_nil
     end
 
     it "should create a link if only one name is mismatched" do
@@ -82,7 +82,7 @@ describe FidePlayer do
       page.click_link @link
       sleep @sleep
       @f.reload
-      @f.icu_id.should == @i.id
+      expect(@f.icu_id).to eq(@i.id)
     end
   end
 end

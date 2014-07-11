@@ -1,18 +1,18 @@
-require 'spec_helper'
+require 'rails_helper'
 
 module IcuRatings
   describe Juniors do
     describe "insufficient data" do
       it "should be unavailable" do
         j = Juniors.new({})
-        j.available?.should be_false
-        j.ratings.should be_empty
+        expect(j.available?).to be false
+        expect(j.ratings).to be_empty
       end
     end
 
     describe "enough data" do
       before(:each) do
-        Date.stub(:today).and_return(Date.new(2011, 12, 17))
+        allow(Date).to receive(:today).and_return(Date.new(2011, 12, 17))
         @list = "2011-09-01"
         @p1 = FactoryGirl.create(:icu_player, dob: "2000-08-02", gender: "F")
         @p2 = FactoryGirl.create(:icu_player, dob: "2000-08-01")
@@ -30,95 +30,95 @@ module IcuRatings
       it "default settings" do
         params = {}
         j = Juniors.new(params)
-        j.available?.should be_true
-        params[:date].should == "2011-12-17"
-        params[:under].should == "21"
-        params[:least].should == "0"
-        j.list.to_s.should == @list
+        expect(j.available?).to be true
+        expect(params[:date]).to eq("2011-12-17")
+        expect(params[:under]).to eq("21")
+        expect(params[:least]).to eq("0")
+        expect(j.list.to_s).to eq(@list)
         ratings = j.ratings
-        ratings.size.should == 3
-        ratings.should include(@r1)
-        ratings.should include(@r2)
-        ratings.should include(@r3)
+        expect(ratings.size).to eq(3)
+        expect(ratings).to include(@r1)
+        expect(ratings).to include(@r2)
+        expect(ratings).to include(@r3)
         date_range = j.date_range
-        date_range.size.should == 14
-        date_range.first.should == "2011-01-01"
-        date_range.last.should == "2012-01-01"
+        expect(date_range.size).to eq(14)
+        expect(date_range.first).to eq("2011-01-01")
+        expect(date_range.last).to eq("2012-01-01")
       end
 
       it "narrow age range" do
         j = Juniors.new(date: "2011-09-01", under: "12", least: "11")
         ratings = j.ratings
-        ratings.size.should == 2
-        ratings.should include(@r1)
-        ratings.should include(@r2)
+        expect(ratings.size).to eq(2)
+        expect(ratings).to include(@r1)
+        expect(ratings).to include(@r2)
         j = Juniors.new(date: "2011-09-01", under: "12", least: "11", gender: "F")
         ratings = j.ratings
-        ratings.size.should == 1
-        ratings.should include(@r1)
+        expect(ratings.size).to eq(1)
+        expect(ratings).to include(@r1)
         j = Juniors.new(date: "2011-08-01", under: "12", least: "11")
         ratings = j.ratings
-        ratings.size.should == 1
-        ratings.should include(@r2)
+        expect(ratings.size).to eq(1)
+        expect(ratings).to include(@r2)
         j = Juniors.new(date: "2011-07-01", under: "12", least: "11")
         ratings = j.ratings
-        ratings.size.should == 0
+        expect(ratings.size).to eq(0)
       end
 
       it "wide age range" do
         j = Juniors.new(date: "2011-12-01", under: "21", least: "8")
         ratings = j.ratings
-        ratings.size.should == 3
-        ratings.should include(@r1)
-        ratings.should include(@r2)
-        ratings.should include(@r3)
+        expect(ratings.size).to eq(3)
+        expect(ratings).to include(@r1)
+        expect(ratings).to include(@r2)
+        expect(ratings).to include(@r3)
         j = Juniors.new(date: "2012-01-01", under: "21", least: "8")
         ratings = j.ratings
-        ratings.size.should == 2
-        ratings.should include(@r1)
-        ratings.should include(@r2)
+        expect(ratings.size).to eq(2)
+        expect(ratings).to include(@r1)
+        expect(ratings).to include(@r2)
       end
     end
 
     describe "beginning of month" do
       before(:each) do
         @today = Date.new(2012, 2, 1)
-        Date.stub(:today).and_return(@today)
+        allow(Date).to receive(:today).and_return(@today)
       end
 
       it "date range" do
         j = Juniors.new({})
-        j.date_range.size.should == 13
-        j.date_range.first.should == "2012-01-01"
-        j.date_range.last.should == "2013-01-01"
+        expect(j.date_range.size).to eq(13)
+        expect(j.date_range.first).to eq("2012-01-01")
+        expect(j.date_range.last).to eq("2013-01-01")
       end
     end
 
     describe "beginning of year" do
       before(:each) do
         @today = Date.new(2012, 1, 1)
-        Date.stub(:today).and_return(@today)
+        allow(Date).to receive(:today).and_return(@today)
       end
 
       it "date range" do
         j = Juniors.new({})
-        j.date_range.size.should == 13
-        j.date_range.first.should == "2012-01-01"
-        j.date_range.last.should == "2013-01-01"
+        expect(j.date_range.size).to eq(13)
+        expect(j.date_range.first).to eq("2012-01-01")
+        expect(j.date_range.last).to eq("2013-01-01")
       end
     end
 
     describe "end of year" do
       before(:each) do
         @today = Date.new(2012, 12, 31)
-        Date.stub(:today).and_return(@today)
+        allow(Date).to receive(:today).and_return(@today)
       end
 
       it "date range" do
         j = Juniors.new({})
-        j.date_range.size.should == 14
-        j.date_range.first.should == "2012-01-01"
-        j.date_range.last.should == "2013-01-01"
+        expect(j.date_range.size).to eq(14)
+        expect(j.date_range.first).to eq("2012-01-01")
+        expect(j.date_range.last).to eq("2013-01-01")
       end
     end
   end

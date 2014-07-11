@@ -1,11 +1,11 @@
 # encoding: UTF-8
-require 'spec_helper'
+require 'rails_helper'
 
 describe "Upload" do
   describe "guests" do
     it "cannot upload files" do
       visit "/admin/uploads/new"
-      page.should have_selector("span.alert", text: /not authorized/i)
+      expect(page).to have_selector("span.alert", text: /not authorized/i)
     end
   end
 
@@ -13,7 +13,7 @@ describe "Upload" do
     it "cannot upload files" do
       login("member")
       visit "/admin/uploads/new"
-      page.should have_selector("span.alert", text: /not authorized/i)
+      expect(page).to have_selector("span.alert", text: /not authorized/i)
     end
   end
 
@@ -25,22 +25,22 @@ describe "Upload" do
       end
 
       it "can upload and then delete" do
-        Upload.count.should == 0
+        expect(Upload.count).to eq(0)
         visit "/admin/uploads/new"
-        page.should have_title("File Upload")
+        expect(page).to have_title("File Upload")
         page.select "FIDE-Krause", from: "upload_format"
         page.attach_file "file", @file
         page.click_button "Upload"
-        page.should have_selector("span.alert", text: /cannot extract/i)
-        Upload.count.should == 1
+        expect(page).to have_selector("span.alert", text: /cannot extract/i)
+        expect(Upload.count).to eq(1)
         upload = Upload.first
-        upload.error.should_not be_blank
-        upload.tournament.should be_blank
+        expect(upload.error).to_not be_blank
+        expect(upload.tournament).to be_blank
         visit "/admin/uploads/#{upload.id}"
-        page.should have_title("Upload")
+        expect(page).to have_title("Upload")
         page.click_link("Delete")
-        page.should have_title("File Upload")
-        Upload.count.should == 0
+        expect(page).to have_title("File Upload")
+        expect(Upload.count).to eq(0)
       end
 
       it "cannot delete uploads they don't own" do
@@ -48,13 +48,13 @@ describe "Upload" do
         page.select "FIDE-Krause", from: "upload_format"
         page.attach_file "file", @file
         page.click_button "Upload"
-        Upload.count.should == 1
+        expect(Upload.count).to eq(1)
         upload = Upload.first
-        upload.user.should == @user
+        expect(upload.user).to eq(@user)
         @user = login("reporter")
-        upload.user.should_not == @user
+        expect(upload.user).to_not eq(@user)
         visit "/admin/uploads/#{upload.id}"
-        page.should_not have_link("Delete")
+        expect(page).to_not have_link("Delete")
       end
     end
 
@@ -65,21 +65,21 @@ describe "Upload" do
       end
 
       it "can delete uploads they don't own", js: true do
-        Upload.count.should == 0
+        expect(Upload.count).to eq(0)
         visit "/admin/uploads/new"
         page.select "FIDE-Krause", from: "upload_format"
         page.attach_file "file", @file
         page.click_button "Upload"
-        Upload.count.should == 1
+        expect(Upload.count).to eq(1)
         upload = Upload.first
-        upload.user.should == @user
+        expect(upload.user).to eq(@user)
         @user = login("officer")
-        upload.user.should_not == @user
+        expect(upload.user).to_not eq(@user)
         visit "/admin/uploads/#{upload.id}"
         page.click_link("Delete")
         # page.driver.browser.switch_to.alert.accept # don't use a confirmation here any more
-        page.current_path.should == "/admin/uploads/new"
-        Upload.count.should == 0
+        expect(page.current_path).to eq("/admin/uploads/new")
+        expect(Upload.count).to eq(0)
       end
     end
   end
@@ -101,32 +101,32 @@ describe "Upload" do
         page.attach_file "file", test_file_path("junior_championships_u19_2010.zip")
         page.click_button "Upload"
 
-        page.should have_selector("div span", text: "U-19 All Ireland")
+        expect(page).to have_selector("div span", text: "U-19 All Ireland")
 
-        Upload.count.should == 1
-        Tournament.count.should == 1
-        Player.where(status: "ok").count.should == 4
-        @thomas.players.size.should == 1
-        @ryan.players.size.should == 1
-        @jamie.players.size.should == 1
-        @leon.players.size.should == 1
+        expect(Upload.count).to eq(1)
+        expect(Tournament.count).to eq(1)
+        expect(Player.where(status: "ok").count).to eq(4)
+        expect(@thomas.players.size).to eq(1)
+        expect(@ryan.players.size).to eq(1)
+        expect(@jamie.players.size).to eq(1)
+        expect(@leon.players.size).to eq(1)
         tournament = Tournament.last
-        tournament.name.should == "U-19 All Ireland"
-        tournament.start.to_s.should == "2010-04-11"
-        tournament.finish.to_s.should == "2010-04-11"
-        tournament.players.map(&:name).join('|').should == "Dunne, Thomas|Flynn, Jamie|Griffiths, Ryan-Rhys|Hulleman, Leon"
+        expect(tournament.name).to eq("U-19 All Ireland")
+        expect(tournament.start.to_s).to eq("2010-04-11")
+        expect(tournament.finish.to_s).to eq("2010-04-11")
+        expect(tournament.players.map(&:name).join('|')).to eq("Dunne, Thomas|Flynn, Jamie|Griffiths, Ryan-Rhys|Hulleman, Leon")
         thomas, jamie, ryan, leon = tournament.players
-        ryan.results.size.should == 3
-        thomas.results.map(&:round).join("|").should == "1|2|3"
-        jamie.results.map(&:result).join("|").should == "W|L|W"
-        jamie.icu_id.should == 5226
-        jamie.icu_id.should == 5226
-        jamie.icu_rating.should == 1633
-        leon.results.map(&:colour).join("|").should == "B|B|W"
-        ryan.original_data.should == "Griffiths, Ryan-Rhys, 6897, 1993-12-20, 2225"
-        thomas.original_data.should == "Dunne, Thomas, 10914, 1992-01-16"
-        jamie.original_data.should == "Flynn, Jamie, 5226, 1633"
-        leon.original_data.should == "Hulleman, Leon, 6409, 1466"
+        expect(ryan.results.size).to eq(3)
+        expect(thomas.results.map(&:round).join("|")).to eq("1|2|3")
+        expect(jamie.results.map(&:result).join("|")).to eq("W|L|W")
+        expect(jamie.icu_id).to eq(5226)
+        expect(jamie.icu_id).to eq(5226)
+        expect(jamie.icu_rating).to eq(1633)
+        expect(leon.results.map(&:colour).join("|")).to eq("B|B|W")
+        expect(ryan.original_data).to eq("Griffiths, Ryan-Rhys, 6897, 1993-12-20, 2225")
+        expect(thomas.original_data).to eq("Dunne, Thomas, 10914, 1992-01-16")
+        expect(jamie.original_data).to eq("Flynn, Jamie, 5226, 1633")
+        expect(leon.original_data).to eq("Hulleman, Leon, 6409, 1466")
       end
 
       it "should process Swiss Perfect Export" do
@@ -137,35 +137,35 @@ describe "Upload" do
         page.attach_file "File to upload", test_file_path("junior_championships_u19_2010.txt")
         page.click_button "Upload"
 
-        page.should have_selector("div span", text: "U-19 All Ireland")
+        expect(page).to have_selector("div span", text: "U-19 All Ireland")
 
-        Upload.count.should == 1
-        Tournament.count.should == 1
-        Player.where(status: "ok").count.should == 4
-        @thomas.players.size.should == 1
-        @ryan.players.size.should == 1
-        @jamie.players.size.should == 1
-        @leon.players.size.should == 1
+        expect(Upload.count).to eq(1)
+        expect(Tournament.count).to eq(1)
+        expect(Player.where(status: "ok").count).to eq(4)
+        expect(@thomas.players.size).to eq(1)
+        expect(@ryan.players.size).to eq(1)
+        expect(@jamie.players.size).to eq(1)
+        expect(@leon.players.size).to eq(1)
         tournament = Tournament.last
-        tournament.name.should == "U-19 All Ireland"
-        tournament.start.to_s.should == "2010-04-11"
-        tournament.finish.to_s.should == "2010-04-11"
-        tournament.players.map(&:name).join('|').should == "Dunne, Thomas|Flynn, Jamie|Griffiths, Ryan-Rhys|Hulleman, Leon"
+        expect(tournament.name).to eq("U-19 All Ireland")
+        expect(tournament.start.to_s).to eq("2010-04-11")
+        expect(tournament.finish.to_s).to eq("2010-04-11")
+        expect(tournament.players.map(&:name).join('|')).to eq("Dunne, Thomas|Flynn, Jamie|Griffiths, Ryan-Rhys|Hulleman, Leon")
         thomas, jamie, ryan, leon = tournament.players
-        ryan.results.map(&:result).join("|").should == "W|W|W"
-        thomas.results.map(&:colour).join("|").should == "||"
-        thomas.dob.should be_nil
-        jamie.results.size.should == 3
-        jamie.original_name.should == "flynn, jamie"
-        jamie.icu_id.should == 5226
-        jamie.original_icu_id.should == 5226
-        jamie.fide_id.should be_nil
-        jamie.original_fide_id.should be_nil
-        leon.results.map(&:round).join("|").should == "1|2|3"
-        ryan.original_data.should == "Griffiths, Ryan-Rhys, 6897"
-        thomas.original_data.should == "Dunne, Thomas, 10914"
-        jamie.original_data.should == "flynn, jamie, 5226"
-        leon.original_data.should == "Hulleman, Leon, 6409"
+        expect(ryan.results.map(&:result).join("|")).to eq("W|W|W")
+        expect(thomas.results.map(&:colour).join("|")).to eq("||")
+        expect(thomas.dob).to be_nil
+        expect(jamie.results.size).to eq(3)
+        expect(jamie.original_name).to eq("flynn, jamie")
+        expect(jamie.icu_id).to eq(5226)
+        expect(jamie.original_icu_id).to eq(5226)
+        expect(jamie.fide_id).to be_nil
+        expect(jamie.original_fide_id).to be_nil
+        expect(leon.results.map(&:round).join("|")).to eq("1|2|3")
+        expect(ryan.original_data).to eq("Griffiths, Ryan-Rhys, 6897")
+        expect(thomas.original_data).to eq("Dunne, Thomas, 10914")
+        expect(jamie.original_data).to eq("flynn, jamie, 5226")
+        expect(leon.original_data).to eq("Hulleman, Leon, 6409")
       end
 
       it "should process Krause" do
@@ -174,35 +174,35 @@ describe "Upload" do
         page.attach_file "file", test_file_path("junior_championships_u19_2010.tab")
         page.click_button "Upload"
 
-        page.should have_selector("div span", text: "U-19 All Ireland")
+        expect(page).to have_selector("div span", text: "U-19 All Ireland")
 
-        Upload.count.should == 1
-        Tournament.count.should == 1
-        Player.where(status: "ok").count.should == 4
-        @thomas.players.size.should == 1
-        @ryan.players.size.should == 1
-        @jamie.players.size.should == 1
-        @leon.players.size.should == 1
+        expect(Upload.count).to eq(1)
+        expect(Tournament.count).to eq(1)
+        expect(Player.where(status: "ok").count).to eq(4)
+        expect(@thomas.players.size).to eq(1)
+        expect(@ryan.players.size).to eq(1)
+        expect(@jamie.players.size).to eq(1)
+        expect(@leon.players.size).to eq(1)
         tournament = Tournament.last
-        tournament.name.should == "U-19 All Ireland"
-        tournament.start.to_s.should == "2010-04-11"
-        tournament.finish.to_s.should == "2010-04-13"
-        tournament.players.map(&:name).join('|').should == "Dunne, Thomas|Flynn, Jamie|Griffiths, Ryan-Rhys|Hulleman, Leon"
+        expect(tournament.name).to eq("U-19 All Ireland")
+        expect(tournament.start.to_s).to eq("2010-04-11")
+        expect(tournament.finish.to_s).to eq("2010-04-13")
+        expect(tournament.players.map(&:name).join('|')).to eq("Dunne, Thomas|Flynn, Jamie|Griffiths, Ryan-Rhys|Hulleman, Leon")
         thomas, jamie, ryan, leon = tournament.players
-        ryan.results.map(&:colour).join("|").should == "W|W|B"
-        ryan.icu_id.should == 6897
-        ryan.icu_rating.should == 2225
-        thomas.results.size.should == 3
-        thomas.dob.to_s.should == "1992-01-16"
-        thomas.icu_id.should == 10914
-        thomas.fide_id.should be_nil
-        jamie.results.map(&:round).join("|").should == "1|2|3"
-        leon.results.map(&:result).join("|").should == "L|W|L"
-        ryan.original_data.should == "Griffiths, Ryan-Rhys, 6897, 1993-12-20, 2225"
-        thomas.original_data.should == "dunne, thomas, 10914, 1992-01-16"
-        jamie.original_data.should == "Flynn, Jamie, 5226, 1633"
-        leon.original_data.should == "Hülleman, Leon, 6409, 1466"
-        leon.name.should == "Hulleman, Leon"
+        expect(ryan.results.map(&:colour).join("|")).to eq("W|W|B")
+        expect(ryan.icu_id).to eq(6897)
+        expect(ryan.icu_rating).to eq(2225)
+        expect(thomas.results.size).to eq(3)
+        expect(thomas.dob.to_s).to eq("1992-01-16")
+        expect(thomas.icu_id).to eq(10914)
+        expect(thomas.fide_id).to be_nil
+        expect(jamie.results.map(&:round).join("|")).to eq("1|2|3")
+        expect(leon.results.map(&:result).join("|")).to eq("L|W|L")
+        expect(ryan.original_data).to eq("Griffiths, Ryan-Rhys, 6897, 1993-12-20, 2225")
+        expect(thomas.original_data).to eq("dunne, thomas, 10914, 1992-01-16")
+        expect(jamie.original_data).to eq("Flynn, Jamie, 5226, 1633")
+        expect(leon.original_data).to eq("Hülleman, Leon, 6409, 1466")
+        expect(leon.name).to eq("Hulleman, Leon")
       end
     end
 
@@ -219,32 +219,32 @@ describe "Upload" do
         page.attach_file "file", test_file_path("isle_of_man_2007.csv")
         page.click_button "Upload"
 
-        page.should have_selector("div span", text: "Isle of Man Masters, 2007")
+        expect(page).to have_selector("div span", text: "Isle of Man Masters, 2007")
 
         tournament = Tournament.last
-        tournament.name.should == "Isle of Man Masters, 2007"
-        tournament.start.to_s.should == "2007-09-22"
-        tournament.finish.to_s.should == "2007-09-30"
+        expect(tournament.name).to eq("Isle of Man Masters, 2007")
+        expect(tournament.start.to_s).to eq("2007-09-22")
+        expect(tournament.finish.to_s).to eq("2007-09-30")
         peter, tony = tournament.players.where(category: "icu_player").order(:last_name)
         doreen = peter.results.find_by_round(5).opponent
-        tony.name.should == "Fox, Anthony"
-        tony.results.size.should == 9
-        tony.results.find_by_round(1).opponent.name.should == "Taylor, Peter P."
-        tony.results.find_by_round(1).opponent.original_name.should == "Taylor, Peter P"
-        tony.results.find_by_round(4).colour.should == 'W'
-        tony.results.find_by_round(6).rateable.should be_false
-        tony.results.find_by_round(9).result.should == "D"
-        peter.results.size.should == 9
-        peter.results.where(rateable: true).size.should == 9  # should this be 8?
-        peter.score.should == 3.0
-        peter.results.map(&:opponent).map(&:fed).join("|").should == "ENG|NED|IRL|IRL|GER|ENG|ISR|AUS|SCO"
-        peter.results.map(&:opponent).map(&:fide_rating).join("|").should == "2198|2227|2100|2394|2151|2282|2205|2200|2223"
-        tony.results.find_by_round(7).opponent.title.should be_nil
-        doreen.name.should == "Troyke, Doreen"
-        doreen.fide_rating.should == 2151
-        doreen.fed.should == "GER"
-        doreen.title.should == "WFM"
-        doreen.fide_rating.should == 2151
+        expect(tony.name).to eq("Fox, Anthony")
+        expect(tony.results.size).to eq(9)
+        expect(tony.results.find_by_round(1).opponent.name).to eq("Taylor, Peter P.")
+        expect(tony.results.find_by_round(1).opponent.original_name).to eq("Taylor, Peter P")
+        expect(tony.results.find_by_round(4).colour).to eq('W')
+        expect(tony.results.find_by_round(6).rateable).to be false
+        expect(tony.results.find_by_round(9).result).to eq("D")
+        expect(peter.results.size).to eq(9)
+        expect(peter.results.where(rateable: true).size).to eq(9)  # should this be 8?
+        expect(peter.score).to eq(3.0)
+        expect(peter.results.map(&:opponent).map(&:fed).join("|")).to eq("ENG|NED|IRL|IRL|GER|ENG|ISR|AUS|SCO")
+        expect(peter.results.map(&:opponent).map(&:fide_rating).join("|")).to eq("2198|2227|2100|2394|2151|2282|2205|2200|2223")
+        expect(tony.results.find_by_round(7).opponent.title).to be_nil
+        expect(doreen.name).to eq("Troyke, Doreen")
+        expect(doreen.fide_rating).to eq(2151)
+        expect(doreen.fed).to eq("GER")
+        expect(doreen.title).to eq("WFM")
+        expect(doreen.fide_rating).to eq(2151)
       end
     end
 
@@ -259,11 +259,11 @@ describe "Upload" do
         page.attach_file "file", test_file_path("galway_major_2011.tab")
         page.click_button "Upload"
 
-        page.should have_selector("span.alert", text: /extract/i)
-        page.should have_selector(:xpath, "//tr/th[.='Errors']/following-sibling::td", text: /date/i)
+        expect(page).to have_selector("span.alert", text: /extract/i)
+        expect(page).to have_selector(:xpath, "//tr/th[.='Errors']/following-sibling::td", text: /date/i)
 
-        Upload.count.should == 1
-        Tournament.count.should == 0
+        expect(Upload.count).to eq(1)
+        expect(Tournament.count).to eq(0)
 
         visit "/admin/uploads/new"
         page.select "FIDE-Krause", from: "upload_format"
@@ -271,11 +271,11 @@ describe "Upload" do
         page.attach_file "file", test_file_path("galway_major_2011.tab")
         page.click_button "Upload"
 
-        page.should have_selector("div span", text: "Galway Major 2011")
-        page.should have_no_selector("span.alert")
+        expect(page).to have_selector("div span", text: "Galway Major 2011")
+        expect(page).to have_no_selector("span.alert")
 
-        Upload.count.should == 2
-        Tournament.count.should == 1
+        expect(Upload.count).to eq(2)
+        expect(Tournament.count).to eq(1)
       end
     end
 
@@ -291,20 +291,20 @@ describe "Upload" do
         page.attach_file "file", test_file_path("rathmines_senior_2011.zip")
         page.click_button "Upload"
 
-        page.should have_selector("div span", text: "Rathmines Senior 2011")
+        expect(page).to have_selector("div span", text: "Rathmines Senior 2011")
 
-        Upload.count.should == 1
-        Tournament.count.should == 1
+        expect(Upload.count).to eq(1)
+        expect(Tournament.count).to eq(1)
         tournament = Tournament.last
-        tournament.name.should == "Rathmines Senior 2011"
-        tournament.original_name.should == "Rathmines Senior 2011"
-        tournament.start.to_s.should == "2011-04-04"
-        tournament.original_start.to_s.should == "2011-04-04"
-        tournament.finish.to_s.should == "2011-04-06"
-        tournament.original_finish.should be_nil
-        tournament.tie_breaks.should == "progressive,buchholz,harkness"
-        tournament.original_tie_breaks.should == "progressive,buchholz,harkness"
-        tournament.original_data.should == "Rathmines Senior 2011, 2011-04-04, progressive|buchholz|harkness"
+        expect(tournament.name).to eq("Rathmines Senior 2011")
+        expect(tournament.original_name).to eq("Rathmines Senior 2011")
+        expect(tournament.start.to_s).to eq("2011-04-04")
+        expect(tournament.original_start.to_s).to eq("2011-04-04")
+        expect(tournament.finish.to_s).to eq("2011-04-06")
+        expect(tournament.original_finish).to be_nil
+        expect(tournament.tie_breaks).to eq("progressive,buchholz,harkness")
+        expect(tournament.original_tie_breaks).to eq("progressive,buchholz,harkness")
+        expect(tournament.original_data).to eq("Rathmines Senior 2011, 2011-04-04, progressive|buchholz|harkness")
       end
     end
 
@@ -321,18 +321,18 @@ describe "Upload" do
         it "should guess finish date" do
           page.click_button "Upload"
           tournament = Tournament.last
-          tournament.start.to_s.should == "2011-01-01"
-          tournament.finish.to_s.should == "2011-01-03"
-          tournament.original_finish.should be_nil
+          expect(tournament.start.to_s).to eq("2011-01-01")
+          expect(tournament.finish.to_s).to eq("2011-01-03")
+          expect(tournament.original_finish).to be_nil
         end
 
         it "should set finish date" do
           page.fill_in "finish", with: "2011-01-30"
           page.click_button "Upload"
           tournament = Tournament.last
-          tournament.start.to_s.should == "2011-01-01"
-          tournament.finish.to_s.should == "2011-01-30"
-          tournament.original_finish.to_s.should == "2011-01-30"
+          expect(tournament.start.to_s).to eq("2011-01-01")
+          expect(tournament.finish.to_s).to eq("2011-01-30")
+          expect(tournament.original_finish.to_s).to eq("2011-01-30")
         end
       end
 
@@ -347,8 +347,8 @@ describe "Upload" do
         it "should get finish date straight from file (since icu_tournament v1.6.0)" do
           page.click_button "Upload"
           tournament = Tournament.last
-          tournament.start.to_s.should == "2007-09-22"
-          tournament.finish.to_s.should == "2007-09-30"
+          expect(tournament.start.to_s).to eq("2007-09-22")
+          expect(tournament.finish.to_s).to eq("2007-09-30")
         end
       end
     end

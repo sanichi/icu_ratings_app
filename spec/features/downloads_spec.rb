@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe "Download" do
   describe "guests and members" do
@@ -11,7 +11,7 @@ describe "Download" do
         login(role) if role
         ["/downloads", "/downloads/new", "downloads/#{@download.id}", "/downloads/#{@download.id}/edit"].each do |path|
           visit path
-          page.should have_selector("span.alert", text: /not authorized/i)
+          expect(page).to have_selector("span.alert", text: /not authorized/i)
         end
       end
     end
@@ -26,21 +26,21 @@ describe "Download" do
     it "can view downloads" do
       ["/downloads", "downloads/#{@download.id}"].each do |path|
         visit path
-        page.should have_no_selector("span.alert")
+        expect(page).to have_no_selector("span.alert")
       end
     end
 
     it "cannot create or update downloads" do
       ["/downloads/new", "downloads/#{@download.id}/edit"].each do |path|
         visit path
-        page.should have_selector("span.alert", text: /not authorized/i)
+        expect(page).to have_selector("span.alert", text: /not authorized/i)
       end
     end
 
     it "are not offered edit or delete links" do
       visit "/downloads"
-      page.should have_no_link("Edit Download")
-      page.should have_no_link("Delete Download")
+      expect(page).to have_no_link("Edit Download")
+      expect(page).to have_no_link("Delete Download")
     end
   end
 
@@ -52,41 +52,41 @@ describe "Download" do
     end
 
     it "can create, view, edit and delete downloads" do
-      Download.count.should == 0
+      expect(Download.count).to eq(0)
       visit "/downloads/new"
-      page.should have_title("New Download")
+      expect(page).to have_title("New Download")
       page.attach_file "download[uploaded_file]", @text
       page.fill_in "Comment", with: "Test Text"
       page.click_button "Create"
-      page.should have_selector("span.notice", text: /created/i)
-      Download.count.should == 1
+      expect(page).to have_selector("span.notice", text: /created/i)
+      expect(Download.count).to eq(1)
       download = Download.first
-      download.comment.should == "Test Text"
-      download.content_type.should == "text/plain"
-      download.file_name.should == "download.txt"
-      download.data.should == "Test Data\n"
+      expect(download.comment).to eq("Test Text")
+      expect(download.content_type).to eq("text/plain")
+      expect(download.file_name).to eq("download.txt")
+      expect(download.data).to eq("Test Data\n")
       page.click_link "download.txt"
-      page.driver.response.body.should == "Test Data\n"
-      page.driver.response.headers["Content-Type"].should == "text/plain"
+      expect(page.driver.response.body).to eq("Test Data\n")
+      expect(page.driver.response.headers["Content-Type"]).to eq("text/plain")
       visit "/downloads"
       click_link "Edit Download"
-      page.should have_title("Update Download")
+      expect(page).to have_title("Update Download")
       page.attach_file "download[uploaded_file]", @image
       page.fill_in "Comment", with: "Test Image"
       page.click_button "Update"
-      page.should have_selector("span.notice", text: /updated/i)
-      Download.count.should == 1
+      expect(page).to have_selector("span.notice", text: /updated/i)
+      expect(Download.count).to eq(1)
       download = Download.first
-      download.comment.should == "Test Image"
+      expect(download.comment).to eq("Test Image")
       click_link "Edit Download"
       page.fill_in "Comment", with: "Rubbish"
       page.click_button "Cancel"
       download.reload
       page.click_link "download.png"
-      page.driver.response.headers["Content-Type"].should == "image/png"
+      expect(page.driver.response.headers["Content-Type"]).to eq("image/png")
       visit "/downloads"
       click_link "Delete Download"
-      Download.count.should == 0
+      expect(Download.count).to eq(0)
     end
   end
 
@@ -99,11 +99,11 @@ describe "Download" do
 
     it "link after 15 items" do
       visit "downloads"
-      page.should have_xpath(@xpath, count: 15)
+      expect(page).to have_xpath(@xpath, count: 15)
       page.click_link "next"
-      page.should have_xpath(@xpath, count: 1)
+      expect(page).to have_xpath(@xpath, count: 1)
       page.click_link "prev"
-      page.should have_xpath(@xpath, count: 15)
+      expect(page).to have_xpath(@xpath, count: 15)
     end
   end
 end

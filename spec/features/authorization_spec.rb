@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe "authorized links for" do
   %w[guest member reporter officer admin].each do |role|
@@ -49,15 +49,15 @@ describe "authorized links for" do
       }.each do |target, authorized|
         if authorized.include?(role)
           it "get link to and can follow #{target}" do
-            page.should have_xpath("//a[@href='#{target}']")
+            expect(page).to have_xpath("//a[@href='#{target}']")
             visit target
-            page.should_not have_selector("span.alert", :text => /authoriz/i)
+            expect(page).to_not have_selector("span.alert", :text => /authoriz/i)
           end
         else
           it "get no link to and can't follow #{target}" do
-            page.should_not have_xpath("//a[@href='#{target}']")
+            expect(page).to_not have_xpath("//a[@href='#{target}']")
             visit target
-            page.should have_selector("span.alert", :text => /authoriz/i)
+            expect(page).to have_selector("span.alert", :text => /authoriz/i)
           end
         end
       end
@@ -83,12 +83,12 @@ describe "authorized to follow" do
         if authorized.include?(role)
           it "can follow #{target}" do
             visit target
-            page.should_not have_selector("span.alert", :text => /authoriz/i)
+            expect(page).to_not have_selector("span.alert", :text => /authoriz/i)
           end
         else
           it "can't follow #{target}" do
             visit target
-            page.should have_selector("span.alert", :text => /authoriz/i)
+            expect(page).to have_selector("span.alert", :text => /authoriz/i)
           end
         end
       end

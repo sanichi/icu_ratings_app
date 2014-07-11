@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe ICU::RatingRun do
   context "basic errors" do
@@ -9,25 +9,25 @@ describe ICU::RatingRun do
 
     it "can't run without a flag" do
       ICU::RatingRun.new.rate_all
-      Failure.count.should == 1
+      expect(Failure.count).to eq(1)
       f = Failure.first
-      f.details.should match(/no flag/)
+      expect(f.details).to match(/no flag/)
     end
 
     it "can't run without an ID in the flag" do
       File.open(@flag, "w") { }
       ICU::RatingRun.new.rate_all
-      Failure.count.should == 1
+      expect(Failure.count).to eq(1)
       f = Failure.first
-      f.details.should match(/no ID/)
+      expect(f.details).to match(/no ID/)
     end
 
     it "can't run without an object matching the ID" do
       File.open(@flag, "w") { |f| f.write 1 }
       ICU::RatingRun.new.rate_all
-      Failure.count.should == 1
+      expect(Failure.count).to eq(1)
       f = Failure.first
-      f.details.should match(/no object/)
+      expect(f.details).to match(/no object/)
     end
   end
 
@@ -49,28 +49,28 @@ describe ICU::RatingRun do
     end
 
     it "success" do
-      @rating_run.status.should == "waiting"
-      File.exists?(@flag).should be_true
+      expect(@rating_run.status).to eq("waiting")
+      expect(File.exists?(@flag)).to be true
 
       ICU::RatingRun.new.rate_all
 
-      Failure.count.should == 0
-      File.exists?(@flag).should be_false
+      expect(Failure.count).to eq(0)
+      expect(File.exists?(@flag)).to be false
 
       @rating_run.reload
-      @rating_run.status.should == "finished"
-      @rating_run.report.should match /Rating 2 tournaments/
-      @rating_run.report.should match /1\s+\d+\/\d+\s+#{@t1.name}/
-      @rating_run.report.should match /2\s+\d+\/\d+\s+#{@t2.name}/
-      @rating_run.report.should match /Finished/
+      expect(@rating_run.status).to eq("finished")
+      expect(@rating_run.report).to match /Rating 2 tournaments/
+      expect(@rating_run.report).to match /1\s+\d+\/\d+\s+#{@t1.name}/
+      expect(@rating_run.report).to match /2\s+\d+\/\d+\s+#{@t2.name}/
+      expect(@rating_run.report).to match /Finished/
 
       [@t1, @t2].each { |o| o.reload }
-      @t1.stage.should == "rated"
-      @t1.stage.should == "rated"
-      @t1.reratings.should == 1
-      @t2.reratings.should == 1
+      expect(@t1.stage).to eq("rated")
+      expect(@t1.stage).to eq("rated")
+      expect(@t1.reratings).to eq(1)
+      expect(@t2.reratings).to eq(1)
 
-      Tournament.next_for_rating.should be_nil
+      expect(Tournament.next_for_rating).to be_nil
     end
 
     it "failure due to tournament being rated" do
@@ -78,20 +78,20 @@ describe ICU::RatingRun do
 
       ICU::RatingRun.new.rate_all
 
-      Failure.count.should == 0
-      File.exists?(@flag).should be_false
+      expect(Failure.count).to eq(0)
+      expect(File.exists?(@flag)).to be false
 
       @rating_run.reload
-      @rating_run.status.should == "error"
-      @rating_run.report.should match /Error.+next for rating/
+      expect(@rating_run.status).to eq("error")
+      expect(@rating_run.report).to match /Error.+next for rating/
 
       [@t1, @t2].each { |o| o.reload }
-      @t1.stage.should == "rated"
-      @t2.stage.should == "queued"
-      @t1.reratings.should == 1
-      @t2.reratings.should == 0
+      expect(@t1.stage).to eq("rated")
+      expect(@t2.stage).to eq("queued")
+      expect(@t1.reratings).to eq(1)
+      expect(@t2.reratings).to eq(0)
 
-      Tournament.next_for_rating.should == @t2
+      expect(Tournament.next_for_rating).to eq(@t2)
     end
 
     it "failure due to tournament being queued" do
@@ -99,22 +99,22 @@ describe ICU::RatingRun do
 
       ICU::RatingRun.new.rate_all
 
-      Failure.count.should == 0
-      File.exists?(@flag).should be_false
+      expect(Failure.count).to eq(0)
+      expect(File.exists?(@flag)).to be false
 
       @rating_run.reload
-      @rating_run.status.should == "error"
-      @rating_run.report.should match /Error.+expected.+finish/
+      expect(@rating_run.status).to eq("error")
+      expect(@rating_run.report).to match /Error.+expected.+finish/
 
       [@t1, @t2, @t3].each { |o| o.reload }
-      @t1.stage.should == "rated"
-      @t2.stage.should == "rated"
-      @t3.stage.should == "queued"
-      @t1.reratings.should == 1
-      @t2.reratings.should == 1
-      @t3.reratings.should == 0
+      expect(@t1.stage).to eq("rated")
+      expect(@t2.stage).to eq("rated")
+      expect(@t3.stage).to eq("queued")
+      expect(@t1.reratings).to eq(1)
+      expect(@t2.reratings).to eq(1)
+      expect(@t3.reratings).to eq(0)
 
-      Tournament.next_for_rating.should == @t3
+      expect(Tournament.next_for_rating).to eq(@t3)
     end
 
     it "failure due to change in status" do
@@ -122,24 +122,24 @@ describe ICU::RatingRun do
       p.icu_id = p.icu_id + 1
       p.save
       @t1.reload
-      @t1.status_ok?.should be_false
+      expect(@t1.status_ok?).to be false
 
       ICU::RatingRun.new.rate_all
 
-      Failure.count.should == 0
-      File.exists?(@flag).should be_false
+      expect(Failure.count).to eq(0)
+      expect(File.exists?(@flag)).to be false
 
       @rating_run.reload
-      @rating_run.status.should == "error"
-      @rating_run.report.should match /Error.+status.+not suitable/
+      expect(@rating_run.status).to eq("error")
+      expect(@rating_run.report).to match /Error.+status.+not suitable/
 
       [@t1, @t2].each { |o| o.reload }
-      @t1.stage.should == "queued"
-      @t2.stage.should == "queued"
-      @t1.reratings.should == 0
-      @t2.reratings.should == 0
+      expect(@t1.stage).to eq("queued")
+      expect(@t2.stage).to eq("queued")
+      expect(@t1.reratings).to eq(0)
+      expect(@t2.reratings).to eq(0)
 
-      Tournament.next_for_rating.should == @t1
+      expect(Tournament.next_for_rating).to eq(@t1)
     end
 
     it "failure due to change in order" do
@@ -149,20 +149,20 @@ describe ICU::RatingRun do
 
       ICU::RatingRun.new.rate_all
 
-      Failure.count.should == 0
-      File.exists?(@flag).should be_false
+      expect(Failure.count).to eq(0)
+      expect(File.exists?(@flag)).to be false
 
       @rating_run.reload
-      @rating_run.status.should == "error"
-      @rating_run.report.should match /Error.+expected.+rating order/
+      expect(@rating_run.status).to eq("error")
+      expect(@rating_run.report).to match /Error.+expected.+rating order/
 
       [@t1, @t2].each { |o| o.reload }
-      @t1.stage.should == "queued"
-      @t2.stage.should == "queued"
-      @t1.reratings.should == 0
-      @t2.reratings.should == 0
+      expect(@t1.stage).to eq("queued")
+      expect(@t2.stage).to eq("queued")
+      expect(@t1.reratings).to eq(0)
+      expect(@t2.reratings).to eq(0)
 
-      Tournament.next_for_rating.should == @t2
+      expect(Tournament.next_for_rating).to eq(@t2)
     end
   end
 end

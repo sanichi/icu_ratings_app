@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe "Player" do
   describe "matching" do
@@ -12,43 +12,43 @@ describe "Player" do
     end
 
     it "test should be setup correctly" do
-      @t.status.should == "ok"
-      @t.stage.should == "initial"
+      expect(@t.status).to eq("ok")
+      expect(@t.stage).to eq("initial")
       p = IcuPlayer.find(6897)
-      p.should_not be_nil
+      expect(p).to_not be_nil
       f = FidePlayer.find(2502054)
-      f.should_not be_nil
-      f.icu_id.should == 6897
+      expect(f).to_not be_nil
+      expect(f.icu_id).to eq(6897)
     end
 
     it "should allow an ICU player match", js: true do
       visit "/admin/tournaments/#{@t.id}"
       click_link("Griffiths, Ryan-Rhys")
-      page.should have_selector(:xpath, "//th[.='FIDE ID']/following-sibling::td[.='']")
-      page.should have_selector(:xpath, "//th[.='Federation']/following-sibling::td[.='']")
-      page.should have_selector(:xpath, "//th[.='Date of birth']/following-sibling::td[.='']")
-      page.should have_selector(:xpath, "//th[.='Gender']/following-sibling::td[.='']")
+      expect(page).to have_selector(:xpath, "//th[.='FIDE ID']/following-sibling::td[.='']")
+      expect(page).to have_selector(:xpath, "//th[.='Federation']/following-sibling::td[.='']")
+      expect(page).to have_selector(:xpath, "//th[.='Date of birth']/following-sibling::td[.='']")
+      expect(page).to have_selector(:xpath, "//th[.='Gender']/following-sibling::td[.='']")
       click_link("Find ICU Player")
       click_link("Link tournament player to this ICU player")
-      page.should have_selector(:xpath, "//th[.='FIDE ID']/following-sibling::td[.='2502054']")
-      page.should have_selector(:xpath, "//th[.='Federation']/following-sibling::td[.='IRL']")
-      page.should have_selector(:xpath, "//th[.='Date of birth']/following-sibling::td[.='1993-12-20']")
-      page.should have_selector(:xpath, "//th[.='Gender']/following-sibling::td[.='M']")
+      expect(page).to have_selector(:xpath, "//th[.='FIDE ID']/following-sibling::td[.='2502054']")
+      expect(page).to have_selector(:xpath, "//th[.='Federation']/following-sibling::td[.='IRL']")
+      expect(page).to have_selector(:xpath, "//th[.='Date of birth']/following-sibling::td[.='1993-12-20']")
+      expect(page).to have_selector(:xpath, "//th[.='Gender']/following-sibling::td[.='M']")
     end
 
     it "should allow a FIDE player match", js: true do
       visit "/admin/tournaments/#{@t.id}"
       click_link("Griffiths, Ryan-Rhys")
-      page.should have_selector(:xpath, "//th[.='FIDE ID']/following-sibling::td[.='']")
-      page.should have_selector(:xpath, "//th[.='Federation']/following-sibling::td[.='']")
-      page.should have_selector(:xpath, "//th[.='Gender']/following-sibling::td[.='']")
-      page.should have_selector(:xpath, "//th[.='Elo rating']/following-sibling::td[.='']")
+      expect(page).to have_selector(:xpath, "//th[.='FIDE ID']/following-sibling::td[.='']")
+      expect(page).to have_selector(:xpath, "//th[.='Federation']/following-sibling::td[.='']")
+      expect(page).to have_selector(:xpath, "//th[.='Gender']/following-sibling::td[.='']")
+      expect(page).to have_selector(:xpath, "//th[.='Elo rating']/following-sibling::td[.='']")
       click_link("Find FIDE Player")
       click_link("Link tournament player to this FIDE player")
-      page.should have_selector(:xpath, "//th[.='FIDE ID']/following-sibling::td[.='2502054']")
-      page.should have_selector(:xpath, "//th[.='Federation']/following-sibling::td[.='IRL']")
-      page.should have_selector(:xpath, "//th[.='Gender']/following-sibling::td[.='M']")
-      page.should have_selector(:xpath, "//th[.='Elo rating']/following-sibling::td[.='2200']")
+      expect(page).to have_selector(:xpath, "//th[.='FIDE ID']/following-sibling::td[.='2502054']")
+      expect(page).to have_selector(:xpath, "//th[.='Federation']/following-sibling::td[.='IRL']")
+      expect(page).to have_selector(:xpath, "//th[.='Gender']/following-sibling::td[.='M']")
+      expect(page).to have_selector(:xpath, "//th[.='Elo rating']/following-sibling::td[.='2200']")
     end
 
     it "a FIDE player match should not update an existing FIDE rating for the player", js: true do
@@ -56,10 +56,10 @@ describe "Player" do
       p.update_column(:fide_rating, 2300)
       visit "/admin/tournaments/#{@t.id}"
       click_link("Griffiths, Ryan-Rhys")
-      page.should have_selector(:xpath, "//th[.='Elo rating']/following-sibling::td[.='2300']")
+      expect(page).to have_selector(:xpath, "//th[.='Elo rating']/following-sibling::td[.='2300']")
       click_link("Find FIDE Player")
       click_link("Link tournament player to this FIDE player")
-      page.should have_selector(:xpath, "//th[.='Elo rating']/following-sibling::td[.='2300']")
+      expect(page).to have_selector(:xpath, "//th[.='Elo rating']/following-sibling::td[.='2300']")
     end
   end
 end

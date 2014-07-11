@@ -1,30 +1,27 @@
 source "http://rubygems.org"
 
-gem "rails", "4.0.2"
+gem "rails", "4.1.4"
 gem "mysql2"
-gem "haml-rails"
-gem "sass"
 gem "icu_tournament"
 gem "icu_ratings"
 gem "icu_name"
-gem "validates_timeliness"
+gem "validates_timeliness", github: "razum2um/validates_timeliness", ref: "b195081f6aeead619430ad38b0f0dfe4d4981252" # See https://github.com/adzap/validates_timeliness/pull/114.
+#gem "validates_timeliness", "~> 3.0"
 gem "whenever", :require => false
 gem "redcarpet"
+gem "nokogiri"
 gem "cancan", "~> 1.6"
 gem "jquery-rails"
 gem "jquery-ui-rails"
-gem "nokogiri"
 gem "rack-mini-profiler"
-gem "sass-rails", "~> 4.0.0"
+gem "haml-rails"
+gem "sass-rails", "~> 4.0.3"
 gem "coffee-rails", "~> 4.0.0"
-gem "therubyracer", "0.11.4", :require => "v8"  # 0.12.0 requires requires gcc 4.4 to compile v8 (ratalacha has 4.1)
-gem "newrelic_rpm"
+gem "therubyracer", platforms: :ruby
 gem "uglifier"
 
 group :development do
-  gem "capistrano", "~> 2.15"
-  gem "capistrano-maintenance", "~> 0.0.4"
-  gem "quiet_assets"
+  gem "capistrano-rails"
   gem "wirble"
 end
 

@@ -112,7 +112,7 @@ class User < ActiveRecord::Base
 
   def password_ok?(pass, admin=false)
     if salt_set?
-      password == eval(APP_CONFIG["hasher"]) || (admin && password == pass)
+      password == eval(Rails.application.secrets.hasher) || (admin && password == pass)
     else
       password == pass
     end
@@ -135,7 +135,7 @@ class User < ActiveRecord::Base
       errors.add(:password, "too short") and return unless pass.length >= 6
       errors.add(:password, "too long")  and return unless pass.length <= 32
       salt = salt_set? ? self.salt : Digest::MD5.hexdigest(Time.now.to_s + rand.to_s)
-      password = eval(APP_CONFIG["hasher"])
+      password = eval(Rails.application.secrets.hasher)
     else
       salt = nil
       password = nil

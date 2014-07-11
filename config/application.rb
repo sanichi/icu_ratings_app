@@ -1,17 +1,13 @@
 require File.expand_path("../boot", __FILE__)
 require "yaml"
-
-APP_CONFIG = YAML.load(File.read(File.expand_path("../app_config.yml", __FILE__)))
-
 require "rails/all"
 
-Bundler.require(:default, Rails.env)
+Bundler.require(*Rails.groups)
 
 module Ratings
   class Application < Rails::Application
-    # Settings in config/environments/* take precedence over those specified here.
-    # Application configuration should go into files in config/initializers
-    # -- all .rb files in that directory are automatically loaded.
+    # Express preference for double quoted attributes (single quoted is HAML's default).
+    Haml::Template.options[:attr_wrapper] = '"'
 
     # Custom directories with classes and modules you want to be autoloadable.
     config.autoload_paths += %W(#{Rails.root}/lib)
@@ -30,21 +26,9 @@ module Ratings
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
-    
-    # Avoid deprecation message: http://stackoverflow.com/questions/20361428/rails-i18n-validation-deprecation-warning
-    I18n.config.enforce_available_locales = false
-
-    # Configure the default encoding used in templates for Ruby 1.9.
-    config.encoding = "utf-8"
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
-
-    # Express preference for double quoted attributes (single quoted is HAML's default).
-    Haml::Template.options[:attr_wrapper] = '"'
-
-    # Version of your assets, change this if you want to expire all your assets.
-    config.assets.version = "1.0"
 
     # no-reply@icu.ie causes an error at fwd{0,1,2}.hosts.co.uk so for now use this instead which has no problem.
     config.action_mailer.default_options = { from: "mjo@ratalacha.icu.ie" }

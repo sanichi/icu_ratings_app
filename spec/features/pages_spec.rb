@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe "Pages" do
   describe "contacts" do
@@ -11,21 +11,21 @@ describe "Pages" do
 
     it "should have correctly pluralized headers and correct numbers of contacts under each" do
       visit "/contacts"
-      page.should have_no_selector("h3", text: /member/i)
+      expect(page).to have_no_selector("h3", text: /member/i)
       {
         "Tournament Reporters"  => 3,
         "Rating Officers"       => 2,
         "Website Administrator" => 1,
       }.each_pair do |h, n|
-        page.find("h3", text: h).find(:xpath, "following-sibling::ul[1]").all("li").should have(n).items
+        expect(page.find("h3", text: h).find(:xpath, "following-sibling::ul[1]").all("li").size).to eq n
       end
     end
 
     it "a single admin becomes an officer if there are no officers" do
       @officers.each { |officer| officer.delete }
       visit "/contacts"
-      page.find("h3", text: "Rating Officer").find(:xpath, "following-sibling::ul").all("li").should have(1).items
-      page.should have_no_selector("h3", text: "Website Administrator")
+      expect(page.find("h3", text: "Rating Officer").find(:xpath, "following-sibling::ul").all("li").size).to eq 1
+      expect(page).to have_no_selector("h3", text: "Website Administrator")
     end
   end
 
@@ -45,7 +45,7 @@ describe "Pages" do
 
     it "should not be available to guests" do
       visit "/my_home"
-      page.should have_selector("div.flash span.alert", text: "Not authorized")
+      expect(page).to have_selector("div.flash span.alert", text: "Not authorized")
     end
 
     it "player with recent tournaments and published ratings" do
@@ -57,16 +57,16 @@ describe "Pages" do
       FactoryGirl.create(:icu_rating, icu_player: m1, rating: 1900, list: "2011-05-01")
       u1 = FactoryGirl.create(:user, icu_player: m1)
       login(u1)
-      page.should have_selector("div.header span", text: m1.name(false))
-      page.should have_selector("table#recent_tournaments")
-      page.should have_selector(:xpath, "//table[@id='recent_tournaments']/tr[td='%s']/td[contains(.,'%d')]" % [@t1.name_with_year, p1.rating_change.abs])
-      page.should have_selector(:xpath, "//table[@id='recent_tournaments']/tr[td='%s']/td[contains(.,'%d')]" % [@t2.name_with_year, p2.rating_change.abs])
-      page.should have_selector("table#published_ratings")
-      page.should have_selector(:xpath, "//table[@id='published_ratings']/tr[th='Latest' and td='January 2012' and td='2000']")
-      page.should have_selector(:xpath, "//table[@id='published_ratings']/tr[th='Highest' and td='September 2011' and td='2100']")
-      page.should have_selector(:xpath, "//table[@id='published_ratings']/tr[th='Lowest' and td='May 2011' and td='1900']")
-      page.should have_selector("table#gains_and_losses")
-      page.should have_no_selector("table#explanation")
+      expect(page).to have_selector("div.header span", text: m1.name(false))
+      expect(page).to have_selector("table#recent_tournaments")
+      expect(page).to have_selector(:xpath, "//table[@id='recent_tournaments']/tr[td='%s']/td[contains(.,'%d')]" % [@t1.name_with_year, p1.rating_change.abs])
+      expect(page).to have_selector(:xpath, "//table[@id='recent_tournaments']/tr[td='%s']/td[contains(.,'%d')]" % [@t2.name_with_year, p2.rating_change.abs])
+      expect(page).to have_selector("table#published_ratings")
+      expect(page).to have_selector(:xpath, "//table[@id='published_ratings']/tr[th='Latest' and td='January 2012' and td='2000']")
+      expect(page).to have_selector(:xpath, "//table[@id='published_ratings']/tr[th='Highest' and td='September 2011' and td='2100']")
+      expect(page).to have_selector(:xpath, "//table[@id='published_ratings']/tr[th='Lowest' and td='May 2011' and td='1900']")
+      expect(page).to have_selector("table#gains_and_losses")
+      expect(page).to have_no_selector("table#explanation")
     end
 
     it "player with recent tournaments but no published ratings" do
@@ -74,12 +74,12 @@ describe "Pages" do
       m = p.icu_player
       u = FactoryGirl.create(:user, icu_player: m)
       login(u)
-      page.should have_selector("div.header span", text: m.name(false))
-      page.should have_selector("table#recent_tournaments")
-      page.should have_no_selector("table#published_ratings")
-      page.should have_selector("table#gains_and_losses")
-      page.should have_selector("table#explanation")
-      page.should have_no_selector("p#explain_rated_tournaments")
+      expect(page).to have_selector("div.header span", text: m.name(false))
+      expect(page).to have_selector("table#recent_tournaments")
+      expect(page).to have_no_selector("table#published_ratings")
+      expect(page).to have_selector("table#gains_and_losses")
+      expect(page).to have_selector("table#explanation")
+      expect(page).to have_no_selector("p#explain_rated_tournaments")
     end
 
     it "player with no recent tournaments but published ratings" do
@@ -87,37 +87,37 @@ describe "Pages" do
       u = FactoryGirl.create(:user, icu_player: m)
       FactoryGirl.create(:icu_rating, icu_player: m, rating: 2000, list: "2012-01-01")
       login(u)
-      page.should have_selector("div.header span", text: m.name(false))
-      page.should have_no_selector("table#recent_tournaments")
-      page.should have_selector("table#published_ratings")
-      page.should have_no_selector("table#gains_and_losses")
-      page.should have_selector("table#explanation")
-      page.should have_selector("p#explain_rated_tournaments")
+      expect(page).to have_selector("div.header span", text: m.name(false))
+      expect(page).to have_no_selector("table#recent_tournaments")
+      expect(page).to have_selector("table#published_ratings")
+      expect(page).to have_no_selector("table#gains_and_losses")
+      expect(page).to have_selector("table#explanation")
+      expect(page).to have_selector("p#explain_rated_tournaments")
     end
 
     it "player with no recent tournaments, no published ratings but with old rating" do
       m = IcuPlayer.find(13001)
       u = FactoryGirl.create(:user, icu_player: m)
       login(u)
-      page.should have_selector("div.header span", text: u.icu_player.name(false))
-      page.should have_no_selector("table#recent_tournaments")
-      page.should have_no_selector("table#published_ratings")
-      page.should have_no_selector("table#gains_and_losses")
-      page.should have_selector("table#explanation")
-      page.should have_selector("p#explain_rated_tournaments")
-      page.should have_selector("span#old_rating")
+      expect(page).to have_selector("div.header span", text: u.icu_player.name(false))
+      expect(page).to have_no_selector("table#recent_tournaments")
+      expect(page).to have_no_selector("table#published_ratings")
+      expect(page).to have_no_selector("table#gains_and_losses")
+      expect(page).to have_selector("table#explanation")
+      expect(page).to have_selector("p#explain_rated_tournaments")
+      expect(page).to have_selector("span#old_rating")
     end
 
     it "player with no recent tournaments, no published ratings and no old rating" do
       u = FactoryGirl.create(:user)
       login(u)
-      page.should have_selector("div.header span", text: u.icu_player.name(false))
-      page.should have_no_selector("table#recent_tournaments")
-      page.should have_no_selector("table#published_ratings")
-      page.should have_no_selector("table#gains_and_losses")
-      page.should have_selector("table#explanation")
-      page.should have_selector("p#explain_rated_tournaments")
-      page.should have_no_selector("span#old_rating")
+      expect(page).to have_selector("div.header span", text: u.icu_player.name(false))
+      expect(page).to have_no_selector("table#recent_tournaments")
+      expect(page).to have_no_selector("table#published_ratings")
+      expect(page).to have_no_selector("table#gains_and_losses")
+      expect(page).to have_selector("table#explanation")
+      expect(page).to have_selector("p#explain_rated_tournaments")
+      expect(page).to have_no_selector("span#old_rating")
     end
   end
 end

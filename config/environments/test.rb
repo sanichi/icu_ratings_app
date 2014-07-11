@@ -6,7 +6,7 @@ Ratings::Application.configure do
   # your test database is "scratch space" for the test suite and is wiped
   # and recreated between test runs.  Don't rely on the data there!
   config.cache_classes = true
-  
+
   # Do not eager load code on boot. This avoids loading your whole application
   # just for the purpose of running a single test. If you are using a tool that
   # preloads Rails for running tests, you may have to set it to true.
@@ -33,4 +33,7 @@ Ratings::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
+
+  # Raises error for missing translations
+  config.action_view.raise_on_missing_translations = true
 end

@@ -1,5 +1,5 @@
 # encoding: UTF-8
-require 'spec_helper'
+require 'rails_helper'
 
 module FIDE
   describe Download do
@@ -8,9 +8,9 @@ module FIDE
     end
 
     it "sanity check" do
-      @players_list.length.should be > 0
-      @players_list.encoding.name.should == "UTF-8"
-      @players_list.valid_encoding?.should be_true
+      expect(@players_list.length).to be > 0
+      expect(@players_list.encoding.name).to eq("UTF-8")
+      expect(@players_list.valid_encoding?).to be true
     end
 
     it "should retrieve Irish players" do
@@ -23,73 +23,73 @@ module FIDE
       end
       parser = Nokogiri::XML::SAX::Parser.new(sax)
       parser.parse(@players_list)
-      hash.size.should == 6
+      expect(hash.size).to eq(6)
 
       me = hash[2500035]
-      me.last_name.should == "Orr"
-      me.first_name.should == "Mark J L"
-      me.gender.should == "M"
-      me.born.should == 1955
-      me.rating.should == 2240
-      me.games.should == 0
-      me.title.should == "IM"
-      me.fed.should == "IRL"
-      me.active.should be_true
+      expect(me.last_name).to eq("Orr")
+      expect(me.first_name).to eq("Mark J L")
+      expect(me.gender).to eq("M")
+      expect(me.born).to eq(1955)
+      expect(me.rating).to eq(2240)
+      expect(me.games).to eq(0)
+      expect(me.title).to eq("IM")
+      expect(me.fed).to eq("IRL")
+      expect(me.active).to be true
 
       april = hash[2500370]
-      april.last_name.should == "Cronin"
-      april.first_name.should == "April"
-      april.gender.should == "F"
-      april.born.should == 1960
-      april.rating.should == 2055
-      april.games.should == 0
-      april.title.should be_nil
-      april.fed.should == "IRL"
-      april.active.should be_false
+      expect(april.last_name).to eq("Cronin")
+      expect(april.first_name).to eq("April")
+      expect(april.gender).to eq("F")
+      expect(april.born).to eq(1960)
+      expect(april.rating).to eq(2055)
+      expect(april.games).to eq(0)
+      expect(april.title).to be_nil
+      expect(april.fed).to eq("IRL")
+      expect(april.active).to be false
 
       gearoidin = hash[2501171]
-      gearoidin.last_name.should == "Ui Laighleis"
-      gearoidin.first_name.should == "Gearoidin"
-      gearoidin.gender.should == "F"
-      gearoidin.born.should == 1964
-      gearoidin.rating.should == 1894
-      gearoidin.games.should == 0
-      gearoidin.title.should == "WCM"
-      gearoidin.fed.should == "IRL"
-      gearoidin.active.should be_true
+      expect(gearoidin.last_name).to eq("Ui Laighleis")
+      expect(gearoidin.first_name).to eq("Gearoidin")
+      expect(gearoidin.gender).to eq("F")
+      expect(gearoidin.born).to eq(1964)
+      expect(gearoidin.rating).to eq(1894)
+      expect(gearoidin.games).to eq(0)
+      expect(gearoidin.title).to eq("WCM")
+      expect(gearoidin.fed).to eq("IRL")
+      expect(gearoidin.active).to be true
 
       mark = hash[2500450]
-      mark.last_name.should == "Quinn"
-      mark.first_name.should == "Mark"
-      mark.gender.should == "M"
-      mark.born.should == 1976
-      mark.rating.should == 2388
-      mark.games.should == 0
-      mark.title.should == "IM"
-      mark.fed.should == "IRL"
-      mark.active.should be_true
+      expect(mark.last_name).to eq("Quinn")
+      expect(mark.first_name).to eq("Mark")
+      expect(mark.gender).to eq("M")
+      expect(mark.born).to eq(1976)
+      expect(mark.rating).to eq(2388)
+      expect(mark.games).to eq(0)
+      expect(mark.title).to eq("IM")
+      expect(mark.fed).to eq("IRL")
+      expect(mark.active).to be true
 
       bernard = hash[2500019]
-      bernard.last_name.should == "Kernan"
-      bernard.first_name.should == "Bernard"
-      bernard.gender.should == "M"
-      bernard.born.should == 1955
-      bernard.rating.should == 2380
-      bernard.games.should == 0
-      bernard.title.should be_nil
-      bernard.fed.should == "IRL"
-      bernard.active.should be_false
+      expect(bernard.last_name).to eq("Kernan")
+      expect(bernard.first_name).to eq("Bernard")
+      expect(bernard.gender).to eq("M")
+      expect(bernard.born).to eq(1955)
+      expect(bernard.rating).to eq(2380)
+      expect(bernard.games).to eq(0)
+      expect(bernard.title).to be_nil
+      expect(bernard.fed).to eq("IRL")
+      expect(bernard.active).to be false
 
       debbie = hash[4413504]
-      debbie.last_name.should == "Quinn"
-      debbie.first_name.should == "Deborah"
-      debbie.gender.should == "F"
-      debbie.born.should == 1969
-      debbie.rating.should == 1841
-      debbie.games.should == 0
-      debbie.title.should be_nil
-      debbie.fed.should == "IRL"
-      debbie.active.should be_false
+      expect(debbie.last_name).to eq("Quinn")
+      expect(debbie.first_name).to eq("Deborah")
+      expect(debbie.gender).to eq("F")
+      expect(debbie.born).to eq(1969)
+      expect(debbie.rating).to eq(1841)
+      expect(debbie.games).to eq(0)
+      expect(debbie.title).to be_nil
+      expect(debbie.fed).to eq("IRL")
+      expect(debbie.active).to be false
     end
 
     it "should retrieve foreign players" do
@@ -102,40 +102,40 @@ module FIDE
       end
       parser = Nokogiri::XML::SAX::Parser.new(sax)
       parser.parse(@players_list)
-      hash.size.should == 3
-      
+      expect(hash.size).to eq(3)
+
       magnus = hash[1503014]
-      magnus.last_name.should == "Carlsen"
-      magnus.first_name.should == "Magnus"
-      magnus.gender.should == "M"
-      magnus.born.should == 1990
-      magnus.rating.should == 2843
-      magnus.games.should == 10
-      magnus.title.should == "GM"
-      magnus.fed.should == "NOR"
-      magnus.active.should be_true
-      
+      expect(magnus.last_name).to eq("Carlsen")
+      expect(magnus.first_name).to eq("Magnus")
+      expect(magnus.gender).to eq("M")
+      expect(magnus.born).to eq(1990)
+      expect(magnus.rating).to eq(2843)
+      expect(magnus.games).to eq(10)
+      expect(magnus.title).to eq("GM")
+      expect(magnus.fed).to eq("NOR")
+      expect(magnus.active).to be true
+
       shakri = hash[13401319]
-      shakri.last_name.should == "Mamedyarov"
-      shakri.first_name.should == "Shakhriyar"
-      shakri.gender.should == "M"
-      shakri.born.should == 1985
-      shakri.rating.should == 2729
-      shakri.games.should == 0
-      shakri.title.should == "GM"
-      shakri.fed.should == "AZE"
-      shakri.active.should be_true
+      expect(shakri.last_name).to eq("Mamedyarov")
+      expect(shakri.first_name).to eq("Shakhriyar")
+      expect(shakri.gender).to eq("M")
+      expect(shakri.born).to eq(1985)
+      expect(shakri.rating).to eq(2729)
+      expect(shakri.games).to eq(0)
+      expect(shakri.title).to eq("GM")
+      expect(shakri.fed).to eq("AZE")
+      expect(shakri.active).to be true
 
       sofia = hash[24150797]
-      sofia.last_name.should == "Zyzlova"
-      sofia.first_name.should == "Sofia"
-      sofia.gender.should == "F"
-      sofia.born.should be nil
-      sofia.rating.should == 2080
-      sofia.games.should == 0
-      sofia.title.should be_nil
-      sofia.fed.should == "RUS"
-      sofia.active.should be_true
+      expect(sofia.last_name).to eq("Zyzlova")
+      expect(sofia.first_name).to eq("Sofia")
+      expect(sofia.gender).to eq("F")
+      expect(sofia.born).to be nil
+      expect(sofia.rating).to eq(2080)
+      expect(sofia.games).to eq(0)
+      expect(sofia.title).to be_nil
+      expect(sofia.fed).to eq("RUS")
+      expect(sofia.active).to be true
     end
   end
 end

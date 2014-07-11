@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe FideRating do
   describe "list", js: true do
@@ -13,34 +13,34 @@ describe FideRating do
 
     it "unfiltered" do
       visit fide_ratings_path
-      page.should have_selector(@xp, count: 6)
+      expect(page).to have_selector(@xp, count: 6)
     end
 
     it "list" do
       visit fide_ratings_path
       page.select "2011 Sep", from: "List"
       click_button "Search"
-      page.should have_selector(@xp, count: 4)
+      expect(page).to have_selector(@xp, count: 4)
     end
 
     it "gender" do
       visit fide_ratings_path
       page.select "Male", from: "Gender"
       click_button "Search"
-      page.should have_selector(@xp, count: 5)
+      expect(page).to have_selector(@xp, count: 5)
       page.select "Female", from: "Gender"
       click_button "Search"
-      page.should have_selector(@xp, count: 2)
+      expect(page).to have_selector(@xp, count: 2)
     end
 
     it "FIDE ID" do
       visit fide_ratings_path
       page.fill_in "FIDE ID", with: @r1.fide_player.id
       click_button "Search"
-      page.should have_selector(@xp, count: 3)
+      expect(page).to have_selector(@xp, count: 3)
       page.select "2011 Sep", from: "List"
       click_button "Search"
-      page.should have_selector(@xp, count: 2)
+      expect(page).to have_selector(@xp, count: 2)
     end
   end
 end

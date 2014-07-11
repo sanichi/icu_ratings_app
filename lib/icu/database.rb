@@ -601,7 +601,7 @@ module ICU
       private
 
       def initialize
-        @client = Mysql2::Client.new(APP_CONFIG["icu_db_ro"].symbolize_keys)
+        @client = Mysql2::Client.new(Rails.application.secrets.icu_db_ro.symbolize_keys)
         @client.query_options.merge!(symbolize_keys: true)
         @start = Time.now
       end
@@ -633,7 +633,7 @@ module ICU
 
     class Push
       def initialize
-        @client = Mysql2::Client.new(APP_CONFIG["icu_db_rw"].symbolize_keys)
+        @client = Mysql2::Client.new(Rails.application.secrets.icu_db_rw.symbolize_keys)
         @client.query_options.merge!(symbolize_keys: true)
       end
 

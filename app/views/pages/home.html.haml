@@ -1,5 +1,5 @@
 - content_for :head do
-  %meta{name: "google-site-verification", content: APP_CONFIG["google_site_verification"]}
+  %meta{name: "google-site-verification", content: Rails.application.secrets.google_site_verification}
 
 - unless can?(:my_home, Pages::MyHome)
   %table{class: "cushioned"}

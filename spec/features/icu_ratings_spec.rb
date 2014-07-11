@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe IcuRating do
   describe "list", js: true do
@@ -13,61 +13,61 @@ describe IcuRating do
 
     it "unfiltered" do
       visit icu_ratings_path
-      page.should have_selector(@xp, count: 6)
+      expect(page).to have_selector(@xp, count: 6)
     end
 
     it "rating list" do
       visit icu_ratings_path
       page.select "2011 Sep", from: "list"
       click_button "Search"
-      page.should have_selector(@xp, count: 4)
+      expect(page).to have_selector(@xp, count: 4)
     end
 
     it "club" do
       visit icu_ratings_path
       page.select "Bangor", from: "club"
       click_button "Search"
-      page.should have_selector(@xp, count: 3)
+      expect(page).to have_selector(@xp, count: 3)
     end
 
     it "gender" do
       visit icu_ratings_path
       page.select "Male", from: "gender"
       click_button "Search"
-      page.should have_selector(@xp, count: 5)
+      expect(page).to have_selector(@xp, count: 5)
       page.select "Female", from: "gender"
       click_button "Search"
-      page.should have_selector(@xp, count: 2)
+      expect(page).to have_selector(@xp, count: 2)
     end
 
     it "federation" do
       visit icu_ratings_path
       page.select "Ireland", from: "fed"
       click_button "Search"
-      page.should have_selector(@xp, count: 4)
+      expect(page).to have_selector(@xp, count: 4)
       page.select "Scotland", from: "fed"
       click_button "Search"
-      page.should have_selector(@xp, count: 2)
+      expect(page).to have_selector(@xp, count: 2)
       page.select "Ireland or Unknown", from: "fed"
       click_button "Search"
-      page.should have_selector(@xp, count: 5)
+      expect(page).to have_selector(@xp, count: 5)
     end
 
     it "ICU ID" do
       visit icu_ratings_path
       page.fill_in "ICU ID", with: @r1.icu_player.id
       click_button "Search"
-      page.should have_selector(@xp, count: 3)
+      expect(page).to have_selector(@xp, count: 3)
     end
 
     it "full or provisional" do
       visit icu_ratings_path
       page.select "Full", from: "type"
       click_button "Search"
-      page.should have_selector(@xp, count: 4)
+      expect(page).to have_selector(@xp, count: 4)
       page.select "Provisional", from: "type"
       click_button "Search"
-      page.should have_selector(@xp, count: 3)
+      expect(page).to have_selector(@xp, count: 3)
     end
   end
 end

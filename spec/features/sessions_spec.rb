@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe "Sessions" do
   describe "logging in" do
@@ -9,61 +9,61 @@ describe "Sessions" do
     end
 
     it "login page" do
-      page.should have_title("Log in")
-      page.should have_xpath("//form//input[@name='email']")
-      page.should have_xpath("//form//input[@name='password']")
+      expect(page).to have_title("Log in")
+      expect(page).to have_xpath("//form//input[@name='email']")
+      expect(page).to have_xpath("//form//input[@name='password']")
     end
 
     it "invalid emails should fail" do
       page.fill_in "Email", with: "wrong_email@icu.ie"
       page.fill_in "Password", with: @user.password
       click_button "Log in"
-      page.should have_title("Log in")
-      page.should have_selector("span.alert", text: /invalid email or password/i)
-      Login.count.should == 0
+      expect(page).to have_title("Log in")
+      expect(page).to have_selector("span.alert", text: /invalid email or password/i)
+      expect(Login.count).to eq(0)
     end
 
     it "invalid passwords should fail" do
       page.fill_in "Email", with: @user.email
       page.fill_in "Password", with: "wrong password"
       click_button "Log in"
-      page.should have_title("Log in")
-      page.should have_selector("span.alert", text: /invalid email or password/i)
-      @user.logins.where(problem: "password", role: "member").count.should == 1
+      expect(page).to have_title("Log in")
+      expect(page).to have_selector("span.alert", text: /invalid email or password/i)
+      expect(@user.logins.where(problem: "password", role: "member").count).to eq(1)
     end
 
     it "expired members should fail" do
       page.fill_in "Email", with: @loser.email
       page.fill_in "Password", with: @loser.password
       click_button "Log in"
-      page.should have_title("Log in")
-      page.should have_selector("span.alert", text: /suspended/i)
-      @loser.logins.where(problem: "expiry", role: "member").count.should == 1
+      expect(page).to have_title("Log in")
+      expect(page).to have_selector("span.alert", text: /suspended/i)
+      expect(@loser.logins.where(problem: "expiry", role: "member").count).to eq(1)
     end
 
     it "valid logins should succeed" do
       page.fill_in "Email", with: @user.email
       page.fill_in "Password", with: @user.password
       click_button "Log in"
-      page.should have_selector("div.header span", text: @user.icu_player.name(false))
-      @user.logins.where(problem: "none", role: "member").count.should == 1
+      expect(page).to have_selector("div.header span", text: @user.icu_player.name(false))
+      expect(@user.logins.where(problem: "none", role: "member").count).to eq(1)
     end
 
     it "the user's current role is recorded" do
       page.fill_in "Email", with: @user.email
       page.fill_in "Password", with: @user.password
       click_button "Log in"
-      @user.logins.where(problem: "none").count.should == 1
-      @user.logins.where(problem: "none", role: "member").count.should == 1
+      expect(@user.logins.where(problem: "none").count).to eq(1)
+      expect(@user.logins.where(problem: "none", role: "member").count).to eq(1)
       @user.role = "reporter"
       @user.save
       visit "/log_in"
       page.fill_in "Email", with: @user.email
       page.fill_in "Password", with: @user.password
       click_button "Log in"
-      @user.logins.where(problem: "none").count.should == 2
-      @user.logins.where(problem: "none", role: "member").count.should == 1
-      @user.logins.where(problem: "none", role: "reporter").count.should == 1
+      expect(@user.logins.where(problem: "none").count).to eq(2)
+      expect(@user.logins.where(problem: "none", role: "member").count).to eq(1)
+      expect(@user.logins.where(problem: "none", role: "reporter").count).to eq(1)
     end
   end
 
@@ -72,7 +72,7 @@ describe "Sessions" do
       salt = "b3f0f553a916b0e8ab6b2469cabd200f"
       @password = [0, 1].map do |i|
         pass = "password#{i}"
-        { password: pass, encrypted: eval(APP_CONFIG["hasher"]) }
+        { password: pass, encrypted: eval(Rails.application.secrets.hasher) }
       end
       @user = FactoryGirl.create(:user, salt: salt, password: @password[0].fetch(:encrypted))
       visit "/log_in"
@@ -87,48 +87,48 @@ describe "Sessions" do
     end
 
     it "valid logins avoid the need for pulls" do
-      ICU::Database::Pull.should_not_receive(:new)
+      expect(ICU::Database::Pull).to_not receive(:new)
       page.fill_in "Email", with: @user.email
       page.fill_in "Password", with: @password[0].fetch(:password)
       click_button "Log in"
       @user.reload
-      @user.logins.where(problem: "none").count.should == 1
-      @user.last_pulled_at.should be_nil
-      @user.last_pull.should be_nil
+      expect(@user.logins.where(problem: "none").count).to eq(1)
+      expect(@user.last_pulled_at).to be_nil
+      expect(@user.last_pull).to be_nil
     end
 
     it "invalid logins triggers pulls to check for changes" do
       hash = [:password, :salt, :status, :expiry].inject({}) { |h,k| h[k] = @user.send(k); h }
-      ICU::Database::Pull.stub_chain(:new, :get_member).with(@user.id, @user.email).and_return(hash)
+      allow(ICU::Database::Pull).to receive_message_chain(:new, :get_member).with(@user.id, @user.email).and_return(hash)
       page.fill_in "Email", with: @user.email
       page.fill_in "Password", with: "rubbish"
       click_button "Log in"
       @user.reload
-      @user.logins.where(problem: "password").count.should == 1
-      @user.last_pulled_at.should_not be_nil
-      @user.last_pull.should == "none"
+      expect(@user.logins.where(problem: "password").count).to eq(1)
+      expect(@user.last_pulled_at).to_not be_nil
+      expect(@user.last_pull).to eq("none")
     end
 
     it "an out of date date password can be refreshed from pulled data" do
       hash = [:salt, :status, :expiry].inject({}) { |h,k| h[k] = @user.send(k); h }.merge(password: @password[1].fetch(:encrypted))
-      ICU::Database::Pull.stub_chain(:new, :get_member).with(@user.id, @user.email).and_return(hash)
+      allow(ICU::Database::Pull).to receive_message_chain(:new, :get_member).with(@user.id, @user.email).and_return(hash)
       page.fill_in "Email", with: @user.email
       page.fill_in "Password", with: @password[1].fetch(:password)
       click_button "Log in"
       @user.reload
-      @user.logins.where(problem: "none").count.should == 1
-      @user.last_pulled_at.should_not be_nil
-      @user.last_pull.should == "password"
+      expect(@user.logins.where(problem: "none").count).to eq(1)
+      expect(@user.last_pulled_at).to_not be_nil
+      expect(@user.last_pull).to eq("password")
     end
-    
+
     it "data is never pulled more than once in quick succession" do
       hash = [:salt, :status, :expiry, :password].inject({}) { |h,k| h[k] = @user.send(k); h }
-      ICU::Database::Pull.stub_chain(:new, :get_member).with(@user.id, @user.email).and_return(hash)
+      allow(ICU::Database::Pull).to receive_message_chain(:new, :get_member).with(@user.id, @user.email).and_return(hash)
       page.fill_in "Email", with: @user.email
       page.fill_in "Password", with: "rubbish"
       click_button "Log in"
       @user.reload
-      @user.logins.where(problem: "password").count.should == 1
+      expect(@user.logins.where(problem: "password").count).to eq(1)
       last_pulled_at = @user.last_pulled_at
       sleep 1
       visit "/log_in"
@@ -136,36 +136,36 @@ describe "Sessions" do
       page.fill_in "Password", with: "more rubbish"
       click_button "Log in"
       @user.reload
-      @user.logins.where(problem: "password").count.should == 2
-      @user.last_pulled_at.should == last_pulled_at
+      expect(@user.logins.where(problem: "password").count).to eq(2)
+      expect(@user.last_pulled_at).to eq(last_pulled_at)
     end
   end
 
   describe "switching user" do
     it "from a member, reporter or officer it logs an event" do
       login("member")
-      Login.count.should == 1
+      expect(Login.count).to eq(1)
       login("reporter")
-      Login.count.should == 2
+      expect(Login.count).to eq(2)
       login("officer")
-      Login.count.should == 3
+      expect(Login.count).to eq(3)
       login("admin")
-      Login.count.should == 4
+      expect(Login.count).to eq(4)
     end
 
     it "from an admin, it does not log an event" do
       login("admin")
-      Login.count.should == 1
+      expect(Login.count).to eq(1)
       login("member")
-      Login.count.should == 1
+      expect(Login.count).to eq(1)
       login("admin")
-      Login.count.should == 2
+      expect(Login.count).to eq(2)
       login("reporter")
-      Login.count.should == 2
+      expect(Login.count).to eq(2)
       login("admin")
-      Login.count.should == 3
+      expect(Login.count).to eq(3)
       login("reporter")
-      Login.count.should == 3
+      expect(Login.count).to eq(3)
     end
   end
 end

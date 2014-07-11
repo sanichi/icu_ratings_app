@@ -1,29 +1,29 @@
 # encoding: UTF-8
-require 'spec_helper'
+require 'rails_helper'
 
 describe "sign" do
   it "should truncate and add a sign" do
-    helper.sign(1234).should == "+1234"
-    helper.sign(1.9).should == "+2"
-    helper.sign(1.1).should == "+1"
-    helper.sign(1).should == "+1"
-    helper.sign(0.9).should == "+1"
-    helper.sign(0.1).should == "+0"
-    helper.sign(0).should == "0"
-    helper.sign(0.0).should == "0"
-    helper.sign(-0.1).should == "−0"
-    helper.sign(-0.9).should == "−1"
-    helper.sign(-1).should == "−1"
-    helper.sign(-999.4999).should == "−999"
-    helper.sign(-999.5).should == "−1000"
+    expect(helper.sign(1234)).to eq("+1234")
+    expect(helper.sign(1.9)).to eq("+2")
+    expect(helper.sign(1.1)).to eq("+1")
+    expect(helper.sign(1)).to eq("+1")
+    expect(helper.sign(0.9)).to eq("+1")
+    expect(helper.sign(0.1)).to eq("+0")
+    expect(helper.sign(0)).to eq("0")
+    expect(helper.sign(0.0)).to eq("0")
+    expect(helper.sign(-0.1)).to eq("−0")
+    expect(helper.sign(-0.9)).to eq("−1")
+    expect(helper.sign(-1)).to eq("−1")
+    expect(helper.sign(-999.4999)).to eq("−999")
+    expect(helper.sign(-999.5)).to eq("−1000")
   end
 
   it "optional arguments" do
-    helper.sign(1, space: true).should == "+ 1"
-    helper.sign(0.1, space: true).should == "+ 0"
-    helper.sign(0, space: true).should == "+ 0"
-    helper.sign(0.0, space: true).should == "+ 0"
-    helper.sign(-0.1, space: true).should == "− 0"
-    helper.sign(-1, space: true).should == "− 1"
+    expect(helper.sign(1, space: true)).to eq("+ 1")
+    expect(helper.sign(0.1, space: true)).to eq("+ 0")
+    expect(helper.sign(0, space: true)).to eq("+ 0")
+    expect(helper.sign(0.0, space: true)).to eq("+ 0")
+    expect(helper.sign(-0.1, space: true)).to eq("− 0")
+    expect(helper.sign(-1, space: true)).to eq("− 1")
   end
 end

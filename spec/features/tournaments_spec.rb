@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe "Tournament" do
   def load_tournament(file, arg={})
@@ -60,50 +60,50 @@ describe "Tournament" do
 
     it "SwissPerfect" do
       load_tournament("rathmines_senior_2011.zip", feds: "ignore")
-      Tournament.count.should == 1
+      expect(Tournament.count).to eq(1)
       tournament = Tournament.first
-      tournament.name.should == "Rathmines Senior 2011"
-      tournament.status.should_not == "ok"
-      tournament.stage.should == "initial"
+      expect(tournament.name).to eq("Rathmines Senior 2011")
+      expect(tournament.status).to_not eq("ok")
+      expect(tournament.stage).to eq("initial")
     end
 
     it "SPExport" do
       name = "Test Tournament Name"
       load_tournament("junior_championships_u19_2010.txt", feds: "skip", name: name)
-      Tournament.count.should == 1
+      expect(Tournament.count).to eq(1)
       tournament = Tournament.first
-      tournament.name.should == name
-      tournament.status.should_not == "ok"
-      tournament.stage.should == "initial"
+      expect(tournament.name).to eq(name)
+      expect(tournament.status).to_not eq("ok")
+      expect(tournament.stage).to eq("initial")
     end
 
     it "Krause" do
       load_tournament("bunratty_masters_2011.tab", ratings: "FIDE")
-      Tournament.count.should == 1
+      expect(Tournament.count).to eq(1)
       tournament = Tournament.first
-      tournament.name.should == "Bunratty 2011"
-      tournament.status.should_not == "ok"
-      tournament.stage.should == "initial"
+      expect(tournament.name).to eq("Bunratty 2011")
+      expect(tournament.status).to_not eq("ok")
+      expect(tournament.stage).to eq("initial")
     end
 
     it "Krause with BOM" do
       test = "armstrong_2012_with_bom.tab"
       load_icu_players_for(test)
       load_tournament(test, ratings: "ICU")
-      Tournament.count.should == 1
+      expect(Tournament.count).to eq(1)
       tournament = Tournament.first
-      tournament.name.should == "LCU Div 1 Armstrong Cup"
-      tournament.status.should == "ok"
-      tournament.stage.should == "initial"
+      expect(tournament.name).to eq("LCU Div 1 Armstrong Cup")
+      expect(tournament.status).to eq("ok")
+      expect(tournament.stage).to eq("initial")
     end
 
     it "CSV" do
       load_tournament("isle_of_man_2007.csv")
-      Tournament.count.should == 1
+      expect(Tournament.count).to eq(1)
       tournament = Tournament.first
-      tournament.name.should == "Isle of Man Masters, 2007"
-      tournament.status.should_not == "ok"
-      tournament.stage.should == "initial"
+      expect(tournament.name).to eq("Isle of Man Masters, 2007")
+      expect(tournament.status).to_not eq("ok")
+      expect(tournament.stage).to eq("initial")
     end
   end
 
@@ -116,22 +116,22 @@ describe "Tournament" do
     it "should get sent for a reporter" do
       login("reporter")
       load_tournament("isle_of_man_2007.csv")
-      Tournament.count.should == @t + 1
-      ActionMailer::Base.deliveries.size.should == @n + 1
+      expect(Tournament.count).to eq(@t + 1)
+      expect(ActionMailer::Base.deliveries.size).to eq(@n + 1)
     end
 
     it "should not get sent for an officer" do
       login("officer")
       load_tournament("isle_of_man_2007.csv")
-      Tournament.count.should == @t + 1
-      ActionMailer::Base.deliveries.size.should == @n
+      expect(Tournament.count).to eq(@t + 1)
+      expect(ActionMailer::Base.deliveries.size).to eq(@n)
     end
 
     it "should not get sent for an admin" do
       login("admin")
       load_tournament("isle_of_man_2007.csv")
-      Tournament.count.should == @t + 1
-      ActionMailer::Base.deliveries.size.should == @n
+      expect(Tournament.count).to eq(@t + 1)
+      expect(ActionMailer::Base.deliveries.size).to eq(@n)
     end
   end
 
@@ -148,16 +148,16 @@ describe "Tournament" do
         t.update_attribute(:stage, "ready")
       end
       visit "/tournaments"
-      page.should have_no_selector(:xpath, "//a[@href='/tournaments/#{@t1.id}']")
-      page.should have_no_selector(:xpath, "//a[@href='/tournaments/#{@t2.id}']")
+      expect(page).to have_no_selector(:xpath, "//a[@href='/tournaments/#{@t1.id}']")
+      expect(page).to have_no_selector(:xpath, "//a[@href='/tournaments/#{@t2.id}']")
       @t1.update_attribute(:status, "ok")
       visit "/tournaments"
-      page.should have_selector(:xpath, "//a[@href='/tournaments/#{@t1.id}']")
-      page.should have_no_selector(:xpath, "//a[@href='/tournaments/#{@t2.id}']")
+      expect(page).to have_selector(:xpath, "//a[@href='/tournaments/#{@t1.id}']")
+      expect(page).to have_no_selector(:xpath, "//a[@href='/tournaments/#{@t2.id}']")
       @t2.update_attribute(:status, "ok")
       visit "/tournaments"
-      page.should have_selector(:xpath, "//a[@href='/tournaments/#{@t1.id}']")
-      page.should have_selector(:xpath, "//a[@href='/tournaments/#{@t2.id}']")
+      expect(page).to have_selector(:xpath, "//a[@href='/tournaments/#{@t1.id}']")
+      expect(page).to have_selector(:xpath, "//a[@href='/tournaments/#{@t2.id}']")
     end
 
     it "should not display tournaments at the 'initial' stage" do
@@ -166,16 +166,16 @@ describe "Tournament" do
         t.update_attribute(:stage, "initial")
       end
       visit "/tournaments"
-      page.should have_no_selector(:xpath, "//a[@href='/tournaments/#{@t1.id}']")
-      page.should have_no_selector(:xpath, "//a[@href='/tournaments/#{@t2.id}']")
+      expect(page).to have_no_selector(:xpath, "//a[@href='/tournaments/#{@t1.id}']")
+      expect(page).to have_no_selector(:xpath, "//a[@href='/tournaments/#{@t2.id}']")
       @t1.update_attribute(:stage, "ready")
       visit "/tournaments"
-      page.should have_selector(:xpath, "//a[@href='/tournaments/#{@t1.id}']")
-      page.should have_no_selector(:xpath, "//a[@href='/tournaments/#{@t2.id}']")
+      expect(page).to have_selector(:xpath, "//a[@href='/tournaments/#{@t1.id}']")
+      expect(page).to have_no_selector(:xpath, "//a[@href='/tournaments/#{@t2.id}']")
       @t2.update_attribute(:stage, "ready")
       visit "/tournaments"
-      page.should have_selector(:xpath, "//a[@href='/tournaments/#{@t1.id}']")
-      page.should have_selector(:xpath, "//a[@href='/tournaments/#{@t2.id}']")
+      expect(page).to have_selector(:xpath, "//a[@href='/tournaments/#{@t1.id}']")
+      expect(page).to have_selector(:xpath, "//a[@href='/tournaments/#{@t2.id}']")
     end
   end
 
@@ -186,43 +186,43 @@ describe "Tournament" do
     end
 
     it "reporters can edit their own tournaments and players, officers can change reporter" do
-      Tournament.count.should == 0
-      Player.count.should == 0
+      expect(Tournament.count).to eq(0)
+      expect(Player.count).to eq(0)
       visit "/admin/uploads/new"
       page.select "FIDE-Krause", from: "upload_format"
       page.attach_file "file", @file
       page.click_button "Upload"
-      Tournament.count.should == 1
+      expect(Tournament.count).to eq(1)
       t = Tournament.first
       tpath = "/admin/tournaments/#{t.id}"
       visit tpath
-      page.should have_selector("div span", text: "Bunratty 2011")
-      page.should have_selector(:xpath, "//a[@href='#{tpath}/edit' and @data-remote='true']")
-      page.should have_selector(:xpath, "//a[@href='#{tpath}/edit?tie_breaks=' and @data-remote='true']")
-      page.should have_selector(:xpath, "//a[@href='#{tpath}/edit?ranks=' and @data-remote='true']")
-      page.should have_no_selector(:xpath, "//a[@href='#{tpath}/edit?reporter=']")
-      Player.count.should == 40
+      expect(page).to have_selector("div span", text: "Bunratty 2011")
+      expect(page).to have_selector(:xpath, "//a[@href='#{tpath}/edit' and @data-remote='true']")
+      expect(page).to have_selector(:xpath, "//a[@href='#{tpath}/edit?tie_breaks=' and @data-remote='true']")
+      expect(page).to have_selector(:xpath, "//a[@href='#{tpath}/edit?ranks=' and @data-remote='true']")
+      expect(page).to have_no_selector(:xpath, "//a[@href='#{tpath}/edit?reporter=']")
+      expect(Player.count).to eq(40)
       p = Player.find_by_last_name_and_first_name("Baburin", "Alexander")
       ppath = "/admin/players/#{p.id}"
       visit ppath
-      page.should have_selector("div span", text: /Alexander Baburin/)
-      page.should have_selector(:xpath, "//a[@href='#{ppath}/edit' and @data-remote='true']")
-      page.should have_selector(:xpath, "//a[starts-with(@href,'/icu_players') and @data-remote='true']")
-      page.should have_selector(:xpath, "//a[starts-with(@href,'/fide_players') and @data-remote='true']")
-      page.should have_selector(:xpath, "//a[starts-with(@href,'/admin/results') and @data-remote='true']", count: 6)
+      expect(page).to have_selector("div span", text: /Alexander Baburin/)
+      expect(page).to have_selector(:xpath, "//a[@href='#{ppath}/edit' and @data-remote='true']")
+      expect(page).to have_selector(:xpath, "//a[starts-with(@href,'/icu_players') and @data-remote='true']")
+      expect(page).to have_selector(:xpath, "//a[starts-with(@href,'/fide_players') and @data-remote='true']")
+      expect(page).to have_selector(:xpath, "//a[starts-with(@href,'/admin/results') and @data-remote='true']", count: 6)
       login("reporter")
       visit tpath
-      page.should have_selector("div span", text: "Bunratty 2011")
-      page.should have_no_selector(:xpath, "//a[starts-with(@href,'#{tpath}/edit')]")
+      expect(page).to have_selector("div span", text: "Bunratty 2011")
+      expect(page).to have_no_selector(:xpath, "//a[starts-with(@href,'#{tpath}/edit')]")
       visit ppath
-      page.should have_selector("div span", text: /Alexander Baburin/)
-      page.should have_no_selector(:xpath, "//a[starts-with(@href,'#{ppath}/edit')]")
-      page.should have_no_selector(:xpath, "//a[starts-with(@href,'/icu_players') and @data-remote='true']")
-      page.should have_no_selector(:xpath, "//a[starts-with(@href,'/fide_players') and @data-remote='true']")
-      page.should have_no_selector(:xpath, "//a[starts-with(@href,'/admin/results')]")
+      expect(page).to have_selector("div span", text: /Alexander Baburin/)
+      expect(page).to have_no_selector(:xpath, "//a[starts-with(@href,'#{ppath}/edit')]")
+      expect(page).to have_no_selector(:xpath, "//a[starts-with(@href,'/icu_players') and @data-remote='true']")
+      expect(page).to have_no_selector(:xpath, "//a[starts-with(@href,'/fide_players') and @data-remote='true']")
+      expect(page).to have_no_selector(:xpath, "//a[starts-with(@href,'/admin/results')]")
       login("officer")
       visit tpath
-      page.should have_selector(:xpath, "//a[@href='#{tpath}/edit?reporter=' and @data-remote='true']")
+      expect(page).to have_selector(:xpath, "//a[@href='#{tpath}/edit?reporter=' and @data-remote='true']")
     end
   end
 
@@ -244,72 +244,72 @@ describe "Tournament" do
       page.select "FIDE", from: "Ratings"
       page.attach_file "file", @file
       page.click_button "Upload"
-      Tournament.count.should == 1
+      expect(Tournament.count).to eq(1)
       t = Tournament.first
       tpath = "/admin/tournaments/#{t.id}"
       visit tpath
-      page.should have_selector("div span", text: "U-19 All Ireland 2010")
-      page.should have_selector(:xpath, "//th[.='Status']/following-sibling::td[.='OK']")
-      t.players.count.should == 8
-      signature(t).should == "1|Cafolla|7||2|Dunne|4||3|Flynn|2||4|Fox|8||5|Griffiths|1||6|Hulleman|3||7|Orr|5||8|Sulskis|6"
-      Player.count.should == 8
-      Result.count.should == 22
+      expect(page).to have_selector("div span", text: "U-19 All Ireland 2010")
+      expect(page).to have_selector(:xpath, "//th[.='Status']/following-sibling::td[.='OK']")
+      expect(t.players.count).to eq(8)
+      expect(signature(t)).to eq("1|Cafolla|7||2|Dunne|4||3|Flynn|2||4|Fox|8||5|Griffiths|1||6|Hulleman|3||7|Orr|5||8|Sulskis|6")
+      expect(Player.count).to eq(8)
+      expect(Result.count).to eq(22)
 
       p = t.players.where(last_name: "Cafolla").first
       visit "/admin/players/#{p.id}"
-      page.should have_selector("div span", text: "Cafolla")
+      expect(page).to have_selector("div span", text: "Cafolla")
       page.click_link "Delete Player"
       page.driver.browser.switch_to.alert.accept
-      page.should have_selector("div span", text: "U-19 All Ireland 2010")
-      page.should have_selector("div.flash span.notice", text: "Deleted player Cafolla, Peter")
-      page.should have_no_link("Cafolla, Peter")
-      signature(t).should == "1|Dunne|4||2|Flynn|2||3|Fox|7||4|Griffiths|1||5|Hulleman|3||6|Orr|5||7|Sulskis|6"
-      Player.count.should == 7
-      Result.count.should == 18
+      expect(page).to have_selector("div span", text: "U-19 All Ireland 2010")
+      expect(page).to have_selector("div.flash span.notice", text: "Deleted player Cafolla, Peter")
+      expect(page).to have_no_link("Cafolla, Peter")
+      expect(signature(t)).to eq("1|Dunne|4||2|Flynn|2||3|Fox|7||4|Griffiths|1||5|Hulleman|3||6|Orr|5||7|Sulskis|6")
+      expect(Player.count).to eq(7)
+      expect(Result.count).to eq(18)
 
       p = t.players.where(last_name: "Flynn").first
       visit "/admin/players/#{p.id}"
-      page.should have_selector("div span", text: "Flynn")
-      page.should have_no_link "Delete Player"
+      expect(page).to have_selector("div span", text: "Flynn")
+      expect(page).to have_no_link "Delete Player"
 
       p = t.players.where(last_name: "Fox").first
       visit "/admin/players/#{p.id}"
-      page.should have_selector("div span", text: "Fox")
+      expect(page).to have_selector("div span", text: "Fox")
       page.click_link "Delete Player"
       page.driver.browser.switch_to.alert.accept
-      page.should have_selector("div span", text: "U-19 All Ireland 2010")
-      page.should have_selector("div.flash span.notice", text: "Deleted player Fox, Anthony")
-      page.should have_no_link("Fox, Anthony")
-      signature(t).should == "1|Dunne|4||2|Flynn|2||3|Griffiths|1||4|Hulleman|3||5|Orr|5||6|Sulskis|6"
-      Player.count.should == 6
-      Result.count.should == 17
+      expect(page).to have_selector("div span", text: "U-19 All Ireland 2010")
+      expect(page).to have_selector("div.flash span.notice", text: "Deleted player Fox, Anthony")
+      expect(page).to have_no_link("Fox, Anthony")
+      expect(signature(t)).to eq("1|Dunne|4||2|Flynn|2||3|Griffiths|1||4|Hulleman|3||5|Orr|5||6|Sulskis|6")
+      expect(Player.count).to eq(6)
+      expect(Result.count).to eq(17)
 
       p = t.players.where(last_name: "Griffiths").first
       visit "/admin/players/#{p.id}"
-      page.should have_selector("div span", text: "Griffiths")
-      page.should have_no_link "Delete Player"
+      expect(page).to have_selector("div span", text: "Griffiths")
+      expect(page).to have_no_link "Delete Player"
 
       p = t.players.where(last_name: "Hulleman").first
       visit "/admin/players/#{p.id}"
-      page.should have_selector("div span", text: "Hulleman")
-      page.should have_no_link "Delete Player"
+      expect(page).to have_selector("div span", text: "Hulleman")
+      expect(page).to have_no_link "Delete Player"
 
       p = t.players.where(last_name: "Orr").first
       visit "/admin/players/#{p.id}"
-      page.should have_selector("div span", text: "Orr")
-      page.should have_no_link "Delete Player"
+      expect(page).to have_selector("div span", text: "Orr")
+      expect(page).to have_no_link "Delete Player"
 
       p = t.players.where(last_name: "Sulskis").first
       visit "/admin/players/#{p.id}"
-      page.should have_selector("div span", text: "Sulskis")
+      expect(page).to have_selector("div span", text: "Sulskis")
       page.click_link "Delete Player"
       page.driver.browser.switch_to.alert.accept
-      page.should have_selector("div span", text: "U-19 All Ireland 2010")
-      page.should have_selector("div.flash span.notice", text: "Deleted player Sulskis, Sarunas")
-      page.should have_no_link("Sulskis, Sarunas")
-      signature(t).should == "1|Dunne|4||2|Flynn|2||3|Griffiths|1||4|Hulleman|3||5|Orr|5"
-      Player.count.should == 5
-      Result.count.should == 17
+      expect(page).to have_selector("div span", text: "U-19 All Ireland 2010")
+      expect(page).to have_selector("div.flash span.notice", text: "Deleted player Sulskis, Sarunas")
+      expect(page).to have_no_link("Sulskis, Sarunas")
+      expect(signature(t)).to eq("1|Dunne|4||2|Flynn|2||3|Griffiths|1||4|Hulleman|3||5|Orr|5")
+      expect(Player.count).to eq(5)
+      expect(Result.count).to eq(17)
     end
   end
 
@@ -344,136 +344,136 @@ describe "Tournament" do
       end
 
       it "three tournaments", js: true do
-        Tournament.count.should == 3
-        Tournament.where("rorder IS NOT NULL").count.should == 0
+        expect(Tournament.count).to eq(3)
+        expect(Tournament.where("rorder IS NOT NULL").count).to eq(0)
         @t.each do |t|
-          t.status.should == "ok"
-          t.stage.should == "initial"
-          t.rorder.should be_nil
+          expect(t.status).to eq("ok")
+          expect(t.stage).to eq("initial")
+          expect(t.rorder).to be_nil
         end
-        @t[0].start.to_s.should == "2011-02-25"
-        @t[1].start.to_s.should == "2007-09-22"
-        @t[2].start.to_s.should == "2010-04-11"
+        expect(@t[0].start.to_s).to eq("2011-02-25")
+        expect(@t[1].start.to_s).to eq("2007-09-22")
+        expect(@t[2].start.to_s).to eq("2010-04-11")
 
         visit "/admin/tournaments/#{@t[0].id}"
-        page.should have_selector(@stgid, text: "Initial")
+        expect(page).to have_selector(@stgid, text: "Initial")
         @click.call
         @update.call
-        page.should have_selector(@stgid, text: "Ready")
+        expect(page).to have_selector(@stgid, text: "Ready")
         @click.call
         select "Queued", from: "tournament_stage"
         @update.call
-        page.should have_selector(@stgid, text: "Queued")
-        Tournament.where("rorder IS NOT NULL").count.should == 1
+        expect(page).to have_selector(@stgid, text: "Queued")
+        expect(Tournament.where("rorder IS NOT NULL").count).to eq(1)
         @t.each { |t| t.reload }
-        @t[0].stage.should == "queued"
-        @t[0].rorder.should == 1
-        @t[0].last_tournament.should be_nil
-        @t[0].next_tournament.should be_nil
-        @t[1].rorder.should be_nil
-        @t[1].last_tournament.should be_nil
-        @t[1].next_tournament.should be_nil
-        @t[2].rorder.should be_nil
-        @t[2].last_tournament.should be_nil
-        @t[2].next_tournament.should be_nil
+        expect(@t[0].stage).to eq("queued")
+        expect(@t[0].rorder).to eq(1)
+        expect(@t[0].last_tournament).to be_nil
+        expect(@t[0].next_tournament).to be_nil
+        expect(@t[1].rorder).to be_nil
+        expect(@t[1].last_tournament).to be_nil
+        expect(@t[1].next_tournament).to be_nil
+        expect(@t[2].rorder).to be_nil
+        expect(@t[2].last_tournament).to be_nil
+        expect(@t[2].next_tournament).to be_nil
 
         visit "/admin/tournaments/#{@t[1].id}"
-        page.should have_selector(@stgid, text: "Initial")
+        expect(page).to have_selector(@stgid, text: "Initial")
         @click.call
         @update.call
-        page.should have_selector(@stgid, text: "Ready")
+        expect(page).to have_selector(@stgid, text: "Ready")
         @click.call
         select "Queued", from: "tournament_stage"
         @update.call
-        page.should have_selector(@stgid, text: "Queued")
-        Tournament.where("rorder IS NOT NULL").count.should == 2
+        expect(page).to have_selector(@stgid, text: "Queued")
+        expect(Tournament.where("rorder IS NOT NULL").count).to eq(2)
         @t.each { |t| t.reload }
-        @t[1].stage.should == "queued"
-        @t[0].rorder.should == 2
-        @t[0].last_tournament.should == @t[1]
-        @t[0].next_tournament.should be_nil
-        @t[1].rorder.should == 1
-        @t[1].last_tournament.should be_nil
-        @t[1].next_tournament.should == @t[0]
-        @t[2].rorder.should be_nil
-        @t[2].last_tournament.should be_nil
-        @t[2].next_tournament.should be_nil
+        expect(@t[1].stage).to eq("queued")
+        expect(@t[0].rorder).to eq(2)
+        expect(@t[0].last_tournament).to eq(@t[1])
+        expect(@t[0].next_tournament).to be_nil
+        expect(@t[1].rorder).to eq(1)
+        expect(@t[1].last_tournament).to be_nil
+        expect(@t[1].next_tournament).to eq(@t[0])
+        expect(@t[2].rorder).to be_nil
+        expect(@t[2].last_tournament).to be_nil
+        expect(@t[2].next_tournament).to be_nil
 
         visit "/admin/tournaments/#{@t[2].id}"
-        page.should have_selector(@stgid, text: "Initial")
+        expect(page).to have_selector(@stgid, text: "Initial")
         @click.call
         @update.call
-        page.should have_selector(@stgid, text: "Ready")
+        expect(page).to have_selector(@stgid, text: "Ready")
         @click.call
         select "Queued", from: "tournament_stage"
         @update.call
-        page.should have_selector(@stgid, text: "Queued")
-        Tournament.where("rorder IS NOT NULL").count.should == 3
+        expect(page).to have_selector(@stgid, text: "Queued")
+        expect(Tournament.where("rorder IS NOT NULL").count).to eq(3)
         @t.each { |t| t.reload }
-        @t[2].stage.should == "queued"
-        @t[0].rorder.should == 3
-        @t[0].last_tournament.should == @t[2]
-        @t[0].next_tournament.should be_nil
-        @t[1].rorder.should == 1
-        @t[1].last_tournament.should be_nil
-        @t[1].next_tournament.should == @t[2]
-        @t[2].rorder.should == 2
-        @t[2].last_tournament.should == @t[1]
-        @t[2].next_tournament.should == @t[0]
+        expect(@t[2].stage).to eq("queued")
+        expect(@t[0].rorder).to eq(3)
+        expect(@t[0].last_tournament).to eq(@t[2])
+        expect(@t[0].next_tournament).to be_nil
+        expect(@t[1].rorder).to eq(1)
+        expect(@t[1].last_tournament).to be_nil
+        expect(@t[1].next_tournament).to eq(@t[2])
+        expect(@t[2].rorder).to eq(2)
+        expect(@t[2].last_tournament).to eq(@t[1])
+        expect(@t[2].next_tournament).to eq(@t[0])
 
         visit "/admin/tournaments/#{@t[0].id}"
-        page.should have_selector(@stgid, text: "Queued")
+        expect(page).to have_selector(@stgid, text: "Queued")
         @click.call
         @update.call
-        page.should have_selector(@stgid, text: "Ready")
-        Tournament.where("rorder IS NOT NULL").count.should == 2
+        expect(page).to have_selector(@stgid, text: "Ready")
+        expect(Tournament.where("rorder IS NOT NULL").count).to eq(2)
         @t.each { |t| t.reload }
-        @t[0].stage.should == "ready"
-        @t[0].rorder.should be_nil
-        @t[0].last_tournament.should be_nil
-        @t[0].next_tournament.should be_nil
-        @t[1].rorder.should == 1
-        @t[1].last_tournament.should be_nil
-        @t[1].next_tournament.should == @t[2]
-        @t[2].rorder.should == 2
-        @t[2].last_tournament.should == @t[1]
-        @t[2].next_tournament.should be_nil
+        expect(@t[0].stage).to eq("ready")
+        expect(@t[0].rorder).to be_nil
+        expect(@t[0].last_tournament).to be_nil
+        expect(@t[0].next_tournament).to be_nil
+        expect(@t[1].rorder).to eq(1)
+        expect(@t[1].last_tournament).to be_nil
+        expect(@t[1].next_tournament).to eq(@t[2])
+        expect(@t[2].rorder).to eq(2)
+        expect(@t[2].last_tournament).to eq(@t[1])
+        expect(@t[2].next_tournament).to be_nil
 
         visit "/admin/tournaments/#{@t[1].id}"
-        page.should have_selector(@stgid, text: "Queued")
+        expect(page).to have_selector(@stgid, text: "Queued")
         @click.call
         @update.call
-        page.should have_selector(@stgid, text: "Ready")
-        Tournament.where("rorder IS NOT NULL").count.should == 1
+        expect(page).to have_selector(@stgid, text: "Ready")
+        expect(Tournament.where("rorder IS NOT NULL").count).to eq(1)
         @t.each { |t| t.reload }
-        @t[1].stage.should == "ready"
-        @t[0].rorder.should be_nil
-        @t[0].last_tournament.should be_nil
-        @t[0].next_tournament.should be_nil
-        @t[1].rorder.should be_nil
-        @t[1].last_tournament.should be_nil
-        @t[1].next_tournament.should be_nil
-        @t[2].rorder.should == 1
-        @t[2].last_tournament.should be_nil
-        @t[2].next_tournament.should be_nil
+        expect(@t[1].stage).to eq("ready")
+        expect(@t[0].rorder).to be_nil
+        expect(@t[0].last_tournament).to be_nil
+        expect(@t[0].next_tournament).to be_nil
+        expect(@t[1].rorder).to be_nil
+        expect(@t[1].last_tournament).to be_nil
+        expect(@t[1].next_tournament).to be_nil
+        expect(@t[2].rorder).to eq(1)
+        expect(@t[2].last_tournament).to be_nil
+        expect(@t[2].next_tournament).to be_nil
 
         visit "/admin/tournaments/#{@t[2].id}"
-        page.should have_selector(@stgid, text: "Queued")
+        expect(page).to have_selector(@stgid, text: "Queued")
         @click.call
         @update.call
-        page.should have_selector(@stgid, text: "Ready")
-        Tournament.where("rorder IS NOT NULL").count.should == 0
+        expect(page).to have_selector(@stgid, text: "Ready")
+        expect(Tournament.where("rorder IS NOT NULL").count).to eq(0)
         @t.each { |t| t.reload }
-        @t[2].stage.should == "ready"
-        @t[0].rorder.should be_nil
-        @t[0].last_tournament.should be_nil
-        @t[0].next_tournament.should be_nil
-        @t[1].rorder.should be_nil
-        @t[1].last_tournament.should be_nil
-        @t[1].next_tournament.should be_nil
-        @t[2].rorder.should be_nil
-        @t[2].last_tournament.should be_nil
-        @t[2].next_tournament.should be_nil
+        expect(@t[2].stage).to eq("ready")
+        expect(@t[0].rorder).to be_nil
+        expect(@t[0].last_tournament).to be_nil
+        expect(@t[0].next_tournament).to be_nil
+        expect(@t[1].rorder).to be_nil
+        expect(@t[1].last_tournament).to be_nil
+        expect(@t[1].next_tournament).to be_nil
+        expect(@t[2].rorder).to be_nil
+        expect(@t[2].last_tournament).to be_nil
+        expect(@t[2].next_tournament).to be_nil
       end
     end
 
@@ -489,29 +489,29 @@ describe "Tournament" do
 
       [["admin", true], ["officer", true], ["reporter", false], [nil, false], ["member", false], ["guest", false]].each do |role, able|
         it "#{role || 'owning reporter'} #{able ? 'can' : 'can not'}", js: true do
-          @t.status.should == "ok"
-          @t.stage.should == "ready"
+          expect(@t.status).to eq("ok")
+          expect(@t.stage).to eq("ready")
 
           login(role || @u)
           visit "/admin/tournaments/#{@t.id}"
-          page.should have_selector(@stgid, text: "Ready") unless role == "member" || role == "guest"
+          expect(page).to have_selector(@stgid, text: "Ready") unless role == "member" || role == "guest"
 
           if able
             @click.call
-            page.should have_selector(:xpath, "//select[@id='tournament_stage']")
+            expect(page).to have_selector(:xpath, "//select[@id='tournament_stage']")
             select "Queued", from: "tournament_stage"
             @update.call
-            page.should have_selector(@stgid, text: "Queued")
-            @t.reload.stage.should == "queued"
+            expect(page).to have_selector(@stgid, text: "Queued")
+            expect(@t.reload.stage).to eq("queued")
             @click.call
             @update.call
-            page.should have_selector(@stgid, text: "Ready")
-            @t.reload.stage.should == "ready"
+            expect(page).to have_selector(@stgid, text: "Ready")
+            expect(@t.reload.stage).to eq("ready")
           elsif !role # owning reporter
             @click.call
-            page.should have_no_selector(:xpath, "//select[@id='tournament_stage']") # because only choice is "Initial"
+            expect(page).to have_no_selector(:xpath, "//select[@id='tournament_stage']") # because only choice is "Initial"
           else
-            page.should have_no_link(@bname)
+            expect(page).to have_no_link(@bname)
           end
         end
       end
@@ -529,23 +529,23 @@ describe "Tournament" do
       end
 
       it "uploads, players and results" do
-        @p1.should be > 0
-        @r1.should be > 0
-        Tournament.count.should == 2
-        Upload.count.should == 2
-        Player.count.should be > @p1
-        Result.count.should be > @r1
+        expect(@p1).to be > 0
+        expect(@r1).to be > 0
+        expect(Tournament.count).to eq(2)
+        expect(Upload.count).to eq(2)
+        expect(Player.count).to be > @p1
+        expect(Result.count).to be > @r1
         visit "/admin/tournaments/#{@t2.id}"
         page.click_link("Delete")
-        Tournament.count.should == 1
-        Upload.count.should == 1
-        Player.count.should == @p1
-        Result.count.should == @r1
+        expect(Tournament.count).to eq(1)
+        expect(Upload.count).to eq(1)
+        expect(Player.count).to eq(@p1)
+        expect(Result.count).to eq(@r1)
         visit "/admin/tournaments/#{@t1.id}"
         page.click_link("Delete")
-        Tournament.count.should == 0
-        Player.count.should == 0
-        Result.count.should == 0
+        expect(Tournament.count).to eq(0)
+        expect(Player.count).to eq(0)
+        expect(Result.count).to eq(0)
       end
     end
 
@@ -560,7 +560,7 @@ describe "Tournament" do
           login(role || @u)
           visit "/admin/tournaments/#{@t.id}"
           page.click_link("Delete")
-          Tournament.count.should == 0
+          expect(Tournament.count).to eq(0)
         end
       end
 
@@ -568,7 +568,7 @@ describe "Tournament" do
         it "not #{label}" do
           role ? login(role) : page.click_link("Log out")
           visit "/admin/tournaments/#{@t.id}"
-          page.should have_no_link("Delete")
+          expect(page).to have_no_link("Delete")
         end
       end
     end
@@ -584,39 +584,39 @@ describe "Tournament" do
 
     it "should be able to make modifications if tournament is not locked" do
       visit "/admin/tournaments/#{@t.id}"
-      page.should have_link("Edit Tournament")
-      page.should have_no_link("Tournament locked")
-      page.should have_no_link("Tournament unlocked")
+      expect(page).to have_link("Edit Tournament")
+      expect(page).to have_no_link("Tournament locked")
+      expect(page).to have_no_link("Tournament unlocked")
       visit "/admin/players/#{@t.players.first.id}"
-      page.should have_link("Update Player")
-      page.should have_link("Edit Result")
+      expect(page).to have_link("Update Player")
+      expect(page).to have_link("Edit Result")
       login @o
       visit "/admin/tournaments/#{@t.id}"
-      page.should have_link("Edit Tournament")
-      page.should have_link("Tournament unlocked")
+      expect(page).to have_link("Edit Tournament")
+      expect(page).to have_link("Tournament unlocked")
       login @a
       visit "/admin/tournaments/#{@t.id}"
-      page.should have_link("Edit Tournament")
-      page.should have_link("Tournament unlocked")
+      expect(page).to have_link("Edit Tournament")
+      expect(page).to have_link("Tournament unlocked")
     end
 
     it "should not be able to make modifications if tournament is locked" do
       @t.update_column(:locked, true)
       visit "/admin/tournaments/#{@t.id}"
-      page.should have_no_link("Edit Tournament")
-      page.should have_no_link("Tournament locked")
-      page.should have_no_link("Tournament unlocked")
+      expect(page).to have_no_link("Edit Tournament")
+      expect(page).to have_no_link("Tournament locked")
+      expect(page).to have_no_link("Tournament unlocked")
       visit "/admin/players/#{@t.players.first.id}"
-      page.should have_no_link("Update Player")
-      page.should have_no_link("Edit Result")
+      expect(page).to have_no_link("Update Player")
+      expect(page).to have_no_link("Edit Result")
       login @o
       visit "/admin/tournaments/#{@t.id}"
-      page.should have_no_link("Edit Tournament")
-      page.should have_link("Tournament locked")
+      expect(page).to have_no_link("Edit Tournament")
+      expect(page).to have_link("Tournament locked")
       login @a
       visit "/admin/tournaments/#{@t.id}"
-      page.should have_no_link("Edit Tournament")
-      page.should have_link("Tournament locked")
+      expect(page).to have_no_link("Edit Tournament")
+      expect(page).to have_link("Tournament locked")
     end
   end
 
@@ -640,63 +640,63 @@ describe "Tournament" do
     end
 
     it "should be available for the next for rating (unless it's the last)" do
-      LiveRating.unscoped.count.should == 0
-      Tournament.next_for_rating.should == @t1
+      expect(LiveRating.unscoped.count).to eq(0)
+      expect(Tournament.next_for_rating).to eq(@t1)
       visit "/admin/tournaments/#{@t1.id}"
-      page.should have_link(@lnk)
+      expect(page).to have_link(@lnk)
       visit "/admin/tournaments/#{@t2.id}"
-      page.should have_no_link(@lnk)
+      expect(page).to have_no_link(@lnk)
       visit "/admin/tournaments/#{@t3.id}"
-      page.should have_no_link(@lnk)
+      expect(page).to have_no_link(@lnk)
       visit "/admin/tournaments/#{@t1.id}"
       page.first(:link, "Rate").click
-      LiveRating.unscoped.count.should == 0
-      Tournament.next_for_rating.should == @t2
+      expect(LiveRating.unscoped.count).to eq(0)
+      expect(Tournament.next_for_rating).to eq(@t2)
       visit "/admin/tournaments/#{@t1.id}"
-      page.should have_no_link(@lnk)
+      expect(page).to have_no_link(@lnk)
       visit "/admin/tournaments/#{@t2.id}"
-      page.should have_link(@lnk)
+      expect(page).to have_link(@lnk)
       visit "/admin/tournaments/#{@t3.id}"
-      page.should have_no_link(@lnk)
+      expect(page).to have_no_link(@lnk)
       visit "/admin/tournaments/#{@t2.id}"
       page.first(:link, "Rate").click
-      LiveRating.unscoped.count.should == 0
-      Tournament.next_for_rating.should == @t3
+      expect(LiveRating.unscoped.count).to eq(0)
+      expect(Tournament.next_for_rating).to eq(@t3)
       visit "/admin/tournaments/#{@t1.id}"
-      page.should have_no_link(@lnk)
+      expect(page).to have_no_link(@lnk)
       visit "/admin/tournaments/#{@t2.id}"
-      page.should have_no_link(@lnk)
+      expect(page).to have_no_link(@lnk)
       visit "/admin/tournaments/#{@t3.id}"
-      page.should have_no_link(@lnk)          # not when it's the last tournament for rating
+      expect(page).to have_no_link(@lnk)          # not when it's the last tournament for rating
       page.first(:link, "Rate").click         # but it still has the Rate button (for rating one tournament)
-      LiveRating.unscoped.count.should == @subs.size
+      expect(LiveRating.unscoped.count).to eq(@subs.size)
       visit "/admin/tournaments/#{@t1.id}"
-      page.should have_no_link(@lnk)
+      expect(page).to have_no_link(@lnk)
       visit "/admin/tournaments/#{@t2.id}"
-      page.should have_no_link(@lnk)
+      expect(page).to have_no_link(@lnk)
       visit "/admin/tournaments/#{@t3.id}"
-      page.should have_no_link(@lnk)
+      expect(page).to have_no_link(@lnk)
     end
 
     it "should rate all tournaments" do
       visit "/admin/tournaments/#{@t1.id}"
       page.click_link @lnk
-      RatingRun.count.should == 1
+      expect(RatingRun.count).to eq(1)
       rr = RatingRun.first
-      rr.start_tournament.should == @t1
-      rr.last_tournament.should == @t3
-      rr.start_tournament_name.should == @t1.name_with_year
-      rr.last_tournament_name.should == @t3.name_with_year
-      rr.start_tournament_rorder.should == @t1.rorder
-      rr.last_tournament_rorder.should == @t3.rorder
-      rr.user.should == @u
-      rr.status.should == "waiting"
+      expect(rr.start_tournament).to eq(@t1)
+      expect(rr.last_tournament).to eq(@t3)
+      expect(rr.start_tournament_name).to eq(@t1.name_with_year)
+      expect(rr.last_tournament_name).to eq(@t3.name_with_year)
+      expect(rr.start_tournament_rorder).to eq(@t1.rorder)
+      expect(rr.last_tournament_rorder).to eq(@t3.rorder)
+      expect(rr.user).to eq(@u)
+      expect(rr.status).to eq("waiting")
       data = ""
-      lambda { File.open(RatingRun.flag) { |f| data = f.read } }.should_not raise_error
-      data.should == rr.id.to_s
-      LiveRating.unscoped.count.should == 0
+      expect { File.open(RatingRun.flag) { |f| data = f.read } }.to_not raise_error
+      expect(data).to eq(rr.id.to_s)
+      expect(LiveRating.unscoped.count).to eq(0)
       rr.process
-      LiveRating.unscoped.count.should == @subs.size
+      expect(LiveRating.unscoped.count).to eq(@subs.size)
     end
   end
 end
