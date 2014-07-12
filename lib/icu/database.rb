@@ -33,26 +33,23 @@ module ICU
 
         MAP =
         {
-          plr_id:           :id,
-          plr_first_name:   :first_name,
-          plr_last_name:    :last_name,
-          plr_date_born:    :dob,
-          plr_date_joined:  :joined,
-          plr_fed:          :fed,
-          plr_sex:          :gender,
-          plr_title:        :title,
-          plr_email:        :email,
-          plr_deceased:     :deceased,
-          plr_id_dup:       :master_id,
-          plr_address1:     :address,
-          plr_address2:     :address,
-          plr_address3:     :address,
-          plr_address4:     :address,
-          plr_phone_home:   :phone_numbers,
-          plr_phone_work:   :phone_numbers,
-          plr_phone_mobile: :phone_numbers,
-          plr_note:         :note,
-          club_name:        :club,
+          :'players.id'      => :id,
+          first_name:           :first_name,
+          last_name:            :last_name,
+          dob:                  :dob,
+          joined:               :joined,
+          fed:                  :fed,
+          gender:               :gender,
+          player_title:         :title,
+          :'players.email'   => :email,
+          status:               :deceased,
+          player_id:            :master_id,
+          :'players.address' => :address,
+          home_phone:           :phone_numbers,
+          work_phone:           :phone_numbers,
+          mobile_phone:         :phone_numbers,
+          note:                 :note,
+          name:                 :club,
         }
 
         def update_ours_from_theirs
@@ -78,19 +75,14 @@ module ICU
         end
 
         def get_their_players
-          x1950 = Date.new(1950, 1, 1)
-          x1975 = Date.new(1975, 1, 1)
           @their_players = @client.query(players_sql).inject({}) do |players, player|
-            id = player.delete(:plr_id)
-            player[:plr_address1] = (1..4).map { |i| player.delete("plr_address#{i}".to_sym) }.reject { |a| a.blank? }.join(", ")
-            player[:plr_phone_home] = %w[home work mobile].map { |n| [n, player.delete("plr_phone_#{n}".to_sym)] }.reject { |p| p[1].blank? }.map { |d| d.join(": ") }.join(", ")
+            id = player.delete(:id)
+            player[:home_phone] = %w[home work mobile].map { |n| [n, player.delete("#{n}_phone".to_sym)] }.reject { |p| p[1].blank? }.map { |d| d.join(": ") }.join(", ")
             players[id] = player.keys.inject({}) do |hash, their_key|
               our_key = MAP[their_key]
               if our_key
                 hash[our_key] = case our_key
-                  when :deceased      then player[their_key] == 'Yes'
-                  when :dob           then player[their_key] == x1950 ? nil : player[their_key].presence
-                  when :joined        then player[their_key] == x1975 ? nil : player[their_key].presence
+                  when :deceased then player[their_key] == "deceased"
                   else player[their_key].presence
                 end
               end
@@ -100,8 +92,23 @@ module ICU
           end
         end
 
+        # Legacy inport details:
+        #   after sync:players
+        #     total: 10298
+        #     status: active=10130, deceased=39, inactive=129 (these are duplicates)
+        #     source: import=10298
+        #   after sync:status
+        #     total: 10298
+        #     status: active=6093, deceased=39, inactive=762, foreign=3404
+        #     source: import=10298
+        #   after sync:archive
+        #     total: 13658
+        #     status: active=6093, deceased=39, inactive=4122, foreign=3404
+        #     source: import=10298, legacy=3360
         def players_sql
-          "SELECT #{MAP.keys.join(', ')} FROM icu_players LEFT JOIN clubs ON plr_club_id = club_id"
+          # For now, sync just like the old ratings site (include duplicates and foreigners but not the archived players).
+          # Eventual aim is to remove inactives and foreigners and be able to easily unarchive players by marking them as active.
+          "SELECT #{MAP.keys.join(', ')} FROM players LEFT JOIN clubs ON club_id = clubs.id where source = 'import'"
         end
 
         def report
