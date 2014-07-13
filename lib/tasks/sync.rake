@@ -12,19 +12,14 @@ namespace :sync do
     ICU::Database::Pull::User.new.sync
   end
 
-  desc "Synchronize Fees with items in the www.icu.ie database (schedule weekly)"
-  task icu_items: :environment do
+  desc "Synchronize ratings_production/fees with www_production/items (schedule weekly, for foreign rating fees)"
+  task fees: :environment do
     ICU::Database::Pull::Item.new.sync
   end
 
   desc "Synchronize ratings_production/subscriptions with www_production/items (schedule at least weekly, but run manually before producing a rating list)"
   task :subs, [:season] => :environment do |t, args|
     ICU::Database::Pull::Subs.new.sync(args[:season])
-  end
-
-  desc "Synchronize FidePlayers and FideRatings with fide_players and fide_ratings in the www.icu.ie database (perform once)"
-  task icu_fide_data: :environment do
-    ICU::Database::Pull::FIDE.new.sync
   end
 
   desc "Synchronize Irish FIDE players with the full download file from fide.com (use [F] to force, schedule weekly)"

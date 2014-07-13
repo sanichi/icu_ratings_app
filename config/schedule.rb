@@ -5,19 +5,19 @@ every 1.minute do
 end
 
 every :day, at: "3:00am" do
-  rake "sync:icu_players"
+  rake "sync:players"
 end
 
 every :day, at: "3:30am" do
-  rake "sync:icu_users"
+  rake "sync:users"
 end
 
-every :day, at: "4:00am" do
-  rake "sync:icu_items"
-end
+# every :day, at: "4:00am" do
+#   rake "sync:fees"
+# end
 
 every :day, at: "4:30am" do
-  rake "sync:icu_subs"
+  rake "sync:subs"
 end
 
 every :day, at: "5:00am" do
