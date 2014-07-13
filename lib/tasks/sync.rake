@@ -2,14 +2,14 @@
 # For example: rake sync:fide_players[f].
 
 namespace :sync do
-  desc "Synchronize IcuPlayers with icu_players in the www.icu.ie database (schedule daily)"
-  task icu_players: :environment do
+  desc "Synchronize ratings_production/icu_players with www_production/players (schedule daily)"
+  task players: :environment do
     ICU::Database::Pull::Player.new.sync
   end
 
-  desc "Synchronize Users with members in the www.icu.ie database (schedule daily)"
-  task icu_users: :environment do
-    ICU::Database::Pull::Member.new.sync
+  desc "Synchronize ratings_production/users with www_production/users (schedule daily, after players sync)"
+  task users: :environment do
+    ICU::Database::Pull::User.new.sync
   end
 
   desc "Synchronize Fees with items in the www.icu.ie database (schedule weekly)"
@@ -40,5 +40,5 @@ namespace :sync do
   end
 
   desc "Synchronize everything in the correct order"
-  task all: [:icu_players, :icu_users, :icu_items, :irish_fide_players, :other_fide_players]
+  task all: [:players, :users, :icu_items, :irish_fide_players, :other_fide_players]
 end

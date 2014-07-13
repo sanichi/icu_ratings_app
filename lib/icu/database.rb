@@ -92,7 +92,7 @@ module ICU
           end
         end
 
-        # Legacy inport details:
+        # Legacy inport (www1 => www2) details:
         #   after sync:players
         #     total: 10298
         #     status: active=10130, deceased=39, inactive=129 (these are duplicates)
@@ -121,9 +121,9 @@ module ICU
         end
       end
 
-      # Should be run periodically, about once per day, to keep members/users in sync.
+      # Should be run periodically, about once per day, to keep users in sync.
       # Should be run after ICU players are synchronized, as unrecognized ICU IDs are rejected.
-      class Member < Pull
+      class User < Pull
         def sync
           success = sync_user_steps
           Event.create(name: "ICU User Synchronisation", report: report, time: Time.now - @start, success: success)
@@ -135,8 +135,9 @@ module ICU
           begin
             get_our_players
             get_our_users
-            get_their_members
+            get_their_users
             update_ours_from_theirs
+            stats
             report
           rescue SyncError => e
             @error = e.message
@@ -152,55 +153,63 @@ module ICU
 
         MAP =
         {
-          mem_id:       :id,
-          mem_email:    :email,
-          mem_password: :password,
-          mem_salt:     :salt,
-          mem_icu_id:   :icu_id,
-          mem_expiry:   :expiry,
-          mem_status:   :status,
+          id:                 :id,
+          email:              :email,
+          encrypted_password: :password,
+          salt:               :salt,
+          player_id:          :icu_id,
+          expires_on:         :expiry,
+          verified_at:        :status,
         }
 
         def get_our_users
-          @our_users = User.all.inject({}) { |h,u| h[u.id] = u; h }
+          @our_users = ::User.all.inject({}) { |h,u| h[u.id] = u; h }
         end
 
-        def get_their_members
+        def get_their_users
           @bad_icu_ids = []
           @bad_emails = []
-          @their_members = @client.query(sql).inject({}) do |members, member|
-            id = member.delete(:mem_id)
-            members[id] = member.keys.inject({}) do |hash, their_key|
+          @their_users = @client.query(sql).inject({}) do |users, user|
+            id = user.delete(:id)
+            users[id] = user.keys.inject({}) do |hash, their_key|
               our_key = MAP[their_key]
-              hash[our_key] = member[their_key].presence if our_key
+              hash[our_key] = user[their_key].presence if our_key
+              if our_key == :status
+                hash[:status] = hash[:status].blank? ? "pending" : "ok" # turn verified_at into one of the legal status types
+              end
               hash
             end
-            icu_id = members[id][:icu_id]
-            email = members[id][:email]
+            icu_id = users[id][:icu_id]
+            email = users[id][:email]
             unless icu_id && @our_players[icu_id]
-              members.delete(id)
+              users.delete(id)
               @bad_icu_ids.push(icu_id || 0)
             end
-            unless email && email.match(User::EMAIL)
-              members.delete(id)
+            unless email && email.match(::User::EMAIL)
+              users.delete(id)
               @bad_emails.push("#{id}|#{email.to_s}")
             end
-            members
+            users
           end
         end
 
+        # Legacy inport (www1 => www2) details (which deliberately dropped bad status or pending at the time performed):
+        # after sync:users there were a total of 1157 users, all with status OK and verified. Prior to the migration,
+        # ratings1 had a lot of pending users - these should be deleted in ratings 2 just after the sync.
+        # In future we should aim to sync verified users only and introduce a 'bad' status for ratings users
+        # (so www users who are temporarily banned - by having a non-OK status - are prevented from logging into ratings).
         def sql
-          "SELECT #{MAP.keys.join(', ')} FROM members WHERE (mem_status = 'ok' OR mem_status = 'pending') AND mem_icu_id IS NOT NULL AND mem_expiry IS NOT NULL"
+          "SELECT #{MAP.keys.join(', ')} FROM users WHERE status = 'OK' AND player_id IS NOT NULL AND expires_on IS NOT NULL"
         end
 
         def update_ours_from_theirs
           @updates = []
           @creates = []
           @changes = Hash.new(0)
-          @their_members.keys.each do |id|
-            their_member = @their_members[id]
-            our_user = @our_users[id] || User.new
-            their_member.keys.each { |key| our_user.send("#{key}=", their_member[key]) }
+          @their_users.keys.each do |id|
+            their_user = @their_users[id]
+            our_user = @our_users[id] || ::User.new
+            their_user.keys.each { |key| our_user.send("#{key}=", their_user[key]) }
             raise SyncError.new("invalid user: #{our_user.inspect})") unless our_user.valid?
             if our_user.id
               if our_user.changed?
@@ -215,10 +224,17 @@ module ICU
           end
         end
 
+        def stats
+          @ours_not_theirs = @our_users.keys.reject { |id| @their_users[id] }
+          @theirs_not_ours = @their_users.keys.reject { |id| @our_users[id] }
+        end
+
         def report
           str = Array.new
-          str.push "users: #{@our_users.size}" if @our_users
-          str.push "members: #{@their_members.size}" if @their_members
+          str.push "our users: #{@our_users.size}" if @our_users
+          str.push "their users: #{@their_users.size}" if @their_users
+          str.push "ours but not theirs: #{summarize_list(@ours_not_theirs)}" if @ours_not_theirs
+          str.push "theirs but not ours: #{summarize_list(@theirs_not_ours)}" if @theirs_not_ours
           str.push "bad emails: #{summarize_list(@bad_emails)}"
           str.push "creates: #{summarize_list(@creates)}"
           str.push "updates: #{summarize_list(@updates)}"
@@ -585,19 +601,19 @@ module ICU
         end
       end
 
-      # This is for checking stuff when a member has difficulty loggining in.
+      # This is for checking stuff when a user has difficulty loggining in.
       def get_member(id, email)
         ms = @client.query("SELECT mem_email, mem_status, mem_password, mem_salt, mem_expiry FROM members WHERE mem_id = #{id}")
         return "couldn't find member with ID #{id}" if ms.size == 0
         return "found more than one (#{ms.size}) members with ID #{id}" if ms.size > 1
         m = ms.first
         address, password, salt, status, expiry = [:mem_email, :mem_password, :mem_salt, :mem_status, :mem_expiry].map { |k| m[k] }
-        return "expected email '#{email}' but got '#{address}'"                      unless email == address
-        return "expected status in (#{User::STATUS.join(', ')}) but got '#{status}'" unless User::STATUS.include?(status)
-        return "expected password but got nothing"                                   unless password
-        return "expected 32 character password but got #{password.length}"           unless password.length == 32
-        return "expected salt but got nothing"                                       unless salt
-        return "expected 32 character salt but got #{salt.length}"                   unless salt.length == 32
+        return "expected email '#{email}' but got '#{address}'"                        unless email == address
+        return "expected status in (#{::User::STATUS.join(', ')}) but got '#{status}'" unless ::User::STATUS.include?(status)
+        return "expected password but got nothing"                                     unless password
+        return "expected 32 character password but got #{password.length}"             unless password.length == 32
+        return "expected salt but got nothing"                                         unless salt
+        return "expected 32 character salt but got #{salt.length}"                     unless salt.length == 32
         { password: password, salt: salt, status: status, expiry: expiry }
       rescue Mysql2::Error => e
         return "mysql error: #{e.message}"
@@ -648,13 +664,13 @@ module ICU
         return unless status || (pass && salt)
         return "attempt to set invalid password '#{pass}'" if pass && pass.length != 32
         return "attempt to set invalid salt '#{salt}'"     if salt && salt.length != 32
-        return "attempt to set invalid status '#{status}'" if status && !User::STATUS.include?(status)
+        return "attempt to set invalid status '#{status}'" if status && !::User::STATUS.include?(status)
         ms = @client.query("SELECT mem_email, mem_status, mem_password, mem_salt FROM members WHERE mem_id = #{id}")
         return "couldn't find member with ID #{id}" if ms.size == 0
         return "found more than one (#{ms.size}) members with ID #{id}" if ms.size > 1
         m = ms.first
         return "expected email #{email} but got '#{m[:mem_email]}'" unless email == m[:mem_email]
-        return "can't update member record with status '#{m[:mem_status]}'" unless User::STATUS.include?(m[:mem_status])
+        return "can't update member record with status '#{m[:mem_status]}'" unless ::User::STATUS.include?(m[:mem_status])
         updates = []
         updates.push "mem_password = '#{pass}'" if pass && pass != m[:mem_password]
         updates.push "mem_salt = '#{salt}'"     if salt && salt != m[:mem_salt]
