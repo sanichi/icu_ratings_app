@@ -17,8 +17,8 @@ namespace :sync do
     ICU::Database::Pull::Item.new.sync
   end
 
-  desc "Synchronize Subscriptions with the www.icu.ie database (schedule at least weekly, but run manually before producing a rating list)"
-  task :icu_subs, [:season] => :environment do |t, args|
+  desc "Synchronize ratings_production/subscriptions with www_production/items (schedule at least weekly, but run manually before producing a rating list)"
+  task :subs, [:season] => :environment do |t, args|
     ICU::Database::Pull::Subs.new.sync(args[:season])
   end
 

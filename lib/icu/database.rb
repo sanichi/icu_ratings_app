@@ -374,6 +374,7 @@ module ICU
           else
             @season = Subscription.season
           end
+          @season_start = "#{@season[0,4]}-09-01"
         end
 
         def get_our_subs
@@ -432,6 +433,7 @@ module ICU
                 if osub.category == tsub[:category]
                   @thesame[i].push(icu_id)
                 else
+                  puts "#{i}|#{icu_id}|#{osub.category}|#{tsub[:category]}"
                   osub.destroy
                   Subscription.create!(tsub)
                   @updates[i].push(icu_id)
@@ -475,13 +477,10 @@ module ICU
         end
 
         def sql(category)
-          case category
-          when "online"
-            "SELECT sub_icu_id AS icu_id, date(pay_date) AS pay_date from subscriptions, payments where sub_pay_id = pay_id and sub_season = '#{@season}' and pay_status != 'Created' and pay_status != 'Refunded'"
-          when "offline"
-            "SELECT sof_icu_id AS icu_id, sof_pay_date AS pay_date from subs_offline where sof_season = '#{@season}'"
-          else
-            "SELECT sfl_icu_id AS icu_id from subs_forlife"
+          "SELECT player_id AS icu_id, date(created_at) AS pay_date from items WHERE type = 'Item::Subscription' AND status = 'paid'" + case category
+            when "online"  then " AND start_date = '#{@season_start}' AND payment_method IN ('paypal', 'stripe')"
+            when "offline" then " AND start_date = '#{@season_start}' AND payment_method IN ('cheque', 'cash')"
+            else                " AND start_date IS NULL"
           end
         end
       end
