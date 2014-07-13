@@ -485,19 +485,20 @@ module ICU
         end
       end
 
-      # This is for checking stuff when a user has difficulty loggining in.
-      def get_member(id, email)
-        ms = @client.query("SELECT mem_email, mem_status, mem_password, mem_salt, mem_expiry FROM members WHERE mem_id = #{id}")
-        return "couldn't find member with ID #{id}" if ms.size == 0
-        return "found more than one (#{ms.size}) members with ID #{id}" if ms.size > 1
-        m = ms.first
-        address, password, salt, status, expiry = [:mem_email, :mem_password, :mem_salt, :mem_status, :mem_expiry].map { |k| m[k] }
-        return "expected email '#{email}' but got '#{address}'"                        unless email == address
-        return "expected status in (#{::User::STATUS.join(', ')}) but got '#{status}'" unless ::User::STATUS.include?(status)
-        return "expected password but got nothing"                                     unless password
-        return "expected 32 character password but got #{password.length}"             unless password.length == 32
-        return "expected salt but got nothing"                                         unless salt
-        return "expected 32 character salt but got #{salt.length}"                     unless salt.length == 32
+      # This is for checking stuff when a user has difficulty logging in.
+      def get_user(id, email)
+        users = @client.query("SELECT email, status, encrypted_password, salt, expires_on, verified_at FROM users WHERE id = #{id}")
+        return "couldn't find user with ID #{id}" if users.size == 0
+        return "found more than one (#{users.size}) users with ID #{id}" if users.size > 1
+        user = users.first
+        address, password, salt, status, expiry = [:email, :encrypted_password, :salt, :status, :expires_on].map { |k| user[k] }
+        return "expected email '#{email}' but got '#{address}'"            unless email == address
+        return "expected status OK but got '#{status}'"                    unless status == "OK"
+        return "expected password but got nothing"                         unless password
+        return "expected 32 character password but got #{password.length}" unless password.length == 32
+        return "expected salt but got nothing"                             unless salt
+        return "expected 32 character salt but got #{salt.length}"         unless salt.length == 32
+        status = user[:verified_at].present? ? 'ok' : 'pending'
         { password: password, salt: salt, status: status, expiry: expiry }
       rescue Mysql2::Error => e
         return "mysql error: #{e.message}"
@@ -544,25 +545,26 @@ module ICU
         @client.query_options.merge!(symbolize_keys: true)
       end
 
-      def update_member(id, email, pass, salt, status)
+      def update_user(id, email, pass, salt, status)
         return unless status || (pass && salt)
         return "attempt to set invalid password '#{pass}'" if pass && pass.length != 32
         return "attempt to set invalid salt '#{salt}'"     if salt && salt.length != 32
         return "attempt to set invalid status '#{status}'" if status && !::User::STATUS.include?(status)
-        ms = @client.query("SELECT mem_email, mem_status, mem_password, mem_salt FROM members WHERE mem_id = #{id}")
-        return "couldn't find member with ID #{id}" if ms.size == 0
-        return "found more than one (#{ms.size}) members with ID #{id}" if ms.size > 1
-        m = ms.first
-        return "expected email #{email} but got '#{m[:mem_email]}'" unless email == m[:mem_email]
-        return "can't update member record with status '#{m[:mem_status]}'" unless ::User::STATUS.include?(m[:mem_status])
+        users = @client.query("SELECT email, status, encrypted_password, salt, verified_at FROM users WHERE id = #{id}")
+        return "couldn't find user with ID #{id}" if users.size == 0
+        return "found more than one (#{ms.size}) users with ID #{id}" if users.size > 1
+        user = users.first
+        return "expected email #{email} but got '#{user[:email]}'" unless email == user[:email]
+        return "can't update user record with status '#{user[:status]}'" unless user[:status] == "OK"
         updates = []
-        updates.push "mem_password = '#{pass}'" if pass && pass != m[:mem_password]
-        updates.push "mem_salt = '#{salt}'"     if salt && salt != m[:mem_salt]
-        if status && status != m[:mem_status]
-          updates.push "mem_status = '#{status}'"
-          updates.push "mem_verified = %s" % (status == "ok" ? "'#{Time.now.to_s(:db)}'" : "NULL")
+        updates.push "encrypted_password = '#{pass}'" if pass && pass != user[:encrypted_password]
+        updates.push "salt = '#{salt}'"               if salt && salt != user[:salt]
+        if status == "ok" && user[:verfied_at].blank?
+          updates.push "verified_at = '#{Time.now.to_s(:db)}'"
+        elsif status == "pending" && user[:verfied_at].present?
+          updates.push "verified_at = NULL"
         end
-        @client.query("UPDATE members SET #{updates.join(', ')} WHERE mem_id = #{id}") unless updates.empty?
+        @client.query("UPDATE users SET #{updates.join(', ')} WHERE id = #{id}") unless updates.empty?
         nil
       rescue Mysql2::Error => e
         return "mysql error: #{e.message}"

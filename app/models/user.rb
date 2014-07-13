@@ -72,7 +72,7 @@ class User < ActiveRecord::Base
   def self.authenticate!(params, ip, admin)
     user = find_by(email: params[:email])
     raise "Invalid email or password" unless user
-    user.pull_www_member unless user.password_ok?(params[:password], admin) && user.status == "ok" && !user.expiry.past?
+    user.pull_www_user unless user.password_ok?(params[:password], admin) && user.status == "ok" && !user.expiry.past?
     user.login_event(ip, admin, :password) unless user.password_ok?(params[:password], admin)
     user.login_event(ip, admin, :status) unless user.status == "ok"
     user.login_event(ip, admin, :expiry) if user.expiry.past?
@@ -118,12 +118,12 @@ class User < ActiveRecord::Base
     end
   end
 
-  def update_www_member(params)
+  def update_www_user(params)
     # Just in case this might help a hacker.
     [:password, :salt].each { |a| params.delete(a) }
     # Get the new password, if there is one.
     pass = params.delete(:new_password).presence
-    # Get and check the status. If it's not new, blank it.
+    # Get and check the status. If it's not different, blank it.
     status = params.delete(:status)
     errors.add(:status, "invalid") and return unless User::STATUS.include?(status)
     status = nil if status == self.status
@@ -141,7 +141,7 @@ class User < ActiveRecord::Base
       password = nil
     end
     # Attempt to update the ICU database, aborting on error.
-    error = ICU::Database::Push.new.update_member(id, email, password, salt, status)
+    error = ICU::Database::Push.new.update_user(id, email, password, salt, status)
     errors.add(:base, error) and return if error
     # Prepare to update the instance and signal success.
     params[:password] = password if password
@@ -150,11 +150,11 @@ class User < ActiveRecord::Base
     return true
   end
 
-  def pull_www_member
+  def pull_www_user
     return unless pullable?
-    details = ICU::Database::Pull.new.get_member(id, email)
+    details = ICU::Database::Pull.new.get_user(id, email)
     unless details.is_a? Hash
-      Failure.record(ICU::Error.new("pull_www_member (#{id}, #{email}): #{details.to_s}"))
+      Failure.record(ICU::Error.new("pull_www_user (#{id}, #{email}): #{details.to_s}"))
       return
     end
     changed = []

@@ -149,7 +149,7 @@ describe User do
     end
   end
 
-  context "#update_www_member" do
+  context "#update_www_user" do
     before(:each) do
       pass = "icuicj"
       salt = "b3f0f553a916b0e8ab6b2469cabd200f"
@@ -158,13 +158,13 @@ describe User do
       @u1 = FactoryGirl.create(:user, password: password, salt: salt)
       @u2 = FactoryGirl.create(:user, password: @p)
       @params = { status: "ok" }
-      allow(ICU::Database::Push).to receive_message_chain(:new, :update_member).and_return(nil)
+      allow(ICU::Database::Push).to receive_message_chain(:new, :update_user).and_return(nil)
     end
 
     it "new password, old salt" do
       @q = "password1"
       @params[:new_password] = @q
-      expect(@u1.update_www_member(@params)).to be true
+      expect(@u1.update_www_user(@params)).to be true
       expect(@params[:new_password]).to_not be_present
       expect(@params[:salt]).to_not be_present
       expect(@params[:password]).to be_present
@@ -180,7 +180,7 @@ describe User do
     it "new password, new salt" do
       @q = "password2"
       @params[:new_password] = @q
-      expect(@u2.update_www_member(@params)).to be true
+      expect(@u2.update_www_user(@params)).to be true
       expect(@params[:new_password]).to_not be_present
       expect(@params[:salt]).to be_present
       expect(@params[:salt].length).to eq(32)
@@ -196,23 +196,23 @@ describe User do
 
     it "new status" do
       @u1.status = "pending"
-      expect(@u1.update_www_member(@params)).to be true
+      expect(@u1.update_www_user(@params)).to be true
       expect(@params[:status]).to eq("ok")
       @params = { status: "pending" }
       @u1.status = "ok"
-      expect(@u1.update_www_member(@params)).to be true
+      expect(@u1.update_www_user(@params)).to be true
       expect(@params[:status]).to eq("pending")
     end
 
     it "no (or blank) password" do
-      expect(@u1.update_www_member(@params)).to be true
+      expect(@u1.update_www_user(@params)).to be true
       expect(@u1.errors).to be_empty
       expect(@params[:new_password]).to_not be_present
       expect(@params[:password]).to_not be_present
       expect(@params[:salt]).to_not be_present
       expect(@params[:status]).to_not be_present
       @params = { new_password: "    ", status: "ok" }
-      expect(@u1.update_www_member(@params)).to be true
+      expect(@u1.update_www_user(@params)).to be true
       expect(@u1.errors).to be_empty
       expect(@params[:new_password]).to_not be_present
       expect(@params[:password]).to_not be_present
@@ -221,22 +221,22 @@ describe User do
 
     it "password too short or too long" do
       @params[:new_password] = "123"
-      expect(@u1.update_www_member(@params)).to be_nil
+      expect(@u1.update_www_user(@params)).to be_nil
       expect(@u1.errors).to_not be_empty
       expect(@params[:password]).to_not be_present
       expect(@params[:salt]).to_not be_present
       expect(@params[:status]).to_not be_present
       @params = { new_password: "1234567890123456789012345678901234567890" }
-      expect(@u1.update_www_member(@params)).to be_nil
+      expect(@u1.update_www_user(@params)).to be_nil
       expect(@u1.errors).to_not be_empty
       expect(@params[:password]).to_not be_present
       expect(@params[:salt]).to_not be_present
     end
 
     it "ICU database push fails" do
-      allow(ICU::Database::Push).to receive_message_chain(:new, :update_member).and_return("woops")
+      allow(ICU::Database::Push).to receive_message_chain(:new, :update_user).and_return("woops")
       @params[:new_password] = "password3"
-      expect(@u1.update_www_member(@params)).to be_nil
+      expect(@u1.update_www_user(@params)).to be_nil
       expect(@params[:new_password]).to_not be_present
       expect(@params[:salt]).to_not be_present
       expect(@params[:password]).to_not be_present
@@ -246,7 +246,7 @@ describe User do
     end
   end
 
-  context "#pull_www_member" do
+  context "#pull_www_user" do
     before(:each) do
       @h =
       {
@@ -267,8 +267,8 @@ describe User do
     end
 
     it "no change" do
-      allow(ICU::Database::Pull).to receive_message_chain(:new, :get_member).with(@user.id, @user.email).and_return(@h)
-      @user.pull_www_member
+      allow(ICU::Database::Pull).to receive_message_chain(:new, :get_user).with(@user.id, @user.email).and_return(@h)
+      @user.pull_www_user
       expect(@user.password).to  eq(@h[:password])
       expect(@user.salt).to      eq(@h[:salt])
       expect(@user.status).to    eq(@h[:status])
@@ -280,8 +280,8 @@ describe User do
 
     it "changed password" do
       password = "abcdefabcdefabcdefabcdefabcdef11"
-      allow(ICU::Database::Pull).to receive_message_chain(:new, :get_member).with(@user.id, @user.email).and_return(@h.merge(password: password))
-      @user.pull_www_member
+      allow(ICU::Database::Pull).to receive_message_chain(:new, :get_user).with(@user.id, @user.email).and_return(@h.merge(password: password))
+      @user.pull_www_user
       expect(@user.password).to  eq(password)
       expect(@user.salt).to      eq(@h[:salt])
       expect(@user.status).to    eq(@h[:status])
@@ -294,8 +294,8 @@ describe User do
     it "changed salt and password" do
       password = "abcdefabcdefabcdefabcdefabcdef12"
       salt     = "abcdefabcdefabcdefabcdefabcdef22"
-      allow(ICU::Database::Pull).to receive_message_chain(:new, :get_member).with(@user.id, @user.email).and_return(@h.merge(password: password, salt: salt))
-      @user.pull_www_member
+      allow(ICU::Database::Pull).to receive_message_chain(:new, :get_user).with(@user.id, @user.email).and_return(@h.merge(password: password, salt: salt))
+      @user.pull_www_user
       expect(@user.password).to  eq(password)
       expect(@user.salt).to      eq(salt)
       expect(@user.status).to    eq(@h[:status])
@@ -308,8 +308,8 @@ describe User do
     it "changed status and expiry" do
       status = "pending"
       expiry = Date.new(2013, 12, 31)
-      allow(ICU::Database::Pull).to receive_message_chain(:new, :get_member).with(@user.id, @user.email).and_return(@h.merge(status: status, expiry: expiry))
-      @user.pull_www_member
+      allow(ICU::Database::Pull).to receive_message_chain(:new, :get_user).with(@user.id, @user.email).and_return(@h.merge(status: status, expiry: expiry))
+      @user.pull_www_user
       expect(@user.password).to  eq(@h[:password])
       expect(@user.salt).to      eq(@h[:salt])
       expect(@user.status).to    eq(status)
@@ -320,8 +320,8 @@ describe User do
     end
 
     it "an error" do
-      allow(ICU::Database::Pull).to receive_message_chain(:new, :get_member).with(@user.id, @user.email).and_return("error xxx")
-      @user.pull_www_member
+      allow(ICU::Database::Pull).to receive_message_chain(:new, :get_user).with(@user.id, @user.email).and_return("error xxx")
+      @user.pull_www_user
       expect(@user.password).to  eq(@h[:password])
       expect(@user.salt).to      eq(@h[:salt])
       expect(@user.status).to    eq(@h[:status])
