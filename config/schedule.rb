@@ -1,4 +1,5 @@
 set :output, "log/cron.log"
+set :job_template, nil # set explicit PATH in crontab instead
 
 every 1.minute do
   command "cd #{path}; F=tmp/#{@environment}_rating_run; if [ -f $F ]; then mv $F ${F}_; RAILS_ENV=#{@environment} bin/rake rating:run --silent; fi"
