@@ -49,11 +49,21 @@ Ratings::Application.configure do
   # Enable serving of images, stylesheets, and JavaScripts from an asset server
   # config.action_controller.asset_host = "http://assets.example.com"
 
-  # Disable delivery errors, bad email addresses will be ignored
+  # Configure mail to use Mailgun.
+  config.action_mailer.delivery_method = :smtp
   config.action_mailer.raise_delivery_errors = false
-
-  # Use sendmail with default options.
-  config.action_mailer.delivery_method = :sendmail
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.default_url_options = { :host => "ratings.icu.ie" }
+  config.action_mailer.smtp_settings =
+  {
+    authentication: :plain,
+    address: "smtp.mailgun.org",
+    port: 587,
+    domain: "icu.ie",
+    user_name: "postmaster@icu.ie",
+    password: Rails.application.secrets.mailgun["password"],
+    enable_starttls_auto: true,
+  }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation can not be found)
