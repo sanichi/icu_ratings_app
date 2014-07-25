@@ -108,7 +108,7 @@ class Tournament < ActiveRecord::Base
     first_name = params[:first_name].strip if params[:first_name].present?
     last_name  = params[:last_name].strip  if params[:last_name].present?
     if icu_id > 0 || first_name || last_name
-      matches = matches.includes(:players)  # the includes, rather than joins, prevents duplicate tournaments
+      matches = matches.includes(:players).references(:players) # the includes, rather than joins, prevents duplicate tournaments
       matches = matches.where("players.icu_id = ?", icu_id)                   if icu_id > 0
       matches = matches.where("players.first_name LIKE ?", "%#{first_name}%") if first_name
       matches = matches.where("players.last_name  LIKE ?", "%#{last_name}%")  if last_name
@@ -802,7 +802,7 @@ class Tournament < ActiveRecord::Base
     update_column_if_changed(:locked, true)
     reset_signatures(true)
   end
-  
+
   # Update live ratings if appropriate.
   def update_live_ratings
     return unless last_rated?
