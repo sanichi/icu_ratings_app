@@ -16,45 +16,45 @@
     %dt What email and password should I use to log in?
     %dd
       If you're a current ICU member and have previously
-      = link_to_icu "registered", "members/register.php"
-      a login account on the main
+      = link_to_icu "signed up", "sign_up"
+      for a login account on the main
       = link_to_icu "ICU site"
       then you can use the same account to log in to this site.
     %dt What should I do if I've forgotten my password?
     %dd
       Please email the ICU
-      = mail_to_icu(:admin)
+      = mail_to_icu(:webmaster)
       requesting that your password be reset.
       If the email address you used for your login is still in use, please send the message from that email.
       If you can't send a message from that email, please state your PIN number.
       If you have a new email address you could, as an alternative to reseting your old password, just
-      = link_to_icu "register", "members/register.php"
-      a new login account. See
-      = link_to_icu "these instructions", "articles/display.php?id=283"
+      = link_to_icu "sign up", "sign_up"
+      for a new login account. See
+      = link_to_icu "these instructions", "help/membership"
       for more help.
     %dt What does "your account has not yet been activated" mean?
     %dd
       %p
         When you
-        = link_to_icu "registered", "members/register.php"
-        your ICU login account we sent you a confirmation email with a link. Your account
+        = link_to_icu "signed up", "sign_up"
+        for an ICU login account we sent you a confirmation email with a link. Your account
         would have been activated if you had received this message and clicked the link.
       %p
         If you don't have a record of this message (even in your spam folder) then please contact the
-        = mail_to_icu(:admin)
-        using the same email address as the one you chose for your login account and stating your PIN number.
+        = mail_to_icu(:webmaster)
+        using the same email address as the one you chose for your login account and stating your season ticket.
     %dt If I don't yet have an account, how can I get one?
     %dd
       %p
         First,
-        = link_to_icu "subscribe", "shop/subscribe.php"
+        = link_to_icu "subscribe", "shop"
         as a member of the ICU for the current season, if you haven't already done so.
         Then
-        = link_to_icu "register an account", "members/newbies.php"
+        = link_to_icu "sign up for an account", "sign_up"
         and wait for it to sync with this site (it can take up to 24 hours).
       %p
         On the main site, there are
-        = link_to_icu "detailed instructions", "articles/display.php?id=283"
+        = link_to_icu "detailed instructions", "help/membership"
         for becoming a member and setting up an account, if you need further help.
     %dt Do I need anything special to submit tournament reports?
     %dd

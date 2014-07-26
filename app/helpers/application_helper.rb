@@ -243,7 +243,7 @@ module ApplicationHelper
     case obj
     when IcuPlayer
       host = "www.icu.ie"
-      path = "players/display.php?id=#{obj.id}"
+      path = "admin/players/#{obj.id}"
       text ||= obj.id
       target ||= "_icu_ie"
     when FidePlayer
