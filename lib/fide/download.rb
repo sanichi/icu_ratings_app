@@ -45,9 +45,11 @@ module FIDE
         zip = Zip::File.open(@zip.path)
         raise SyncError.new("zip file has no entry for #{@file}") unless zip.find_entry(@file)
         data = zip.read(@file)
-        raise SyncError.new("unexpected zip data encoding (#{data.encoding.name})") unless data.encoding.name.match(/^ASCII-8BIT|US-ASCII$/)
-        data.force_encoding("ISO-8859-1")
-        data.encode!("UTF-8")
+        raise SyncError.new("unexpected zip data encoding (#{data.encoding.name})") unless data.encoding.name.match(/^ASCII-8BIT|US-ASCII|UTF-8$/)
+        unless data.encoding.name == "UTF-8"
+          data.force_encoding("ISO-8859-1")
+          data.encode!("UTF-8")
+        end
 
         # Parse the data using SAX parser based on FIDE::Download::Parser and FIDE::Download::Player.
         @their_players = Hash.new
@@ -72,7 +74,7 @@ module FIDE
 
       def update_our_players_and_ratings
         @our_players = FidePlayer.all.inject({}) { |h,p| h[p.id] = p; h }
-        @our_ratings = FideRating.find_all_by_list(@list).inject({}) { |h,r| h[r.fide_id] = r; h }
+        @our_ratings = FideRating.where(list: @list).inject({}) { |h,r| h[r.fide_id] = r; h }
         @updates = []
         @creates = []
         @invalid = []
@@ -87,7 +89,7 @@ module FIDE
             tplr.keys.each { |key| oplr.send("#{key}=", tplr[key]) }
             if oplr.changed?
               @updates.push(id)
-              oplr.changed.each { |atr| @changes[atr] += 1 }
+              oplr.changed.each { |atr| @changes[atr.to_sym] += 1 }
             end
           else
             oplr = FidePlayer.new(tplr) { |p| p.id = id }
@@ -202,9 +204,11 @@ module FIDE
         zip = Zip::File.open(@zip.path)
         raise SyncError.new("zip file has no entry for #{@file}") unless zip.find_entry(@file)
         data = zip.read(@file)
-        raise SyncError.new("unexpected zip data encoding (#{data.encoding.name})") unless data.encoding.name.match(/^ASCII-8BIT|US-ASCII$/)
-        data.force_encoding("ISO-8859-1")
-        data.encode!("UTF-8")
+        raise SyncError.new("unexpected zip data encoding (#{data.encoding.name})") unless data.encoding.name.match(/^ASCII-8BIT|US-ASCII|UTF-8$/)
+        unless data.encoding.name == "UTF-8"
+          data.force_encoding("ISO-8859-1")
+          data.encode!("UTF-8")
+        end
 
         # Prepare to save CSV data to a file.
         @csv = "#{Rails.root}/tmp/other_fide_players.csv"
