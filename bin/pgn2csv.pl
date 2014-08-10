@@ -205,7 +205,14 @@ sub output_csv
         {
             if ($results->{$r})
             {
-                printf "%d,%s\n", $r, join(',', @{$results->{$r}});
+                if ($results->{$r}->[2])
+                {
+                    printf "%d,%s\n", $r, join(',', @{$results->{$r}});
+                }
+                else
+                {
+                    printf "%d,%s,-\n", $r, $results->{$r}->[0];
+                }
                 $total+= 2 if $results->{$r}->[0] eq '1';
                 $total+= 1 if $results->{$r}->[0] eq '=';
             }
