@@ -192,7 +192,7 @@ sub output_csv
     print "Website,$opt{w}\n\n";
 
     # Players.
-    foreach my $id (keys %players)
+    foreach my $id (sort { $a <=> $b } keys %players)
     {
         my $results = $results{$id};
         die sprintf("no results for player %d (%s)\n", $id, $players{$id}) unless $results;
