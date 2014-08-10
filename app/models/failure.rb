@@ -11,7 +11,11 @@
 class Failure < ActiveRecord::Base
   extend ICU::Util::Pagination
 
+  IGNORE = %w[ActiveRecord::RecordNotFound ActionController::UnknownFormat]
+
   default_scope -> { order(created_at: :desc) }
+
+  before_create :normalize_details
 
   def self.search(params, path)
     matches = all
@@ -25,5 +29,25 @@ class Failure < ActiveRecord::Base
     details = e.backtrace ? e.backtrace[0..max-1] : []
     details.unshift(e.message)
     create!(name: e.class.to_s, details: details.join("\n"))
+  end
+
+  def self.examine(payload)
+    name = payload[:exception].first
+    unless IGNORE.include?(name)
+      Failure.create!(name: name, details: payload.dup)
+    end
+  end
+
+  private
+
+  def normalize_details
+    if details.is_a?(Hash)
+      if details[:exception].is_a?(Array) && details[:exception].size == 2
+        exception = details.delete(:exception)
+        details[:name] = exception.first
+        details[:message] = exception.last
+      end
+      self.details = details.map{ |key,val| "#{key}: #{val}" }.sort.join("\n")
+    end
   end
 end
