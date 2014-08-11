@@ -5,6 +5,9 @@ use Getopt::Std;
 # Regex for one player specified on the command line (with the -p flag).
 my $prgx = "[1-9]\\d*,[A-Z][-A-Za-z' ]+,[A-Z][-A-Za-z' .]+";
 
+# Hash from country names to 3-letter codes.
+my %cnt_fed; &get_cnt_fed();
+
 # Options.
 my %opt;
 my $opt = 'hp:w:e:';
@@ -139,8 +142,8 @@ sub analyse_tags
     my $belo = $tags{BlackElo};
     my $wtit = $tags{WhiteTitle};
     my $btit = $tags{BlackTitle};
-    my $wfed = $tags{WhiteFederation};
-    my $bfed = $tags{BlackFederation};
+    my $wfed = &get_fed($tags{WhiteFederation}, $tags{WhiteTeam});
+    my $bfed = &get_fed($tags{BlackFederation}, $tags{BlackTeam});
     my $result = $tags{Result};
     die "no result information ($lineno)\n" unless $result =~ /^(1-0|0-1|1\/2-1\/2)$/;
 
@@ -234,3 +237,205 @@ sub trim
     $str =~ s/\s+/ /g;
     $str;
 }
+
+sub get_fed
+{
+    foreach my $str (@_)
+    {
+        return $str if $str =~ /^[A-Z]{3}$/;
+        return $cnt_fed{$str} if $cnt_fed{$str};
+    }
+    return "";
+}
+
+sub get_cnt_fed
+{
+    foreach my $line (<DATA>)
+    {
+        next unless $line =~ /^([A-Z]{3}) ([A-Z].+)/;
+        $cnt_fed{$2} = $1;
+    }
+}
+
+__DATA__
+AFG Afghanistan
+ALB Albania
+ALG Algeria
+AND Andorra
+ANG Angola
+ANT Antigua
+ARG Argentina
+ARM Armenia
+ARU Aruba
+AUS Australia
+AUT Austria
+AZE Azerbaijan
+BAH Bahamas
+BRN Bahrain
+BAN Bangladesh
+BAR Barbados
+BLR Belarus
+BEL Belgium
+BIZ Belize
+BEN Benin Republic
+BER Bermuda
+BHU Bhutan
+BOL Bolivia
+BIH Bosnia and Herzegovina
+BOT Botswana
+BRA Brazil
+IVB British Virgin Islands
+BRU Brunei Darussalam
+BUL Bulgaria
+BDI Burundi
+CAM Cambodia
+CMR Cameroon
+CAN Canada
+CHA Chad
+CHI Chile
+CHN China
+TPE Chinese Taipei
+COL Colombia
+CGO Congo-Kinshasa
+CRC Costa Rica
+CRO Croatia
+CUB Cuba
+CYP Cyprus
+CZE Czech Republic
+DEN Denmark
+DJI Djibouti
+DOM Dominican Republic
+ECU Ecuador
+EGY Egypt
+ESA El Salvador
+ENG England
+EST Estonia
+ETH Ethiopia
+FAI Faroe Islands
+FIJ Fiji
+FIN Finland
+FRA France
+GAB Gabon
+GAM Gambia
+GEO Georgia
+GER Germany
+GHA Ghana
+GRE Greece
+GUM Guam
+GUA Guatemala
+GCI Guernsey
+GUY Guyana
+HAI Haiti
+HON Honduras
+HKG Hong Kong
+HUN Hungary
+ISL Iceland
+IND India
+INA Indonesia
+IRI Iran
+IRQ Iraq
+IRL Ireland
+ISR Israel
+ITA Italy
+CIV Ivory Coast
+JAM Jamaica
+JPN Japan
+JCI Jersey
+JOR Jordan
+KAZ Kazakhstan
+KEN Kenya
+KUW Kuwait
+KGZ Kyrgyzstan
+LAO Laos
+LAT Latvia
+LIB Lebanon
+LES Lesotho
+LBA Libya
+LIE Liechtenstein
+LTU Lithuania
+LUX Luxembourg
+MAC Macau
+MKD Macedonia
+MAD Madagascar
+MAW Malawi
+MAS Malaysia
+MDV Maldives
+MLI Mali
+MLT Malta
+MTN Mauritania
+MRI Mauritius
+MEX Mexico
+MDA Moldova
+MNC Monaco
+MGL Mongolia
+MNE Montenegro
+MAR Morocco
+MOZ Mozambique
+MYA Myanmar
+NAM Namibia
+NEP Nepal
+NED Netherlands
+AHO Netherlands Antilles
+NZL New Zealand
+NCA Nicaragua
+NGR Nigeria
+NOR Norway
+PAK Pakistan
+PLW Palau
+PLE Palestine
+PAN Panama
+PNG Papua New Guinea
+PAR Paraguay
+PER Peru
+PHI Philippines
+POL Poland
+POR Portugal
+PUR Puerto Rico
+QAT Qatar
+ROU Romania
+RUS Russia
+RWA Rwanda
+SMR San Marino
+STP Sao Tome and Principe
+KSA Saudi Arabia
+SCO Scotland
+SEN Senegal
+SRB Serbia
+SEY Seychelles
+SLE Sierra Leone
+SIN Singapore
+SVK Slovakia
+SLO Slovenia
+SOL Solomon Islands
+SOM Somalia
+RSA South Africa
+KOR South Korea
+ESP Spain
+SRI Sri Lanka
+SUD Sudan
+SUR Surinam
+SWZ Swaziland
+SWE Sweden
+SUI Switzerland
+SYR Syria
+TJK Tajikistan
+TAN Tanzania
+THA Thailand
+TOG Togo
+TRI Trinidad and Tobago
+TUN Tunisia
+TUR Turkey
+TKM Turkmenistan
+ISV US Virgin Islands
+UGA Uganda
+UKR Ukraine
+UAE United Arab Emirates
+USA United States of America
+URU Uruguay
+UZB Uzbekistan
+VEN Venezuela
+VIE Vietnam
+WLS Wales
+YEM Yemen
+ZAM Zambia
+ZIM Zimbabwe
