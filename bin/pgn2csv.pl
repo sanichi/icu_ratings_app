@@ -153,13 +153,13 @@ sub analyse_tags
     if ($wid)
     {
         my $wresult = $result eq '1-0' ? 1 : ($result eq '0-1' ? 0 : '=');
-        $results{$wid}->{$round} = [$wresult, $black, $belo, $btit, $bfed];
+        $results{$wid}->{$round} = [$wresult, 'W', $black, $belo, $btit, $bfed];
     }
 
     if ($bid)
     {
         my $bresult = $result eq '1-0' ? 0 : ($result eq '0-1' ? 1 : '=');
-        $results{$bid}->{$round} = [$bresult, $white, $welo, $wtit, $wfed];
+        $results{$bid}->{$round} = [$bresult, 'B', $white, $welo, $wtit, $wfed];
     }
 }
 
@@ -208,7 +208,7 @@ sub output_csv
         {
             if ($results->{$r})
             {
-                if ($results->{$r}->[2])
+                if ($results->{$r}->[3])
                 {
                     printf "%d,%s\n", $r, join(',', @{$results->{$r}});
                 }
