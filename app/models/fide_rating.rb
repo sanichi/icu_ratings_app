@@ -16,12 +16,12 @@ class FideRating < ActiveRecord::Base
 
   belongs_to :fide_player, foreign_key: "fide_id"
 
-  validates_numericality_of :fide_id, only_integer: true, greater_than: 0
-  validates_numericality_of :rating, only_integer: true, greater_than: 0, less_than: 3000
-  validates_numericality_of :games, only_integer: true, greater_than_or_equal_to: 0, less_than: 100
-  validates_date            :list, on_or_after: "1950-01-01", on_or_before: :today
-  validates_uniqueness_of   :list, scope: :fide_id
-  validate                  :list_should_be_first_of_month
+  validates :fide_id, numericality: { only_integer: true, greater_than: 0 }
+  validates :rating, numericality: { only_integer: true, greater_than: 0, less_than: 3000 }
+  validates :games, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than: 100 }
+  validates :list, date: { on_or_after: "1950-01-01", on_or_before: :today }
+  validates :list, uniqueness: { scope: :fide_id }
+  validate  :list_should_be_first_of_month
 
   default_scope -> { includes(:fide_player).joins(:fide_player).order("list DESC, fide_ratings.rating DESC") }
 

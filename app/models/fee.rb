@@ -17,9 +17,9 @@ class Fee < ActiveRecord::Base
 
   belongs_to :icu_player, foreign_key: "icu_id"
 
-  validates_presence_of     :description, :status, :category
-  validates_date            :date, on_or_after: "2008-01-01"
-  validates_numericality_of :icu_id, only_integer: true, greater_than: 0
+  validates :description, :status, :category, presence: true
+  validates :date, date: { on_or_after: "2008-01-01" }
+  validates :icu_id, numericality: { only_integer: true, greater_than: 0 }
 
   def self.search(params, path)
     matches = joins(:icu_player).includes(:icu_player)

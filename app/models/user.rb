@@ -41,7 +41,7 @@ class User < ActiveRecord::Base
   validates :role, inclusion: { in: ROLES, message: "(%{value}) is invalid" }
   validates :status, inclusion: { in: STATUS, message: "(%{value}) is invalid" }
   validates :icu_id, numericality: { only_integer: true, greater_than: 0, message: "(%{value}) is invalid" }
-  validates :expiry, timeliness: { on_or_after: "2004-12-31", type: :date }
+  validates :expiry, date: { on_or_after: "2004-12-31" }
 
   default_scope -> { includes(:icu_player).references(:icu_player) }
 

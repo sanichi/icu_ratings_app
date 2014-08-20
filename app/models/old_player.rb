@@ -30,8 +30,8 @@ class OldPlayer < ActiveRecord::Base
   validates :rating, numericality: { only_integer: true, greater_than: 0 }
   validates :events, :games, numericality: { only_integer: true, greater_than_or_equal: 0 }
   validates :gender, inclusion: { in: ["M", "F"] }, allow_nil: true
-  validates :dob, timeliness: { on_or_after: "1900-01-01", on_or_before: :today, type: :date }, allow_nil: true
-  validates :joined, timeliness: { on_or_after: "1960-01-01", on_or_before: :today, type: :date }, allow_nil: true
+  validates :dob, date: { on_or_after: "1900-01-01", on_or_before: :today }, allow_nil: true
+  validates :joined, date: { on_or_after: "1960-01-01", on_or_before: :today }, allow_nil: true
   validates :status, :inclusion => { :in => STATUS }
 
   def self.search(params, path)

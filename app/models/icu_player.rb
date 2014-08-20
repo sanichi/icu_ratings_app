@@ -38,15 +38,14 @@ class IcuPlayer < ActiveRecord::Base
 
   default_scope -> { order("last_name, first_name") }
 
-  validates_presence_of     :first_name
-  validates_presence_of     :last_name
-  validates_format_of       :fed, with: /\A[A-Z]{3}\z/, allow_nil: true
-  validates_format_of       :title, with: /\AW?[GIFCN]M\z/, allow_nil: true
-  validates_format_of       :gender, with: /\A(M|F)\z/, allow_nil: true
-  validates_inclusion_of    :deceased, in: [true, false]
-  validates_numericality_of :master_id, only_integer: true, greater_than: 0, allow_nil: true
-  validates_date            :dob, on_or_after: "1900-01-01", on_or_before: :today, allow_nil: true
-  validates_date            :joined, on_or_after: "1960-01-01", on_or_before: :today, allow_nil: true
+  validates :first_name, :last_name, presence: true
+  validates :fed, format: { with: /\A[A-Z]{3}\z/ }, allow_nil: true
+  validates :title, format: { with: /\AW?[GIFCN]M\z/ }, allow_nil: true
+  validates :gender, format: { with: /\A(M|F)\z/ }, allow_nil: true
+  validates :deceased, inclusion: { in: [true, false] }
+  validates :master_id, numericality: { only_integer: true, greater_than: 0 }, allow_nil: true
+  validates :dob, date: { on_or_after: "1900-01-01", on_or_before: :today }, allow_nil: true
+  validates :joined, date: { on_or_after: "1960-01-01", on_or_before: :today }, allow_nil: true
 
   def name(*args)
     args.push :reversed if args.empty?

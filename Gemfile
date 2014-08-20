@@ -5,8 +5,6 @@ gem "mysql2"
 gem "icu_tournament"
 gem "icu_ratings"
 gem "icu_name"
-gem "validates_timeliness", github: "razum2um/validates_timeliness", ref: "b195081f6aeead619430ad38b0f0dfe4d4981252" # See https://github.com/adzap/validates_timeliness/pull/114.
-#gem "validates_timeliness", "~> 3.0"
 gem "whenever", :require => false
 gem "redcarpet"
 gem "nokogiri"

@@ -15,9 +15,9 @@ class RatingList < ActiveRecord::Base
 
   has_many :publications, dependent: :destroy
 
-  validates :date, timeliness: { on_or_after: "2012-01-01", on_or_before: :today, type: :date }
+  validates :date, date: { on_or_after: "2012-01-01", on_or_before: :today }
   validates :date, list_date: true
-  validates :tournament_cut_off, :payment_cut_off, timeliness: { type: :date }
+  validates :tournament_cut_off, :payment_cut_off, date: true
   validate  :cut_off_rules
 
   default_scope -> { order(date: :desc) }

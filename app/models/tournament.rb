@@ -58,15 +58,14 @@ class Tournament < ActiveRecord::Base
 
   before_validation :normalise_attributes, :guess_finish, :requeue
 
-  validates_presence_of     :name, :start, :status
-  validates_date            :start, after: "1900-01-01", on_or_before: :today
-  validates_date            :finish, after: "1900-01-01", on_or_before: :today
-  validate                  :finish_on_or_after_start
-  validates_inclusion_of    :fed, in: FEDS, allow_nil: true, message: '(%{value}) is invalid'
-  validates_inclusion_of    :stage, in: STAGE, message: '(%{value}) is invalid'
-  validates_format_of       :tie_breaks, with: /\A#{TIEBREAK}(?:,#{TIEBREAK})*\z/, allow_nil: true
-  validates_numericality_of :user_id, :rounds, only_integer: true, greater_than: 0, message: "(%{value}) is invalid"
-  validates_numericality_of :rorder, :fide_id, only_integer: true, greater_than: 0, allow_nil: true, message: "(%{value}) is invalid"
+  validates :name, :start, :status, presence: true
+  validates :start, :finish, date: { after: "1900-01-01", on_or_before: :today }
+  validate  :finish_on_or_after_start
+  validates :fed, inclusion: { in: FEDS, message: '(%{value}) is invalid' }, allow_nil: true
+  validates :stage, inclusion: { in: STAGE, message: '(%{value}) is invalid' }
+  validates :tie_breaks, format: { with: /\A#{TIEBREAK}(?:,#{TIEBREAK})*\z/ }, allow_nil: true
+  validates :user_id, :rounds, numericality: { only_integer: true, greater_than: 0, message: "(%{value}) is invalid" }
+  validates :rorder, :fide_id, numericality: { only_integer: true, greater_than: 0, message: "(%{value}) is invalid" }, allow_nil: true
   validates :iterations1, :iterations2, numericality: { only_integer: true, greater_than_or_equal: 0 }
 
   # Build a Tournament from an icu_tournament object parsed from an uploaded file.

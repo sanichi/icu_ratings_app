@@ -16,10 +16,10 @@ class Subscription < ActiveRecord::Base
 
   belongs_to :icu_player, foreign_key: "icu_id"
 
-  validates_numericality_of :icu_id, only_integer: true, greater_than: 0
-  validates_format_of       :season, with: /\A20\d\d-\d\d\z/, :if => Proc.new { |sub| sub.category != "lifetime" }
-  validates_inclusion_of    :category, :in => CATEGORY, message: "%{value} is not a valid category"
-  validates_date            :pay_date, on_or_after: "2006-08-01", allow_nil: true
+  validates :icu_id, numericality: { only_integer: true, greater_than: 0 }
+  validates :season, format: { with: /\A20\d\d-\d\d\z/ }, :if => Proc.new { |sub| sub.category != "lifetime" }
+  validates :category, inclusion: { :in => CATEGORY, message: "%{value} is not a valid category" }
+  validates :pay_date, date: { on_or_after: "2006-08-01" }, allow_nil: true
 
   def self.search(params, path)
     matches = joins(:icu_player).includes(:icu_player)

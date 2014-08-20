@@ -20,7 +20,7 @@ class IcuRating < ActiveRecord::Base
   validates :full, inclusion: { in: [true, false] }
   validates :original_rating, numericality: { only_integer: true }, allow_nil: true
   validates :original_full, inclusion: { in: [true, false] }, allow_nil: true
-  validates :list, timeliness: { on_or_after: "2001-09-01", on_or_before: :today, type: :date }
+  validates :list, date: { on_or_after: "2001-09-01", on_or_before: :today }
   validates :list, list_date: true
 
   default_scope -> { includes(:icu_player).joins(:icu_player).order("list DESC, rating DESC, icu_players.last_name") }
