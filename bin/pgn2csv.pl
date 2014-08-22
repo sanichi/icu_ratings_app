@@ -142,8 +142,8 @@ sub analyse_tags
     my $belo = $tags{BlackElo};
     my $wtit = $tags{WhiteTitle};
     my $btit = $tags{BlackTitle};
-    my $wfed = &get_fed($tags{WhiteFederation}, $tags{WhiteTeam});
-    my $bfed = &get_fed($tags{BlackFederation}, $tags{BlackTeam});
+    my $wfed = &get_fed($tags{WhiteTeamCountry}, $tags{WhiteFederation}, $tags{WhiteTeam});
+    my $bfed = &get_fed($tags{BlackTeamCountry}, $tags{BlackFederation}, $tags{BlackTeam});
     my $result = $tags{Result};
     die "no result information ($lineno)\n" unless $result =~ /^(1-0|0-1|1\/2-1\/2)$/;
 
