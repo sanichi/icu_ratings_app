@@ -5,8 +5,9 @@ development:
   database: ratings_development
   pool: 5
   username: ratings
-  password: 
+  password:
   socket: /opt/local/var/run/mysql5/mysqld.sock
+  strict: false
 
 test:
   adapter: mysql2
@@ -15,8 +16,9 @@ test:
   database: ratings_test
   pool: 5
   username: ratings
-  password: 
+  password:
   socket: /opt/local/var/run/mysql5/mysqld.sock
+  strict: false
 
 production:
   adapter: mysql2
@@ -25,5 +27,6 @@ production:
   database: ratings_production
   pool: 5
   username: ratings
-  password: 
+  password:
   socket: /opt/local/var/run/mysql5/mysqld.sock
+  strict: false
