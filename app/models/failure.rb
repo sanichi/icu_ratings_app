@@ -11,7 +11,7 @@
 class Failure < ActiveRecord::Base
   extend ICU::Util::Pagination
 
-  IGNORE = %w[ActiveRecord::RecordNotFound ActionController::UnknownFormat]
+  IGNORE = %w[ActiveRecord::RecordNotFound ActionController::UnknownFormat ActionController::InvalidCrossOriginRequest]
 
   default_scope -> { order(created_at: :desc) }
 
