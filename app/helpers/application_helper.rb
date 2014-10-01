@@ -103,12 +103,6 @@ module ApplicationHelper
     [["Name", "default"], ["ID", "id"], ["Last Updated", "update"], ["Last Created", "create"]]
   end
 
-  def old_players_status_menu(any=nil)
-    menu = OldPlayer::STATUS.map{ |s| [s, s] }
-    menu.unshift([any, ""]) if any
-    menu
-  end
-
   def rating_type_menu(any=nil)
     menu = [["Full", "full"], ["Provisional", "provisional"]]
     menu.unshift([any, ""]) if any

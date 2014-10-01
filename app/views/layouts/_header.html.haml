@@ -53,8 +53,6 @@
     %li
       = link_to "Players", icu_players_path
       %ul
-        - if can? :read, OldPlayer
-          %li= link_to "Former Players", admin_old_players_path
         - if can? :manage, Player
           %li= link_to "New Players", admin_new_players_path
         %li= link_to "FIDE Players", fide_players_path

@@ -19,7 +19,6 @@ describe "authorized links for" do
         "/admin/logins"            => %w[admin],
         "/admin/new_players"       => %w[admin officer],
         "/admin/old_ratings"       => %w[admin officer reporter],
-        "/admin/old_players"       => %w[admin officer reporter],
         "/admin/old_tournaments"   => %w[admin officer reporter],
         "/admin/rating_lists"      => %w[admin officer],
         "/admin/rating_runs"       => %w[admin officer],

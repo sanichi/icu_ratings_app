@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131204093853) do
+ActiveRecord::Schema.define(version: 20141001134841) do
 
   create_table "articles", force: true do |t|
     t.string   "headline"
@@ -148,23 +148,6 @@ ActiveRecord::Schema.define(version: 20131204093853) do
     t.string   "problem",    limit: 8,  default: "none"
     t.string   "role",       limit: 20
     t.datetime "created_at"
-  end
-
-  create_table "old_players", force: true do |t|
-    t.integer  "icu_id"
-    t.string   "first_name"
-    t.string   "last_name"
-    t.string   "club"
-    t.string   "gender",     limit: 1
-    t.date     "dob"
-    t.date     "joined"
-    t.text     "note"
-    t.integer  "rating",     limit: 2
-    t.integer  "events",     limit: 2
-    t.integer  "games",      limit: 2
-    t.string   "status",     limit: 20, default: "archived"
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
   end
 
   create_table "old_rating_histories", force: true do |t|
