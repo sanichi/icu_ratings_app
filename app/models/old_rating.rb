@@ -22,7 +22,8 @@ class OldRating < ActiveRecord::Base
 
   def self.search(params, path)
     matches = all
-    matches = matches.joins(:icu_player).order("icu_players.last_name, icu_players.first_name")
+    matches = matches.joins("LEFT JOIN icu_players ON icu_players.id = old_ratings.icu_id")
+    matches = matches.order(:icu_id)
     matches = matches.where("icu_players.last_name LIKE ?", "%#{params[:last_name]}%") if params[:last_name].present?
     matches = matches.where("icu_players.first_name LIKE ?", "%#{params[:first_name]}%") if params[:first_name].present?
     matches = matches.where(icu_id: params[:icu_id].to_i) if params[:icu_id].to_i > 0

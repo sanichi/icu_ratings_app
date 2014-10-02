@@ -14,20 +14,28 @@
       from the previous system (which was based on a Microsoft Access database) in September 2011.
     %dt Apart from the inherited ratings, are there any others that appear here?
     %dd
-      There are occasionally additions to this list by the ratings of two groups of players:
-      (1) players who have been resurrected from the archive (see
-      = succeed(")") do
-        = link_to "Former ICU Players", admin_old_players_path
-      and (2) players who have an established FIDE rating at the time they join the ICU (usually foreigners).
-      In the first case the ratings are lagacy (old) ratings, but belong to players who have been inactive
-      and in the second case the (FIDE) ratings aren't legacy ratings but treating them as such is a
+      There may be occasional additions to this list by the ratings of players who have an established
+      FIDE (or Elo-equivalent) rating at the time they join the ICU (usually foreigners).
+      Such ratings aren't really legacy ratings but treating them as such is a
       convenient mechanism to provide players with realistic start ratings.
+    %dt Why do some players have no name?
+    %dd
+      These are old inactive players who have not yet been "resurrected" (marked as active again
+      in the main ICU database) and who therefore have no player record (where names come from) in the ratings
+      database. If an inactive player is subsequently marked as active in the main database, then a new player
+      record will be created in the ratings database, it will link to the old rating record that you see here
+      and the name from that new record can then be displayed. To put it another way, the legacy ratings records
+      already include all old data (ready for any inactive players that are resurrected) but the player records
+      do not. The reason for the difference is to eliminate people who haven't played chess in a long while
+      from searches of the player records, until they start playing again.
     %dt Why are some full ratings associated with less than 20 games?
     %dd
       The old rating system had to create new ICU players with full ratings
       for the FIDE-rated opponents of Irish players in foreign tournaments
       such as Olympiads, IM tournaments and junior internationals. This led
       to the creation of thousands of player records with a small number of
-      rated games (often just one) but with full ratings. In addition, some
-      game counts inherited from the old system were underestimates because
-      they did not include games played before the old system was established.
+      rated games (often just one) but with full ratings. In addition, many
+      game counts of old inactive Irish players (a subset of about 3300 records,
+      many of which have no names for the reason stated above) were later discovered
+      to contain underestimates of the true game counts, so all these were marked as
+      being full ratings.

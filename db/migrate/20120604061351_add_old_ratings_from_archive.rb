@@ -1,6 +1,4 @@
 class AddOldRatingsFromArchive < ActiveRecord::Migration
-  # You can add new records to this migration and rerun it:
-  # RAILS_ENV=production bin/rake db:migrate:redo VERSION=20120604061351
   RECORDS =
   [
     {icu_id:   357, rating: 1631, games:  3, full: true},  # resurrected from former players
@@ -15,9 +13,9 @@ class AddOldRatingsFromArchive < ActiveRecord::Migration
     {icu_id:  2059, rating: 1071, games: 20, full: true},  # old Fred Harte data, number of games guessed
     {icu_id:  2327, rating: 1389, games: 21, full: true},  # resurrected from former players
     {icu_id:  2404, rating: 1210, games:  6, full: true},
-    {icu_id:  3928, rating: 1189, games: 13, full: true},  # resurrected from former players
     {icu_id:  3712, rating: 1516, games:  4, full: true},  # resurrected from former players
     {icu_id:  3758, rating: 1507, games: 12, full: true},
+    {icu_id:  3928, rating: 1189, games: 13, full: true},  # resurrected from former players
     {icu_id:  4126, rating:  938, games: 35, full: true},
     {icu_id:  4574, rating: 1232, games: 89, full: true},  # resurrected from former players
     {icu_id: 13382, rating: 1196, games: 80, full: true},
