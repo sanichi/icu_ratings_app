@@ -92,7 +92,7 @@ module ICU
           end
         end
 
-        # Legacy inport (www1 => www2) details:
+        # Legacy import (www1 => www2, July 2014) details:
         #   after sync:players
         #     total: 10298
         #     status: active=10130, deceased=39, inactive=129 (these are duplicates)
@@ -482,6 +482,113 @@ module ICU
             when "offline" then " AND start_date = '#{@season_start}' AND payment_method IN ('cheque', 'cash')"
             else                " AND start_date IS NULL"
           end
+        end
+      end
+
+      # Just prints player stats, can be run manually whenever you want.
+      class Stats < Pull
+        WIDTH = 14
+
+        def print
+          setup
+          gather
+          report
+        end
+
+        private
+
+        def setup
+          @statuses = %w[active inactive deceased foreign duplicate]
+          @sources = %w[import subscription archive]
+          @www_stats = Hash.new
+          @rat_stats = Hash.new
+          @plr_stats = Hash.new
+          @statuses.each do |status|
+            @www_stats[status] = Hash.new
+            @rat_stats[status] = Hash.new
+            @plr_stats[status] = Hash.new
+            @sources.each do |source|
+              @www_stats[status][source] = Set.new
+            end
+          end
+        end
+
+        def gather
+          get_www_stats
+          get_rat_stats
+          get_plr_stats
+        end
+
+        def get_www_stats
+          @www_all = Set.new
+          @client.query(players_sql).each do |player|
+            raise "invlid status: #{player.inspect}" unless @statuses.include?(player[:status])
+            raise "invlid source: #{player.inspect}" unless @sources.include?(player[:source])
+            if player[:player_id]
+              @www_stats["duplicate"][player[:source]] << player[:id]
+            else
+              @www_stats[player[:status]][player[:source]] << player[:id]
+            end
+            @www_all << player[:id]
+          end
+        end
+
+        def get_rat_stats
+          @rat_all = Set.new(::IcuPlayer.all.pluck(:id))
+          @statuses.each do |status|
+            @sources.each do |source|
+              @rat_stats[status][source] = @www_stats[status][source] & @rat_all
+            end
+          end
+        end
+
+        def get_plr_stats
+          @plr_all = Set.new(::Player.where.not(icu_id: nil).pluck(:icu_id))
+          @statuses.each do |status|
+            @sources.each do |source|
+              @plr_stats[status][source] = @www_stats[status][source] & @plr_all
+            end
+          end
+        end
+
+        def players_sql
+          "SELECT id, player_id, status, source FROM players"
+        end
+
+        def report
+          str = Array.new
+          table(str, @www_stats, @www_all.size, "www_#{Rails.env} ICU IDs")
+          table(str, @rat_stats, @rat_all.size, "ratings_#{Rails.env} ICU IDs")
+          table(str, @plr_stats, @plr_all.size, "ratings_#{Rails.env} player IDs")
+          puts str.join("\n")
+        end
+
+        def center(str: nil, left: nil, width: WIDTH)
+          str = "-" * width unless str
+          str = "%5d" % str if str.is_a?(Fixnum)
+          left ||= (width - str.length) / 2
+          rite = width - str.length - left
+          " " * left + str + " " * rite
+        end
+
+        def row(array, sep="|")
+          sep + array.join(sep) + sep
+        end
+
+        def divider(str)
+          str.push row ["", @sources].flatten.map{ center }, "-"
+        end
+
+        def table(str, stats, total, header)
+          divider(str)
+          str.push row [center(str: "#{header} (total: #{total})", width: (@sources.size + 1) * (WIDTH + 1) - 1)]
+          divider(str)
+          str.push row ["", @sources].flatten.map{ |source| center(str: source) }
+          divider(str)
+          @statuses.each do |status|
+            str.push row [center(str: status, left: 1), @sources.map{ |source| center(str: stats[status][source].size) }].flatten
+          end
+          divider(str)
         end
       end
 

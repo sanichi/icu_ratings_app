@@ -36,4 +36,9 @@ namespace :sync do
 
   desc "Synchronize everything in the correct order"
   task all: [:players, :users, :icu_items, :irish_fide_players, :other_fide_players]
+  
+  desc "Print stats about the players in the two databases (run manually anytime you want)"
+  task stats: :environment do
+    ICU::Database::Pull::Stats.new.print
+  end
 end
