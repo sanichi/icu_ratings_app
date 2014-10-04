@@ -503,10 +503,12 @@ module ICU
           @www_stats = Hash.new
           @rat_stats = Hash.new
           @plr_stats = Hash.new
+          @usr_stats = Hash.new
           @statuses.each do |status|
             @www_stats[status] = Hash.new
             @rat_stats[status] = Hash.new
             @plr_stats[status] = Hash.new
+            @usr_stats[status] = Hash.new
             @sources.each do |source|
               @www_stats[status][source] = Set.new
             end
@@ -517,6 +519,7 @@ module ICU
           get_www_stats
           get_rat_stats
           get_plr_stats
+          get_usr_stats
         end
 
         def get_www_stats
@@ -551,6 +554,15 @@ module ICU
           end
         end
 
+        def get_usr_stats
+          @usr_all = Set.new(::User.all.pluck(:icu_id))
+          @statuses.each do |status|
+            @sources.each do |source|
+              @usr_stats[status][source] = @www_stats[status][source] & @usr_all
+            end
+          end
+        end
+
         def players_sql
           "SELECT id, player_id, status, source FROM players"
         end
@@ -560,6 +572,7 @@ module ICU
           table(str, @www_stats, @www_all.size, "www_#{Rails.env} ICU IDs")
           table(str, @rat_stats, @rat_all.size, "ratings_#{Rails.env} ICU IDs")
           table(str, @plr_stats, @plr_all.size, "ratings_#{Rails.env} player IDs")
+          table(str, @usr_stats, @usr_all.size, "ratings_#{Rails.env} user IDs")
           puts str.join("\n")
         end
 
