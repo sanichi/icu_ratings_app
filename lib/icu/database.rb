@@ -504,11 +504,17 @@ module ICU
           @rat_stats = Hash.new
           @plr_stats = Hash.new
           @usr_stats = Hash.new
+          @lst_stats = Hash.new
+          @leg_stats = Hash.new
+          @old_stats = Hash.new
           @statuses.each do |status|
             @www_stats[status] = Hash.new
             @rat_stats[status] = Hash.new
             @plr_stats[status] = Hash.new
             @usr_stats[status] = Hash.new
+            @lst_stats[status] = Hash.new
+            @leg_stats[status] = Hash.new
+            @old_stats[status] = Hash.new
             @sources.each do |source|
               @www_stats[status][source] = Set.new
             end
@@ -520,6 +526,9 @@ module ICU
           get_rat_stats
           get_plr_stats
           get_usr_stats
+          get_lst_stats
+          get_leg_stats
+          get_old_stats
         end
 
         def get_www_stats
@@ -563,16 +572,46 @@ module ICU
           end
         end
 
+        def get_lst_stats
+          @lst_all = Set.new(::IcuRating.all.pluck(:icu_id))
+          @statuses.each do |status|
+            @sources.each do |source|
+              @lst_stats[status][source] = @www_stats[status][source] & @lst_all
+            end
+          end
+        end
+
+        def get_leg_stats
+          @leg_all = Set.new(::OldRating.all.pluck(:icu_id))
+          @statuses.each do |status|
+            @sources.each do |source|
+              @leg_stats[status][source] = @www_stats[status][source] & @leg_all
+            end
+          end
+        end
+
+        def get_old_stats
+          @old_all = Set.new(::OldRatingHistory.all.pluck(:icu_player_id))
+          @statuses.each do |status|
+            @sources.each do |source|
+              @old_stats[status][source] = @www_stats[status][source] & @old_all
+            end
+          end
+        end
+
         def players_sql
           "SELECT id, player_id, status, source FROM players"
         end
 
         def report
           str = Array.new
-          table(str, @www_stats, @www_all.size, "www_#{Rails.env} ICU IDs")
-          table(str, @rat_stats, @rat_all.size, "ratings_#{Rails.env} ICU IDs")
-          table(str, @plr_stats, @plr_all.size, "ratings_#{Rails.env} player IDs")
-          table(str, @usr_stats, @usr_all.size, "ratings_#{Rails.env} user IDs")
+          table(str, @www_stats, @www_all.size, "www_#{Rails.env}.players")
+          table(str, @rat_stats, @rat_all.size, "ratings_#{Rails.env}.icu_players")
+          table(str, @plr_stats, @plr_all.size, "ratings_#{Rails.env}.players")
+          table(str, @usr_stats, @usr_all.size, "ratings_#{Rails.env}.users")
+          table(str, @lst_stats, @lst_all.size, "ratings_#{Rails.env}.icu_ratings")
+          table(str, @leg_stats, @leg_all.size, "ratings_#{Rails.env}.old_ratings")
+          table(str, @old_stats, @old_all.size, "ratings_#{Rails.env}.old_rating_histories")
           puts str.join("\n")
         end
 
