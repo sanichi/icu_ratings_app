@@ -106,9 +106,8 @@ module ICU
         #     status: active=6093, deceased=39, inactive=4122, foreign=3404
         #     source: import=10298, legacy=3360
         def players_sql
-          # For now, sync just like the old ratings site (include duplicates and foreigners but not the archived players).
-          # Eventual aim is to remove inactives and foreigners and be able to easily unarchive players by marking them as active.
-          "SELECT #{MAP.keys.join(', ')} FROM players LEFT JOIN clubs ON club_id = clubs.id where source = 'import' OR source = 'subscription'"
+          # Only active and deceased. Make sure no duplicates.
+          "SELECT #{MAP.keys.join(', ')} FROM players LEFT JOIN clubs ON club_id = clubs.id where status IN ('active', 'deceased') AND player_id IS NULL"
         end
 
         def report
