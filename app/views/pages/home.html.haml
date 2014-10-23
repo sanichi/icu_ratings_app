@@ -1,23 +1,7 @@
 - content_for :head do
   %meta{name: "google-site-verification", content: Rails.application.secrets.google_site_verification}
 
-- unless can?(:my_home, Pages::MyHome)
-  %table{class: "cushioned"}
-    %tr
-      %td{class: "section"}
-        ICU Members -
-        = link_to "log in", log_in_path
-        to see:
-        %ul
-          %li how your rating fared in recent tournaments,
-          %li your biggest tournament gains and losses,
-          %li your biggest gains and losses in individual games,
-          %li a full breakdown of how your rating is calculated.
-        To become an ICU member and register a login account see
-        = succeed(".") do
-          = link_to_icu("Help", "help/membership")
-
-%table{class: "sections"}
+%table{class: "sections cushioned"}
   %tr
     %td{class: "section"}
       %h2 Latest Tournaments
@@ -35,6 +19,22 @@
             = link_to n.headline, n
         - if @articles.size  == @limit
           %li= link_to "More...", articles_path
+
+- unless can?(:my_home, Pages::MyHome)
+  %table
+    %tr
+      %td{class: "section"}
+        ICU Members -
+        = link_to "log in", log_in_path
+        to see:
+        %ul
+          %li how your rating fared in recent tournaments,
+          %li your biggest tournament gains and losses,
+          %li your biggest gains and losses in individual games,
+          %li a full breakdown of how your rating is calculated.
+        To become an ICU member and register a login account see
+        = succeed(".") do
+          = link_to_icu("Help", "help/membership")
 
 #help
   %dl
