@@ -255,6 +255,7 @@ module ICU
 
         def sync_item_steps
           begin
+            remove_legacy_fees
             get_our_fees
             get_their_items
             update_ours_from_theirs
@@ -272,13 +273,17 @@ module ICU
 
         MAP =
         {
-          item_id:          :id,
-          item_description: :description,
-          pay_status:       :status,
-          item_type:        :category,
-          item_date:        :date,
-          item_icu_id:      :icu_id,
+          id:          :id,
+          status:      :status,
+          player_id:   :icu_id,
+          notes:       nil,
         }
+
+        # Remove fees synced from the legacy www database, recognizable from their low ID numbers.
+        # This will happen once and they'll be replaced with the same fees from the new database.
+        def remove_legacy_fees
+          @legacy_deletes = Fee.where(category: "FTR").where("id < 400").delete_all
+        end
 
         def get_our_fees
           @our_fees = Fee.all.inject({}) { |h,f| h[f.id] = f; h }
@@ -286,13 +291,28 @@ module ICU
 
         def get_their_items
           @their_items = @client.query(sql).inject({}) do |items, item|
-            id = item.delete(:item_id)
+            adjust(item)
+            id = item.delete(:id)
             items[id] = item.keys.inject({}) do |hash, their_key|
-              our_key = MAP[their_key]
+              our_key = MAP[their_key] || their_key
               hash[our_key] = item[their_key].presence if our_key
               hash
             end
             items
+          end
+        end
+
+        def adjust(item)
+          # Category and status still reflect conventions from the lagacy www app (2004-14).
+          item[:category] = "FTR"
+          item[:status] = item[:status] == "refunded" ? "Refunded" : "Completed"
+          # Description (tournament name) and date (tournament start) are part of the YAML notes in the new www app.
+          if item[:notes].match(/- ([^\n]+)\n- '(\d{4}-\d{2}-\d{2})'/)
+            item[:description] = $1.strip
+            item[:date] = $2
+            item.delete(:notes)
+          else
+            raise "can't parse note [#{item[:notes].gsub(/\n/, '_')}] for item #{item[:id]}"
           end
         end
 
@@ -304,6 +324,7 @@ module ICU
             their_item = @their_items[id]
             our_fee = @our_fees[id] || Fee.new
             their_item.keys.each { |key| our_fee.send("#{key}=", their_item[key]) }
+            our_fee.used = true if id <= 7296 && our_fee.new_record? # cope with old data synced from the legacy database
             raise SyncError.new("invalid fee: #{our_fee.inspect})") unless our_fee.valid?
             if our_fee.id
               if our_fee.changed?
@@ -319,13 +340,14 @@ module ICU
         end
 
         def sql
-          "SELECT #{MAP.keys.join(', ')} from items, payments where item_pay_id = pay_id and pay_status != 'Created' and item_type = 'FTR'"
+          "SELECT #{MAP.keys.join(', ')} FROM items WHERE status IN ('paid', 'refunded') and description = 'Foreign Rating Fee'"
         end
 
         def report
           str = Array.new
           str.push "our fees: #{@our_fees.size}" if @our_fees
           str.push "their items: #{@their_items.size}" if @their_items
+          str.push "legacy deletes: #{@legacy_deletes}" if @legacy_deletes
           str.push "creates: #{summarize_list(@creates)}"
           str.push "updates: #{summarize_list(@updates)}"
           str.push "changes: #{summarize_changes}"
