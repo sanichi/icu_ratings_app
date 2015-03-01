@@ -107,14 +107,14 @@ GEM
       nokogiri (~> 1.6.0)
       ruby_parser (~> 3.5)
     i18n (0.7.0)
-    icu_name (1.2.3)
+    icu_name (1.2.4)
     icu_ratings (1.8.3)
-    icu_tournament (1.9.3)
-      dbf
-      icu_name
-      icu_utils
-      rubyzip
-    icu_utils (1.2.2)
+    icu_tournament (1.9.4)
+      dbf (~> 2.0)
+      icu_name (~> 1.2)
+      icu_utils (~> 1.2)
+      rubyzip (~> 1.1)
+    icu_utils (1.2.3)
     jquery-rails (4.0.3)
       rails-dom-testing (~> 1.0)
       railties (>= 4.2.0)
