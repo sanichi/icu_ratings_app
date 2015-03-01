@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe Emailer do
   context "#notify_tournament_uploaded" do
@@ -9,10 +9,10 @@ describe Emailer do
     end
 
     it "should send notification to rating officer" do
-      email = Emailer.notify_tournament_uploaded(@t).deliver
+      email = Emailer.notify_tournament_uploaded(@t).deliver_now
       expect(ActionMailer::Base.deliveries.size).to eq(@n + 1)
       expect(email.to).to include("ratings@icu.ie")
-      expect(email.from).to include("mjo@ratalacha.icu.ie")
+      expect(email.from).to include("NO-REPLY@icu.ie")
       expect(email.subject).to eq("New Tournament Uploaded")
       expect(email.body).to include("Name: #{@t.name}")
       expect(email.body).to include("Start: #{@t.start.to_s(:db)}")
