@@ -108,7 +108,7 @@ GEM
       ruby_parser (~> 3.5)
     i18n (0.7.0)
     icu_name (1.2.3)
-    icu_ratings (1.8.2)
+    icu_ratings (1.8.3)
     icu_tournament (1.9.3)
       dbf
       icu_name
