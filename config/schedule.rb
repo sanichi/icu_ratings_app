@@ -13,9 +13,9 @@ every :day, at: "3:30am" do
   rake "sync:users"
 end
 
-# every :day, at: "4:00am" do
-#   rake "sync:fees"
-# end
+every :day, at: "4:00am" do
+  rake "sync:fees"
+end
 
 every :day, at: "4:30am" do
   rake "sync:subs"
