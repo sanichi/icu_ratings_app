@@ -19,8 +19,8 @@ class FidePlayerFile < ActiveRecord::Base
   attr_accessor :file, :update
 
   before_validation :analyse_file
-  validate :description, presence: true
-  validate :user_id, numericality: { only_integer: true, greater_than: 0 }
+  validates :description, presence: true
+  validates :user_id, numericality: { only_integer: true, greater_than: 0 }
 
   def self.search(params, path)
     matches = includes(user: :icu_player)

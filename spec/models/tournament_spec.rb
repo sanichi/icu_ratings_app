@@ -2,8 +2,8 @@ require 'rails_helper'
 
 describe Tournament do
   before(:all) do
-    # This seems to work better as a before-all. Before-each (in each group that needs it) is prone to hit
-    # an ActiveRecord::RecordNotUnique error when all tests are run (but not when just this file is run).
+    # Try to avoid the tendancy of before(:each) (in each group that needs it) to get an
+    # ActiveRecord::RecordNotUnique error when all tests are run (but not just this file).
     @u = FactoryGirl.create(:user, role: "officer")
   end
 
@@ -87,7 +87,6 @@ describe Tournament do
       # Setup two tournaments to begin with.
       @p = load_icu_players
       @r = load_old_ratings
-      #@u = FactoryGirl.create(:user, role: "officer")
       @t1, @t3 = %w{bunratty_masters_2011.tab kilkenny_masters_2011.tab}.map do |f|
         t = test_tournament(f, @u.id)
         t.move_stage("ready", @u)
@@ -688,7 +687,6 @@ describe Tournament do
       # Setup two tournaments to begin with.
       @p = load_icu_players
       @r = load_old_ratings
-      #@u = FactoryGirl.create(:user, role: "officer")
       @t1, @t2 = %w{bunratty_masters_2011.tab kilkenny_masters_2011.tab}.map do |f|
         t = test_tournament(f, @u.id)
         t.move_stage("ready", @u)
@@ -786,7 +784,6 @@ describe Tournament do
       f = "junior_championships_u19_2010.tab"
       load_icu_players_for(f)
       load_old_ratings
-      #@u = FactoryGirl.create(:user, role: "officer")
       @t = test_tournament(f, @u.id)
       @t.move_stage("ready", @u)
       @t.move_stage("queued", @u)
@@ -814,7 +811,6 @@ describe Tournament do
       f = "bunratty_masters_2011.tab"
       load_icu_players_for(f)
       load_old_ratings
-      #@u = FactoryGirl.create(:user, role: "officer")
       @t = test_tournament(f, @u.id)
       @t.move_stage("ready", @u)
       @t.move_stage("queued", @u)
@@ -853,7 +849,6 @@ describe Tournament do
       f = "bunratty_masters_2011.tab"
       load_icu_players_for(f)
       load_fide_players
-      #u = FactoryGirl.create(:user, role: "officer")
       @t = test_tournament(f, @u.id)
     end
 
@@ -951,8 +946,8 @@ describe Tournament do
       expect(updates[:fed_mismatch].map(&:last_name).join("|")).to eq("Osborne")
       expect(updates[:fed_unrecognized].count).to eq(0)
       expect(updates[:dob_new].count).to eq(11)
-      expect(updates[:dob_unchanged].map(&:last_name).join("|")).to eq("Kosten")
-      expect(updates[:dob_changed].map(&:last_name).join("|")).to eq("Williams")
+      expect(updates[:dob_unchanged].count).to eq(0)
+      expect(updates[:dob_changed].map(&:last_name).join("|")).to eq("Kosten|Williams")
       expect(updates[:dob_mismatch].map(&:last_name).join("|")).to eq("Freeman")
       expect(updates[:dob_removed].count).to eq(1)
       expect(updates[:dob_unrecognized].count).to eq(0)

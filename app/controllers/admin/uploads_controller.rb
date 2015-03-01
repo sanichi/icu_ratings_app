@@ -25,7 +25,7 @@ module Admin
         if @tournament
           if @tournament.save
             @tournament.renumber_opponents
-            Emailer.notify_tournament_uploaded(@tournament).deliver unless current_user.role?(:officer)
+            Emailer.notify_tournament_uploaded(@tournament).deliver_now unless current_user.role?(:officer)
             redirect_to [:admin, @tournament], notice: "New tournament created"
           else
             @upload.update_attribute :error, @tournament.error_summary

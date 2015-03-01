@@ -3,9 +3,10 @@
 .DS_Store
 .tm_properties
 db/*.sqlite3
-log/
-tmp/
-public/assets/
+log/*
+!log/.keep
+tmp/*
+public/assets/*
 config/database.yml
 config/app_config.yml
 config/secrets.yml

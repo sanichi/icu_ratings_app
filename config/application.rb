@@ -32,5 +32,8 @@ module Ratings
 
     # no-reply@icu.ie causes an error at fwd{0,1,2}.hosts.co.uk so for now use this instead which has no problem.
     config.action_mailer.default_options = { from: "mjo@ratalacha.icu.ie" }
+    
+    # Do not swallow errors in after_commit/after_rollback callbacks.
+    config.active_record.raise_in_transactional_callbacks = true
   end
 end
