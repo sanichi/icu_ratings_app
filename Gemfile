@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem "rails", "4.2.1.rc2"
+gem "rails", "4.2.1.rc3"
 gem "mysql2"
 gem "icu_tournament"
 gem "icu_ratings"
@@ -19,7 +19,7 @@ gem "therubyracer", platforms: :ruby
 gem "uglifier"
 
 group :development do
-  gem "capistrano-rails"
+  gem "capistrano-rails", "~> 1.1"
   gem "wirble"
 end
 
