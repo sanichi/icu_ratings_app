@@ -1,5 +1,3 @@
-lock "3.2.1" # config valid only for this version of capistrano
-
 set :application, "icu_ratings_app"
 
 set :repo_url, "git://github.com/sanichi/icu_ratings_app.git"

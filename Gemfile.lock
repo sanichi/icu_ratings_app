@@ -240,7 +240,7 @@ PLATFORMS
 DEPENDENCIES
   byebug
   cancan (~> 1.6)
-  capistrano-rails
+  capistrano-rails (~> 1.1)
   capybara
   coffee-rails (~> 4.1.0)
   database_cleaner
